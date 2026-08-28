@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spokane in Progress — what's being built, and where</title>
+<meta name="description" content="Tracking Spokane's housing progress: an independent map of housing and mixed-use development across the City of Spokane, from pre-application through completion.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__bar">
+    <div class="masthead__id">
+      <h1>Spokane <em>in Progress</em></h1>
+      <p class="masthead__tag">Tracking Spokane's housing progress.</p>
+    </div>
+    <div class="masthead__meta">
+      <span class="stamp" id="count-stamp">Loading</span>
+      <span class="stamp stamp--quiet" id="built-stamp"></span>
+    </div>
+  </div>
+
+  <!-- The spine: every tracked project, stacked by where it is in its life. -->
+  <div class="spine" id="spine" role="img" aria-label="Projects by stage"></div>
+  <ul class="spine__key" id="spine-key"></ul>
+</header>
+
+<div class="viewswitch" role="tablist" aria-label="View">
+  <button role="tab" aria-selected="false" data-view="list">List</button>
+  <button role="tab" aria-selected="true" data-view="map">Map</button>
+</div>
+
+<main class="layout">
+  <section class="panel" id="panel" aria-label="Projects">
+    <div class="filters">
+      <label class="search">
+        <span class="visually-hidden">Search projects</span>
+        <input type="search" id="search" placeholder="Search by name, street, or developer" autocomplete="off">
+      </label>
+      <div class="chips" id="status-chips" role="group" aria-label="Filter by stage"></div>
+    </div>
+
+    <p class="tally" id="tally" aria-live="polite"></p>
+    <ol class="cards" id="cards"></ol>
+    <p class="empty" id="empty" hidden>Nothing matches those filters. Clear the search or turn a stage back on.</p>
+  </section>
+
+  <section class="mapwrap" aria-label="Map of projects">
+    <div id="map"></div>
+  </section>
+</main>
+
+<aside class="detail" id="detail" hidden aria-label="Project detail">
+  <button class="detail__close" id="detail-close" aria-label="Close project detail">Close</button>
+  <div id="detail-body"></div>
+</aside>
+
+<footer class="colophon">
+  <p><strong>Spokane in Progress</strong> is an independent personal project. It is not affiliated with, endorsed by, or speaking for the City of Spokane.</p>
+  <p>Projects are added by hand, so the map is a curated selection rather than a complete record. For the full permit record, use the City's <a href="https://notifymespokane.org">permit activity map</a>.</p>
+  <p>Found something wrong or missing? <a href="mailto:hello@example.com">Send a correction.</a></p>
+</footer>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
