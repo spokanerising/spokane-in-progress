@@ -5,34 +5,40 @@
   --raised: #f5f6f2;
   --line: #c9cbc4;
   --slate: #5c6367;
-
-  --proposed: #c9a227;
-  --review: #bd7a24;
-  --approved: #14666b;
   --building: #a2472f;
-  --complete: #4a5d52;
-  --stalled: #868c90;
 
   --shadow: 0 1px 0 var(--line), 0 8px 24px -18px rgba(22, 25, 27, 0.5);
+
+  /* Panel width scales with the window instead of snapping at breakpoints. */
+  --panel: clamp(300px, 30vw, 440px);
+  --detail: clamp(320px, 27vw, 440px);
+  --gutter: clamp(14px, 2.6vw, 30px);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
 
+/* App shell: header sits still, the columns beneath it scroll on their own. */
 body {
   margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  /* Without an explicit column the grid sizes to its widest content, which
+     lets a nowrap row push the whole page wider than the screen. */
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
   background: var(--paper);
   color: var(--basalt);
   font: 400 16px/1.55 "IBM Plex Sans", system-ui, sans-serif;
 }
 
-a { color: var(--approved); text-underline-offset: 3px; }
+a { color: #14666b; text-underline-offset: 3px; }
 
-:focus-visible {
-  outline: 2px solid var(--basalt);
-  outline-offset: 2px;
-}
+:focus-visible { outline: 2px solid var(--basalt); outline-offset: 2px; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px;
@@ -42,111 +48,111 @@ a { color: var(--approved); text-underline-offset: 3px; }
 /* ---------- masthead ---------- */
 
 .masthead {
+  min-width: 0;
   background: var(--basalt);
   color: var(--paper);
-  padding: 22px clamp(16px, 4vw, 40px) 0;
+  padding: clamp(14px, 2vw, 22px) var(--gutter) 0;
 }
 
 .masthead__bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px 32px;
+  gap: 8px clamp(16px, 3vw, 32px);
   align-items: flex-end;
   justify-content: space-between;
-  max-width: 1500px;
-  margin: 0 auto;
 }
 
 .masthead h1 {
   margin: 0;
   font-family: Archivo, sans-serif;
   font-weight: 800;
-  font-size: clamp(28px, 4.4vw, 46px);
+  font-size: clamp(24px, 3.6vw, 44px);
   letter-spacing: -0.035em;
   line-height: 0.95;
 }
 
-.masthead h1 em {
-  font-style: normal;
-  font-weight: 600;
-  color: var(--proposed);
-}
+.masthead h1 em { font-style: normal; font-weight: 600; color: #c9a227; }
 
 .masthead__tag {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   max-width: 46ch;
   color: #b6bab7;
-  font-size: 15px;
+  font-size: clamp(13px, 1.2vw, 15px);
 }
 
-.masthead__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.masthead__meta { display: flex; flex-wrap: wrap; gap: 2px 14px; }
 
 .stamp {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 12px;
+  font-size: clamp(10px, 1vw, 12px);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--proposed);
+  color: #c9a227;
+  white-space: nowrap;
 }
 
 .stamp--quiet { color: #7d8285; }
 
-/* The signature element: one stacked bar for the whole city. */
+/* The signature element: every tracked project, stacked by stage. */
 
 .spine {
   display: flex;
-  height: 12px;
-  margin: 20px auto 0;
-  max-width: 1500px;
+  height: 10px;
+  margin-top: clamp(12px, 1.6vw, 20px);
   overflow: hidden;
   background: var(--basalt-soft);
 }
 
-.spine__seg { transition: flex-grow 0.5s ease; }
+.spine__seg { transition: flex-grow 0.5s ease; min-width: 2px; }
 
 .spine__key {
+  min-width: 0;
   display: flex;
+  gap: 4px clamp(12px, 2vw, 20px);
   flex-wrap: wrap;
-  gap: 4px 20px;
-  max-width: 1500px;
-  margin: 10px auto 0;
-  padding: 0 0 18px;
+  margin: 9px 0 0;
+  padding: 0 0 clamp(12px, 1.6vw, 18px);
   list-style: none;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 12px;
+  font-size: clamp(10px, 1vw, 12px);
   color: #b6bab7;
 }
 
-.spine__key li { display: flex; align-items: center; gap: 7px; }
-
-.spine__key i {
-  width: 9px; height: 9px; border-radius: 50%;
-  display: inline-block; flex: none;
-}
-
+.spine__key li { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.spine__key i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .spine__key b { color: var(--paper); font-weight: 500; }
 
-/* ---------- view switch (small screens only) ---------- */
+/* ---------- view switch (narrow screens only) ---------- */
 
 .viewswitch { display: none; }
 
 /* ---------- layout ---------- */
 
 .layout {
+  min-width: 0;
   display: grid;
-  grid-template-columns: minmax(360px, 460px) 1fr;
-  max-width: 1500px;
-  margin: 0 auto;
-  min-height: calc(100vh - 220px);
+  grid-template-columns: var(--panel) minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* When a project is open on a wide screen it takes a third column rather
+   than covering the map. */
+@media (min-width: 1180px) {
+  body[data-detail="open"] .layout {
+    grid-template-columns: var(--panel) minmax(0, 1fr) var(--detail);
+  }
 }
 
 .panel {
-  padding: 22px clamp(16px, 3vw, 28px) 60px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(16px, 2vw, 22px) var(--gutter) 40px;
   border-right: 1px solid var(--line);
 }
 
-.mapwrap { position: sticky; top: 0; height: 100vh; }
-#map { width: 100%; height: 100%; background: var(--paper); }
+.mapwrap { min-height: 0; position: relative; }
+#map { position: absolute; inset: 0; background: var(--paper); }
 
 /* ---------- filters ---------- */
 
@@ -157,24 +163,32 @@ a { color: var(--approved); text-underline-offset: 3px; }
   background: var(--raised);
   border-radius: 2px;
   font: inherit;
+  font-size: 16px; /* stops iOS zooming on focus */
   color: inherit;
 }
 
 .search input::placeholder { color: var(--slate); }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 5px 11px 5px 9px;
+  min-height: 36px;
+  padding: 6px 12px 6px 10px;
   border: 1px solid var(--line);
   background: transparent;
   border-radius: 999px;
   font: 500 13px/1 "IBM Plex Sans", sans-serif;
   color: var(--slate);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .chip i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
@@ -187,7 +201,7 @@ a { color: var(--approved); text-underline-offset: 3px; }
 }
 
 .tally {
-  margin: 18px 0 10px;
+  margin: 16px 0 10px;
   font-family: "IBM Plex Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.06em;
@@ -203,10 +217,10 @@ a { color: var(--approved); text-underline-offset: 3px; }
   width: 100%;
   text-align: left;
   display: block;
-  padding: 14px 15px 13px;
+  padding: 13px 15px 12px;
   background: var(--raised);
   border: 1px solid var(--line);
-  border-left: 4px solid var(--stalled);
+  border-left: 4px solid var(--slate);
   border-radius: 2px;
   font: inherit;
   color: inherit;
@@ -226,12 +240,13 @@ a { color: var(--approved); text-underline-offset: 3px; }
   margin: 3px 0 2px;
   font-family: Archivo, sans-serif;
   font-weight: 600;
-  font-size: 18px;
+  font-size: clamp(16px, 1.5vw, 19px);
   letter-spacing: -0.015em;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
-.card__where { color: var(--slate); font-size: 14px; }
+.card__where { color: var(--slate); font-size: 14px; overflow-wrap: anywhere; }
 
 .card__facts {
   margin: 9px 0 0;
@@ -245,18 +260,28 @@ a { color: var(--approved); text-underline-offset: 3px; }
 
 .empty { color: var(--slate); font-size: 15px; }
 
+.maperror { margin: 0; padding: 28px var(--gutter); color: var(--slate); font-size: 14px; max-width: 42ch; }
+
 /* ---------- detail ---------- */
 
 .detail {
-  position: fixed;
-  right: 0; top: 0; bottom: 0;
-  width: min(460px, 100vw);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--raised);
   border-left: 1px solid var(--basalt);
-  box-shadow: -14px 0 40px -30px rgba(22, 25, 27, 0.7);
-  overflow-y: auto;
-  padding: 18px clamp(16px, 3vw, 26px) 50px;
-  z-index: 20;
+  padding: 16px var(--gutter) 44px;
+}
+
+/* Below the three-column breakpoint it floats over everything instead. */
+@media (max-width: 1179px) {
+  .detail {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(460px, 100vw);
+    z-index: 30;
+    box-shadow: -14px 0 40px -30px rgba(22, 25, 27, 0.7);
+  }
 }
 
 .detail__close {
@@ -264,10 +289,11 @@ a { color: var(--approved); text-underline-offset: 3px; }
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  background: none;
+  background: var(--raised);
   border: 1px solid var(--line);
   border-radius: 2px;
-  padding: 6px 10px;
+  min-height: 36px;
+  padding: 6px 12px;
   cursor: pointer;
   color: var(--slate);
 }
@@ -276,30 +302,20 @@ a { color: var(--approved); text-underline-offset: 3px; }
   font-family: Archivo, sans-serif;
   font-weight: 800;
   letter-spacing: -0.03em;
-  font-size: 26px;
+  font-size: clamp(21px, 2.2vw, 27px);
   line-height: 1.1;
   margin: 16px 0 4px;
+  overflow-wrap: anywhere;
 }
 
-.detail__where { color: var(--slate); margin: 0 0 16px; }
+.detail__where { color: var(--slate); margin: 0 0 16px; overflow-wrap: anywhere; }
 
-.detail img { width: 100%; border: 1px solid var(--line); display: block; }
-
+.detail img { width: 100%; height: auto; border: 1px solid var(--line); display: block; }
 .detail figure { margin: 0 0 18px; }
-
-.detail figcaption {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  color: var(--slate);
-  padding-top: 6px;
-}
-
-/* Per-project lifecycle track. */
+.detail figcaption { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--slate); padding-top: 6px; }
 
 .track { display: flex; gap: 3px; margin: 0 0 6px; }
-
 .track span { height: 6px; flex: 1; background: var(--line); }
-
 .track span.on { background: var(--stage); }
 
 .track__label {
@@ -314,8 +330,8 @@ a { color: var(--approved); text-underline-offset: 3px; }
 .specs {
   margin: 0 0 18px;
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 7px 18px;
+  grid-template-columns: minmax(90px, max-content) minmax(0, 1fr);
+  gap: 7px clamp(12px, 1.6vw, 18px);
   font-size: 14px;
 }
 
@@ -328,72 +344,9 @@ a { color: var(--approved); text-underline-offset: 3px; }
   padding-top: 2px;
 }
 
-.specs dd { margin: 0; }
+.specs dd { margin: 0; overflow-wrap: anywhere; }
 
-.detail__sources { font-size: 13px; color: var(--slate); border-top: 1px solid var(--line); padding-top: 14px; }
-.detail__sources ul { margin: 6px 0 0; padding-left: 18px; }
-
-/* ---------- colophon ---------- */
-
-.colophon {
-  border-top: 1px solid var(--line);
-  padding: 26px clamp(16px, 4vw, 40px) 50px;
-  font-size: 13px;
-  color: var(--slate);
-  max-width: 1500px;
-  margin: 0 auto;
-}
-
-.colophon p { margin: 0 0 8px; max-width: 70ch; }
-
-/* ---------- map popup ---------- */
-
-.maplibregl-popup-content {
-  font-family: "IBM Plex Sans", sans-serif;
-  border-radius: 2px;
-  padding: 10px 12px;
-}
-
-/* ---------- small screens ---------- */
-
-@media (max-width: 900px) {
-  .viewswitch {
-    display: flex;
-    position: sticky;
-    top: 0;
-    z-index: 15;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .viewswitch button {
-    flex: 1;
-    padding: 12px;
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    font: 500 14px "IBM Plex Sans", sans-serif;
-    color: var(--slate);
-    cursor: pointer;
-  }
-
-  .viewswitch button[aria-selected="true"] { color: var(--basalt); border-bottom-color: var(--building); }
-
-  .layout { grid-template-columns: 1fr; }
-  .panel { border-right: none; }
-  .mapwrap { height: calc(100vh - 46px); }
-
-  body[data-view="list"] .mapwrap { display: none; }
-  body[data-view="map"] .panel { display: none; }
-
-  .detail { width: 100vw; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
-}
-
-/* ---------- blank fields and attachments ---------- */
+.specs--quiet { border-top: 1px solid var(--line); padding-top: 14px; font-size: 13px; color: var(--slate); }
 
 .detail__note {
   margin: 22px 0 0;
@@ -405,12 +358,9 @@ a { color: var(--approved); text-underline-offset: 3px; }
   color: var(--slate);
 }
 
-.specs--quiet {
-  border-top: 1px solid var(--line);
-  padding-top: 14px;
-  font-size: 13px;
-  color: var(--slate);
-}
+.detail__sources { font-size: 13px; color: var(--slate); border-top: 1px solid var(--line); padding-top: 14px; margin-top: 18px; }
+.detail__sources ul { margin: 6px 0 0; padding-left: 18px; }
+.detail__sources li { overflow-wrap: anywhere; }
 
 .doc {
   display: flex;
@@ -437,4 +387,80 @@ a { color: var(--approved); text-underline-offset: 3px; }
   padding: 4px 6px;
   border-radius: 2px;
   flex: none;
+}
+
+/* ---------- colophon ---------- */
+
+.colophon {
+  border-top: 1px solid var(--line);
+  margin-top: 32px;
+  padding-top: 22px;
+  font-size: 13px;
+  color: var(--slate);
+}
+
+.colophon p { margin: 0 0 8px; max-width: 70ch; }
+
+/* ---------- map popup ---------- */
+
+.maplibregl-popup-content { font-family: "IBM Plex Sans", sans-serif; border-radius: 2px; padding: 10px 12px; }
+
+/* ---------- narrow: one column, tabbed ---------- */
+
+@media (max-width: 860px) {
+  .viewswitch {
+    display: flex;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .viewswitch button {
+    flex: 1;
+    min-height: 46px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font: 500 15px "IBM Plex Sans", sans-serif;
+    color: var(--slate);
+    cursor: pointer;
+  }
+
+  .viewswitch button[aria-selected="true"] { color: var(--basalt); border-bottom-color: var(--building); }
+
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .panel { border-right: none; }
+
+  body[data-view="list"] .mapwrap { display: none; }
+  body[data-view="map"] .panel { display: none; }
+
+  /* Filter chips become one swipeable row instead of three stacked lines. */
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+  }
+
+  .chips::-webkit-scrollbar { display: none; }
+
+  .spine__key { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .spine__key::-webkit-scrollbar { display: none; }
+}
+
+/* Very small phones: give the map more room. */
+@media (max-width: 400px) {
+  .masthead__tag { display: none; }
+  .spine__key { font-size: 10px; }
+}
+
+/* Short landscape phones. */
+@media (max-height: 520px) and (max-width: 900px) {
+  .masthead__tag, .spine__key { display: none; }
+  .masthead h1 { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }

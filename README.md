@@ -6,7 +6,7 @@ step turns the sheet into the site.
 ## How it fits together
 
 ```
-Google Sheet  ->  build.py  ->  data/projects.json  ->  the website
+Google Sheet  ->  build.py  ->  projects.json  ->  the website
   (you edit)     (checks it)    (what the site reads)
 ```
 
@@ -17,7 +17,7 @@ You only ever touch the sheet.
 | File | What it is |
 | --- | --- |
 | `data/projects.sample.csv` | The column layout, with seven fictional example projects. |
-| `build.py` | Reads the sheet, checks the rows, writes `data/projects.json`. Python 3, nothing to install. |
+| `build.py` | Reads the sheet, checks the rows, writes `projects.json`. Python 3, nothing to install. |
 | `index.html`, `styles.css`, `app.js` | The site itself. |
 | `.github/workflows/build.yml` | Rebuilds the data every morning, and on demand. |
 
@@ -67,7 +67,7 @@ In Cloudflare Pages, connect the repository:
 - Build command: leave empty
 - Build output directory: `/`
 
-No build is needed on Cloudflare — the GitHub Action commits `data/projects.json`
+No build is needed on Cloudflare — the GitHub Action commits `projects.json`
 to the repository, so the site is already static by the time it deploys.
 
 ## The columns
@@ -114,7 +114,7 @@ available when the project was entered, plus the `last_verified` date.
 ## Changing the stages
 
 The stage names and their colours are defined once, at the top of `build.py`.
-They get written into `data/projects.json` and the website reads them from there,
+They get written into `projects.json` and the website reads them from there,
 so editing that one list changes the filters, the map dots, the header bar, and
 the project pages together. Do not edit the fallback list in `app.js`.
 

@@ -1,5 +1,5 @@
 // Spokane in Progress — map, list, filters, detail panel.
-// Reads data/projects.json, which build.py generates from your sheet.
+// Reads projects.json, which build.py generates from your sheet.
 
 // Stages are defined in build.py and travel with the data, so this list is only
 // a fallback for when the data fails to load. Edit build.py, not this.
@@ -243,6 +243,8 @@ function select(id, flyTo) {
 
   el.detail.hidden = false;
   el.detail.scrollTop = 0;
+  document.body.dataset.detail = "open";
+  if (map) requestAnimationFrame(() => map.resize());
   document.getElementById("detail-close").focus();
 
   if (flyTo && map) {
@@ -252,6 +254,8 @@ function select(id, flyTo) {
 
 function closeDetail() {
   el.detail.hidden = true;
+  document.body.dataset.detail = "closed";
+  if (map) requestAnimationFrame(() => map.resize());
   state.selected = null;
   el.cards.querySelectorAll(".card").forEach((c) => c.classList.remove("is-active"));
 }
@@ -303,6 +307,24 @@ function startMap() {
 
 // --------------------------------------------------------------------------
 
+function showProblem(message) {
+  el.countStamp.textContent = "Something is wrong";
+  el.tally.textContent = "";
+  el.empty.hidden = false;
+  el.empty.textContent = message;
+  console.error(message);
+}
+
+async function loadData() {
+  const response = await fetch("projects.json", { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(
+      `projects.json returned HTTP ${response.status}. The file is probably missing from the deployment.`
+    );
+  }
+  return response.json();
+}
+
 async function start() {
   el.search.addEventListener("input", (e) => {
     state.query = e.target.value;
@@ -324,31 +346,45 @@ async function start() {
     });
   });
   document.body.dataset.view = "map";
+  document.body.dataset.detail = "closed";
+
+  // Keep the map sized to its box through window resizes and rotation.
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => map && map.resize(), 120);
+  });
+
+  // Data and map are loaded separately, so a failure in one does not look like
+  // a failure in the other.
+  let payload = null;
+  try {
+    payload = await loadData();
+    if (Array.isArray(payload.stages) && payload.stages.length) STAGES = payload.stages;
+    state.projects = payload.projects || [];
+  } catch (error) {
+    showProblem(`Could not load the project data. ${error.message}`);
+  }
+
+  drawChips();
 
   try {
-    const response = await fetch("data/projects.json", { cache: "no-store" });
-    if (!response.ok) throw new Error(response.status);
-    const payload = await response.json();
-
-    if (Array.isArray(payload.stages) && payload.stages.length) STAGES = payload.stages;
-    state.projects = payload.projects;
-
-    drawChips();
+    if (typeof maplibregl === "undefined") {
+      throw new Error("The map library did not load. Check your connection or an ad blocker.");
+    }
     startMap();
-    el.countStamp.textContent = `${payload.projects.length} projects tracked`;
+  } catch (error) {
+    document.getElementById("map").innerHTML =
+      `<p class="maperror">${error.message}</p>`;
+    console.error(error);
+  }
+
+  if (payload) {
+    el.countStamp.textContent = `${state.projects.length} projects tracked`;
     el.builtStamp.textContent = payload.builtAt
       ? `Updated ${new Date(payload.builtAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`
       : "";
-
     render();
-  } catch (error) {
-    drawChips();
-    startMap();
-    el.countStamp.textContent = "Data did not load";
-    el.tally.textContent = "";
-    el.empty.hidden = false;
-    el.empty.textContent = "The project data did not load. Run python3 build.py to generate data/projects.json.";
-    console.error(error);
   }
 }
 

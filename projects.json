@@ -1,0 +1,548 @@
+{
+  "builtAt": "2026-08-28T03:49:15.602779+00:00",
+  "stages": [
+    {
+      "name": "Pre-Application",
+      "color": "#c9a227"
+    },
+    {
+      "name": "Applied",
+      "color": "#bd7a24"
+    },
+    {
+      "name": "Approved",
+      "color": "#14666b"
+    },
+    {
+      "name": "Under Construction",
+      "color": "#a2472f"
+    },
+    {
+      "name": "Complete",
+      "color": "#4a5d52"
+    },
+    {
+      "name": "Stalled",
+      "color": "#868c90"
+    }
+  ],
+  "projects": [
+    {
+      "id": "sample-office",
+      "name": "Post Street Office Renovation",
+      "address": "601 N Post St",
+      "neighborhood": "Downtown",
+      "parcelId": "35182.0007",
+      "lat": 47.6634,
+      "lng": -117.4234,
+      "status": "Applied",
+      "statusUpdated": "2026-08-12",
+      "lastVerified": "2026-08-22",
+      "projectType": "Office",
+      "units": null,
+      "stories": 4,
+      "description": "Full-floor renovation and seismic upgrade of a four-story office building, adding a rooftop terrace.",
+      "permitNumbers": [
+        "B2026-02244"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Office",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "64,000 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "30",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$11,800,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Property Group",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Sample Architects",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://my.spokanecity.org/",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "sample-udistrict",
+      "name": "University District Student Housing",
+      "address": "850 E Spokane Falls Blvd",
+      "neighborhood": "University District",
+      "parcelId": "35182.0004",
+      "lat": 47.6606,
+      "lng": -117.4028,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-08-04",
+      "lastVerified": "2026-08-22",
+      "projectType": "Housing",
+      "units": null,
+      "stories": 5,
+      "description": "Pre-application conference held in August for a five-story student housing building near the Gateway Bridge. No permit application has been filed yet.",
+      "permitNumbers": [],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "5",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Housing Partners",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "sample-kendall",
+      "name": "Kendall Yards Block 14",
+      "address": "1250 W Summit Pkwy",
+      "neighborhood": "Kendall Yards",
+      "parcelId": "35182.0003",
+      "lat": 47.6641,
+      "lng": -117.4362,
+      "status": "Applied",
+      "statusUpdated": "2026-07-11",
+      "lastVerified": "2026-08-22",
+      "projectType": "Housing",
+      "units": 120,
+      "stories": 8,
+      "description": "Eight-story apartment building on the last undeveloped block along Summit Parkway. Includes a structured parking podium and ground-floor amenity space.",
+      "permitNumbers": [
+        "B2026-01903"
+      ],
+      "drbFile": "DRB-2026-08",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "120",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "138,000 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "8",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "96",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$41,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Urban Group",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Sample Design Collective",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://my.spokanecity.org/",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "sample-warehouse",
+      "name": "Trent Warehouse Lofts",
+      "address": "1420 E Trent Ave",
+      "neighborhood": "East Central",
+      "parcelId": "35182.0002",
+      "lat": 47.6624,
+      "lng": -117.3941,
+      "status": "Approved",
+      "statusUpdated": "2026-06-02",
+      "lastVerified": "2026-08-20",
+      "projectType": "Housing",
+      "units": 32,
+      "stories": 3,
+      "description": "Conversion of a 1920s brick warehouse into 32 loft apartments. No on-site parking is proposed; the application relies on the surrounding street grid.",
+      "permitNumbers": [
+        "B2026-00421"
+      ],
+      "drbFile": "DRB-2026-03",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "32",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "41,000 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "0",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$8,900,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Partners LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Sample Studio",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://my.spokanecity.org/",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "sample-riverside",
+      "name": "Riverside Avenue Apartments",
+      "address": "808 W Riverside Ave",
+      "neighborhood": "Downtown",
+      "parcelId": "35182.0001",
+      "lat": 47.6577,
+      "lng": -117.4265,
+      "status": "Under Construction",
+      "statusUpdated": "2026-05-18",
+      "lastVerified": "2026-08-20",
+      "projectType": "Mixed-use",
+      "units": 84,
+      "stories": 6,
+      "description": "Six-story mixed-use building with ground-floor retail and 84 apartments, replacing a surface parking lot on the north side of Riverside.",
+      "permitNumbers": [
+        "B2025-01234",
+        "B2025-01288"
+      ],
+      "drbFile": "DRB-2025-11",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Under Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Mixed-use",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "84",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "96,000 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "6",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "42",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$24,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Development Co.",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Sample Architects",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://my.spokanecity.org/",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "sample-garland",
+      "name": "Garland District Infill",
+      "address": "912 W Garland Ave",
+      "neighborhood": "North Hill",
+      "parcelId": "35182.0005",
+      "lat": 47.6912,
+      "lng": -117.4283,
+      "status": "Complete",
+      "statusUpdated": "2026-03-30",
+      "lastVerified": "2026-08-20",
+      "projectType": "Mixed-use",
+      "units": 18,
+      "stories": 3,
+      "description": "Three-story infill building with two commercial bays on Garland and 18 apartments above. Opened in spring 2026.",
+      "permitNumbers": [
+        "B2024-00877"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Complete",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Mixed-use",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "18",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "22,400 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "12",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$5,200,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Neighborhood Builders",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Sample Architecture Workshop",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://my.spokanecity.org/",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "sample-hillyard",
+      "name": "Hillyard Townhomes",
+      "address": "3020 E Olympic Ave",
+      "neighborhood": "Hillyard",
+      "parcelId": "35182.0006",
+      "lat": 47.7048,
+      "lng": -117.3792,
+      "status": "Stalled",
+      "statusUpdated": "2026-01-15",
+      "lastVerified": "2026-08-20",
+      "projectType": "Housing",
+      "units": 24,
+      "stories": 2,
+      "description": "Twenty-four attached townhomes. The permit lapsed in January and no construction has begun; the site remains cleared and fenced.",
+      "permitNumbers": [
+        "B2024-02110"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [
+        "https://my.spokanecity.org/"
+      ],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Stalled",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "24",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "29,000 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "24",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$6,100,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Sample Residential LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Sample Design Studio",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://my.spokanecity.org/",
+          "kind": "link"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Reads your Google Sheet, checks every row, and writes data/projects.json.
+Reads your Google Sheet, checks every row, and writes projects.json.
 
 Run it with:   python3 build.py
 
@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVMhbLFK8Gl1Uc3siqKq6kim0RT8JTYTmIAR5IR3D9uJzNF3qoRLPUdhwTixHpoGLQ2cZIm3aiyg7r/pub?gid=883083305&single=true&output=csv"
 
 # The single source of truth for stages. The website reads this list out of
-# data/projects.json, so changing a name or colour here changes it everywhere.
+# projects.json, so changing a name or colour here changes it everywhere.
 STAGES = [
     {"name": "Pre-Application",    "color": "#c9a227"},  # pre-application conference held
     {"name": "Applied",            "color": "#bd7a24"},  # permit application filed
@@ -214,8 +214,9 @@ def main():
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
-    os.makedirs("data", exist_ok=True)
-    with open(os.path.join("data", "projects.json"), "w", encoding="utf-8") as handle:
+    # Written to the project root, not into data/, so that every deployment
+    # method serves it. Some upload flows drop subfolders.
+    with open("projects.json", "w", encoding="utf-8") as handle:
         json.dump(
             {
                 "builtAt": datetime.now(timezone.utc).isoformat(),
@@ -226,7 +227,7 @@ def main():
             indent=2,
         )
 
-    print(f"\nWrote data/projects.json with {len(projects)} projects.")
+    print(f"\nWrote projects.json with {len(projects)} projects.")
     if warnings:
         print(f"\n{len(warnings)} thing(s) to look at:")
         for warning in warnings:
