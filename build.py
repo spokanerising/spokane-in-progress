@@ -12,6 +12,7 @@ import io
 import json
 import os
 import sys
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -80,6 +81,153 @@ def to_int(value):
         return None
 
 
+# ---------------------------------------------------------------------------
+# Coordinates.
+#
+# Typing lat/lng by hand is the worst part of adding a project, so leave both
+# blank and this fills them in from parcel_id. Address geocoders were tried and
+# rejected: a street-centreline geocoder put "850 E Spokane Falls Blvd" 1.6km
+# away on 850 W, silently. The county parcel layer is authoritative instead --
+# it either finds your parcel number or tells you it did not.
+#
+# Anything you type by hand always wins. Results are cached in
+# data/geocache.json, committed alongside projects.json, so repeat builds are
+# stable and the county gets one request per new parcel.
+# ---------------------------------------------------------------------------
+
+PARCEL_SERVICE = (
+    "https://gismo.spokanecounty.org/arcgis/rest/services"
+    "/Assessor/Parcels/MapServer/0/query"
+)
+GEOCACHE_PATH = os.path.join("data", "geocache.json")
+
+
+def load_geocache():
+    try:
+        with open(GEOCACHE_PATH, encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return {}
+
+
+def save_geocache(cache):
+    os.makedirs(os.path.dirname(GEOCACHE_PATH), exist_ok=True)
+    with open(GEOCACHE_PATH, "w", encoding="utf-8") as handle:
+        json.dump(cache, handle, indent=2, sort_keys=True)
+
+
+def ring_area(ring):
+    """Signed area, computed about a local origin to avoid cancellation."""
+    ox, oy = ring[0]
+    total = 0.0
+    for i in range(len(ring)):
+        x0, y0 = ring[i - 1][0] - ox, ring[i - 1][1] - oy
+        x1, y1 = ring[i][0] - ox, ring[i][1] - oy
+        total += x0 * y1 - x1 * y0
+    return total / 2.0
+
+
+def ring_centroid(ring):
+    """Area-weighted centroid, about a local origin.
+
+    The translation is not optional. Spokane longitudes sit near -117.36 while
+    a city parcel spans about 0.0003 degrees, so running this on raw
+    coordinates loses the significant digits and can put the answer outside
+    the parcel's own bounding box.
+    """
+    ox, oy = ring[0]
+    area = cx = cy = 0.0
+    for i in range(len(ring)):
+        x0, y0 = ring[i - 1][0] - ox, ring[i - 1][1] - oy
+        x1, y1 = ring[i][0] - ox, ring[i][1] - oy
+        cross = x0 * y1 - x1 * y0
+        area += cross
+        cx += (x0 + x1) * cross
+        cy += (y0 + y1) * cross
+    area /= 2.0
+    if abs(area) < 1e-15:  # slivers, duplicate points, degenerate rings
+        return (
+            sum(p[0] for p in ring) / len(ring),
+            sum(p[1] for p in ring) / len(ring),
+        )
+    return cx / (6 * area) + ox, cy / (6 * area) + oy
+
+
+def point_in_ring(x, y, ring):
+    inside = False
+    for i in range(len(ring)):
+        xi, yi = ring[i]
+        xj, yj = ring[i - 1]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi:
+            inside = not inside
+    return inside
+
+
+def interior_point(rings):
+    """A (lat, lng) guaranteed to sit inside the parcel.
+
+    The outer boundary is the ring with the largest area; smaller rings are
+    holes or detached slivers. A centroid is normally inside it, but on a
+    U- or L-shaped parcel it can land in the notch, so fall back to the middle
+    of the widest interior span across the centroid's latitude.
+    """
+    outer = max(rings, key=lambda r: abs(ring_area(r)))
+    x, y = ring_centroid(outer)
+    if point_in_ring(x, y, outer):
+        return y, x
+
+    crossings = []
+    for i in range(len(outer)):
+        xi, yi = outer[i]
+        xj, yj = outer[i - 1]
+        if (yi > y) != (yj > y):
+            crossings.append(xi + (y - yi) * (xj - xi) / (yj - yi))
+    crossings.sort()
+    if len(crossings) >= 2:
+        widest = max(
+            (crossings[i + 1] - crossings[i], (crossings[i] + crossings[i + 1]) / 2)
+            for i in range(0, len(crossings) - 1, 2)
+        )
+        return y, widest[1]
+    return y, x
+
+
+def lookup_parcel(pin):
+    """Ask the county for a parcel boundary. Returns (lat, lng, address)."""
+    query = urllib.parse.urlencode(
+        {
+            "where": "PID_NUM='%s'" % pin.replace("'", "''"),
+            "outFields": "PID_NUM,site_address",
+            "returnGeometry": "true",
+            "outSR": "4326",
+            "f": "json",
+        }
+    )
+    request = urllib.request.Request(
+        PARCEL_SERVICE + "?" + query,
+        headers={"User-Agent": "spokane-in-progress (projects.spokanerising.com)"},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+
+    if payload.get("error"):
+        raise RuntimeError(payload["error"].get("message", "parcel service error"))
+    features = payload.get("features") or []
+    if not features:
+        return None
+    rings = (features[0].get("geometry") or {}).get("rings") or []
+    if not rings:
+        return None
+    lat, lng = interior_point(rings)
+    return lat, lng, (features[0].get("attributes") or {}).get("site_address", "")
+
+
+def house_number(text):
+    """Leading street number, for sanity-checking a parcel against an address."""
+    first = str(text or "").strip().split(" ")[0]
+    return first if first.isdigit() else ""
+
+
 def load_rows():
     if SHEET_CSV_URL:
         print("Reading the Google Sheet...")
@@ -111,6 +259,8 @@ def main():
     warnings = []
     projects = []
     seen_ids = set()
+    geocache = load_geocache()
+    cache_dirty = False
 
     for offset, row in enumerate(rows):
         row = {(k or "").strip(): (v or "").strip() for k, v in row.items()}
@@ -124,12 +274,53 @@ def main():
             warnings.append(f"Row {line}: no name. Skipped.")
             continue
 
+        # Hand-typed coordinates always win. Otherwise derive them from the
+        # parcel number, which is a lookup rather than a guess.
         try:
             lat = float(row.get("lat"))
             lng = float(row.get("lng"))
         except (TypeError, ValueError):
-            warnings.append(f"{label}: missing or unreadable lat/lng. Skipped.")
-            continue
+            lat = lng = None
+
+        if lat is None:
+            pin = row.get("parcel_id", "")
+            if not pin:
+                warnings.append(
+                    f"{label}: no lat/lng, and no parcel_id to look them up with. Skipped."
+                )
+                continue
+            if pin in geocache:
+                lat = geocache[pin]["lat"]
+                lng = geocache[pin]["lng"]
+            else:
+                try:
+                    found = lookup_parcel(pin)
+                except Exception as error:
+                    warnings.append(
+                        f'{label}: could not reach the county parcel service for '
+                        f'"{pin}" ({error}). Skipped this time; it will retry next build.'
+                    )
+                    continue
+                if not found:
+                    warnings.append(
+                        f'{label}: parcel "{pin}" is not in the county parcel layer. '
+                        f"Check the number, or fill lat/lng in by hand. Skipped."
+                    )
+                    continue
+                lat, lng, matched = found
+                geocache[pin] = {"lat": lat, "lng": lng, "address": matched}
+                cache_dirty = True
+                warnings.append(
+                    f'{label}: located from parcel {pin} ({matched or "no address on file"}). '
+                    f"Worth a glance on the map the first time."
+                )
+                sheet_number = house_number(row.get("address"))
+                parcel_number = house_number(matched)
+                if sheet_number and parcel_number and sheet_number != parcel_number:
+                    warnings.append(
+                        f'{label}: the sheet says "{row.get("address")}" but parcel {pin} '
+                        f'is "{matched}". One of them is wrong.'
+                    )
 
         if not (BOUNDS["min_lat"] <= lat <= BOUNDS["max_lat"]) or not (
             BOUNDS["min_lng"] <= lng <= BOUNDS["max_lng"]
@@ -211,6 +402,9 @@ def main():
                 "fields": fields,
             }
         )
+
+    if cache_dirty:
+        save_geocache(geocache)
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
