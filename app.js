@@ -15,6 +15,14 @@ let STAGES = [
 // Roughly the City of Spokane limits. The map opens here.
 const CITY_BOUNDS = [[-117.545, 47.598], [-117.300, 47.748]];
 
+// Aerial imagery for the satellite view. Esri's World Imagery needs no key or
+// account and covers Spokane to z19. The attribution is required and rides on
+// the source, so MapLibre shows it whenever the layer is drawn.
+const SATELLITE_TILES =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const SATELLITE_CREDIT =
+  'Imagery &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics';
+
 const colorOf = (status) =>
   (STAGES.find((s) => s.name === status) || STAGES[STAGES.length - 1]).color;
 const indexOf = (status) => STAGES.findIndex((s) => s.name === status);
@@ -41,6 +49,10 @@ const el = {
 };
 
 let map;
+
+// Positron's label layers, with the halo they ship with, captured at load so
+// the satellite view can thicken them and the map view can put them back.
+let labelLayers = [];
 
 // --------------------------------------------------------------------------
 
@@ -267,6 +279,48 @@ function closeDetail() {
 
 // --------------------------------------------------------------------------
 
+function savedBasemap() {
+  try {
+    return localStorage.getItem("basemap") === "satellite" ? "satellite" : "map";
+  } catch (error) {
+    return "map"; // private browsing, or storage turned off
+  }
+}
+
+// The imagery sits above the vector fills and roads but below the labels, so a
+// switch is one layer's visibility and street names keep drawing on top. Those
+// labels are tuned for a pale background, so over imagery they get a heavier
+// halo to stay readable.
+function setBasemap(mode) {
+  if (!map || !map.getLayer("satellite")) return;
+  const on = mode === "satellite";
+
+  map.setLayoutProperty("satellite", "visibility", on ? "visible" : "none");
+
+  labelLayers.forEach((layer) => {
+    try {
+      map.setPaintProperty(layer.id, "text-halo-width", on ? 1.8 : layer.haloWidth);
+      map.setPaintProperty(
+        layer.id,
+        "text-halo-color",
+        on ? "rgba(255,255,255,0.95)" : layer.haloColor
+      );
+    } catch (error) {
+      /* a label layer without a halo is not worth failing the switch over */
+    }
+  });
+
+  document.querySelectorAll(".basemap button").forEach((b) =>
+    b.setAttribute("aria-pressed", String(b.dataset.basemap === mode))
+  );
+
+  try {
+    localStorage.setItem("basemap", mode);
+  } catch (error) {
+    /* the choice just does not persist */
+  }
+}
+
 function startMap() {
   map = new maplibregl.Map({
     container: "map",
@@ -279,6 +333,30 @@ function startMap() {
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
   map.on("load", () => {
+    const styleLayers = map.getStyle().layers || [];
+    const firstSymbol = styleLayers.find((l) => l.type === "symbol");
+
+    labelLayers = styleLayers
+      .filter((l) => l.type === "symbol" && map.getLayoutProperty(l.id, "text-field"))
+      .map((l) => ({
+        id: l.id,
+        haloWidth: map.getPaintProperty(l.id, "text-halo-width"),
+        haloColor: map.getPaintProperty(l.id, "text-halo-color"),
+      }));
+
+    map.addSource("satellite", {
+      type: "raster",
+      tiles: [SATELLITE_TILES],
+      tileSize: 256,
+      maxzoom: 19,
+      attribution: SATELLITE_CREDIT,
+    });
+
+    map.addLayer(
+      { id: "satellite", type: "raster", source: "satellite", layout: { visibility: "none" } },
+      firstSymbol && firstSymbol.id
+    );
+
     map.addSource("projects", { type: "geojson", data: toGeoJson(visible()) });
 
     map.addLayer({
@@ -303,6 +381,11 @@ function startMap() {
         "circle-stroke-color": "#f5f6f2",
       },
     });
+
+    document.querySelectorAll(".basemap button").forEach((button) => {
+      button.addEventListener("click", () => setBasemap(button.dataset.basemap));
+    });
+    setBasemap(savedBasemap());
 
     map.on("click", "project-dot", (e) => select(e.features[0].properties.id, false));
     map.on("mouseenter", "project-dot", () => (map.getCanvas().style.cursor = "pointer"));

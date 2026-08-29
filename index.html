@@ -59,6 +59,13 @@
 
   <section class="mapwrap" aria-label="Map of projects">
     <div id="map"></div>
+
+    <!-- Base map switcher. Sits over the canvas rather than in the header so it
+         stays with the map when the narrow layout tabs the panel away. -->
+    <div class="basemap" id="basemap" role="group" aria-label="Base map">
+      <button type="button" data-basemap="map" aria-pressed="true">Map</button>
+      <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
+    </div>
   </section>
 
 <aside class="detail" id="detail" hidden aria-label="Project detail">

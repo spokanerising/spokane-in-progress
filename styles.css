@@ -159,6 +159,43 @@ a { color: #14666b; text-underline-offset: 3px; }
 .mapwrap { min-height: 0; position: relative; }
 #map { position: absolute; inset: 0; background: var(--paper); }
 
+/* Base map switcher: map vs satellite, over the top-left of the canvas.
+   MapLibre's own controls own the top-right corner. */
+.basemap {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: flex;
+  background: var(--raised);
+  border: 1px solid var(--basalt);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px -12px rgba(22, 25, 27, 0.6);
+}
+
+.basemap button {
+  min-height: 32px;
+  padding: 0 12px;
+  background: none;
+  border: none;
+  font: 500 13px "IBM Plex Sans", sans-serif;
+  color: var(--slate);
+  cursor: pointer;
+}
+
+.basemap button + button { border-left: 1px solid var(--line); }
+
+.basemap button[aria-pressed="true"] {
+  background: var(--basalt);
+  color: var(--paper);
+}
+
+/* The map is hidden entirely in list view, so the switcher goes with it. */
+@media (max-width: 860px) {
+  .basemap button { min-height: 36px; }
+}
+
 /* ---------- filters ---------- */
 
 .search input {
