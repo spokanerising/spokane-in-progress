@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-08-29T02:11:33.791709+00:00",
+  "builtAt": "2026-08-29T03:39:51.609586+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -162,152 +162,29 @@
       ]
     },
     {
-      "id": "sample-office",
-      "name": "Post Street Office Renovation",
-      "address": "601 N Post St",
-      "neighborhood": "Downtown",
-      "parcelId": "35182.0007",
-      "lat": 47.6634,
-      "lng": -117.4234,
-      "status": "Applied",
-      "statusUpdated": "2026-08-12",
-      "lastVerified": "2026-08-22",
-      "projectType": "Office",
-      "units": null,
-      "stories": 4,
-      "description": "Full-floor renovation and seismic upgrade of a four-story office building, adding a rooftop terrace.",
-      "permitNumbers": [
-        "B2026-02244"
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Applied",
-          "kind": "text"
-        },
-        {
-          "label": "Type",
-          "value": "Office",
-          "kind": "text"
-        },
-        {
-          "label": "Floor area",
-          "value": "64,000 sq ft",
-          "kind": "text"
-        },
-        {
-          "label": "Stories",
-          "value": "4",
-          "kind": "text"
-        },
-        {
-          "label": "Parking stalls",
-          "value": "30",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$11,800,000",
-          "kind": "text"
-        },
-        {
-          "label": "Developer",
-          "value": "Sample Property Group",
-          "kind": "text"
-        },
-        {
-          "label": "Architect",
-          "value": "Sample Architects",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://my.spokanecity.org/",
-          "kind": "link"
-        }
-      ]
-    },
-    {
-      "id": "sample-udistrict",
-      "name": "University District Student Housing",
-      "address": "850 E Spokane Falls Blvd",
-      "neighborhood": "University District",
-      "parcelId": "35182.0004",
-      "lat": 47.6606,
-      "lng": -117.4028,
-      "status": "Pre-Application",
-      "statusUpdated": "2026-08-04",
-      "lastVerified": "2026-08-22",
-      "projectType": "Housing",
-      "units": null,
-      "stories": 5,
-      "description": "Pre-application conference held in August for a five-story student housing building near the Gateway Bridge. No permit application has been filed yet.",
-      "permitNumbers": [],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Pre-Application",
-          "kind": "text"
-        },
-        {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
-        },
-        {
-          "label": "Stories",
-          "value": "5",
-          "kind": "text"
-        },
-        {
-          "label": "Developer",
-          "value": "Sample Housing Partners",
-          "kind": "text"
-        }
-      ]
-    },
-    {
-      "id": "sample-kendall",
-      "name": "Kendall Yards Block 14",
-      "address": "1250 W Summit Pkwy",
+      "id": "B2610856BLDC",
+      "name": "Kendall Yards Podium",
+      "address": "1175 W Summit Pkwy",
       "neighborhood": "Kendall Yards",
-      "parcelId": "35182.0003",
-      "lat": 47.6641,
-      "lng": -117.4362,
+      "parcelId": "35183.0801",
+      "lat": 47.66146845834986,
+      "lng": -117.42970488330755,
       "status": "Applied",
-      "statusUpdated": "2026-07-11",
-      "lastVerified": "2026-08-22",
+      "statusUpdated": "2026-07-16",
+      "lastVerified": "2026-08-28",
       "projectType": "Housing",
-      "units": 120,
+      "units": 200,
       "stories": 8,
-      "description": "Eight-story apartment building on the last undeveloped block along Summit Parkway. Includes a structured parking podium and ground-floor amenity space.",
+      "description": "New six-story multifamily building with 200 housing units, ground-floor commercial space, undeground parking, and a rooftop amenity area.",
       "permitNumbers": [
-        "B2026-01903"
+        "B2610856BLDC"
       ],
-      "drbFile": "DRB-2026-08",
+      "drbFile": "",
       "imageUrl": "",
       "imageCredit": "",
       "docUrl": "",
       "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
+      "sourceUrls": [],
       "fields": [
         {
           "label": "Stage",
@@ -321,12 +198,12 @@
         },
         {
           "label": "Housing units",
-          "value": "120",
+          "value": "200",
           "kind": "text"
         },
         {
           "label": "Floor area",
-          "value": "138,000 sq ft",
+          "value": "425,830 sq ft",
           "kind": "text"
         },
         {
@@ -336,76 +213,74 @@
         },
         {
           "label": "Parking stalls",
-          "value": "96",
+          "value": "364",
           "kind": "text"
         },
         {
           "label": "Estimated cost",
-          "value": "$41,000,000",
+          "value": "$70,907,175",
           "kind": "text"
         },
         {
           "label": "Developer",
-          "value": "Sample Urban Group",
+          "value": "SRM Development/Greenstone Homes",
           "kind": "text"
         },
         {
           "label": "Architect",
-          "value": "Sample Design Collective",
+          "value": "Urbal Architecture",
           "kind": "text"
         },
         {
           "label": "Permit application",
-          "value": "https://my.spokanecity.org/",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00319&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
       ]
     },
     {
-      "id": "sample-warehouse",
-      "name": "Trent Warehouse Lofts",
-      "address": "1420 E Trent Ave",
-      "neighborhood": "East Central",
-      "parcelId": "35182.0002",
-      "lat": 47.6624,
-      "lng": -117.3941,
-      "status": "Approved",
-      "statusUpdated": "2026-06-02",
-      "lastVerified": "2026-08-20",
-      "projectType": "Housing",
-      "units": 32,
+      "id": "B2610856BLDC",
+      "name": "Cora Townhomes A",
+      "address": "1207 W Cora Ave",
+      "neighborhood": "Emerson-Garfield",
+      "parcelId": "35063.2826",
+      "lat": 47.688469912009,
+      "lng": -117.43019534829014,
+      "status": "Applied",
+      "statusUpdated": "2026-06-24",
+      "lastVerified": "2026-08-28",
+      "projectType": "Middle housing",
+      "units": 4,
       "stories": 3,
-      "description": "Conversion of a 1920s brick warehouse into 32 loft apartments. No on-site parking is proposed; the application relies on the surrounding street grid.",
+      "description": "One fourplex of a set of three fourplexes on adjacent lots.",
       "permitNumbers": [
-        "B2026-00421"
+        "B2610856BLDC"
       ],
-      "drbFile": "DRB-2026-03",
+      "drbFile": "",
       "imageUrl": "",
       "imageCredit": "",
       "docUrl": "",
       "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
+      "sourceUrls": [],
       "fields": [
         {
           "label": "Stage",
-          "value": "Approved",
+          "value": "Applied",
           "kind": "text"
         },
         {
           "label": "Type",
-          "value": "Housing",
+          "value": "Middle housing",
           "kind": "text"
         },
         {
           "label": "Housing units",
-          "value": "32",
+          "value": "4",
           "kind": "text"
         },
         {
           "label": "Floor area",
-          "value": "41,000 sq ft",
+          "value": "6,766 sq ft",
           "kind": "text"
         },
         {
@@ -414,28 +289,239 @@
           "kind": "text"
         },
         {
-          "label": "Parking stalls",
-          "value": "0",
-          "kind": "text"
-        },
-        {
           "label": "Estimated cost",
-          "value": "$8,900,000",
+          "value": "$350,000",
           "kind": "text"
         },
         {
           "label": "Developer",
-          "value": "Sample Partners LLC",
+          "value": "Legacy Properties Spokane, LLC",
           "kind": "text"
         },
         {
           "label": "Architect",
-          "value": "Sample Studio",
+          "value": "Russell Page Architects",
           "kind": "text"
         },
         {
           "label": "Permit application",
-          "value": "https://my.spokanecity.org/",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00288&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B2609573BLDC",
+      "name": "Cora Townhomes B",
+      "address": "1211 W Cora Ave",
+      "neighborhood": "Emerson-Garfield",
+      "parcelId": "35063.2825",
+      "lat": 47.68847039637858,
+      "lng": -117.43040647471791,
+      "status": "Applied",
+      "statusUpdated": "2026-06-24",
+      "lastVerified": "2026-08-28",
+      "projectType": "Middle housing",
+      "units": 4,
+      "stories": 3,
+      "description": "One fourplex of a set of three fourplexes on adjacent lots.",
+      "permitNumbers": [
+        "B2609573BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "6,766 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$350,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Legacy Properties Spokane, LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Russell Page Architects",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00287&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B2609572BLDC",
+      "name": "Cora Townhomes C",
+      "address": "1215 W Cora Ave",
+      "neighborhood": "Emerson-Garfield",
+      "parcelId": "35063.2824",
+      "lat": 47.68847107597651,
+      "lng": -117.43061722266943,
+      "status": "Applied",
+      "statusUpdated": "2026-06-24",
+      "lastVerified": "2026-08-28",
+      "projectType": "Middle housing",
+      "units": 4,
+      "stories": 3,
+      "description": "One fourplex of a set of three fourplexes on adjacent lots.",
+      "permitNumbers": [
+        "B2609572BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "6,766 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$350,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Legacy Properties Spokane, LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Russell Page Architects",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00286&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B2607616BLDC",
+      "name": "MHIG Sinto Multi-Family",
+      "address": "506 W Sinto Ave",
+      "neighborhood": "North Central",
+      "parcelId": "35181.2923",
+      "lat": 47.67053522914457,
+      "lng": -117.41951762192117,
+      "status": "Approved",
+      "statusUpdated": "2026-05-22",
+      "lastVerified": "2026-08-28",
+      "projectType": "Middle housing",
+      "units": 9,
+      "stories": 3,
+      "description": "Three-story, nine-unit apartment building with parking.",
+      "permitNumbers": [
+        "B2607616BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "9",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "8,348 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,165,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Ministry Housing Investment Group, LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Bernardo Wills",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00248&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
       ]
@@ -521,114 +607,33 @@
       ]
     },
     {
-      "id": "sample-garland",
-      "name": "Garland District Infill",
-      "address": "912 W Garland Ave",
-      "neighborhood": "North Hill",
-      "parcelId": "35182.0005",
-      "lat": 47.6912,
-      "lng": -117.4283,
-      "status": "Complete",
-      "statusUpdated": "2026-03-30",
-      "lastVerified": "2026-08-20",
-      "projectType": "Mixed-use",
-      "units": 18,
-      "stories": 3,
-      "description": "Three-story infill building with two commercial bays on Garland and 18 apartments above. Opened in spring 2026.",
-      "permitNumbers": [
-        "B2024-00877"
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Complete",
-          "kind": "text"
-        },
-        {
-          "label": "Type",
-          "value": "Mixed-use",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "18",
-          "kind": "text"
-        },
-        {
-          "label": "Floor area",
-          "value": "22,400 sq ft",
-          "kind": "text"
-        },
-        {
-          "label": "Stories",
-          "value": "3",
-          "kind": "text"
-        },
-        {
-          "label": "Parking stalls",
-          "value": "12",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$5,200,000",
-          "kind": "text"
-        },
-        {
-          "label": "Developer",
-          "value": "Sample Neighborhood Builders",
-          "kind": "text"
-        },
-        {
-          "label": "Architect",
-          "value": "Sample Architecture Workshop",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://my.spokanecity.org/",
-          "kind": "link"
-        }
-      ]
-    },
-    {
-      "id": "sample-hillyard",
-      "name": "Hillyard Townhomes",
-      "address": "3020 E Olympic Ave",
-      "neighborhood": "Hillyard",
-      "parcelId": "35182.0006",
-      "lat": 47.7048,
-      "lng": -117.3792,
-      "status": "Stalled",
-      "statusUpdated": "2026-01-15",
-      "lastVerified": "2026-08-20",
+      "id": "B2607178BLDC",
+      "name": "Timberline Multi-Family",
+      "address": "4911 S Freya St",
+      "neighborhood": "Southgate",
+      "parcelId": "34031.9012",
+      "lat": 47.608928324191126,
+      "lng": -117.35660982820237,
+      "status": "Applied",
+      "statusUpdated": "2026-05-14",
+      "lastVerified": "2026-08-28",
       "projectType": "Housing",
-      "units": 24,
-      "stories": 2,
-      "description": "Twenty-four attached townhomes. The permit lapsed in January and no construction has begun; the site remains cleared and fenced.",
+      "units": 29,
+      "stories": 3,
+      "description": "New 29-unit, three-story apartment building.",
       "permitNumbers": [
-        "B2024-02110"
+        "B2607178BLDC"
       ],
       "drbFile": "",
       "imageUrl": "",
       "imageCredit": "",
       "docUrl": "",
       "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
+      "sourceUrls": [],
       "fields": [
         {
           "label": "Stage",
-          "value": "Stalled",
+          "value": "Applied",
           "kind": "text"
         },
         {
@@ -638,12 +643,84 @@
         },
         {
           "label": "Housing units",
-          "value": "24",
+          "value": "29",
           "kind": "text"
         },
         {
           "label": "Floor area",
-          "value": "29,000 sq ft",
+          "value": "34,890 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$3,300,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "CM Development & Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Mercier Architecture & Planning",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00238&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B2606311BLDC",
+      "name": "37 E Everett Triplex",
+      "address": "37 E Everett Ave",
+      "neighborhood": "Northtown",
+      "parcelId": "36323.2130",
+      "lat": 47.70635573017199,
+      "lng": -117.40957550147503,
+      "status": "Applied",
+      "statusUpdated": "2026-04-30",
+      "lastVerified": "2026-08-28",
+      "projectType": "Middle housing",
+      "units": 3,
+      "stories": 2,
+      "description": "New triplex by an owner-builder in an R1 neighborhood.",
+      "permitNumbers": [
+        "B2606311BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "4,911 sq ft",
           "kind": "text"
         },
         {
@@ -652,28 +729,23 @@
           "kind": "text"
         },
         {
-          "label": "Parking stalls",
-          "value": "24",
-          "kind": "text"
-        },
-        {
           "label": "Estimated cost",
-          "value": "$6,100,000",
+          "value": "$600,000",
           "kind": "text"
         },
         {
           "label": "Developer",
-          "value": "Sample Residential LLC",
+          "value": "Rud Empire LLC",
           "kind": "text"
         },
         {
           "label": "Architect",
-          "value": "Sample Design Studio",
+          "value": "Mason",
           "kind": "text"
         },
         {
           "label": "Permit application",
-          "value": "https://my.spokanecity.org/",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00216&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
       ]
