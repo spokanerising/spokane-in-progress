@@ -51,15 +51,22 @@ const escapeHtml = (value) =>
 
 const numberWithCommas = (n) => n.toLocaleString("en-US");
 
+// Developer, architect, cost and the rest arrive inside fields[], not as
+// top-level keys, so search reads the field values instead of naming keys that
+// do not exist. Links are skipped so a query cannot match a bare URL.
+const searchText = (p) =>
+  [p.name, p.address, p.neighborhood, p.projectType]
+    .concat((p.fields || []).filter((f) => f.kind !== "link").map((f) => f.value))
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
 function visible() {
   const q = state.query.trim().toLowerCase();
   return state.projects.filter((p) => {
     if (state.hidden.has(p.status)) return false;
     if (!q) return true;
-    return [p.name, p.address, p.neighborhood, p.developer, p.architect, p.projectType]
-      .join(" ")
-      .toLowerCase()
-      .includes(q);
+    return searchText(p).includes(q);
   });
 }
 
@@ -244,7 +251,6 @@ function select(id, flyTo) {
   el.detail.hidden = false;
   el.detail.scrollTop = 0;
   document.body.dataset.detail = "open";
-  if (map) requestAnimationFrame(() => map.resize());
   document.getElementById("detail-close").focus();
 
   if (flyTo && map) {
@@ -255,7 +261,6 @@ function select(id, flyTo) {
 function closeDetail() {
   el.detail.hidden = true;
   document.body.dataset.detail = "closed";
-  if (map) requestAnimationFrame(() => map.resize());
   state.selected = null;
   el.cards.querySelectorAll(".card").forEach((c) => c.classList.remove("is-active"));
 }
@@ -342,18 +347,30 @@ async function start() {
         t.setAttribute("aria-selected", String(t === tab))
       );
       document.body.dataset.view = tab.dataset.view;
-      if (tab.dataset.view === "map" && map) map.resize();
     });
   });
   document.body.dataset.view = "map";
   document.body.dataset.detail = "closed";
 
-  // Keep the map sized to its box through window resizes and rotation.
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => map && map.resize(), 120);
-  });
+  // MapLibre measures its container once, when the map is constructed, and does
+  // not follow it afterwards. Every later change to the map box has to say so:
+  // the cards rendering below, the detail column opening on wide screens, the
+  // view switch on narrow ones, window resizes and rotation. One observer on the
+  // box covers all of them.
+  const mapBox = document.querySelector(".mapwrap");
+  if (mapBox && window.ResizeObserver) {
+    let pending;
+    new ResizeObserver(() => {
+      cancelAnimationFrame(pending);
+      pending = requestAnimationFrame(() => map && map.resize());
+    }).observe(mapBox);
+  } else {
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => map && map.resize(), 120);
+    });
+  }
 
   // Data and map are loaded separately, so a failure in one does not look like
   // a failure in the other.

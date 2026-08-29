@@ -128,7 +128,12 @@ a { color: #14666b; text-underline-offset: 3px; }
 
 /* ---------- layout ---------- */
 
+/* grid-row is explicit because .viewswitch is display:none above 860px. Without
+   it, .layout auto-places into the auto-sized second row and takes its height
+   from the panel's content rather than the space left under the header, which
+   makes the map as tall as the card list happens to be. */
 .layout {
+  grid-row: 3;
   min-width: 0;
   display: grid;
   grid-template-columns: var(--panel) minmax(0, 1fr);
