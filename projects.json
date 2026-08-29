@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-08-28T03:49:15.602779+00:00",
+  "builtAt": "2026-08-29T02:11:33.791709+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -27,6 +27,140 @@
     }
   ],
   "projects": [
+    {
+      "id": "B26M0088PDEV",
+      "name": "Northpointe Assisted Living",
+      "address": "9641 N Nevada St",
+      "neighborhood": "Country Homes",
+      "parcelId": "36174.1615",
+      "lat": 47.745556,
+      "lng": -117.397641,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-08-27",
+      "lastVerified": "2026-08-27",
+      "projectType": "Housing",
+      "units": null,
+      "stories": null,
+      "description": "Small assisted living facility estimated at $5 million valuation. Estimated to start construction in March 2027.",
+      "permitNumbers": [
+        "B26M0088PDEV"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "11,000 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$5,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Cedar Creek LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "HDG Architecture",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00088&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B26M0087PDEV",
+      "name": "Montgomery Duplexes",
+      "address": "3450 E Montgomery Ave",
+      "neighborhood": "Minnehaha",
+      "parcelId": "35103.0117",
+      "lat": 47.678477,
+      "lng": -117.359655,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-08-19",
+      "lastVerified": "2026-08-27",
+      "projectType": "Middle housing",
+      "units": 4,
+      "stories": 2,
+      "description": "Two duplexes, for four total units, which would be developed by the owner-occupant of an adjacent parcel.",
+      "permitNumbers": [
+        "B26M0087PDEV"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "5,400 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$486,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Michael Krupko",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00087&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
     {
       "id": "sample-office",
       "name": "Post Street Office Renovation",
