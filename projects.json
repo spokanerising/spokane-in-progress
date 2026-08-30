@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-08-29T12:05:46.154445+00:00",
+  "builtAt": "2026-08-30T01:27:50.359316+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -239,6 +239,78 @@
       ]
     },
     {
+      "id": "B26M0075PDEV",
+      "name": "College Avenue Townhomes",
+      "address": "1823 W College Ave",
+      "neighborhood": "West Central",
+      "parcelId": "25134.1608",
+      "lat": 47.66320391042897,
+      "lng": -117.43871689512073,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-07-09",
+      "lastVerified": "2026-08-29",
+      "projectType": "Middle housing",
+      "units": 4,
+      "stories": 3,
+      "description": "Four townhouses on one lot, with a separate four-car garage.",
+      "permitNumbers": [
+        "B26M0075PDEV"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "3,200 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "McQixy Investments LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00075&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
       "id": "B2610856BLDC",
       "name": "Cora Townhomes A",
       "address": "1207 W Cora Ave",
@@ -455,6 +527,135 @@
       ]
     },
     {
+      "id": "B26M0063PDEV",
+      "name": "Broadway 1 & 2",
+      "address": "1229 W Broadway Ave",
+      "neighborhood": "West Central",
+      "parcelId": "35183.1804",
+      "lat": 47.664089832717046,
+      "lng": -117.43089998261642,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-06-16",
+      "lastVerified": "2026-08-29",
+      "projectType": "Housing",
+      "units": 16,
+      "stories": null,
+      "description": "Two eightplexes, to be constructed one at a time.",
+      "permitNumbers": [
+        "B26M0063PDEV"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "16",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,300,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "McQixy Investments LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00063&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B26M0060PDEV",
+      "name": "Regal Infill",
+      "address": "3505 S Regal St",
+      "neighborhood": "Lincoln Heights",
+      "parcelId": "35342.2801",
+      "lat": 47.62243468792627,
+      "lng": -117.36830889110438,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-06-16",
+      "lastVerified": "2026-08-29",
+      "projectType": "Housing",
+      "units": 18,
+      "stories": 3,
+      "description": "Demolition of an existing single-family residence and construction of a new, 3- or 4-story apartment building in its place, with 18-24 units depending on the number of floors the developer ultimately chooses to construct.",
+      "permitNumbers": [
+        "B26M0060PDEV"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "18",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "12,468 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "6",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$3,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Trek Architecture",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00060&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
       "id": "B2607616BLDC",
       "name": "MHIG Sinto Multi-Family",
       "address": "506 W Sinto Ave",
@@ -522,86 +723,6 @@
         {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00248&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        }
-      ]
-    },
-    {
-      "id": "sample-riverside",
-      "name": "Riverside Avenue Apartments",
-      "address": "808 W Riverside Ave",
-      "neighborhood": "Downtown",
-      "parcelId": "35182.0001",
-      "lat": 47.6577,
-      "lng": -117.4265,
-      "status": "Under Construction",
-      "statusUpdated": "2026-05-18",
-      "lastVerified": "2026-08-20",
-      "projectType": "Mixed-use",
-      "units": 84,
-      "stories": 6,
-      "description": "Six-story mixed-use building with ground-floor retail and 84 apartments, replacing a surface parking lot on the north side of Riverside.",
-      "permitNumbers": [
-        "B2025-01234",
-        "B2025-01288"
-      ],
-      "drbFile": "DRB-2025-11",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "Project documents (PDF)",
-      "sourceUrls": [
-        "https://my.spokanecity.org/"
-      ],
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Under Construction",
-          "kind": "text"
-        },
-        {
-          "label": "Type",
-          "value": "Mixed-use",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "84",
-          "kind": "text"
-        },
-        {
-          "label": "Floor area",
-          "value": "96,000 sq ft",
-          "kind": "text"
-        },
-        {
-          "label": "Stories",
-          "value": "6",
-          "kind": "text"
-        },
-        {
-          "label": "Parking stalls",
-          "value": "42",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$24,500,000",
-          "kind": "text"
-        },
-        {
-          "label": "Developer",
-          "value": "Sample Development Co.",
-          "kind": "text"
-        },
-        {
-          "label": "Architect",
-          "value": "Sample Architects",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://my.spokanecity.org/",
           "kind": "link"
         }
       ]
