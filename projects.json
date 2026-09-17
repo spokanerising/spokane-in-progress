@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-09-16T12:12:39.733967+00:00",
+  "builtAt": "2026-09-17T12:12:00.070100+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -157,6 +157,83 @@
         {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00087&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B2610856BLDC",
+      "name": "Kendall Yards Podium",
+      "address": "1175 W Summit Pkwy",
+      "neighborhood": "Kendall Yards",
+      "parcelId": "35183.0801",
+      "lat": 47.66146845834986,
+      "lng": -117.42970488330755,
+      "status": "Applied",
+      "statusUpdated": "2026-07-16",
+      "lastVerified": "2026-08-28",
+      "projectType": "Housing",
+      "units": 200,
+      "stories": 8,
+      "description": "New six-story multifamily building with 200 housing units, ground-floor commercial space, undeground parking, and a rooftop amenity area.",
+      "permitNumbers": [
+        "B2610856BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "200",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "425,830 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "8",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "364",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$70,907,175",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "SRM Development/Greenstone Homes",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Urbal Architecture",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00319&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
       ]
