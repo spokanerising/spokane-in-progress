@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-10-06T17:54:18.931369+00:00",
+  "builtAt": "2026-10-07T18:24:51.718236+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -795,78 +795,6 @@
         {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00238&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        }
-      ]
-    },
-    {
-      "id": "B2606311BLDC",
-      "name": "37 E Everett Triplex",
-      "address": "37 E Everett Ave",
-      "neighborhood": "Northtown",
-      "parcelId": "36323.2130",
-      "lat": 47.70635573017199,
-      "lng": -117.40957550147503,
-      "status": "Applied",
-      "statusUpdated": "2026-04-30",
-      "lastVerified": "2026-08-28",
-      "projectType": "Middle housing",
-      "units": 3,
-      "stories": 2,
-      "description": "New triplex by an owner-builder in an R1 neighborhood.",
-      "permitNumbers": [
-        "B2606311BLDC"
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "Project documents (PDF)",
-      "sourceUrls": [],
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Applied",
-          "kind": "text"
-        },
-        {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "3",
-          "kind": "text"
-        },
-        {
-          "label": "Floor area",
-          "value": "4,911 sq ft",
-          "kind": "text"
-        },
-        {
-          "label": "Stories",
-          "value": "2",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$600,000",
-          "kind": "text"
-        },
-        {
-          "label": "Developer",
-          "value": "Rud Empire LLC",
-          "kind": "text"
-        },
-        {
-          "label": "Architect",
-          "value": "Mason",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00216&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
       ]
