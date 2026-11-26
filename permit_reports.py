@@ -96,7 +96,27 @@ def exists(url):
 def links_from_index():
     """The city's resources page links the latest few weekly reports."""
     html = fetch(INDEX_URL).decode("utf-8", "replace")
-    return sorted(set(REPORT_LINK.findall(html)))
+    links = sorted(set(REPORT_LINK.findall(html)))
+    if not links:
+        snippet = " ".join(html[:300].split())
+        print(f"  Index page returned {len(html)} characters and no report links. Starts: {snippet}")
+    return links
+
+
+def diagnose(url):
+    """Print exactly what the city's server sends back for one URL."""
+    for method in ("HEAD", "GET"):
+        request = urllib.request.Request(url, headers=HEADERS, method=method)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                body = response.read(400) if method == "GET" else b""
+                print(f"  {method} {response.status} {response.headers.get('Content-Type')} "
+                      f"{body[:120]!r}")
+        except urllib.error.HTTPError as error:
+            print(f"  {method} HTTP {error.code} {error.reason} "
+                  f"{error.read(200)!r} server={error.headers.get('Server')}")
+        except Exception as error:
+            print(f"  {method} failed: {error}")
 
 
 def links_by_probing(weeks):
@@ -409,6 +429,10 @@ def main():
         except Exception as error:
             sys.exit(f"Could not read the city's report index page: {error}")
         print(f"Index page lists {len(urls)} weekly report(s).")
+        if not urls:
+            known = REPORT_BASE.format(year=2026, day="2026-11-23")
+            print(f"Checking a report known to exist: {known}")
+            diagnose(known)
         if args.backfill_weeks:
             print(f"Looking back {args.backfill_weeks} weeks for older reports...")
             urls = sorted(set(urls) | set(links_by_probing(args.backfill_weeks)))
