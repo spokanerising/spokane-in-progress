@@ -45,5 +45,5 @@ jobs:
           git add projects.json data/
           git diff --staged --quiet && exit 0
           git commit -m "Refresh project data"
-          git pull --rebase origin main
+          git pull --rebase origin "$GITHUB_REF_NAME"
           git push

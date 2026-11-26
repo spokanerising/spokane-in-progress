@@ -262,9 +262,18 @@ def load_json(path, default):
 
 
 def save_json(path, data):
+    """One record per line, so a day's changes read as a short diff."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as handle:
-        json.dump(data, handle, indent=1, sort_keys=True)
+        if isinstance(data.get("records"), dict):
+            handle.write('{"fetchedAt": %s, "records": {\n' % json.dumps(data.get("fetchedAt", "")))
+            items = sorted(data["records"].items())
+            for i, (key, value) in enumerate(items):
+                handle.write("%s: %s%s\n" % (json.dumps(key), json.dumps(value, sort_keys=True),
+                                              "," if i < len(items) - 1 else ""))
+            handle.write("}}\n")
+        else:
+            json.dump(data, handle, indent=1, sort_keys=True)
 
 
 # ---------------------------------------------------------------------------
