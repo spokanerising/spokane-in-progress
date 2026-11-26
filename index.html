@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <link href="styles.css" rel="stylesheet">
 </head>
@@ -20,15 +20,15 @@
       <h1>Spokane <em>in Progress</em></h1>
       <p class="masthead__tag">Tracking Spokane's housing progress.</p>
     </div>
-    <div class="masthead__meta">
-      <span class="stamp" id="count-stamp">Loading</span>
-      <span class="stamp stamp--quiet" id="built-stamp"></span>
+
+    <!-- The spine: every tracked project, stacked by where it is in its life. -->
+    <div class="figure">
+      <p class="figure__title" id="count-stamp">Loading projects</p>
+      <div class="spine" id="spine" role="img" aria-label="Projects by stage"></div>
+      <ul class="spine__key" id="spine-key"></ul>
+      <p class="source" id="spine-source">Note: Construction status is estimated from permit activity. Source: City of Spokane permit records.</p>
     </div>
   </div>
-
-  <!-- The spine: every tracked project, stacked by where it is in its life. -->
-  <div class="spine" id="spine" role="img" aria-label="Projects by stage"></div>
-  <ul class="spine__key" id="spine-key"></ul>
 </header>
 
 <div class="viewswitch" role="tablist" aria-label="View">
@@ -66,6 +66,10 @@
       <button type="button" data-basemap="map" aria-pressed="true">Map</button>
       <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
     </div>
+
+    <!-- Size key: circle area is proportional to housing units. Redrawn on
+         zoom so the sample circles match what is on the map. -->
+    <div class="mapkey" id="mapkey" aria-label="Map key"></div>
   </section>
 
 <aside class="detail" id="detail" hidden aria-label="Project detail">
