@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-26T21:41:37.221349+00:00",
+  "builtAt": "2026-11-26T21:44:45.341799+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -103,80 +103,6 @@
       ]
     },
     {
-      "id": "city-b2616741bldr",
-      "name": "4279 W Pine Cliff Ct Multifamily",
-      "address": "4279 W Pine Cliff Ct & 4268 W Pine Cliff Ct",
-      "neighborhood": "North Indian Trail",
-      "parcelId": "26233.1206",
-      "lat": 47.73244840665401,
-      "lng": -117.47379139278438,
-      "status": "Approved",
-      "statusUpdated": "2026-11-17",
-      "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
-      "units": 2,
-      "unitsSource": "city weekly permit report",
-      "stories": null,
-      "description": "New 4 Bedroom New SFR - One family house detached with garage, finished basement, unfinished basement, uncovered deck, covered deck, covered entry area, and air conditioning. / New 5 Bedroom New SFR - One family house detached with garage, finished basement, unfinished basement, uncovered deck, covered deck, covered entry area, and air conditioning.",
-      "permitNumbers": [
-        "B2616741BLDR",
-        "B2616743BLDR"
-      ],
-      "permits": [
-        {
-          "id": "B2616741BLDR",
-          "type": "Residential Building Permit",
-          "status": "Issued",
-          "opened": "2026-10-19",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01173&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2616743BLDR",
-          "type": "Residential Building Permit",
-          "status": "Issued",
-          "opened": "2026-10-19",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01174&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
-      ],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Approved",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "2",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$1,950,000",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01173&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records and weekly permit report",
-          "kind": "text"
-        }
-      ]
-    },
-    {
       "id": "city-b2616976bldr",
       "name": "4332 W Indian Trail Rd Duplex",
       "address": "4332 W Indian Trail Rd",
@@ -245,7 +171,7 @@
     {
       "id": "city-b2604501bldc",
       "name": "Bethany Apartments",
-      "address": "3203 E 27th Ave. & 3215 E 27th Ave",
+      "address": "3203 E 27th Ave & 3215 E 27th Ave",
       "neighborhood": "Lincoln Heights",
       "parcelId": "35273.0618",
       "lat": 47.63045279006967,
@@ -393,7 +319,7 @@
     },
     {
       "id": "city-b2617887bldr",
-      "name": "5204 S Falcon Point Ct Townhomes",
+      "name": "5204 S Falcon Point Ct House + ADU",
       "address": "5204 S Falcon Point Ct",
       "neighborhood": "Latah-Hangman",
       "parcelId": "34062.2405",
@@ -1383,67 +1309,6 @@
       ]
     },
     {
-      "id": "city-b2610907bldc",
-      "name": "Legacy CO Khinda 4-unit Apartments",
-      "address": "3133 N Stuart St",
-      "neighborhood": "Nevada Heights",
-      "parcelId": "35053.3614",
-      "lat": 47.6871556214665,
-      "lng": -117.41034966708409,
-      "status": "Approved",
-      "statusUpdated": "2026-07-27",
-      "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
-      "units": 3,
-      "unitsSource": "city weekly permit report",
-      "stories": null,
-      "description": "Legacy CO /Change of use from SFR to 4 Unit Apartment Building to include Life/fire safety and property maintenance corrections as redlined on plans.",
-      "permitNumbers": [
-        "B2610907BLDC"
-      ],
-      "permits": [
-        {
-          "id": "B2610907BLDC",
-          "type": "Commercial Change of Use",
-          "status": "Issued",
-          "opened": "2026-07-16",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00320&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
-      ],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Approved",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "3",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00320&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records and weekly permit report",
-          "kind": "text"
-        }
-      ]
-    },
-    {
       "id": "B2610856BLDC",
       "name": "Kendall Yards Podium",
       "address": "1175 W Summit Pkwy",
@@ -2232,89 +2097,6 @@
       ]
     },
     {
-      "id": "city-b2602789bldr",
-      "name": "5818 S Bernard St Multifamily",
-      "address": "5818 S Bernard St & 5812 S Bernard St and 1 more",
-      "neighborhood": "Latah-Hangman",
-      "parcelId": "34064.0047",
-      "lat": 47.60127266595439,
-      "lng": -117.41500928685332,
-      "status": "Under Construction",
-      "statusUpdated": "2026-05-29",
-      "stageSource": "city permit records: 2 of 3 buildings finaled",
-      "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
-      "units": 3,
-      "unitsSource": "city weekly permit report",
-      "stories": null,
-      "description": "New 4 Bedroom New SFR - One family house detached with garage, uncovered deck, covered entry area, and air conditioning. / New 4 Bedroom New SFR - One family house detached with garage, covered entry area, and air conditioning.",
-      "permitNumbers": [
-        "B2602789BLDR",
-        "B2602816BLDR",
-        "B2607989BLDR"
-      ],
-      "permits": [
-        {
-          "id": "B2602789BLDR",
-          "type": "Residential Building Permit",
-          "status": "CO Final",
-          "opened": "2026-02-25",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00186&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2602816BLDR",
-          "type": "Residential Building Permit",
-          "status": "CO Final",
-          "opened": "2026-02-26",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00188&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2607989BLDR",
-          "type": "Residential Building Permit",
-          "status": "Issued",
-          "opened": "2026-05-29",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00591&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-04-13.pdf",
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
-      ],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Under Construction",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "3",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$1,058,701",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00186&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records and weekly permit report",
-          "kind": "text"
-        }
-      ]
-    },
-    {
       "id": "city-b26m0061pdev",
       "name": "Old Fort Dr Duplex Split",
       "address": "5406 W Old Fort Dr",
@@ -2506,105 +2288,6 @@
         {
           "label": "Source",
           "value": "City of Spokane permit records",
-          "kind": "text"
-        }
-      ]
-    },
-    {
-      "id": "city-b2604872bldc",
-      "name": "New Sales Office & SFR Showroom to replace B2604309BLDR",
-      "address": "1770 W Albany Ave & 1790 W Albany Ave and 3 more",
-      "neighborhood": "Latah-Hangman",
-      "parcelId": "25364.0001",
-      "lat": 47.62091975839857,
-      "lng": -117.43888665442894,
-      "status": "Under Construction",
-      "statusUpdated": "2026-05-19",
-      "stageSource": "city permit records: 4 of 5 buildings finaled",
-      "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
-      "units": 5,
-      "unitsSource": "city weekly permit report",
-      "stories": null,
-      "description": "New construction of a B occupancy office and showroom built a new SFR. The showroom is allowed to be constructed to provisions of the IRC as a single family residence showroom with the design that it will later be converted to a single-family residence. Garage only to be converted into office - 380 sq ft / New construction of a B occupancy office and showroom built a new SFR. The showroom is allowed to be constructed to provisions of the IRC as a single family residence showroom with the design that it will later be converted to a single-family residence. Garage only to be converted into office - 461 sq ft / New 3 Bedroom New SFR - One family house detached with garage, uncovered deck, covered deck, covered entry area, and air conditioning. / New 4 Bedroom New SFR - One family house detached with garage, uncovered deck, covered entry area, and air conditioning. / New 3 Bedroom New SFR - One family house detached with garage, covered deck, covered entry area, and air conditioning.",
-      "permitNumbers": [
-        "B2604872BLDC",
-        "B2604874BLDC",
-        "B2605018BLDR",
-        "B2606802BLDR",
-        "B2607420BLDR"
-      ],
-      "permits": [
-        {
-          "id": "B2604872BLDC",
-          "type": "Commercial Building New",
-          "status": "CO Final",
-          "opened": "2026-04-07",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00184&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2604874BLDC",
-          "type": "Commercial Building New",
-          "status": "CO Final",
-          "opened": "2026-04-07",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00185&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2605018BLDR",
-          "type": "Residential Building Permit",
-          "status": "CO Final",
-          "opened": "2026-04-08",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00367&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2606802BLDR",
-          "type": "Residential Building Permit",
-          "status": "Issued",
-          "opened": "2026-05-08",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00497&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2607420BLDR",
-          "type": "Residential Building Permit",
-          "status": "CO Final",
-          "opened": "2026-05-19",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00547&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-06-07.pdf",
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
-      ],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Under Construction",
-          "kind": "text"
-        },
-        {
-          "label": "Housing units",
-          "value": "5",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$1,758,092",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00184&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
       ]
@@ -2875,6 +2558,121 @@
       ]
     },
     {
+      "id": "B2606311BLDC",
+      "name": "37 E Everett Triplex",
+      "address": "37 E Everett Ave",
+      "neighborhood": "Northtown",
+      "parcelId": "36323.2130",
+      "lat": 47.70634583738461,
+      "lng": -117.40965627188935,
+      "status": "Under Construction",
+      "statusUpdated": "2026-04-30",
+      "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
+      "lastVerified": "2026-08-28",
+      "projectType": "Middle housing",
+      "units": 3,
+      "unitsSource": "sheet",
+      "stories": 2,
+      "description": "New triplex by an owner-builder in an R1 neighborhood.",
+      "permitNumbers": [
+        "B2610050BLDR",
+        "B2610052BLDR",
+        "B2610060BLDR",
+        "PROJ-26-0035",
+        "B2606311BLDC"
+      ],
+      "permits": [
+        {
+          "id": "B2610050BLDR",
+          "type": "Residential Building Permit",
+          "status": "Issued",
+          "opened": "2026-07-02",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00740&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2610052BLDR",
+          "type": "Residential Building Permit",
+          "status": "Issued",
+          "opened": "2026-07-02",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00742&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2610060BLDR",
+          "type": "Residential Building Permit",
+          "status": "Issued",
+          "opened": "2026-07-02",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=00746&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "PROJ-26-0035",
+          "type": "Project Review",
+          "status": "Closed",
+          "opened": "2026-07-06",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26CAP&capID2=00000&capID3=00GJF&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2606311BLDC",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Under Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Middle housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "4,911 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$600,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Rud Empire LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Mason",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00216&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
       "id": "city-b2500228bldc",
       "name": "Buth Townhouses",
       "address": "4315 E Longfellow Ave & 3819 E Rich Ave",
@@ -2962,7 +2760,7 @@
     },
     {
       "id": "city-b2605678bldr",
-      "name": "Duplex",
+      "name": "Duplex in Logan",
       "address": "",
       "neighborhood": "Logan",
       "parcelId": "35082.4701",
@@ -3465,8 +3263,8 @@
     },
     {
       "id": "city-b2602760bldr",
-      "name": "Duplex",
-      "address": "",
+      "name": "380 E 8th Ave Duplex",
+      "address": "380 E 8th Ave",
       "neighborhood": "East Central",
       "parcelId": "35203.1406",
       "lat": 47.64817920255618,
@@ -3524,8 +3322,8 @@
     },
     {
       "id": "city-b2602761bldr",
-      "name": "Duplex",
-      "address": "",
+      "name": "2226 W York Ave Duplex",
+      "address": "2226 W York Ave",
       "neighborhood": "Emerson-Garfield",
       "parcelId": "25122.3214",
       "lat": 47.6819685046292,
@@ -3718,7 +3516,7 @@
     {
       "id": "city-b25m0091pdev",
       "name": "Moody Apartments",
-      "address": "",
+      "address": "5484 S Freya St",
       "neighborhood": "Southgate",
       "parcelId": "34032.0402",
       "lat": 47.60465840821294,
@@ -3985,7 +3783,7 @@
     },
     {
       "id": "city-b2600511bldc",
-      "name": "Great Northern Flats Apartments New to Replace B2310948BLDC",
+      "name": "Great Northern Flats Apartments",
       "address": "4747 N Haven St",
       "neighborhood": "Hillyard",
       "parcelId": "36343.2918",
@@ -5522,7 +5320,7 @@
     {
       "id": "city-b2415962bldc",
       "name": "Clarke Avenue Apartments",
-      "address": "",
+      "address": "2675 W Clarke Ave",
       "neighborhood": "Peaceful Valley",
       "parcelId": "25136.2075",
       "lat": 47.6574467471489,
@@ -5725,7 +5523,7 @@
     {
       "id": "city-b2505565bldc",
       "name": "Oxbow Properties 4 Unit Apartment Building",
-      "address": "4-Plex With 3 Units On Main Level And 1 Unit On 2",
+      "address": "",
       "neighborhood": "Nevada Heights",
       "parcelId": "35053.0722",
       "lat": 47.69246375059703,
@@ -5843,7 +5641,7 @@
     {
       "id": "city-b2502198bldc",
       "name": "Riverpoint Multifamily",
-      "address": "",
+      "address": "643 N Riverpoint Blvd",
       "neighborhood": "Logan",
       "parcelId": "35173.3003",
       "lat": 47.662875467409165,
@@ -6109,7 +5907,7 @@
     {
       "id": "city-b2406546bldc",
       "name": "Vistas Townhomes",
-      "address": "4408 N Dapple St. ** Lot 1",
+      "address": "4408 N Dapple St",
       "neighborhood": "Hillyard",
       "parcelId": "35022.0101",
       "lat": 47.69721104336213,
@@ -6412,7 +6210,7 @@
     {
       "id": "city-b2404761bldc",
       "name": "Redband MF",
-      "address": "Z24-393Fsp",
+      "address": "1620 N River Ridge Blvd",
       "neighborhood": "West Hills",
       "parcelId": "25116.0077",
       "lat": 47.672805578957096,
