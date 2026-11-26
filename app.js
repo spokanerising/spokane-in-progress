@@ -553,6 +553,32 @@ function renderField(field) {
   return `<dt>${escapeHtml(field.label)}</dt><dd>${body}</dd>`;
 }
 
+// Google Maps, Street View and the county's parcel record. Maps searches the
+// first street address when there is one (a pin with a place card), and falls
+// back to the map point. Street View always opens at the map point.
+function placeLinks(p) {
+  const hasPoint = Number.isFinite(p.lat) && Number.isFinite(p.lng);
+  const firstAddress = (p.address || "").split(/\s*&\s*|\s+and\s+/)[0].trim();
+  const links = [];
+  if (firstAddress || hasPoint) {
+    const query = firstAddress ? `${firstAddress}, Spokane, WA` : `${p.lat},${p.lng}`;
+    links.push(["Google Maps", `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`]);
+  }
+  if (hasPoint) {
+    links.push(["Street View", `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${p.lat},${p.lng}`]);
+  }
+  if (/^\d{5}\.\d{4}$/.test(p.parcelId || "")) {
+    links.push([
+      "County parcel record",
+      `https://cp.spokanecounty.org/scout/propertyinformation/Summary.aspx?PID=${encodeURIComponent(p.parcelId)}`,
+    ]);
+  }
+  if (!links.length) return "";
+  return `<p class="placelinks">${links
+    .map(([label, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(label)}<span aria-hidden="true"> ↗</span></a>`)
+    .join("")}</p>`;
+}
+
 function select(id, flyTo) {
   const project = state.projects.find((p) => p.id === id);
   if (!project) return;
@@ -569,6 +595,7 @@ function select(id, flyTo) {
   el.detailBody.innerHTML = `
     <h2>${escapeHtml(project.name)}</h2>
     <p class="detail__where">${escapeHtml(where(project))}</p>
+    ${placeLinks(project)}
 
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
@@ -622,7 +649,7 @@ function select(id, flyTo) {
              ${firstFiled(project) ? `<dt>First filed</dt><dd>${escapeHtml(apDate(firstFiled(project)))}</dd>` : ""}
              ${councilOf(project) ? `<dt>Neighborhood council</dt><dd>${escapeHtml(councilOf(project))}</dd>` : ""}
              ${project.councilDistrict ? `<dt>Council district</dt><dd>District ${escapeHtml(project.councilDistrict)}</dd>` : ""}
-             ${project.parcelId ? `<dt>Parcel</dt><dd>${escapeHtml(project.parcelId)}</dd>` : ""}
+             ${project.parcelId ? `<dt>Parcel</dt><dd>${/^\d{5}\.\d{4}$/.test(project.parcelId) ? `<a href="https://cp.spokanecounty.org/scout/propertyinformation/Summary.aspx?PID=${encodeURIComponent(project.parcelId)}" target="_blank" rel="noopener">${escapeHtml(project.parcelId)}</a>` : escapeHtml(project.parcelId)}</dd>` : ""}
              ${project.lastVerified ? `<dt>Verified</dt><dd>${escapeHtml(apDate(project.lastVerified))}</dd>` : ""}
            </dl>`
         : ""

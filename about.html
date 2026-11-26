@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stats &amp; About — Spokane in Progress</title>
+<meta name="description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district and neighborhood, with sources, definitions and the limits of the data.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+</head>
+<body class="page">
+
+<header class="masthead masthead--page">
+  <div class="masthead__page">
+    <a class="masthead__home" href="./">
+      <span class="masthead__title">Spokane <em>in Progress</em></span>
+    </a>
+    <nav class="pagenav" aria-label="Site">
+      <a href="./">Map</a>
+      <a href="about.html" aria-current="page">Stats &amp; About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article">
+  <p class="kicker">Stats &amp; About</p>
+  <h1 class="article__hed">What’s being built in Spokane, and how this map knows</h1>
+  <p class="article__dek" id="dek">Loading the latest numbers…</p>
+  <p class="byline" id="asof"></p>
+
+  <div class="stats" id="stats" aria-live="polite"></div>
+
+  <section class="section" aria-labelledby="h-charts">
+    <h2 id="h-charts" class="section__hed">The pipeline, by the numbers</h2>
+    <p>Every bar below counts homes in projects this map tracks, colored by how far along each project is. Darker means further along.</p>
+    <ul class="legend" id="legend"></ul>
+
+    <figure class="chart" id="chart-type"></figure>
+    <figure class="chart" id="chart-district"></figure>
+    <figure class="chart" id="chart-hood"></figure>
+    <figure class="chart" id="chart-quarter"></figure>
+    <figure class="chart" id="chart-size"></figure>
+  </section>
+
+  <section class="section" aria-labelledby="h-how">
+    <h2 id="h-how" class="section__hed">How this map works</h2>
+    <p><strong>Spokane in Progress</strong> tracks housing projects of two or more homes inside the City of Spokane, from the first pre-development meeting with the city through completion. It is an independent project, not affiliated with or endorsed by the City of Spokane.</p>
+    <p>Every morning a script reads the city’s public permit records and adds new housing projects, moves existing ones forward when their permits change, and refreshes this page. A hand-kept list adds projects and details the permit records miss, such as developer names and renderings. Because most projects are added automatically, expect the occasional mistake; the limits are spelled out below.</p>
+
+    <h3 class="subhed">Stages</h3>
+    <dl class="deflist">
+      <dt><i style="--c:var(--s0)"></i>Pre-application</dt>
+      <dd>The developer has held a pre-development conference with the city, but no building permit has been filed. A proposal, not a commitment: many change or never go ahead.</dd>
+      <dt><i style="--c:var(--s1)"></i>Applied</dt>
+      <dd>A building permit application is on file and in plan review.</dd>
+      <dt><i style="--c:var(--s2)"></i>Approved</dt>
+      <dd>The city has approved or issued the building permit.</dd>
+      <dt><i style="--c:var(--s3)"></i>Under construction</dt>
+      <dd>The building permit is issued and trade permits (electrical, plumbing, mechanical) have been issued or finaled since. This is an inference: the city’s public records don’t include inspections.</dd>
+      <dt><i style="--c:var(--s4)"></i>Complete</dt>
+      <dd>Every building permit in the project has been finaled.</dd>
+      <dt><i style="--c:var(--s5)"></i>Stalled</dt>
+      <dd>Marked by hand when a project has clearly stopped.</dd>
+    </dl>
+
+    <h3 class="subhed">Building types and middle housing</h3>
+    <p>Each project gets a building type from its permit descriptions, its name and the number of homes per building: a duplex, triplex or fourplex, fiveplex or sixplex, townhomes, cottage housing, apartments, a house with an accessory dwelling unit (ADU), a conversion or addition to an existing building, or senior and group living.</p>
+    <p><strong>Middle housing</strong> follows Washington’s legal definition: buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes, including duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units aren’t on that list, so a house with an ADU is not counted as middle housing here. Townhouses count at any project size.</p>
+
+    <h3 class="subhed">Neighborhoods and districts</h3>
+    <p>Each project is placed in one of the city’s 29 neighborhood councils and three City Council districts by looking up its map point in the city’s boundary maps. Some projects show a more familiar name in the list, like Kendall Yards or South Perry; the filters always use the official council.</p>
+
+    <h3 class="subhed">Sources</h3>
+    <ul class="sources">
+      <li>City of Spokane permit records, from the city’s public permit map (<a href="https://notifymespokane.org" target="_blank" rel="noopener">permit activity map</a>), read daily: building permits, pre-development conferences and every other permit on the same parcels.</li>
+      <li>City of Spokane weekly permit reports, for exact unit counts when a building permit is issued.</li>
+      <li>The city’s monthly permit report to the City Council, for unit counts on large projects in plan review and early proposals.</li>
+      <li>City of Spokane boundary maps, for neighborhood councils and council districts.</li>
+      <li>Spokane County Assessor (<a href="https://cp.spokanecounty.org/scout/propertyinformation/" target="_blank" rel="noopener">SCOUT</a>), linked from each project for parcel records.</li>
+      <li>Base map: OpenFreeMap and OpenStreetMap contributors. Satellite imagery: Esri, Maxar, Earthstar Geographics.</li>
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="h-limits">
+    <h2 id="h-limits" class="section__hed">What this map can’t tell you</h2>
+    <ul class="limits" id="limits">
+      <li><strong>It’s not every project.</strong> Projects in plan review sometimes appear in the city’s monthly report before its public permit map, and projects named without housing words (“Gardens,” “Haven,” “Tower”) can be missed until a building permit is issued.</li>
+      <li><strong>“Under construction” is an estimate.</strong> The city’s public records don’t include inspections, so the map infers construction from trade permits issued after the building permit. A project can sit at “Approved” after work has started, or the reverse.</li>
+      <li id="limit-units"><strong>Some projects have no unit count yet.</strong> Unit counts come from the city’s weekly permit report when a permit is issued, from permit descriptions, or from the monthly report’s tables of large projects. Projects without a count are drawn as hollow rings and add nothing to the totals, which is why the headline says “at least.”</li>
+      <li><strong>Large-project unit counts can be out of date.</strong> The monthly report’s project tables are updated less often than the report itself; the copy used here was last updated May 31, 2026.</li>
+      <li id="limit-dates"><strong>Dates only go back about three years.</strong> The city’s public permit map keeps roughly three years of records, so no project here shows a filing before December 2023. The date a project reached its current stage is when this site first saw it there; dates from before November 2026 are estimates.</li>
+      <li><strong>Building types are inferred.</strong> They come from permit wording and unit counts, so a few will be wrong.</li>
+      <li><strong>Finished housing is undercounted.</strong> Projects that were already complete when the map first found them are generally left off, so “Complete” is not a count of homes built.</li>
+      <li><strong>Pre-application isn’t a promise.</strong> A pre-development conference is a meeting about an idea. Homes at that stage are reported separately as “proposed.”</li>
+    </ul>
+
+    <h3 class="subhed">Why these numbers differ from the city’s</h3>
+    <p>The city counts permits; this map counts projects. A single apartment complex can have several building permits, one per building, and the city’s reports count each. This map groups permits on the same parcel, under the same project name, or on the same street by the same builder into one project, and counts every home in it once. The city’s reports also count by the month a permit was issued, while this map shows where every active project stands today.</p>
+  </section>
+
+  <section class="section" aria-labelledby="h-data">
+    <h2 id="h-data" class="section__hed">Use the data</h2>
+    <p>Download every project on the map as a spreadsheet, with stage, building type, units, neighborhood council, council district, first filing date and permit numbers.</p>
+    <p><button type="button" class="button" id="download">Download projects (CSV)</button></p>
+  </section>
+</main>
+
+<footer class="colophon colophon--page">
+  <p><strong>Spokane in Progress</strong> is an independent project. It is not affiliated with, endorsed by, or speaking for the City of Spokane.</p>
+</footer>
+
+<script src="about.js"></script>
+</body>
+</html>
