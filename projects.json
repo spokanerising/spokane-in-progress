@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-25T21:01:43.081127+00:00",
+  "builtAt": "2026-11-26T20:43:41.700524+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -40,6 +40,7 @@
       "lastVerified": "2026-08-27",
       "projectType": "Housing",
       "units": null,
+      "unitsSource": "",
       "stories": null,
       "description": "Small assisted living facility estimated at $5 million valuation. Estimated to start construction in March 2027.",
       "permitNumbers": [
@@ -102,6 +103,7 @@
       "lastVerified": "2026-08-27",
       "projectType": "Middle housing",
       "units": 4,
+      "unitsSource": "sheet",
       "stories": 2,
       "description": "Two duplexes, for four total units, which would be developed by the owner-occupant of an adjacent parcel.",
       "permitNumbers": [
@@ -174,6 +176,7 @@
       "lastVerified": "2026-08-28",
       "projectType": "Housing",
       "units": 200,
+      "unitsSource": "sheet",
       "stories": 8,
       "description": "New six-story multifamily building with 200 housing units, ground-floor commercial space, undeground parking, and a rooftop amenity area.",
       "permitNumbers": [
@@ -251,6 +254,7 @@
       "lastVerified": "2026-08-29",
       "projectType": "Middle housing",
       "units": 4,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "Four townhouses on one lot, with a separate four-car garage.",
       "permitNumbers": [
@@ -323,6 +327,7 @@
       "lastVerified": "2026-08-28",
       "projectType": "Middle housing",
       "units": 4,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "One fourplex of a set of three fourplexes on adjacent lots.",
       "permitNumbers": [
@@ -395,6 +400,7 @@
       "lastVerified": "2026-08-28",
       "projectType": "Middle housing",
       "units": 4,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "One fourplex of a set of three fourplexes on adjacent lots.",
       "permitNumbers": [
@@ -467,6 +473,7 @@
       "lastVerified": "2026-08-28",
       "projectType": "Middle housing",
       "units": 4,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "One fourplex of a set of three fourplexes on adjacent lots.",
       "permitNumbers": [
@@ -539,6 +546,7 @@
       "lastVerified": "2026-08-29",
       "projectType": "Housing",
       "units": 16,
+      "unitsSource": "sheet",
       "stories": null,
       "description": "Two eightplexes, to be constructed one at a time.",
       "permitNumbers": [
@@ -596,6 +604,7 @@
       "lastVerified": "2026-08-29",
       "projectType": "Housing",
       "units": 18,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "Demolition of an existing single-family residence and construction of a new, 3- or 4-story apartment building in its place, with 18-24 units depending on the number of floors the developer ultimately chooses to construct.",
       "permitNumbers": [
@@ -668,6 +677,7 @@
       "lastVerified": "2026-08-28",
       "projectType": "Middle housing",
       "units": 9,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "Three-story, nine-unit apartment building with parking.",
       "permitNumbers": [
@@ -740,6 +750,7 @@
       "lastVerified": "2026-08-28",
       "projectType": "Housing",
       "units": 29,
+      "unitsSource": "sheet",
       "stories": 3,
       "description": "New 29-unit, three-story apartment building.",
       "permitNumbers": [
