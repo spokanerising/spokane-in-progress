@@ -11,6 +11,7 @@ import csv
 import io
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -278,6 +279,207 @@ def write_not_on_site(city, sheet_permits):
     return len(missing)
 
 
+# ---------------------------------------------------------------------------
+# Projects published straight from the city's permit reports.
+#
+# Every issued permit with 2+ new units that no sheet row mentions goes on the
+# site automatically. Permits are grouped into one project when they share a
+# parcel or a project name ("Bethany Apartments - Bldg. A" and "- Bldg. B").
+#
+# To take one over: add a sheet row listing its permit number(s). Your row
+#   replaces the automatic one on the next build.
+# To hide one: add a sheet row with its permit number and published = FALSE.
+# ---------------------------------------------------------------------------
+
+AUTO_MIN_UNITS = 2
+CITY_REPORT_URL = (
+    "https://static.spokanecity.org/documents/business/statistics/"
+    "daily-activity-report/{year}/{name}"
+)
+GENERIC_NAME = re.compile(
+    r"^(new\s+)?(duplex|townhouse|townhome|sfr|triplex|fourplex|multi-?family)\b", re.I
+)
+
+
+def us_to_iso(us_date):
+    try:
+        return datetime.strptime(us_date, "%m/%d/%Y").date().isoformat()
+    except (TypeError, ValueError):
+        return ""
+
+
+def tidy_name(brief):
+    text = re.sub(r"^\s*OT-FIRE-\d+\s*-?\s*", "", brief or "")   # wildfire rebuild tag
+    text = re.sub(r"\*\*.*$", "", text)                          # "** Will get new address"
+    text = re.sub(r"\s*-\s*(Owner Builder|Apartment building.*)$", "", text, flags=re.I)
+    return text.strip(" -")
+
+
+def group_name(brief):
+    """'Bethany Apartments - Bldg. A' and '... - Bldg. B' share 'bethany apartments'."""
+    text = tidy_name(brief)
+    text = re.sub(r"\s*[-,]?\s*(Bldg\.?|Building)\s*\S+$", "", text, flags=re.I)
+    return text.lower().strip()
+
+
+def tidy_description(text):
+    """Keep the plain description; drop the '** All trade permits...' boilerplate."""
+    text = re.sub(r"^\s*OT-FIRE-\d+\s*-?\s*", "", text or "")
+    text = text.split("*")[0]
+    text = re.split(r"\bAddressing\b", text, flags=re.I)[0]
+    return text.strip(" -")
+
+
+def nice_case(text):
+    """'3215 E 27TH' -> '3215 E 27th', matching how the sheet writes addresses."""
+    text = (text or "").title()
+    text = re.sub(r"(\d)(St|Nd|Rd|Th)\b", lambda m: m.group(1) + m.group(2).lower(), text)
+    return re.sub(r"\b(Ne|Nw|Se|Sw)\b", lambda m: m.group(1).upper(), text)
+
+
+def stage_for(status):
+    status = (status or "").lower()
+    if status.startswith("final") or "co final" in status or status == "closed":
+        return "Complete"
+    return "Approved"
+
+
+def city_report_url(report_file):
+    name = os.path.basename(report_file or "")
+    match = re.search(r"(\d{4})-\d{2}-\d{2}\.pdf$", name)
+    if not match:
+        return ""
+    return CITY_REPORT_URL.format(year=match.group(1), name=name)
+
+
+def auto_projects(city, sheet_permits, geocache):
+    """Returns (projects, warnings, cache_changed)."""
+    warnings = []
+    changed = False
+    candidates = [
+        row for permit, row in city.items()
+        if (to_int(row.get("units")) or 0) >= AUTO_MIN_UNITS and permit not in sheet_permits
+    ]
+
+    # Group by shared parcel or shared specific name.
+    groups = []
+    for row in sorted(candidates, key=lambda r: r["permit"]):
+        name_key = group_name(row.get("brief_description"))
+        specific = name_key and not GENERIC_NAME.match(name_key)
+        home = None
+        for group in groups:
+            if (row.get("parcel") and row["parcel"] in group["parcels"]) or (
+                specific and name_key in group["names"]
+            ):
+                home = group
+                break
+        if home is None:
+            home = {"rows": [], "parcels": set(), "names": set()}
+            groups.append(home)
+        home["rows"].append(row)
+        if row.get("parcel"):
+            home["parcels"].add(row["parcel"])
+        if specific:
+            home["names"].add(name_key)
+
+    projects = []
+    for group in groups:
+        rows = sorted(group["rows"], key=lambda r: r["permit"])
+        first = rows[0]
+        units = sum(to_int(r.get("units")) or 0 for r in rows)
+        cost = sum(to_int(r.get("valuation")) or 0 for r in rows) or None
+        addresses = []
+        for r in rows:
+            nice = nice_case(r.get("address"))
+            if nice and nice not in addresses:
+                addresses.append(nice)
+        address = " & ".join(addresses[:2]) + (f" and {len(addresses) - 2} more" if len(addresses) > 2 else "")
+
+        name = tidy_name(first.get("brief_description"))
+        if not name or GENERIC_NAME.match(name):
+            kind = "Duplex" if units == 2 else ("Townhomes" if "town" in name.lower() else "Multifamily")
+            name = f"{addresses[0] if addresses else first['permit']} {kind}"
+        else:
+            name = re.sub(r"\s*[-,]?\s*(Bldg\.?|Building)\s*\S+$", "", name, flags=re.I).strip()
+
+        descriptions = []
+        for r in rows:
+            text = tidy_description(r.get("detailed_description"))
+            if text and text not in descriptions:
+                descriptions.append(text)
+        description = " / ".join(descriptions)
+        stories = [int(n) for n in re.findall(r"(\d+)[- ]stor(?:y|ies)", description, re.I)]
+
+        # Place it on the map from the parcel, same as sheet rows.
+        lat = lng = None
+        for pin in [r.get("parcel") for r in rows if r.get("parcel")]:
+            if pin in geocache:
+                lat, lng = geocache[pin]["lat"], geocache[pin]["lng"]
+                break
+            try:
+                found = lookup_parcel(pin)
+            except Exception as error:
+                warnings.append(f"Auto: {name}: county parcel service unreachable ({error}). Will retry.")
+                break
+            if found:
+                lat, lng, matched = found
+                geocache[pin] = {"lat": lat, "lng": lng, "address": matched}
+                changed = True
+                break
+        if lat is None:
+            warnings.append(
+                f"Auto: {name} ({', '.join(r['permit'] for r in rows)}) has no parcel the county "
+                f"recognises, so it's not on the map. Add a sheet row with lat/lng to place it."
+            )
+            continue
+
+        stage = stage_for(first.get("status"))
+        issued = max((us_to_iso(r.get("issue_date")) for r in rows), default="")
+        verified = max((us_to_iso(r.get("report_to")) for r in rows), default="")
+        sources = []
+        for r in rows:
+            url = city_report_url(r.get("report_url"))
+            if url and url not in sources:
+                sources.append(url)
+
+        fields = [
+            f for f in [
+                field("Stage", stage),
+                field("Housing units", f"{units:,}"),
+                field("Stories", str(max(stories)) if stories else ""),
+                field("Estimated cost", f"${cost:,}" if cost else ""),
+                field("Source", "City of Spokane weekly permit report"),
+            ] if f
+        ]
+        projects.append({
+            "id": "permit-" + first["permit"].lower(),
+            "name": name,
+            "address": address,
+            "neighborhood": "",
+            "parcelId": first.get("parcel", ""),
+            "lat": lat,
+            "lng": lng,
+            "status": stage,
+            "statusUpdated": issued,
+            "lastVerified": verified,
+            "projectType": "Housing" if units >= 10 else "Middle housing",
+            "units": units,
+            "unitsSource": "city permit report",
+            "stories": max(stories) if stories else None,
+            "description": description,
+            "permitNumbers": [r["permit"] for r in rows],
+            "drbFile": "",
+            "imageUrl": "",
+            "imageCredit": "",
+            "docUrl": "",
+            "docLabel": "",
+            "sourceUrls": sources,
+            "autoAdded": True,
+            "fields": fields,
+        })
+    return projects, warnings, changed
+
+
 def load_rows():
     if SHEET_CSV_URL:
         print("Reading the Google Sheet...")
@@ -512,12 +714,18 @@ def main():
         save_geocache(geocache)
 
     if city:
-        count = write_not_on_site(city, set(permit_owners))
-        if count:
-            warnings.append(
-                f"{count} issued permit(s) with 2+ units aren't on the site yet. "
-                f"See {NOT_ON_SITE_PATH}."
-            )
+        write_not_on_site(city, set(permit_owners))
+        auto, auto_warnings, auto_cache = auto_projects(city, set(permit_owners), geocache)
+        warnings.extend(auto_warnings)
+        if auto_cache:
+            save_geocache(geocache)
+        taken = {p["id"] for p in projects}
+        auto = [p for p in auto if p["id"] not in taken]
+        projects.extend(auto)
+        if auto:
+            print(f"Added {len(auto)} project(s) straight from the city's permit reports:")
+            for p in auto:
+                print(f"  + {p['name']} ({p['units']} units, {', '.join(p['permitNumbers'])})")
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
