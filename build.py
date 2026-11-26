@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 import city_records as cr
 import display_tidy
 import housing_types
+import boundaries
 
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
@@ -1129,6 +1130,8 @@ def main():
     display_tidy.polish(projects)
     # Building type and the middle-housing flag (see housing_types.py).
     housing_types.classify_all(projects)
+    # Official neighborhood council and council district (see boundaries.py).
+    warnings.extend(boundaries.assign(projects))
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 

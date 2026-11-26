@@ -58,12 +58,71 @@ function matchesSize(p, size) {
   return bucket ? bucket.test(p.units) : true;
 }
 
+// ---- timeline -----------------------------------------------------------
+
+const DAY = 24 * 60 * 60 * 1000;
+const isoToTime = (iso) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
+  return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : null;
+};
+
+// The earliest city record for the project (a pre-development meeting counts).
+function firstFiled(p) {
+  const dates = (p.permits || []).map((x) => x.opened).filter(Boolean).sort();
+  return dates.length ? dates[0] : "";
+}
+
+// Ages are measured from the day the data was built, not today, so the
+// filter means the same thing however long a page sits open.
+function ageInDays(iso) {
+  const t = isoToTime(iso);
+  if (t === null) return null;
+  const ref = state.builtAt ? state.builtAt.getTime() : Date.now();
+  return Math.floor((ref - t) / DAY);
+}
+
+const TIMES = [
+  { key: "filed:30", group: "First filed with the city", label: "Filed in the past 30 days", test: (p) => within(firstFiled(p), 30) },
+  { key: "filed:90", group: "First filed with the city", label: "Filed in the past 3 months", test: (p) => within(firstFiled(p), 91) },
+  { key: "filed:365", group: "First filed with the city", label: "Filed in the past 12 months", test: (p) => within(firstFiled(p), 365) },
+  { key: "filed:old", group: "First filed with the city", label: "Filed more than a year ago", test: (p) => { const a = ageInDays(firstFiled(p)); return a !== null && a > 365; } },
+  { key: "filed:none", group: "First filed with the city", label: "Filing date not known", test: (p) => !firstFiled(p) },
+  { key: "stage:30", group: "Reached its current stage", label: "New stage in the past 30 days", test: (p) => within(p.statusUpdated, 30) },
+  { key: "stage:90", group: "Reached its current stage", label: "New stage in the past 3 months", test: (p) => within(p.statusUpdated, 91) },
+  { key: "stage:365", group: "Reached its current stage", label: "New stage in the past 12 months", test: (p) => within(p.statusUpdated, 365) },
+];
+
+function within(iso, days) {
+  const a = ageInDays(iso);
+  return a !== null && a >= 0 && a <= days;
+}
+
+const matchesTime = (p) => {
+  if (state.time === "all") return true;
+  const t = TIMES.find((x) => x.key === state.time);
+  return t ? t.test(p) : true;
+};
+
+// ---- place --------------------------------------------------------------
+
+const councilOf = (p) => p.neighborhoodCouncil ?? "";
+
+const matchesPlace = (p) => {
+  const [kind, value] = state.place.split(/:(.*)/s);
+  if (kind === "all") return true;
+  if (kind === "district") return String(p.councilDistrict ?? "") === value;
+  if (kind === "hood") return councilOf(p) === value;
+  return true;
+};
+
 const state = {
   projects: [],
   hidden: new Set(),
   query: "",
   types: new Set([...MIDDLE_TYPES, ...OTHER_TYPES, UNKNOWN_TYPE]),
   size: "all",
+  time: "all",
+  place: "all",
   selected: null,
   builtAt: null,
   measure: "homes", // what the stage bar is sized by: "homes" or "projects"
@@ -172,6 +231,8 @@ function visible() {
     if (state.hidden.has(p.status)) return false;
     if (!matchesType(p)) return false;
     if (!matchesSize(p, state.size)) return false;
+    if (!matchesTime(p)) return false;
+    if (!matchesPlace(p)) return false;
     if (!q) return true;
     return searchText(p).includes(q);
   });
@@ -272,6 +333,35 @@ function drawSelects() {
   sizeSelect.innerHTML =
     opt("all", "All sizes") + SIZES.map((s) => opt(s.key, s.label, count((p) => s.test(p.units)))).join("");
   sizeSelect.value = state.size;
+
+  const timeSelect = document.getElementById("time-filter");
+  const groups = [...new Set(TIMES.map((t) => t.group))];
+  timeSelect.innerHTML =
+    opt("all", "Any time") +
+    groups
+      .map(
+        (g) =>
+          `<optgroup label="${escapeHtml(g)}">${TIMES.filter((t) => t.group === g)
+            .map((t) => opt(t.key, t.label, count(t.test)))
+            .join("")}</optgroup>`
+      )
+      .join("");
+  timeSelect.value = state.time;
+
+  const placeSelect = document.getElementById("place-filter");
+  const districts = [...new Set(all.map((p) => p.councilDistrict).filter((d) => d != null))].sort();
+  const hoods = [...new Set(all.map(councilOf).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const outside = count((p) => !councilOf(p));
+  placeSelect.innerHTML =
+    opt("all", "All of Spokane") +
+    `<optgroup label="City Council district">${districts
+      .map((d) => opt(`district:${d}`, `District ${d}`, count((p) => p.councilDistrict === d)))
+      .join("")}</optgroup>` +
+    `<optgroup label="Neighborhood council">${hoods
+      .map((h) => opt(`hood:${h}`, h, count((p) => councilOf(p) === h)))
+      .join("")}</optgroup>` +
+    (outside ? opt("hood:", "No neighborhood council", outside) : "");
+  placeSelect.value = state.place;
 }
 
 // ---- building type checklist ----------------------------------------------
@@ -374,12 +464,15 @@ function wireTypePicker() {
 }
 
 const filtersActive = () =>
-  state.hidden.size > 0 || !allTypesOn() || state.size !== "all" || state.query.trim() !== "";
+  state.hidden.size > 0 || !allTypesOn() || state.size !== "all" || state.time !== "all" ||
+  state.place !== "all" || state.query.trim() !== "";
 
 function clearFilters() {
   state.hidden.clear();
   state.types = new Set(ALL_TYPES);
   state.size = "all";
+  state.time = "all";
+  state.place = "all";
   state.query = "";
   el.search.value = "";
   el.chips.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "true"));
@@ -507,7 +600,7 @@ function select(id, flyTo) {
     </dl>
 
     ${
-      project.drbFile || project.permitNumbers.length || project.parcelId || project.lastVerified
+      project.drbFile || project.permitNumbers.length || project.parcelId || project.lastVerified || councilOf(project)
         ? `<dl class="specs specs--quiet">
              ${project.drbFile ? `<dt>Design review</dt><dd>${escapeHtml(project.drbFile)}</dd>` : ""}
              ${
@@ -526,6 +619,9 @@ function select(id, flyTo) {
                  ? `<dt>Permit numbers</dt><dd>${escapeHtml(project.permitNumbers.join(", "))}</dd>`
                  : ""
              }
+             ${firstFiled(project) ? `<dt>First filed</dt><dd>${escapeHtml(apDate(firstFiled(project)))}</dd>` : ""}
+             ${councilOf(project) ? `<dt>Neighborhood council</dt><dd>${escapeHtml(councilOf(project))}</dd>` : ""}
+             ${project.councilDistrict ? `<dt>Council district</dt><dd>District ${escapeHtml(project.councilDistrict)}</dd>` : ""}
              ${project.parcelId ? `<dt>Parcel</dt><dd>${escapeHtml(project.parcelId)}</dd>` : ""}
              ${project.lastVerified ? `<dt>Verified</dt><dd>${escapeHtml(apDate(project.lastVerified))}</dd>` : ""}
            </dl>`
@@ -555,6 +651,37 @@ function select(id, flyTo) {
   if (flyTo && map) {
     map.flyTo({ center: [project.lng, project.lat], zoom: Math.max(map.getZoom(), 15), speed: 0.9 });
   }
+}
+
+// ---- collapsible project list (wide screens) -------------------------------
+
+function setPanel(open, remember = true) {
+  document.body.dataset.panel = open ? "open" : "closed";
+  const button = document.getElementById("panel-toggle");
+  const label = open ? "Hide project list" : "Show project list";
+  button.setAttribute("aria-expanded", String(open));
+  button.setAttribute("aria-label", label);
+  button.title = label;
+  if (remember) {
+    try {
+      localStorage.setItem("panel", open ? "open" : "closed");
+    } catch (error) {
+      /* the choice just does not persist */
+    }
+  }
+}
+
+function wirePanelToggle() {
+  let saved = "open";
+  try {
+    saved = localStorage.getItem("panel") || "open";
+  } catch (error) {
+    /* private browsing */
+  }
+  setPanel(saved !== "closed", false);
+  document.getElementById("panel-toggle").addEventListener("click", () =>
+    setPanel(document.body.dataset.panel === "closed")
+  );
 }
 
 function closeDetail() {
@@ -733,7 +860,16 @@ async function start() {
     state.size = e.target.value;
     render();
   });
+  document.getElementById("time-filter").addEventListener("change", (e) => {
+    state.time = e.target.value;
+    render();
+  });
+  document.getElementById("place-filter").addEventListener("change", (e) => {
+    state.place = e.target.value;
+    render();
+  });
   document.getElementById("clear-filters").addEventListener("click", clearFilters);
+  wirePanelToggle();
 
   document.querySelectorAll("#measure button").forEach((button) => {
     button.addEventListener("click", () => {

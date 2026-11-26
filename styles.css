@@ -235,6 +235,42 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .mapwrap { min-height: 0; position: relative; }
+
+/* Collapsed list: the map takes the panel's column. */
+@media (min-width: 861px) {
+  body[data-panel="closed"] .layout { grid-template-columns: 0 minmax(0, 1fr); }
+  body[data-panel="closed"] .panel { visibility: hidden; padding: 0; border: none; overflow: hidden; }
+}
+
+@media (min-width: 1180px) {
+  body[data-panel="closed"][data-detail="open"] .layout {
+    grid-template-columns: 0 minmax(0, 1fr) var(--detail);
+  }
+}
+
+/* The tab on the map's left edge that hides and shows the list. */
+.paneltoggle {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 56px;
+  padding: 0;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 4px 0 12px -8px rgba(18, 18, 18, 0.5);
+}
+
+.paneltoggle:hover { background: #fff; }
+body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 #map { position: absolute; inset: 0; background: var(--paper); }
 
 /* Base map switcher: map vs satellite, over the top-left of the canvas.
@@ -378,7 +414,7 @@ a:hover { text-decoration-thickness: 2px; }
   margin-top: 14px;
 }
 
-.select { display: grid; gap: 4px; min-width: 0; }
+.select { display: grid; gap: 4px; min-width: 0; align-content: start; }
 
 .select__label {
   font-size: 11px;
@@ -486,6 +522,8 @@ a:hover { text-decoration-thickness: 2px; }
 .explain summary { cursor: pointer; color: var(--link); width: fit-content; }
 .explain summary:hover { text-decoration: underline; text-underline-offset: 3px; }
 .explain p { margin: 8px 0 0; line-height: 1.5; max-width: 60ch; }
+.explain + .explain { margin-top: 4px; }
+.explain b { font-weight: 600; color: var(--ink); }
 
 .tallyrow {
   display: flex;
@@ -766,6 +804,7 @@ a:hover { text-decoration-thickness: 2px; }
 
   .layout { grid-template-columns: minmax(0, 1fr); }
   .panel { border-right: none; }
+  .paneltoggle { display: none; }
 
   body[data-view="list"] .mapwrap { display: none; }
   body[data-view="map"] .panel { display: none; }

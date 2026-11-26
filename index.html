@@ -66,6 +66,14 @@
           <span class="select__label">Project size</span>
           <select id="size-filter"></select>
         </label>
+        <label class="select">
+          <span class="select__label">Timeline</span>
+          <select id="time-filter"></select>
+        </label>
+        <label class="select">
+          <span class="select__label">Where</span>
+          <select id="place-filter"></select>
+        </label>
       </div>
 
       <details class="explain">
@@ -73,6 +81,13 @@
         <p>Washington law defines middle housing as buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes: duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units are not on that list, so a house with an ADU is counted separately.</p>
         <p>Tick "Middle housing" to see all five of its types at once, or pick individual types in any combination.</p>
         <p>Building types here are worked out from permit descriptions, project names and units per building, so a few may be wrong. Project size counts every home in the project, across all its buildings.</p>
+      </details>
+
+      <details class="explain">
+        <summary>How the timeline and places work</summary>
+        <p><b>First filed</b> is the date of the earliest city record for the project, including a pre-development meeting. The city's public permit map keeps about three years of records, so nothing here shows a filing before December 2023. A few projects known only from the city's monthly report have no filing date.</p>
+        <p><b>Reached its current stage</b> is when this site first saw the project at that stage. Dates from before November 2026 are estimates.</p>
+        <p><b>Neighborhoods</b> are the city's 29 neighborhood councils and three City Council districts, worked out from each project's map point. Where the list shows a more familiar name, like Kendall Yards, the filter still uses the official council.</p>
       </details>
     </div>
 
@@ -92,6 +107,11 @@
 
   <section class="mapwrap" aria-label="Map of projects">
     <div id="map"></div>
+
+    <!-- Hides the project list so the map can use the full width (wide screens only). -->
+    <button type="button" class="paneltoggle" id="panel-toggle" aria-controls="panel" aria-expanded="true" aria-label="Hide project list" title="Hide project list">
+      <svg width="10" height="14" viewBox="0 0 10 14" aria-hidden="true"><path d="M8 1 2 7l6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    </button>
 
     <!-- Base map switcher. Sits over the canvas rather than in the header so it
          stays with the map when the narrow layout tabs the panel away. -->
