@@ -7,8 +7,11 @@ The city's GIS permit layer has no unit count. These weekly PDFs do, in a
 column headed "# House" -- 1 for a house, 2 for a duplex, 12 for a 12-unit
 apartment building, 0 for roofs, remodels and trade permits.
 
+The city's file server blocks scripted downloads, so the PDFs are saved by
+hand into the permit-reports/ folder (see permit-reports/README.md). Each
+one is read once; uploading the same file again does nothing.
+
 Run it with:   python3 permit_reports.py
-Backfill with: python3 permit_reports.py --backfill-weeks 104
 
 Needs one extra library:   pip install pdfplumber
 
@@ -21,6 +24,7 @@ Writes:
 
 import argparse
 import csv
+import hashlib
 import io
 import json
 import os
@@ -47,6 +51,7 @@ REPORT_LINK = re.compile(
     re.IGNORECASE,
 )
 
+INBOX = "permit-reports"
 OUT_CSV = os.path.join("data", "permit-units.csv")
 STATE_DIR = os.path.join("data", "permit-reports")
 PROCESSED = os.path.join(STATE_DIR, "processed.json")
@@ -407,23 +412,49 @@ def load_processed():
         return {}
 
 
+def report_date(us_date):
+    try:
+        return datetime.strptime(us_date, "%m/%d/%Y").date()
+    except (TypeError, ValueError):
+        return date.min
+
+
+def inbox_files():
+    """PDFs dropped into the permit-reports folder, oldest name first."""
+    if not os.path.isdir(INBOX):
+        return []
+    return sorted(
+        os.path.join(INBOX, name) for name in os.listdir(INBOX)
+        if name.lower().endswith(".pdf")
+    )
+
+
+def fingerprint(pdf_bytes):
+    return hashlib.sha256(pdf_bytes).hexdigest()[:16]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    parser.add_argument("--fetch", action="store_true",
+                        help="download from the city's website instead of reading the "
+                             "permit-reports folder (blocked for scripts as of Nov 2026)")
     parser.add_argument("--backfill-weeks", type=int, default=0,
-                        help="also look for older reports this many weeks back")
+                        help="with --fetch, also look for older reports this many weeks back")
     parser.add_argument("--reprocess", action="store_true",
                         help="read every report again, even ones already done")
     parser.add_argument("--file", action="append", default=[],
-                        help="parse a local PDF instead of downloading (testing)")
+                        help="parse one local PDF (testing)")
     args = parser.parse_args()
 
     processed = {} if args.reprocess else load_processed()
     rows = load_existing()
     problems = []
 
+    # Each source is (label, loader). Loaders return the PDF's bytes.
+    sources = []
     if args.file:
-        sources = [(path, None) for path in args.file]
-    else:
+        sources = [(path, lambda p=path: open(p, "rb").read()) for path in args.file]
+    elif args.fetch:
         try:
             urls = links_from_index()
         except Exception as error:
@@ -436,60 +467,81 @@ def main():
         if args.backfill_weeks:
             print(f"Looking back {args.backfill_weeks} weeks for older reports...")
             urls = sorted(set(urls) | set(links_by_probing(args.backfill_weeks)))
-            print(f"Found {len(urls)} report(s) in total.")
-        sources = [(None, url) for url in urls if url not in processed]
-        if not sources:
-            print("No new reports. Nothing to do.")
-            return
+        sources = [(url, lambda u=url: fetch(u)) for url in urls if url not in processed]
+    else:
+        files = inbox_files()
+        print(f"{len(files)} PDF(s) in {INBOX}/.")
+        for path in files:
+            sources.append((path, lambda p=path: open(p, "rb").read()))
 
     newest_sample = None
-    for path, url in sorted(sources, key=lambda s: s[1] or s[0]):
-        name = url or path
+    newest_to = date.min
+    read_count = 0
+    for label, load in sources:
         try:
-            if path:
-                with open(path, "rb") as handle:
-                    pdf_bytes = handle.read()
-            else:
-                pdf_bytes = fetch(url)
+            pdf_bytes = load()
+        except Exception as error:
+            problems.append(f"{label}: could not open it ({error}).")
+            continue
+        key = label if args.fetch else f"{os.path.basename(label)}:{fingerprint(pdf_bytes)}"
+        if key in processed and not args.file:
+            continue
+        try:
             records, info = parse_report(pdf_bytes)
         except Exception as error:
-            problems.append(f"{name}: could not read it ({error}). Will retry next run.")
+            problems.append(
+                f"{label}: could not read it as a permit report ({error}). "
+                f"Is it the weekly Daily Activity Report PDF?"
+            )
             continue
+        read_count += 1
 
+        this_to = report_date(info["to"])
         kept = [r for r in records if keep(r)]
         units_total = sum(to_int(r["units"]) or 0 for r in records)
         no_units = sum(1 for r in records if r["units"] == "")
         for record in kept:
-            record.update(
-                report_from=info["from"], report_to=info["to"], report_url=url or path
-            )
+            record.update(report_from=info["from"], report_to=info["to"], report_url=label)
+            existing = rows.get(record["permit"])
+            # A newer report wins, so uploading an old one later can't roll a
+            # permit's status backwards.
+            if existing and report_date(existing.get("report_to")) > this_to:
+                continue
             rows[record["permit"]] = record
 
-        line = (
-            f"{info['from'] or '?'} to {info['to'] or '?'}: {info['pages']} pages, "
-            f"{len(records)} permits, {units_total} units, kept {len(kept)}"
+        print(
+            f"{os.path.basename(label)}: {info['from'] or '?'} to {info['to'] or '?'}, "
+            f"{info['pages']} pages, {len(records)} permits, {units_total} units, kept {len(kept)}"
         )
-        print(line)
         if not records:
-            problems.append(f"{name}: no permits found. The report layout may have changed.")
+            problems.append(
+                f"{label}: no permits found. Either it isn't the weekly Daily Activity "
+                f"Report, or the city changed the layout."
+            )
         if no_units:
-            problems.append(f"{name}: {no_units} permit(s) had no readable unit count.")
+            problems.append(f"{label}: {no_units} permit(s) had no readable unit count.")
         summary = info["summary_new_units"]
         if summary is not None and summary != units_total:
-            # Not necessarily wrong: the city's total may count new buildings
-            # only. Logged so a layout change can't slip by silently.
             problems.append(
-                f"{name}: the report's own total says {summary} new units; "
+                f"{label}: the report's own total says {summary} new units; "
                 f"the permits add up to {units_total}."
             )
 
-        if url:
-            processed[url] = {
+        if not args.file:
+            processed[key] = {
                 "from": info["from"], "to": info["to"], "permits": len(records),
                 "units": units_total, "summary_new_units": summary,
                 "read_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             }
-        newest_sample = info["sample"]
+        if this_to >= newest_to:
+            newest_to = this_to
+            newest_sample = info["sample"]
+
+    if not read_count:
+        print("No new reports to read.")
+        for problem in problems:
+            print(f"  - {problem}")
+        return
 
     save(rows)
     os.makedirs(STATE_DIR, exist_ok=True)
@@ -501,7 +553,8 @@ def main():
             json.dump(newest_sample, handle, indent=0)
 
     housing = sum(1 for r in rows.values() if (to_int(r.get("units")) or 0) >= 2)
-    print(f"\nSaved {len(rows)} permits to {OUT_CSV} ({housing} with 2+ units).")
+    print(f"\nRead {read_count} report(s). {OUT_CSV} now has {len(rows)} permits "
+          f"({housing} with 2+ units).")
     if problems:
         print(f"\n{len(problems)} thing(s) to look at:")
         for problem in problems:
