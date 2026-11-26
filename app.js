@@ -238,7 +238,22 @@ function select(id, flyTo) {
       project.drbFile || project.permitNumbers.length || project.parcelId || project.lastVerified
         ? `<dl class="specs specs--quiet">
              ${project.drbFile ? `<dt>Design review</dt><dd>${escapeHtml(project.drbFile)}</dd>` : ""}
-             ${project.permitNumbers.length ? `<dt>Permit numbers</dt><dd>${escapeHtml(project.permitNumbers.join(", "))}</dd>` : ""}
+             ${
+               project.permits && project.permits.length
+                 ? `<dt>Permits</dt><dd><ul class="permits">${project.permits
+                     .map(
+                       (p) =>
+                         `<li>${
+                           p.url
+                             ? `<a href="${escapeHtml(p.url)}" target="_blank" rel="noopener">${escapeHtml(p.id)}</a>`
+                             : escapeHtml(p.id)
+                         }${p.type ? ` · ${escapeHtml(p.type)}` : ""}${p.status ? ` · <span class="permits__status">${escapeHtml(p.status)}</span>` : ""}</li>`
+                     )
+                     .join("")}</ul></dd>`
+                 : project.permitNumbers.length
+                 ? `<dt>Permit numbers</dt><dd>${escapeHtml(project.permitNumbers.join(", "))}</dd>`
+                 : ""
+             }
              ${project.parcelId ? `<dt>Parcel</dt><dd>${escapeHtml(project.parcelId)}</dd>` : ""}
              ${project.lastVerified ? `<dt>Verified</dt><dd>${escapeHtml(project.lastVerified)}</dd>` : ""}
            </dl>`
