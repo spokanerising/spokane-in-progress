@@ -96,11 +96,18 @@ def kind_of(record):
     return "other"
 
 
+LEGALIZE = re.compile(r"legacy co|legaliz|retro", re.I)
+
+
 def is_housing(record, weekly_units=None):
-    """A building or pre-development record that is about homes."""
+    """A building or pre-development record that is about new homes."""
     notes = record["notes"]
-    if weekly_units is not None:
-        return weekly_units >= 1
+    if LEGALIZE.search(notes):
+        return False                 # papering over units that already exist
+    if weekly_units is not None and weekly_units >= 2:
+        return True                  # the city's own unit count says so
+    if weekly_units is not None and weekly_units <= 0:
+        return False
     if NOT_HOUSING.search(notes):
         return False
     if record["type"] == "Residential Building Permit":
@@ -290,7 +297,10 @@ def nice_case(text):
 
 
 def clean_address(text):
-    if not text or re.search(r"new address|changing|parcel created|as the result|^\d{2}-\d{2}-\d{2}", text, re.I):
+    """The street address, or "" when the field holds a note instead."""
+    text = re.split(r"\s*(?:\*\*|new address|changing|address added|parcel created|as the result"
+                    r"|\blot \d|;|\()", text or "", flags=re.I)[0].strip(" .,")
+    if not re.match(r"^\d+[A-Z]?\s+[A-Za-z]", text):
         return ""
     return nice_case(text)
 
@@ -302,7 +312,9 @@ GENERIC = re.compile(
 
 def name_stem(notes):
     text = re.sub(r"^\s*OT-FIRE-\d+\s*-?\s*", "", notes or "")
+    text = re.sub(r"^\s*\*\*\s*to finish[^*]*\*\*\s*", "", text, flags=re.I)
     text = re.sub(r"\*\*.*$", "", text)
+    text = re.sub(r"\s+(new\s+)?to (replace|finish)\b.*$", "", text, flags=re.I)
     text = re.sub(r"\s*[-,]?\s*(Bldg\.?|Building|Phase)\s*[\w&]+.*$", "", text, flags=re.I)
     text = re.sub(r"\s*-\s*(Owner ?/?Builder|Contractor|New \d+ Unit.*)$", "", text, flags=re.I)
     return text.strip(" -")
@@ -310,7 +322,9 @@ def name_stem(notes):
 
 def builder_of(notes):
     match = re.search(r"-\s*([A-Z][A-Z0-9 &./]{3,})$", notes or "")
-    return match.group(1).strip() if match else ""
+    if not match or re.match(r"OWNER|CONTRACTOR|BUILDING|BLDG", match.group(1).strip()):
+        return ""
+    return match.group(1).strip()
 
 
 def street_of(address):
@@ -446,10 +460,14 @@ def name_for(records, units, address):
             if stem and not GENERIC.match(stem) and len(stem) > 3:
                 return nice_case(stem)
     kinds = " ".join(r["notes"].lower() for r in records)
-    kind = ("Duplex" if units == 2 and "duplex" in kinds else
+    kind = ("House + ADU" if "adu" in kinds else
+            "Duplex" if units == 2 and "duplex" in kinds else
             "Duplexes" if "duplex" in kinds else
             "Townhomes" if re.search(r"town|attached|zero lot", kinds) else "Multifamily")
-    return f"{address} {kind}".strip() if address else kind
+    if address:
+        return f"{address} {kind}"
+    hood = neighborhood_of(records)
+    return f"{kind} in {hood}" if hood else kind
 
 
 def today_iso():

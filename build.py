@@ -439,7 +439,7 @@ def annotate(records, weekly):
         units = None
         if row and str(row.get("units", "")).lstrip("-").isdigit():
             units = int(row["units"])
-            if r["kind"] == "other" and units >= 1:
+            if r["kind"] == "other" and units >= 2:
                 r["kind"] = "building"   # e.g. a residential permit worded unusually
         r["housing"] = r["kind"] in ("building", "predev") and cr.is_housing(r, units)
 
@@ -580,6 +580,14 @@ def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
             a = cr.clean_address(r["address"]) or cr.clean_address(weekly.get(r["id"], {}).get("address", ""))
             if a and a not in addresses:
                 addresses.append(a)
+        if not addresses:
+            # The permit's own address field held a note; trade permits on
+            # the same parcel usually carry the real one.
+            for r in sorted(siblings, key=lambda r: r["opened"]):
+                a = cr.clean_address(r["address"])
+                if a:
+                    addresses.append(a)
+                    break
         address = " & ".join(addresses[:2]) + (f" and {len(addresses) - 2} more" if len(addresses) > 2 else "")
         name = cr.name_for(own, units, addresses[0] if addresses else "")
 
@@ -765,6 +773,11 @@ def main():
                     # New lots and boundary adjustments can be missing from the
                     # county layer; the city's permit map still places the permit.
                     hit, cache_hit = locate_by_permits(permits, geocache)
+                    if not hit:
+                        on_parcel = [r for r in by_parcel.get(pin, []) if r["lat"] and r["lng"]]
+                        if on_parcel:
+                            hit = (on_parcel[0]["lat"], on_parcel[0]["lng"], on_parcel[0]["address"],
+                                   on_parcel[0]["id"])
                     cache_dirty = cache_dirty or cache_hit
                     if not hit:
                         warnings.append(
