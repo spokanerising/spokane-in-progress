@@ -223,6 +223,59 @@ def lookup_parcel(pin):
     return lat, lng, (features[0].get("attributes") or {}).get("site_address", "")
 
 
+PERMIT_SERVICE = (
+    "https://services.spokanegis.org/arcgis/rest/services"
+    "/Permit/Permit_WM_Dynamic2/MapServer/0/query"
+)
+
+
+def lookup_permit_point(permit):
+    """Fallback when the county doesn't know a parcel (new lots, boundary
+    adjustments): the city's own permit map places every permit at a point.
+    Returns (lat, lng, address) or None."""
+    query = urllib.parse.urlencode(
+        {
+            "where": "SpokanePermitID='%s'" % permit.replace("'", "''"),
+            "outFields": "SpokanePermitID,FullAddress",
+            "returnGeometry": "true",
+            "outSR": "4326",
+            "f": "json",
+        }
+    )
+    request = urllib.request.Request(
+        PERMIT_SERVICE + "?" + query,
+        headers={"User-Agent": "spokane-in-progress (projects.spokanerising.com)"},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    if payload.get("error"):
+        raise RuntimeError(payload["error"].get("message", "permit service error"))
+    for feature in payload.get("features") or []:
+        point = feature.get("geometry") or {}
+        if "x" in point and "y" in point and point["x"] and point["y"]:
+            return point["y"], point["x"], (feature.get("attributes") or {}).get("FullAddress") or ""
+    return None
+
+
+def locate_by_permits(permits, geocache):
+    """Try each permit number on the city's permit map. Returns
+    ((lat, lng, address, permit) or None, cache_changed)."""
+    for permit in permits:
+        key = "permit:" + permit.upper()
+        if key in geocache:
+            hit = geocache[key]
+            return (hit["lat"], hit["lng"], hit["address"], permit), False
+        try:
+            found = lookup_permit_point(permit.upper())
+        except Exception:
+            continue
+        if found:
+            lat, lng, address = found
+            geocache[key] = {"lat": lat, "lng": lng, "address": address}
+            return (lat, lng, address, permit), True
+    return None, False
+
+
 def house_number(text):
     """Leading street number, for sanity-checking a parcel against an address."""
     first = str(text or "").strip().split(" ")[0]
@@ -427,9 +480,15 @@ def auto_projects(city, sheet_permits, geocache):
                 changed = True
                 break
         if lat is None:
+            hit, cache_hit = locate_by_permits([r["permit"] for r in rows], geocache)
+            changed = changed or cache_hit
+            if hit:
+                lat, lng = hit[0], hit[1]
+        if lat is None:
             warnings.append(
-                f"Auto: {name} ({', '.join(r['permit'] for r in rows)}) has no parcel the county "
-                f"recognises, so it's not on the map. Add a sheet row with lat/lng to place it."
+                f"Auto: {name} ({', '.join(r['permit'] for r in rows)}) couldn't be placed: "
+                f"neither the county parcel map nor the city's permit map has it. "
+                f"Add a sheet row with lat/lng to place it."
             )
             continue
 
@@ -554,12 +613,23 @@ def main():
 
         if lat is None:
             pin = row.get("parcel_id", "")
-            if not pin:
+            permits = semicolon_list(row.get("permit_numbers"))
+            if not pin and not permits:
                 warnings.append(
-                    f"{label}: no lat/lng, and no parcel_id to look them up with. Skipped."
+                    f"{label}: no lat/lng, and no parcel_id or permit number to look them up with. Skipped."
                 )
                 continue
-            if pin in geocache:
+            if not pin:
+                hit, cache_hit = locate_by_permits(permits, geocache)
+                cache_dirty = cache_dirty or cache_hit
+                if not hit:
+                    warnings.append(
+                        f"{label}: no parcel_id, and the city's permit map doesn't have "
+                        f"{', '.join(permits)}. Fill lat/lng in by hand. Skipped."
+                    )
+                    continue
+                lat, lng = hit[0], hit[1]
+            elif pin in geocache:
                 lat = geocache[pin]["lat"]
                 lng = geocache[pin]["lng"]
             else:
@@ -572,11 +642,22 @@ def main():
                     )
                     continue
                 if not found:
+                    # New lots and boundary adjustments can be missing from the
+                    # county layer; the city's permit map still places the permit.
+                    hit, cache_hit = locate_by_permits(permits, geocache)
+                    cache_dirty = cache_dirty or cache_hit
+                    if not hit:
+                        warnings.append(
+                            f'{label}: parcel "{pin}" is not in the county parcel layer, and the '
+                            f"city's permit map doesn't have its permit numbers either. "
+                            f"Check the number, or fill lat/lng in by hand. Skipped."
+                        )
+                        continue
+                    found = (hit[0], hit[1], hit[2])
                     warnings.append(
-                        f'{label}: parcel "{pin}" is not in the county parcel layer. '
-                        f"Check the number, or fill lat/lng in by hand. Skipped."
+                        f'{label}: parcel "{pin}" isn\'t in the county parcel layer (often a new or '
+                        f"adjusted lot), so it was placed from permit {hit[3]} on the city's permit map."
                     )
-                    continue
                 lat, lng, matched = found
                 geocache[pin] = {"lat": lat, "lng": lng, "address": matched}
                 cache_dirty = True
