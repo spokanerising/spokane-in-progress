@@ -46,11 +46,11 @@ const SIZES = [
 
 const typeOf = (p) => p.buildingType || UNKNOWN_TYPE;
 
-function matchesType(p, type) {
-  if (type === "all") return true;
-  if (type === "middle") return !!p.middleHousing;
-  return typeOf(p) === type;
-}
+const ALL_TYPES = [...MIDDLE_TYPES, ...OTHER_TYPES, UNKNOWN_TYPE];
+
+// state.types holds every building type currently switched on.
+const allTypesOn = () => ALL_TYPES.every((t) => state.types.has(t));
+const matchesType = (p) => allTypesOn() || state.types.has(typeOf(p));
 
 function matchesSize(p, size) {
   if (size === "all") return true;
@@ -62,7 +62,7 @@ const state = {
   projects: [],
   hidden: new Set(),
   query: "",
-  type: "all",
+  types: new Set([...MIDDLE_TYPES, ...OTHER_TYPES, UNKNOWN_TYPE]),
   size: "all",
   selected: null,
   builtAt: null,
@@ -170,7 +170,7 @@ function visible() {
   const q = state.query.trim().toLowerCase();
   return state.projects.filter((p) => {
     if (state.hidden.has(p.status)) return false;
-    if (!matchesType(p, state.type)) return false;
+    if (!matchesType(p)) return false;
     if (!matchesSize(p, state.size)) return false;
     if (!q) return true;
     return searchText(p).includes(q);
@@ -266,14 +266,7 @@ function drawSelects() {
   const opt = (value, label, n) =>
     `<option value="${escapeHtml(value)}">${escapeHtml(label)}${n === undefined ? "" : ` (${n})`}</option>`;
 
-  const typeSelect = document.getElementById("type-filter");
-  typeSelect.innerHTML =
-    opt("all", "All building types") +
-    opt("middle", "All middle housing", count((p) => p.middleHousing)) +
-    `<optgroup label="Middle housing">${MIDDLE_TYPES.map((t) => opt(t, t, count((p) => typeOf(p) === t))).join("")}</optgroup>` +
-    `<optgroup label="Other housing">${OTHER_TYPES.map((t) => opt(t, t, count((p) => typeOf(p) === t))).join("")}</optgroup>` +
-    opt(UNKNOWN_TYPE, "Type not yet known", count((p) => typeOf(p) === UNKNOWN_TYPE));
-  typeSelect.value = state.type;
+  drawTypePicker();
 
   const sizeSelect = document.getElementById("size-filter");
   sizeSelect.innerHTML =
@@ -281,12 +274,111 @@ function drawSelects() {
   sizeSelect.value = state.size;
 }
 
+// ---- building type checklist ----------------------------------------------
+
+function typeSummary() {
+  const on = ALL_TYPES.filter((t) => state.types.has(t));
+  if (on.length === ALL_TYPES.length) return "All building types";
+  if (on.length === 0) return "No types selected";
+  const sameAs = (list) => list.length === on.length && list.every((t) => on.includes(t));
+  if (sameAs(MIDDLE_TYPES)) return "Middle housing";
+  if (sameAs(OTHER_TYPES)) return "Other housing";
+  if (on.length <= 2) return on.join(", ");
+  return `${on.length} types`;
+}
+
+function drawTypePicker() {
+  const panel = document.getElementById("type-panel");
+  const count = (t) => state.projects.filter((p) => typeOf(p) === t).length;
+  const groupCount = (list) => state.projects.filter((p) => list.includes(typeOf(p))).length;
+  const box = (type) =>
+    `<label class="picker__item">
+       <input type="checkbox" data-type="${escapeHtml(type)}"${state.types.has(type) ? " checked" : ""}>
+       <span>${escapeHtml(type === UNKNOWN_TYPE ? "Type not yet known" : type)}</span>
+       <span class="picker__n">${count(type)}</span>
+     </label>`;
+  const group = (key, label, list) =>
+    `<div class="picker__group">
+       <label class="picker__item picker__item--group">
+         <input type="checkbox" data-group="${key}">
+         <span>${label}</span>
+         <span class="picker__n">${groupCount(list)}</span>
+       </label>
+       ${list.map(box).join("")}
+     </div>`;
+
+  panel.innerHTML = `
+    <div class="picker__quick">
+      <button type="button" data-quick="all">All types</button>
+      <button type="button" data-quick="middle">Only middle housing</button>
+    </div>
+    ${group("middle", "Middle housing", MIDDLE_TYPES)}
+    ${group("other", "Other housing", OTHER_TYPES)}
+    <div class="picker__group">${box(UNKNOWN_TYPE)}</div>`;
+
+  syncGroupBoxes();
+  document.getElementById("type-summary").textContent = typeSummary();
+}
+
+// A group box is checked when all its types are on, half-checked when some are.
+function syncGroupBoxes() {
+  const groups = { middle: MIDDLE_TYPES, other: OTHER_TYPES };
+  document.querySelectorAll("#type-panel input[data-group]").forEach((input) => {
+    const list = groups[input.dataset.group];
+    const on = list.filter((t) => state.types.has(t)).length;
+    input.checked = on === list.length;
+    input.indeterminate = on > 0 && on < list.length;
+  });
+}
+
+function wireTypePicker() {
+  const panel = document.getElementById("type-panel");
+  const picker = document.getElementById("type-picker");
+  const groups = { middle: MIDDLE_TYPES, other: OTHER_TYPES };
+
+  panel.addEventListener("change", (e) => {
+    const input = e.target;
+    if (input.dataset.type) {
+      if (input.checked) state.types.add(input.dataset.type);
+      else state.types.delete(input.dataset.type);
+    } else if (input.dataset.group) {
+      groups[input.dataset.group].forEach((t) =>
+        input.checked ? state.types.add(t) : state.types.delete(t)
+      );
+    }
+    drawTypePicker();
+    render();
+  });
+
+  panel.addEventListener("click", (e) => {
+    const quick = e.target.closest("button[data-quick]");
+    if (!quick) return;
+    state.types = new Set(quick.dataset.quick === "middle" ? MIDDLE_TYPES : ALL_TYPES);
+    drawTypePicker();
+    render();
+  });
+
+  // Close on a click outside or Escape, like a normal dropdown.
+  document.addEventListener("click", (e) => {
+    // composedPath() still lists the picker when the clicked element has just
+    // been redrawn and detached, so a click inside never counts as outside.
+    if (picker.open && !e.composedPath().includes(picker)) picker.open = false;
+  });
+  picker.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && picker.open) {
+      e.stopPropagation();
+      picker.open = false;
+      picker.querySelector("summary").focus();
+    }
+  });
+}
+
 const filtersActive = () =>
-  state.hidden.size > 0 || state.type !== "all" || state.size !== "all" || state.query.trim() !== "";
+  state.hidden.size > 0 || !allTypesOn() || state.size !== "all" || state.query.trim() !== "";
 
 function clearFilters() {
   state.hidden.clear();
-  state.type = "all";
+  state.types = new Set(ALL_TYPES);
   state.size = "all";
   state.query = "";
   el.search.value = "";
@@ -636,10 +728,7 @@ async function start() {
 
   document.getElementById("detail-close").addEventListener("click", closeDetail);
 
-  document.getElementById("type-filter").addEventListener("change", (e) => {
-    state.type = e.target.value;
-    render();
-  });
+  wireTypePicker();
   document.getElementById("size-filter").addEventListener("change", (e) => {
     state.size = e.target.value;
     render();
