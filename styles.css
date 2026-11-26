@@ -389,6 +389,10 @@ a { color: #14666b; text-underline-offset: 3px; }
 .specs dd { margin: 0; overflow-wrap: anywhere; }
 
 .specs--quiet { border-top: 1px solid var(--line); padding-top: 14px; font-size: 13px; color: var(--slate); }
+.permits { list-style: none; margin: 0; padding: 0; }
+.permits li { margin: 0 0 6px; line-height: 1.35; }
+.permits a { color: inherit; font-weight: 600; }
+.permits__status { white-space: nowrap; }
 
 .detail__note {
   margin: 22px 0 0;

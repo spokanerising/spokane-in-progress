@@ -17,6 +17,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
+import city_records as cr
+
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
 # In Sheets: File > Share > Publish to web > pick the sheet > choose CSV.
@@ -405,128 +407,239 @@ def city_report_url(report_file):
     return CITY_REPORT_URL.format(year=match.group(1), name=name)
 
 
-def auto_projects(city, sheet_permits, geocache):
-    """Returns (projects, warnings, cache_changed)."""
+# ---------------------------------------------------------------------------
+# The city's live permit records (city_records.py).
+#
+# Every build reads the city's permit map. For sheet rows that brings the
+# stage forward (never back, never over Stalled) and lists every permit with a
+# link to its record. Every other active housing project in the city's records
+# is published on its own. A sheet row listing a permit takes that project
+# over; a row with the permit and published = FALSE hides it.
+# ---------------------------------------------------------------------------
+
+PROCESS_TYPES = re.compile(
+    r"SEPA|Boundary Line|Plat|Private Development|Grading|Design Review|Land Use|Variance"
+    r"|Conditional Use|Rezone|Project Review|Unit Lot",
+    re.I,
+)
+MULTI_SIGNAL = re.compile(
+    r"apart|multi|plex|town ?h|\bunits\b|flats|lofts|cottage|housing|residences|haven|gardens|duplexes",
+    re.I,
+)
+
+
+def stage_rank(stage):
+    return cr.STAGES.index(stage) if stage in cr.STAGES else -1
+
+
+def annotate(records, weekly):
+    for r in records.values():
+        r["kind"] = cr.kind_of(r)
+        row = weekly.get(r["id"])
+        units = None
+        if row and str(row.get("units", "")).lstrip("-").isdigit():
+            units = int(row["units"])
+            if r["kind"] == "other" and units >= 2:
+                r["kind"] = "building"   # e.g. a residential permit worded unusually
+        r["housing"] = r["kind"] in ("building", "predev") and cr.is_housing(r, units)
+
+
+def by_parcel_index(records):
+    index = {}
+    for r in records.values():
+        if r["parcel"]:
+            index.setdefault(r["parcel"], []).append(r)
+    return index
+
+
+def records_for(permits, parcels, records, by_parcel):
+    """A project's own records (its permits, plus housing building and
+    pre-development records on its parcels) and everything else on those
+    parcels."""
+    own = {p: records[p] for p in permits if p in records}
+    parcels = set(parcels) | {r["parcel"] for r in own.values() if r["parcel"]}
+    for parcel in parcels:
+        for r in by_parcel.get(parcel, []):
+            if r["housing"]:
+                own.setdefault(r["id"], r)
+    siblings = [r for parcel in parcels for r in by_parcel.get(parcel, []) if r["id"] not in own]
+    return list(own.values()), siblings
+
+
+def shown_permits(own, siblings, listed):
+    shown = cr.permit_list(own + [s for s in siblings if s["kind"] == "other" and PROCESS_TYPES.search(s["type"])])
+    have = {p["id"] for p in shown}
+    for permit in listed:
+        if permit not in have:
+            shown.append({"id": permit, "type": "", "status": "", "opened": "", "url": ""})
+    return shown
+
+
+def main_permit_url(permits):
+    for p in permits:
+        if p["url"] and re.search(r"Building New|Change of Use|Residential|Remodel", p["type"]):
+            return p["url"]
+    for p in permits:
+        if p["url"]:
+            return p["url"]
+    return ""
+
+
+def since_for(history, pid, stage, fallback):
+    """The date a project reached its stage: first seen by a build, or the
+    best date the records give for projects already there on the first run."""
+    entry = history.get(pid)
+    if entry and entry.get("stage") == stage:
+        return entry.get("since", fallback)
+    since = cr.today_iso() if entry else fallback
+    history[pid] = {"stage": stage, "since": since}
+    return since
+
+
+def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
+                  history, previously_shown, geocache):
+    """Every active housing project in the city's records that no sheet row
+    covers. Returns (projects, warnings, geocache_changed)."""
     warnings = []
     changed = False
-    candidates = [
-        row for permit, row in city.items()
-        if (to_int(row.get("units")) or 0) >= AUTO_MIN_UNITS and permit not in sheet_permits
-    ]
+    since_predev = (datetime.now(timezone.utc).date().replace(day=1).toordinal()
+                    - cr.PREDEV_MONTHS * 30)
 
-    # Group by shared parcel or shared specific name.
-    groups = []
-    for row in sorted(candidates, key=lambda r: r["permit"]):
-        name_key = group_name(row.get("brief_description"))
-        specific = name_key and not GENERIC_NAME.match(name_key)
-        home = None
-        for group in groups:
-            if (row.get("parcel") and row["parcel"] in group["parcels"]) or (
-                specific and name_key in group["names"]
-            ):
-                home = group
-                break
-        if home is None:
-            home = {"rows": [], "parcels": set(), "names": set()}
-            groups.append(home)
-        home["rows"].append(row)
-        if row.get("parcel"):
-            home["parcels"].add(row["parcel"])
-        if specific:
-            home["names"].add(name_key)
+    candidates = []
+    for r in records.values():
+        if not r["housing"] or r["id"] in claimed_ids or r["parcel"] in claimed_parcels:
+            continue
+        if r["kind"] == "predev" and (not r["opened"] or
+                                       datetime.fromisoformat(r["opened"]).toordinal() < since_predev):
+            continue
+        candidates.append(r)
+
+    # Permits the weekly reports know about but the permit map is missing.
+    for permit, row in weekly.items():
+        if permit in records or permit in claimed_ids or row.get("parcel") in claimed_parcels:
+            continue
+        if (to_int(row.get("units")) or 0) < 2:
+            continue
+        candidates.append({
+            "id": permit, "type": "Commercial Building New" if permit.endswith("BLDC") else "Residential Building Permit",
+            "status": row.get("status") or "Issued", "opened": us_to_iso(row.get("issue_date")),
+            "parcel": row.get("parcel", ""), "address": row.get("address", ""),
+            "notes": row.get("brief_description", ""), "neighborhood": "", "lat": None, "lng": None,
+            "aca": "", "kind": "building", "housing": True,
+        })
 
     projects = []
-    for group in groups:
-        rows = sorted(group["rows"], key=lambda r: r["permit"])
-        first = rows[0]
-        units = sum(to_int(r.get("units")) or 0 for r in rows)
-        cost = sum(to_int(r.get("valuation")) or 0 for r in rows) or None
-        addresses = []
-        for r in rows:
-            nice = nice_case(r.get("address"))
-            if nice and nice not in addresses:
-                addresses.append(nice)
-        address = " & ".join(addresses[:2]) + (f" and {len(addresses) - 2} more" if len(addresses) > 2 else "")
+    for group in cr.group_records(candidates):
+        own = group["records"]
+        siblings = [r for parcel in group["parcels"] for r in by_parcel.get(parcel, [])
+                    if r["id"] not in {o["id"] for o in own}]
+        stage, units, unit_sources, cost, evidence = cr.assess(own, siblings, weekly)
+        if stage is None:
+            continue
+        buildings = [r for r in own if r["kind"] == "building"]
+        if units is not None and units < 2:
+            continue
+        if units is None and not (len(buildings) > 1 or any(MULTI_SIGNAL.search(r["notes"]) for r in own)):
+            continue
+        first = sorted(own, key=lambda r: (r["opened"], r["id"]))[0]
+        pid = "city-" + first["id"].lower()
+        shown_before = pid in history or any(r["id"] in previously_shown for r in own)
+        if stage == "Complete" and not shown_before:
+            continue
 
-        name = tidy_name(first.get("brief_description"))
-        if not name or GENERIC_NAME.match(name):
-            kind = "Duplex" if units == 2 else ("Townhomes" if "town" in name.lower() else "Multifamily")
-            name = f"{addresses[0] if addresses else first['permit']} {kind}"
-        else:
-            name = re.sub(r"\s*[-,]?\s*(Bldg\.?|Building)\s*\S+$", "", name, flags=re.I).strip()
+        lat = lng = None
+        for r in sorted(own, key=lambda r: r["kind"] != "building"):
+            if r["lat"] and r["lng"]:
+                lat, lng = r["lat"], r["lng"]
+                break
+        if lat is None:
+            for pin in sorted(group["parcels"]):
+                if pin in geocache:
+                    lat, lng = geocache[pin]["lat"], geocache[pin]["lng"]
+                    break
+                try:
+                    found = lookup_parcel(pin)
+                except Exception:
+                    break
+                if found:
+                    lat, lng = found[0], found[1]
+                    geocache[pin] = {"lat": lat, "lng": lng, "address": found[2]}
+                    changed = True
+                    break
+        if lat is None:
+            hit, hit_changed = locate_by_permits([r["id"] for r in own], geocache)
+            changed = changed or hit_changed
+            if hit:
+                lat, lng = hit[0], hit[1]
+        if lat is None:
+            warnings.append(f"City: {first['notes'] or first['id']} ({first['id']}) has no map location. Skipped.")
+            continue
+
+        addresses = []
+        for r in sorted(own, key=lambda r: r["kind"] != "building"):
+            a = cr.clean_address(r["address"]) or cr.clean_address(weekly.get(r["id"], {}).get("address", ""))
+            if a and a not in addresses:
+                addresses.append(a)
+        if not addresses:
+            # The permit's own address field held a note; trade permits on
+            # the same parcel usually carry the real one.
+            for r in sorted(siblings, key=lambda r: r["opened"]):
+                a = cr.clean_address(r["address"])
+                if a:
+                    addresses.append(a)
+                    break
+        address = " & ".join(addresses[:2]) + (f" and {len(addresses) - 2} more" if len(addresses) > 2 else "")
+        name = cr.name_for(own, units, addresses[0] if addresses else "")
 
         descriptions = []
-        for r in rows:
-            text = tidy_description(r.get("detailed_description"))
+        for r in buildings:
+            text = tidy_description(weekly.get(r["id"], {}).get("detailed_description", ""))
             if text and text not in descriptions:
                 descriptions.append(text)
         description = " / ".join(descriptions)
         stories = [int(n) for n in re.findall(r"(\d+)[- ]stor(?:y|ies)", description, re.I)]
 
-        # Place it on the map from the parcel, same as sheet rows.
-        lat = lng = None
-        for pin in [r.get("parcel") for r in rows if r.get("parcel")]:
-            if pin in geocache:
-                lat, lng = geocache[pin]["lat"], geocache[pin]["lng"]
-                break
-            try:
-                found = lookup_parcel(pin)
-            except Exception as error:
-                warnings.append(f"Auto: {name}: county parcel service unreachable ({error}). Will retry.")
-                break
-            if found:
-                lat, lng, matched = found
-                geocache[pin] = {"lat": lat, "lng": lng, "address": matched}
-                changed = True
-                break
-        if lat is None:
-            hit, cache_hit = locate_by_permits([r["permit"] for r in rows], geocache)
-            changed = changed or cache_hit
-            if hit:
-                lat, lng = hit[0], hit[1]
-        if lat is None:
-            warnings.append(
-                f"Auto: {name} ({', '.join(r['permit'] for r in rows)}) couldn't be placed: "
-                f"neither the county parcel map nor the city's permit map has it. "
-                f"Add a sheet row with lat/lng to place it."
-            )
-            continue
-
-        stage = stage_for(first.get("status"))
-        issued = max((us_to_iso(r.get("issue_date")) for r in rows), default="")
-        verified = max((us_to_iso(r.get("report_to")) for r in rows), default="")
+        permits = shown_permits(own, siblings, [])
+        dates = sorted(r["opened"] for r in own if r["opened"])
+        issued = [us_to_iso(weekly[r["id"]].get("issue_date")) for r in own if r["id"] in weekly]
+        fallback = (max(issued) if stage == "Approved" and issued else dates[-1] if dates else "")
+        since = since_for(history, pid, stage, fallback)
         sources = []
-        for r in rows:
-            url = city_report_url(r.get("report_url"))
+        for r in own:
+            url = city_report_url(weekly.get(r["id"], {}).get("report_url"))
             if url and url not in sources:
                 sources.append(url)
 
         fields = [
             f for f in [
                 field("Stage", stage),
-                field("Housing units", f"{units:,}"),
+                field("Housing units", f"{units:,}" if units else ""),
                 field("Stories", str(max(stories)) if stories else ""),
                 field("Estimated cost", f"${cost:,}" if cost else ""),
-                field("Source", "City of Spokane weekly permit report"),
+                field("Permit application", main_permit_url(permits), kind="link"),
+                field("Source", "City of Spokane permit records"
+                      + (" and weekly permit report" if sources else "")),
             ] if f
         ]
         projects.append({
-            "id": "permit-" + first["permit"].lower(),
+            "id": pid,
             "name": name,
             "address": address,
-            "neighborhood": "",
+            "neighborhood": cr.neighborhood_of(own),
             "parcelId": first.get("parcel", ""),
             "lat": lat,
             "lng": lng,
             "status": stage,
-            "statusUpdated": issued,
-            "lastVerified": verified,
-            "projectType": "Housing" if units >= 10 else "Middle housing",
+            "statusUpdated": since,
+            "stageSource": "city permit records: " + "; ".join(evidence),
+            "lastVerified": cr.today_iso(),
+            "projectType": "Housing" if (units or 0) >= 10 else ("Middle housing" if units else ""),
             "units": units,
-            "unitsSource": "city permit report",
+            "unitsSource": ", ".join(unit_sources),
             "stories": max(stories) if stories else None,
             "description": description,
-            "permitNumbers": [r["permit"] for r in rows],
+            "permitNumbers": [p["id"] for p in permits],
+            "permits": permits,
             "drbFile": "",
             "imageUrl": "",
             "imageCredit": "",
@@ -591,6 +704,21 @@ def main():
                 f"Usually a copy-paste slip."
             )
 
+    # Today's city permit records, and what the last build published.
+    sheet_rows = [{(k or "").strip(): (v or "").strip() for k, v in raw.items()} for raw in rows]
+    sheet_parcels = {r.get("parcel_id") for r in sheet_rows if r.get("parcel_id")}
+    records, record_warnings = cr.fetch(set(permit_owners), sheet_parcels, set(city))
+    warnings.extend(record_warnings)
+    annotate(records, city)
+    by_parcel = by_parcel_index(records)
+    history = cr.load_json(cr.HISTORY_PATH, {})
+    previous = cr.load_json("projects.json", {}).get("projects", [])
+    previously_shown = {p for project in previous for p in project.get("permitNumbers", [])}
+    claimed_parcels = set(sheet_parcels)
+    for permit in permit_owners:
+        if permit in records and records[permit]["parcel"]:
+            claimed_parcels.add(records[permit]["parcel"])
+
     for offset, row in enumerate(rows):
         row = {(k or "").strip(): (v or "").strip() for k, v in row.items()}
         line = offset + 2
@@ -645,6 +773,11 @@ def main():
                     # New lots and boundary adjustments can be missing from the
                     # county layer; the city's permit map still places the permit.
                     hit, cache_hit = locate_by_permits(permits, geocache)
+                    if not hit:
+                        on_parcel = [r for r in by_parcel.get(pin, []) if r["lat"] and r["lng"]]
+                        if on_parcel:
+                            hit = (on_parcel[0]["lat"], on_parcel[0]["lng"], on_parcel[0]["address"],
+                                   on_parcel[0]["id"])
                     cache_dirty = cache_dirty or cache_hit
                     if not hit:
                         warnings.append(
@@ -688,6 +821,20 @@ def main():
             )
         elif stage != raw_stage:
             warnings.append(f'{label}: stage "{raw_stage}" read as "{stage}". Tidy the sheet when you get a chance.')
+
+        listed = [p.upper() for p in semicolon_list(row.get("permit_numbers"))]
+        own, siblings = records_for(listed, [row.get("parcel_id")] if row.get("parcel_id") else [],
+                                    records, by_parcel)
+        city_stage, _, _, _, evidence = cr.assess(own, siblings, city) if own else (None, 0, 0, 0, [])
+        stage_source = "sheet"
+        if city_stage and stage != "Stalled" and stage_rank(city_stage) > stage_rank(stage):
+            warnings.append(
+                f"{label}: stage moved from {stage} to {city_stage} by the city's permit records "
+                f"({'; '.join(evidence)}). Update the sheet to match when you can."
+            )
+            stage = city_stage
+            stage_source = "city permit records: " + "; ".join(evidence)
+        permits_shown = shown_permits(own, siblings, listed)
 
         project_id = row.get("id") or "".join(
             c if c.isalnum() else "-" for c in row["name"].lower()
@@ -758,7 +905,7 @@ def main():
                 field("Estimated cost", f"${cost:,}" if cost is not None else ""),
                 field("Developer", row.get("developer")),
                 field("Architect", row.get("architect")),
-                field("Permit application", row.get("permit_url"), kind="link"),
+                field("Permit application", row.get("permit_url") or main_permit_url(permits_shown), kind="link"),
             ]
             if f
         ]
@@ -773,14 +920,17 @@ def main():
                 "lat": lat,
                 "lng": lng,
                 "status": stage,
-                "statusUpdated": row.get("status_updated", ""),
+                "statusUpdated": (since_for(history, project_id, stage, row.get("status_updated", ""))
+                                  if stage_source != "sheet" else row.get("status_updated", "")),
+                "stageSource": stage_source,
                 "lastVerified": row.get("last_verified", ""),
                 "projectType": row.get("project_type", ""),
                 "units": units,
                 "unitsSource": units_source,
                 "stories": stories,
                 "description": row.get("description", ""),
-                "permitNumbers": semicolon_list(row.get("permit_numbers")),
+                "permitNumbers": [p["id"] for p in permits_shown],
+                "permits": permits_shown,
                 "drbFile": row.get("drb_file", ""),
                 "imageUrl": row.get("image_url", "") if image_ok else "",
                 "imageCredit": row.get("image_credit", ""),
@@ -796,17 +946,23 @@ def main():
 
     if city:
         write_not_on_site(city, set(permit_owners))
-        auto, auto_warnings, auto_cache = auto_projects(city, set(permit_owners), geocache)
-        warnings.extend(auto_warnings)
-        if auto_cache:
-            save_geocache(geocache)
-        taken = {p["id"] for p in projects}
-        auto = [p for p in auto if p["id"] not in taken]
-        projects.extend(auto)
-        if auto:
-            print(f"Added {len(auto)} project(s) straight from the city's permit reports:")
-            for p in auto:
-                print(f"  + {p['name']} ({p['units']} units, {', '.join(p['permitNumbers'])})")
+    auto, auto_warnings, auto_cache = city_projects(
+        records, by_parcel, city, set(permit_owners), claimed_parcels, history,
+        previously_shown, geocache,
+    )
+    warnings.extend(auto_warnings)
+    if auto_cache:
+        save_geocache(geocache)
+    taken = {p["id"] for p in projects}
+    auto = [p for p in auto if p["id"] not in taken]
+    projects.extend(auto)
+    cr.save_json(cr.HISTORY_PATH, history)
+    if auto:
+        counts = {}
+        for p in auto:
+            counts[p["status"]] = counts.get(p["status"], 0) + 1
+        print(f"Published {len(auto)} project(s) from the city's permit records: "
+              + ", ".join(f"{n} {s}" for s, n in counts.items()))
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
