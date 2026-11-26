@@ -432,7 +432,8 @@ def main():
         listed = [p.upper() for p in semicolon_list(row.get("permit_numbers"))]
         found = [city[p] for p in listed if p in city]
         if found:
-            city_units = sum(to_int(r.get("units")) or 0 for r in found)
+            # New units only: a demolition on the same project reports -1.
+            city_units = sum(max(to_int(r.get("units")) or 0, 0) for r in found)
             city_cost = sum(
                 to_int(r.get("valuation")) or 0
                 for r in found if is_building_permit(r["permit"].upper())

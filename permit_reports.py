@@ -52,6 +52,8 @@ REPORT_LINK = re.compile(
 )
 
 INBOX = "permit-reports"
+# Bump when the parser changes, and every uploaded report is read again.
+PARSER_VERSION = 2
 OUT_CSV = os.path.join("data", "permit-units.csv")
 STATE_DIR = os.path.join("data", "permit-reports")
 PROCESSED = os.path.join(STATE_DIR, "processed.json")
@@ -321,6 +323,7 @@ def parse_report(pdf_bytes):
     with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
         info["pages"] = len(pdf.pages)
         all_text = []
+        carry = None
         for page_number, page in enumerate(pdf.pages, start=1):
             words = page.extract_words(x_tolerance=1.5, y_tolerance=2, keep_blank_chars=False)
             text = page.extract_text() or ""
@@ -345,10 +348,25 @@ def parse_report(pdf_bytes):
                 (w for w in body if PERMIT_RE.match(w["text"]) and w["x0"] < cols["date"] - 3),
                 key=lambda w: w["top"],
             )
+
+            # A permit cut off by the page break continues at the top of this
+            # page, above the first new permit number. Stitch it back onto the
+            # previous page's last permit, shifted down so it reads in order.
+            first_top = starts[0]["top"] if starts else float("inf")
+            leading = [w for w in body if w["top"] < first_top - 1]
+            if leading and carry is not None:
+                shift = carry["bottom"] + 20
+                moved = [dict(w, top=w["top"] + shift, bottom=w["bottom"] + shift) for w in leading]
+                records[-1] = parse_record(carry["words"] + moved, carry["cols"])
+
+            carry = None
             for i, start in enumerate(starts):
                 end = starts[i + 1]["top"] - 1 if i + 1 < len(starts) else float("inf")
                 chunk = [w for w in body if start["top"] - 1 <= w["top"] < end]
                 records.append(parse_record(chunk, cols))
+                if i + 1 == len(starts):
+                    carry = {"words": chunk, "cols": cols,
+                             "bottom": max(w["bottom"] for w in chunk)}
 
         joined = "\n".join(all_text)
         match = RANGE_RE.search(joined)
@@ -483,7 +501,7 @@ def main():
         except Exception as error:
             problems.append(f"{label}: could not open it ({error}).")
             continue
-        key = label if args.fetch else f"{os.path.basename(label)}:{fingerprint(pdf_bytes)}"
+        key = (label if args.fetch else f"{os.path.basename(label)}:{fingerprint(pdf_bytes)}") + f":v{PARSER_VERSION}"
         if key in processed and not args.file:
             continue
         try:
@@ -498,7 +516,9 @@ def main():
 
         this_to = report_date(info["to"])
         kept = [r for r in records if keep(r)]
-        units_total = sum(to_int(r["units"]) or 0 for r in records)
+        # Demolitions carry negative units (-1 for a house torn down). The
+        # city's "New Residential Units" total counts additions only.
+        units_total = sum(max(to_int(r["units"]) or 0, 0) for r in records)
         no_units = sum(1 for r in records if r["units"] == "")
         for record in kept:
             record.update(report_from=info["from"], report_to=info["to"], report_url=label)
@@ -511,7 +531,7 @@ def main():
 
         print(
             f"{os.path.basename(label)}: {info['from'] or '?'} to {info['to'] or '?'}, "
-            f"{info['pages']} pages, {len(records)} permits, {units_total} units, kept {len(kept)}"
+            f"{info['pages']} pages, {len(records)} permits, {units_total} new units, kept {len(kept)}"
         )
         if not records:
             problems.append(
