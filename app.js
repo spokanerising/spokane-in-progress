@@ -29,10 +29,41 @@ const colorOf = (status) =>
   (STAGES.find((s) => s.name === status) || STAGES[STAGES.length - 1]).color;
 const indexOf = (status) => STAGES.findIndex((s) => s.name === status);
 
+// Building types, in the order the filter lists them. These names come from
+// housing_types.py, which assigns them during the build.
+const MIDDLE_TYPES = ["Duplex", "Triplex or fourplex", "Fiveplex or sixplex", "Townhomes", "Cottage housing"];
+const OTHER_TYPES = ["Apartments", "House + ADU", "Conversion or addition", "Senior & group living"];
+const UNKNOWN_TYPE = "Not yet known";
+
+// Project size, by every home in the project.
+const SIZES = [
+  { key: "2-4", label: "2–4 homes", test: (u) => u >= 2 && u <= 4 },
+  { key: "5-19", label: "5–19 homes", test: (u) => u >= 5 && u <= 19 },
+  { key: "20-99", label: "20–99 homes", test: (u) => u >= 20 && u <= 99 },
+  { key: "100", label: "100 or more homes", test: (u) => u >= 100 },
+  { key: "unknown", label: "Size not reported", test: (u) => !(u > 0) },
+];
+
+const typeOf = (p) => p.buildingType || UNKNOWN_TYPE;
+
+function matchesType(p, type) {
+  if (type === "all") return true;
+  if (type === "middle") return !!p.middleHousing;
+  return typeOf(p) === type;
+}
+
+function matchesSize(p, size) {
+  if (size === "all") return true;
+  const bucket = SIZES.find((s) => s.key === size);
+  return bucket ? bucket.test(p.units) : true;
+}
+
 const state = {
   projects: [],
   hidden: new Set(),
   query: "",
+  type: "all",
+  size: "all",
   selected: null,
   builtAt: null,
   measure: "homes", // what the stage bar is sized by: "homes" or "projects"
@@ -129,7 +160,7 @@ function radiusExpression() {
 // top-level keys, so search reads the field values instead of naming keys that
 // do not exist. Links are skipped so a query cannot match a bare URL.
 const searchText = (p) =>
-  [p.name, p.address, p.neighborhood, p.projectType]
+  [p.name, p.address, p.neighborhood, p.buildingType, p.middleHousing ? "middle housing" : ""]
     .concat((p.fields || []).filter((f) => f.kind !== "link").map((f) => f.value))
     .filter(Boolean)
     .join(" ")
@@ -139,6 +170,8 @@ function visible() {
   const q = state.query.trim().toLowerCase();
   return state.projects.filter((p) => {
     if (state.hidden.has(p.status)) return false;
+    if (!matchesType(p, state.type)) return false;
+    if (!matchesSize(p, state.size)) return false;
     if (!q) return true;
     return searchText(p).includes(q);
   });
@@ -225,21 +258,59 @@ function drawChips() {
   });
 }
 
+// The two dropdowns. Counts are for the whole map, so they don't jump around
+// as other filters change.
+function drawSelects() {
+  const all = state.projects;
+  const count = (fn) => all.filter(fn).length;
+  const opt = (value, label, n) =>
+    `<option value="${escapeHtml(value)}">${escapeHtml(label)}${n === undefined ? "" : ` (${n})`}</option>`;
+
+  const typeSelect = document.getElementById("type-filter");
+  typeSelect.innerHTML =
+    opt("all", "All building types") +
+    opt("middle", "All middle housing", count((p) => p.middleHousing)) +
+    `<optgroup label="Middle housing">${MIDDLE_TYPES.map((t) => opt(t, t, count((p) => typeOf(p) === t))).join("")}</optgroup>` +
+    `<optgroup label="Other housing">${OTHER_TYPES.map((t) => opt(t, t, count((p) => typeOf(p) === t))).join("")}</optgroup>` +
+    opt(UNKNOWN_TYPE, "Type not yet known", count((p) => typeOf(p) === UNKNOWN_TYPE));
+  typeSelect.value = state.type;
+
+  const sizeSelect = document.getElementById("size-filter");
+  sizeSelect.innerHTML =
+    opt("all", "All sizes") + SIZES.map((s) => opt(s.key, s.label, count((p) => s.test(p.units)))).join("");
+  sizeSelect.value = state.size;
+}
+
+const filtersActive = () =>
+  state.hidden.size > 0 || state.type !== "all" || state.size !== "all" || state.query.trim() !== "";
+
+function clearFilters() {
+  state.hidden.clear();
+  state.type = "all";
+  state.size = "all";
+  state.query = "";
+  el.search.value = "";
+  el.chips.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "true"));
+  drawSelects();
+  render();
+}
+
 function drawCards(list) {
   el.cards.innerHTML = list
     .map((p) => {
       const facts = [
         p.units ? `<b>${numberWithCommas(p.units)}</b> ${p.units === 1 ? "unit" : "units"}` : null,
-        p.projectType ? escapeHtml(p.projectType) : null,
+        typeOf(p) !== UNKNOWN_TYPE ? escapeHtml(typeOf(p)) : null,
         p.stories ? escapeHtml(plural(p.stories, "story", "stories")) : null,
       ].filter(Boolean);
+      const tag = p.middleHousing ? `<small class="tag">Middle housing</small>` : "";
 
       return `<li>
         <button class="card" data-id="${escapeHtml(p.id)}">
           <div class="card__stage"><i style="background:${colorOf(p.status)}"></i>${escapeHtml(p.status)}</div>
           <h3 class="card__name">${escapeHtml(p.name)}</h3>
           <div class="card__where">${escapeHtml(where(p))}</div>
-          ${facts.length ? `<div class="card__facts">${facts.map((f) => `<span>${f}</span>`).join("")}</div>` : ""}
+          ${facts.length || tag ? `<div class="card__facts">${facts.map((f) => `<span>${f}</span>`).join("")}${tag}</div>` : ""}
         </button>
       </li>`;
     })
@@ -256,6 +327,7 @@ function drawCards(list) {
       ? plural(list.length, "project", "projects")
       : `${numberWithCommas(list.length)} of ${plural(state.projects.length, "project", "projects")}`) +
     (homes ? ` · ${plural(homes, "home", "homes")}` : "");
+  document.getElementById("clear-filters").hidden = !filtersActive();
 }
 
 function render() {
@@ -564,6 +636,16 @@ async function start() {
 
   document.getElementById("detail-close").addEventListener("click", closeDetail);
 
+  document.getElementById("type-filter").addEventListener("change", (e) => {
+    state.type = e.target.value;
+    render();
+  });
+  document.getElementById("size-filter").addEventListener("change", (e) => {
+    state.size = e.target.value;
+    render();
+  });
+  document.getElementById("clear-filters").addEventListener("click", clearFilters);
+
   document.querySelectorAll("#measure button").forEach((button) => {
     button.addEventListener("click", () => {
       state.measure = button.dataset.measure;
@@ -617,6 +699,7 @@ async function start() {
   }
 
   drawChips();
+  drawSelects();
 
   try {
     if (typeof maplibregl === "undefined") {

@@ -39,7 +39,7 @@
       "statusUpdated": "2026-11-18",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Fiveplex or sixplex",
       "units": 6,
       "unitsSource": "permit description",
       "stories": null,
@@ -86,6 +86,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Fiveplex or sixplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "6",
           "kind": "text"
@@ -100,7 +105,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Fiveplex or sixplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2616976bldr",
@@ -114,7 +121,7 @@
       "statusUpdated": "2026-11-17",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
@@ -147,6 +154,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -166,7 +178,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2604501bldc",
@@ -180,7 +194,7 @@
       "statusUpdated": "2026-11-16",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 22,
       "unitsSource": "city weekly permit report",
       "stories": 3,
@@ -229,6 +243,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "22",
           "kind": "text"
@@ -253,7 +272,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0039pdev",
@@ -267,7 +288,7 @@
       "statusUpdated": "2026-11-12",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -306,6 +327,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00505&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -315,7 +341,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2617887bldr",
@@ -329,7 +357,7 @@
       "statusUpdated": "2026-11-05",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "House + ADU",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -360,6 +388,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "House + ADU"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -374,7 +407,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "House + ADU",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0112pdev",
@@ -388,7 +423,7 @@
       "statusUpdated": "2026-11-05",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -428,7 +463,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Not yet known",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0109pdev",
@@ -442,7 +479,7 @@
       "statusUpdated": "2026-10-26",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Fiveplex or sixplex",
       "units": 6,
       "unitsSource": "permit description",
       "stories": null,
@@ -473,6 +510,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Fiveplex or sixplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "6",
           "kind": "text"
@@ -487,7 +529,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Fiveplex or sixplex",
+      "middleHousing": true
     },
     {
       "id": "city-b26m0104pdev",
@@ -501,7 +545,7 @@
       "statusUpdated": "2026-10-15",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -532,6 +576,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00104&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -541,7 +590,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2615612bldr",
@@ -555,7 +606,7 @@
       "statusUpdated": "2026-10-01",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -586,6 +637,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -600,7 +656,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0093pdev",
@@ -614,7 +672,7 @@
       "statusUpdated": "2026-09-28",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
       "stories": null,
@@ -661,6 +719,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "4",
           "kind": "text"
@@ -675,7 +738,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2615342bldc",
@@ -689,7 +754,7 @@
       "statusUpdated": "2026-09-28",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -736,6 +801,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00436&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -745,7 +815,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b26m0099pdev",
@@ -759,7 +831,7 @@
       "statusUpdated": "2026-09-25",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -799,7 +871,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Not yet known",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0095pdev",
@@ -813,7 +887,7 @@
       "statusUpdated": "2026-09-16",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -853,7 +927,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Not yet known",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0097pdev",
@@ -867,7 +943,7 @@
       "statusUpdated": "2026-09-16",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -898,6 +974,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00097&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -907,7 +988,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2614510bldc",
@@ -921,7 +1004,7 @@
       "statusUpdated": "2026-09-15",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 3,
       "unitsSource": "permit description",
       "stories": null,
@@ -952,6 +1035,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "3",
           "kind": "text"
@@ -966,7 +1054,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2614022bldc",
@@ -980,7 +1070,7 @@
       "statusUpdated": "2026-09-08",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 3,
       "unitsSource": "permit description",
       "stories": null,
@@ -1011,6 +1101,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "3",
           "kind": "text"
@@ -1025,7 +1120,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b26m0091pdev",
@@ -1039,7 +1136,7 @@
       "statusUpdated": "2026-09-03",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -1079,7 +1176,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Not yet known",
+      "middleHousing": false
     },
     {
       "id": "B26M0088PDEV",
@@ -1093,7 +1192,7 @@
       "statusUpdated": "2026-08-27",
       "stageSource": "sheet",
       "lastVerified": "2026-08-27",
-      "projectType": "Housing",
+      "projectType": "Senior & group living",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -1123,9 +1222,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Senior & group living"
         },
         {
           "label": "Floor area",
@@ -1152,7 +1251,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00088&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Senior & group living",
+      "middleHousing": false
     },
     {
       "id": "B26M0087PDEV",
@@ -1166,7 +1267,7 @@
       "statusUpdated": "2026-08-19",
       "stageSource": "sheet",
       "lastVerified": "2026-08-27",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 4,
       "unitsSource": "sheet",
       "stories": 2,
@@ -1196,9 +1297,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
         },
         {
           "label": "Housing units",
@@ -1235,7 +1336,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00087&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2600346bldc",
@@ -1249,7 +1352,7 @@
       "statusUpdated": "2026-07-27",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 82,
       "unitsSource": "city weekly permit report",
       "stories": 4,
@@ -1282,6 +1385,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "82",
           "kind": "text"
@@ -1306,7 +1414,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "B2610856BLDC",
@@ -1320,7 +1430,7 @@
       "statusUpdated": "2026-07-16",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 200,
       "unitsSource": "sheet",
       "stories": 8,
@@ -1350,9 +1460,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
         },
         {
           "label": "Housing units",
@@ -1394,7 +1504,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00319&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "B26M0075PDEV",
@@ -1408,7 +1520,7 @@
       "statusUpdated": "2026-07-09",
       "stageSource": "sheet",
       "lastVerified": "2026-08-29",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 4,
       "unitsSource": "sheet",
       "stories": 3,
@@ -1438,9 +1550,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
         },
         {
           "label": "Housing units",
@@ -1477,7 +1589,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00075&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "B26M0062PDEV",
@@ -1491,7 +1605,7 @@
       "statusUpdated": "2026-07-09",
       "stageSource": "sheet",
       "lastVerified": "2026-08-29",
-      "projectType": "Housing",
+      "projectType": "Conversion or addition",
       "units": 10,
       "unitsSource": "sheet",
       "stories": 1,
@@ -1521,9 +1635,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Conversion or addition"
         },
         {
           "label": "Housing units",
@@ -1560,7 +1674,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00062&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Conversion or addition",
+      "middleHousing": false
     },
     {
       "id": "B2610856BLDC",
@@ -1574,7 +1690,7 @@
       "statusUpdated": "2026-06-24",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 4,
       "unitsSource": "sheet",
       "stories": 3,
@@ -1604,9 +1720,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
         },
         {
           "label": "Housing units",
@@ -1643,7 +1759,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00288&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "B2609573BLDC",
@@ -1657,7 +1775,7 @@
       "statusUpdated": "2026-06-24",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 4,
       "unitsSource": "sheet",
       "stories": 3,
@@ -1687,9 +1805,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
         },
         {
           "label": "Housing units",
@@ -1726,7 +1844,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00287&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "B2609572BLDC",
@@ -1740,7 +1860,7 @@
       "statusUpdated": "2026-06-24",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 4,
       "unitsSource": "sheet",
       "stories": 3,
@@ -1778,9 +1898,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
         },
         {
           "label": "Housing units",
@@ -1817,7 +1937,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00286&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2609463bldr",
@@ -1831,7 +1953,7 @@
       "statusUpdated": "2026-06-23",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -1862,6 +1984,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -1876,7 +2003,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2609293bldr",
@@ -1890,7 +2019,7 @@
       "statusUpdated": "2026-06-21",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -1929,6 +2058,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -1943,7 +2077,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "B26M0063PDEV",
@@ -1957,7 +2093,7 @@
       "statusUpdated": "2026-06-16",
       "stageSource": "sheet",
       "lastVerified": "2026-08-29",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 16,
       "unitsSource": "sheet",
       "stories": null,
@@ -1987,9 +2123,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
         },
         {
           "label": "Housing units",
@@ -2011,7 +2147,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00063&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "B26M0060PDEV",
@@ -2025,7 +2163,7 @@
       "statusUpdated": "2026-06-16",
       "stageSource": "sheet",
       "lastVerified": "2026-08-29",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 18,
       "unitsSource": "sheet",
       "stories": 3,
@@ -2055,9 +2193,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
         },
         {
           "label": "Housing units",
@@ -2094,7 +2232,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00060&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "monthly-b26m0031pdev",
@@ -2108,7 +2248,7 @@
       "statusUpdated": "2026-05-31",
       "stageSource": "city monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
       "lastVerified": "2026-05-31",
-      "projectType": "Housing",
+      "projectType": "Townhomes",
       "units": 111,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -2139,6 +2279,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "111",
           "kind": "text"
@@ -2153,7 +2298,9 @@
           "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "monthly-b2601077",
@@ -2167,7 +2314,7 @@
       "statusUpdated": "2026-05-31",
       "stageSource": "city monthly permit report (Largest Projects 2026, as of 2026-05-31)",
       "lastVerified": "2026-05-31",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 40,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -2198,6 +2345,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "40",
           "kind": "text"
@@ -2212,7 +2364,9 @@
           "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "monthly-b23m0147pdev",
@@ -2226,7 +2380,7 @@
       "statusUpdated": "2026-05-31",
       "stageSource": "city monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
       "lastVerified": "2026-05-31",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 36,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -2257,6 +2411,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "36",
           "kind": "text"
@@ -2271,7 +2430,9 @@
           "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "monthly-b2600350",
@@ -2285,7 +2446,7 @@
       "statusUpdated": "2026-05-31",
       "stageSource": "city monthly permit report (Largest Projects in Plan Review, as of 2026-05-31)",
       "lastVerified": "2026-05-31",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 31,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -2316,6 +2477,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "31",
           "kind": "text"
@@ -2330,7 +2496,9 @@
           "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0061pdev",
@@ -2344,7 +2512,7 @@
       "statusUpdated": "2026-05-28",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -2375,6 +2543,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -2389,7 +2562,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "B2607616BLDC",
@@ -2403,7 +2578,7 @@
       "statusUpdated": "2026-05-22",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Middle housing",
+      "projectType": "Apartments",
       "units": 9,
       "unitsSource": "sheet",
       "stories": 3,
@@ -2433,9 +2608,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
         },
         {
           "label": "Housing units",
@@ -2472,7 +2647,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00248&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0055pdev",
@@ -2486,7 +2663,7 @@
       "statusUpdated": "2026-05-20",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -2517,6 +2694,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00055&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -2526,7 +2708,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "B2607178BLDC",
@@ -2540,7 +2724,7 @@
       "statusUpdated": "2026-05-14",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 29,
       "unitsSource": "sheet",
       "stories": 3,
@@ -2578,9 +2762,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
         },
         {
           "label": "Housing units",
@@ -2617,7 +2801,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00238&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "B2606909BLDC",
@@ -2631,7 +2817,7 @@
       "statusUpdated": "2026-05-11",
       "stageSource": "sheet",
       "lastVerified": "2026-08-28",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 43,
       "unitsSource": "sheet",
       "stories": 4,
@@ -2693,9 +2879,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
         },
         {
           "label": "Housing units",
@@ -2732,7 +2918,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00231&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2606433bldr",
@@ -2746,7 +2934,7 @@
       "statusUpdated": "2026-05-03",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -2777,6 +2965,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -2791,7 +2984,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "B2606311BLDC",
@@ -2805,7 +3000,7 @@
       "statusUpdated": "2026-04-30",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-08-28",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 3,
       "unitsSource": "sheet",
       "stories": 2,
@@ -2867,9 +3062,9 @@
           "kind": "text"
         },
         {
-          "label": "Type",
-          "value": "Middle housing",
-          "kind": "text"
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
         },
         {
           "label": "Housing units",
@@ -2906,7 +3101,9 @@
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00216&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2500228bldc",
@@ -2920,7 +3117,7 @@
       "statusUpdated": "2026-04-24",
       "stageSource": "city permit records: 6 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -2983,6 +3180,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00010&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -2992,7 +3194,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2605678bldr",
@@ -3006,7 +3210,7 @@
       "statusUpdated": "2026-04-20",
       "stageSource": "city permit records: 3 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -3037,6 +3241,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -3051,7 +3260,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b26m0044pdev",
@@ -3065,7 +3276,7 @@
       "statusUpdated": "2026-04-17",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Senior & group living",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -3096,6 +3307,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Senior & group living"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00044&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -3105,7 +3321,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Senior & group living",
+      "middleHousing": false
     },
     {
       "id": "city-b2604790bldr",
@@ -3119,7 +3337,7 @@
       "statusUpdated": "2026-04-06",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -3150,6 +3368,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -3164,7 +3387,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0112pdev",
@@ -3178,7 +3403,7 @@
       "statusUpdated": "2026-03-31",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -3225,6 +3450,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00168&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -3234,7 +3464,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2604346bldr",
@@ -3248,7 +3480,7 @@
       "statusUpdated": "2026-03-27",
       "stageSource": "city permit records: 5 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
@@ -3281,6 +3513,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -3300,7 +3537,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0094pdev",
@@ -3314,7 +3553,7 @@
       "statusUpdated": "2026-03-17",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 20,
       "unitsSource": "city weekly permit report",
       "stories": 4,
@@ -3363,6 +3602,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "20",
           "kind": "text"
@@ -3387,7 +3631,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2603688bldc",
@@ -3401,7 +3647,7 @@
       "statusUpdated": "2026-03-16",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -3432,6 +3678,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00143&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -3441,7 +3692,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b26m0029pdev",
@@ -3455,7 +3708,7 @@
       "statusUpdated": "2026-03-12",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -3486,6 +3739,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00029&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -3495,7 +3753,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2602760bldr",
@@ -3509,7 +3769,7 @@
       "statusUpdated": "2026-02-25",
       "stageSource": "city permit records: 5 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -3540,6 +3800,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -3554,7 +3819,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2602761bldr",
@@ -3568,7 +3835,7 @@
       "statusUpdated": "2026-02-25",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -3599,6 +3866,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -3613,7 +3885,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b26m0022pdev",
@@ -3627,7 +3901,7 @@
       "statusUpdated": "2026-02-25",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
       "stories": null,
@@ -3658,6 +3932,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "4",
           "kind": "text"
@@ -3672,7 +3951,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0073pdev",
@@ -3686,7 +3967,7 @@
       "statusUpdated": "2026-02-24",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -3733,6 +4014,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -3747,7 +4033,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2602644bldc",
@@ -3761,7 +4049,7 @@
       "statusUpdated": "2026-02-24",
       "stageSource": "city permit records: plan review approved",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Senior & group living",
       "units": 10,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -3792,6 +4080,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Senior & group living"
+        },
+        {
           "label": "Housing units",
           "value": "10",
           "kind": "text"
@@ -3806,7 +4099,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Senior & group living",
+      "middleHousing": false
     },
     {
       "id": "city-b25m0091pdev",
@@ -3820,7 +4115,7 @@
       "statusUpdated": "2026-02-12",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 24,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -3875,6 +4170,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "24",
           "kind": "text"
@@ -3889,7 +4189,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b25m0096pdev",
@@ -3903,7 +4205,7 @@
       "statusUpdated": "2026-01-26",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Fiveplex or sixplex",
       "units": 12,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -3950,6 +4252,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Fiveplex or sixplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "12",
           "kind": "text"
@@ -3964,7 +4271,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Fiveplex or sixplex",
+      "middleHousing": true
     },
     {
       "id": "city-b26m0006pdev",
@@ -3978,7 +4287,7 @@
       "statusUpdated": "2026-01-23",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -4009,6 +4318,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00006&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -4018,7 +4332,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2600937bldc",
@@ -4032,7 +4348,7 @@
       "statusUpdated": "2026-01-21",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Conversion or addition",
       "units": 40,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -4071,6 +4387,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Conversion or addition"
+        },
+        {
           "label": "Housing units",
           "value": "40",
           "kind": "text"
@@ -4085,7 +4406,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Conversion or addition",
+      "middleHousing": false
     },
     {
       "id": "city-b2600702bldr",
@@ -4099,7 +4422,7 @@
       "statusUpdated": "2026-01-16",
       "stageSource": "city permit records: 3 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
@@ -4132,6 +4455,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -4151,7 +4479,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2600511bldc",
@@ -4165,7 +4495,7 @@
       "statusUpdated": "2026-01-13",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -4196,6 +4526,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00017&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -4205,7 +4540,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2322426bldr",
@@ -4219,7 +4556,7 @@
       "statusUpdated": "2025-11-10",
       "stageSource": "city permit records: 2 of 6 buildings finaled",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Duplex",
       "units": 10,
       "unitsSource": "permit description",
       "stories": null,
@@ -4290,6 +4627,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "10",
           "kind": "text"
@@ -4304,7 +4646,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2515144bldr",
@@ -4318,7 +4662,7 @@
       "statusUpdated": "2025-11-05",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -4357,6 +4701,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -4371,7 +4720,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0103pdev",
@@ -4385,7 +4736,7 @@
       "statusUpdated": "2025-10-14",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 18,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -4416,6 +4767,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "18",
           "kind": "text"
@@ -4430,7 +4786,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2517162bldr",
@@ -4444,7 +4802,7 @@
       "statusUpdated": "2025-10-13",
       "stageSource": "city permit records: every building permit is finaled",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
@@ -4477,6 +4835,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -4496,7 +4859,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2516743bldr",
@@ -4510,7 +4875,7 @@
       "statusUpdated": "2025-10-08",
       "stageSource": "city permit records: plan review approved",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -4557,6 +4922,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -4571,7 +4941,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2516195bldc",
@@ -4585,7 +4957,7 @@
       "statusUpdated": "2025-09-26",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Townhomes",
       "units": 24,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -4680,6 +5052,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "24",
           "kind": "text"
@@ -4694,7 +5071,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2515824bldr",
@@ -4708,7 +5087,7 @@
       "statusUpdated": "2025-09-22",
       "stageSource": "city permit records: 3 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -4739,6 +5118,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -4753,7 +5137,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2515747bldc",
@@ -4767,7 +5153,7 @@
       "statusUpdated": "2025-09-19",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 72,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -4854,6 +5240,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "72",
           "kind": "text"
@@ -4868,7 +5259,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2515401bldc",
@@ -4882,7 +5275,7 @@
       "statusUpdated": "2025-09-12",
       "stageSource": "city permit records: 6 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 8,
       "unitsSource": "city weekly permit report",
       "stories": 2,
@@ -4923,6 +5316,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "8",
           "kind": "text"
@@ -4947,7 +5345,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0090pdev",
@@ -4961,7 +5361,7 @@
       "statusUpdated": "2025-09-03",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -4992,6 +5392,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00090&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5001,7 +5406,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b25m0085pdev",
@@ -5015,7 +5422,7 @@
       "statusUpdated": "2025-08-26",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5046,6 +5453,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00085&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5055,7 +5467,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0086pdev",
@@ -5069,7 +5483,7 @@
       "statusUpdated": "2025-08-26",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Cottage housing",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5108,6 +5522,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Cottage housing (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00086&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5117,7 +5536,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Cottage housing",
+      "middleHousing": true
     },
     {
       "id": "city-b2514195bldr",
@@ -5131,7 +5552,7 @@
       "statusUpdated": "2025-08-22",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -5162,6 +5583,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -5176,7 +5602,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2512924bldc",
@@ -5190,7 +5618,7 @@
       "statusUpdated": "2025-08-01",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 97,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -5261,6 +5689,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "97",
           "kind": "text"
@@ -5275,7 +5708,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2511997bldc",
@@ -5289,7 +5724,7 @@
       "statusUpdated": "2025-07-29",
       "stageSource": "city permit records: 3 of 6 buildings finaled",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Townhomes",
       "units": 24,
       "unitsSource": "city weekly permit report, permit description",
       "stories": 2,
@@ -5362,6 +5797,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "24",
           "kind": "text"
@@ -5386,7 +5826,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0076pdev",
@@ -5400,7 +5842,7 @@
       "statusUpdated": "2025-07-21",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5431,6 +5873,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00076&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5440,7 +5887,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0075pdev",
@@ -5454,7 +5903,7 @@
       "statusUpdated": "2025-07-15",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5485,6 +5934,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00075&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5494,7 +5948,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2510514bldr",
@@ -5508,7 +5964,7 @@
       "statusUpdated": "2025-07-01",
       "stageSource": "city permit records: 9 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Townhomes",
       "units": 3,
       "unitsSource": "permit description",
       "stories": null,
@@ -5555,6 +6011,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "3",
           "kind": "text"
@@ -5569,7 +6030,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0066pdev",
@@ -5583,7 +6046,7 @@
       "statusUpdated": "2025-06-20",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5614,6 +6077,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00066&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5623,7 +6091,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0061pdev",
@@ -5637,7 +6107,7 @@
       "statusUpdated": "2025-06-17",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Cottage housing",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5668,6 +6138,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Cottage housing (middle housing)"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00061&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5677,7 +6152,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Cottage housing",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0055pdev",
@@ -5691,7 +6168,7 @@
       "statusUpdated": "2025-06-03",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5722,6 +6199,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00055&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5731,7 +6213,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b25m0052pdev",
@@ -5745,7 +6229,7 @@
       "statusUpdated": "2025-05-30",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5785,7 +6269,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Not yet known",
+      "middleHousing": false
     },
     {
       "id": "city-b2415962bldc",
@@ -5799,7 +6285,7 @@
       "statusUpdated": "2025-05-29",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5854,6 +6340,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00565&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5863,7 +6354,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2508117bldc",
@@ -5877,7 +6370,7 @@
       "statusUpdated": "2025-05-20",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Conversion or addition",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -5908,6 +6401,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Conversion or addition"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00217&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5917,7 +6415,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Conversion or addition",
+      "middleHousing": false
     },
     {
       "id": "city-b2506988bldc",
@@ -5931,7 +6431,7 @@
       "statusUpdated": "2025-05-01",
       "stageSource": "city permit records: 11 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "city weekly permit report",
       "stories": 2,
@@ -5964,6 +6464,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "4",
           "kind": "text"
@@ -5988,7 +6493,9 @@
           "value": "City of Spokane permit records and weekly permit report",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2505565bldc",
@@ -6002,7 +6509,7 @@
       "statusUpdated": "2025-04-07",
       "stageSource": "city permit records: 5 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
       "stories": null,
@@ -6033,6 +6540,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "4",
           "kind": "text"
@@ -6047,7 +6559,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0033pdev",
@@ -6061,7 +6575,7 @@
       "statusUpdated": "2025-03-25",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 101,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6092,6 +6606,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "101",
           "kind": "text"
@@ -6106,7 +6625,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b25m0021pdev",
@@ -6120,7 +6641,7 @@
       "statusUpdated": "2025-03-06",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 76,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6151,6 +6672,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "76",
           "kind": "text"
@@ -6165,7 +6691,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2502922bldr",
@@ -6179,7 +6707,7 @@
       "statusUpdated": "2025-02-21",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -6210,6 +6738,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -6224,7 +6757,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b25m0010pdev",
@@ -6238,7 +6773,7 @@
       "statusUpdated": "2025-02-07",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 30,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6277,6 +6812,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "30",
           "kind": "text"
@@ -6291,7 +6831,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2502198bldc",
@@ -6305,7 +6847,7 @@
       "statusUpdated": "2025-02-06",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 64,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6352,6 +6894,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "64",
           "kind": "text"
@@ -6366,7 +6913,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2422146bldc",
@@ -6380,7 +6929,7 @@
       "statusUpdated": "2024-12-13",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
       "stories": null,
@@ -6411,6 +6960,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Triplex or fourplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "4",
           "kind": "text"
@@ -6425,7 +6979,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Triplex or fourplex",
+      "middleHousing": true
     },
     {
       "id": "city-b24m0146pdev",
@@ -6439,7 +6995,7 @@
       "statusUpdated": "2024-11-26",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 60,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6470,6 +7026,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "60",
           "kind": "text"
@@ -6484,7 +7045,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2417372bldr",
@@ -6498,7 +7061,7 @@
       "statusUpdated": "2024-09-27",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -6529,6 +7092,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -6543,7 +7111,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2415968bldc",
@@ -6557,7 +7127,7 @@
       "statusUpdated": "2024-09-06",
       "stageSource": "city permit records: plan review approved",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 40,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6612,6 +7182,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "40",
           "kind": "text"
@@ -6626,7 +7201,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b24m0105pdev",
@@ -6640,7 +7217,7 @@
       "statusUpdated": "2024-08-23",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 64,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6671,6 +7248,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "64",
           "kind": "text"
@@ -6685,7 +7267,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2406546bldc",
@@ -6699,7 +7283,7 @@
       "statusUpdated": "2024-04-19",
       "stageSource": "city permit records: 8 of 14 buildings finaled",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Townhomes",
       "units": 43,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -6834,6 +7418,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "43",
           "kind": "text"
@@ -6848,7 +7437,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Townhomes",
+      "middleHousing": true
     },
     {
       "id": "city-b2406272bldr",
@@ -6862,7 +7453,7 @@
       "statusUpdated": "2024-04-16",
       "stageSource": "city permit records: 6 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -6893,6 +7484,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -6907,7 +7503,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     },
     {
       "id": "city-b2405741bldc",
@@ -6921,7 +7519,7 @@
       "statusUpdated": "2024-04-08",
       "stageSource": "city permit records: 2 of 4 buildings finaled",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -6984,6 +7582,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00246&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -6993,7 +7596,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2404761bldc",
@@ -7007,7 +7612,7 @@
       "statusUpdated": "2024-03-22",
       "stageSource": "city permit records: plan review approved",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 48,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -7054,6 +7659,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "48",
           "kind": "text"
@@ -7068,7 +7678,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2404320bldc",
@@ -7082,7 +7694,7 @@
       "statusUpdated": "2024-03-15",
       "stageSource": "city permit records: 17 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
+      "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
       "stories": null,
@@ -7161,6 +7773,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00194&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -7170,7 +7787,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2404005bldc",
@@ -7184,7 +7803,7 @@
       "statusUpdated": "2024-03-12",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Conversion or addition",
       "units": 96,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -7215,6 +7834,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Conversion or addition"
+        },
+        {
           "label": "Housing units",
           "value": "96",
           "kind": "text"
@@ -7229,7 +7853,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Conversion or addition",
+      "middleHousing": false
     },
     {
       "id": "city-b2400924bldc",
@@ -7243,7 +7869,7 @@
       "statusUpdated": "2024-01-17",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 236,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -7306,6 +7932,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "236",
           "kind": "text"
@@ -7320,7 +7951,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b24m0008pdev",
@@ -7334,7 +7967,7 @@
       "statusUpdated": "2024-01-12",
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 108,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -7365,6 +7998,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "108",
           "kind": "text"
@@ -7379,7 +8017,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2322189bldc",
@@ -7393,7 +8033,7 @@
       "statusUpdated": "2023-12-20",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Housing",
+      "projectType": "Apartments",
       "units": 24,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
@@ -7424,6 +8064,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
           "label": "Housing units",
           "value": "24",
           "kind": "text"
@@ -7438,7 +8083,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Apartments",
+      "middleHousing": false
     },
     {
       "id": "city-b2321443bldr",
@@ -7452,7 +8099,7 @@
       "statusUpdated": "2023-12-07",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "Middle housing",
+      "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
       "stories": null,
@@ -7491,6 +8138,11 @@
           "kind": "text"
         },
         {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
           "label": "Housing units",
           "value": "2",
           "kind": "text"
@@ -7505,7 +8157,9 @@
           "value": "City of Spokane permit records",
           "kind": "text"
         }
-      ]
+      ],
+      "buildingType": "Duplex",
+      "middleHousing": true
     }
   ]
 }

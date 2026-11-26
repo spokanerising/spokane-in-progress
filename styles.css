@@ -370,12 +370,77 @@ a:hover { text-decoration-thickness: 2px; }
 
 .chip:hover { border-color: var(--ink); }
 
-.tally {
+/* Building type and size dropdowns, side by side. */
+.selects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.select { display: grid; gap: 4px; min-width: 0; }
+
+.select__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.select select {
+  width: 100%;
+  min-height: 38px;
+  padding: 6px 30px 6px 10px;
+  border: 1px solid var(--rule);
+  border-bottom-color: var(--ink-2);
+  border-radius: 0;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23121212' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 11px center;
+  font: 500 14px var(--sans);
+  font-size: 16px; /* stops iOS zooming on focus */
+  color: var(--ink);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+@media (min-width: 861px) {
+  .select select { font-size: 14px; }
+}
+
+.select select:hover { border-color: var(--ink); }
+
+/* "What counts as middle housing?" */
+.explain { margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.explain summary { cursor: pointer; color: var(--link); width: fit-content; }
+.explain summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+.explain p { margin: 8px 0 0; line-height: 1.5; max-width: 60ch; }
+
+.tallyrow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
   margin: 20px 0 0;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--ink);
-  color: var(--ink);
 }
+
+.tally { margin: 0; color: var(--ink); }
+
+.clear {
+  flex: none;
+  padding: 0;
+  background: none;
+  border: none;
+  font: 600 11.5px var(--sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--link);
+  cursor: pointer;
+}
+
+.clear:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- project list ---------- */
 
@@ -436,6 +501,20 @@ a:hover { text-decoration-thickness: 2px; }
 
 .card__facts span + span::before { content: "·"; margin: 0 7px; color: var(--muted); }
 .card__facts b { font-weight: 700; color: var(--ink); }
+
+/* "Middle housing" marker on list rows. */
+.tag {
+  margin-left: 10px;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
 
 .empty { color: var(--muted); font-size: 15px; }
 

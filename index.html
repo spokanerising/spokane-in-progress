@@ -51,9 +51,29 @@
         <input type="search" id="search" placeholder="Search by name, street, or developer" autocomplete="off">
       </label>
       <div class="chips" id="status-chips" role="group" aria-label="Filter by stage"></div>
+
+      <div class="selects">
+        <label class="select">
+          <span class="select__label">Building type</span>
+          <select id="type-filter"></select>
+        </label>
+        <label class="select">
+          <span class="select__label">Project size</span>
+          <select id="size-filter"></select>
+        </label>
+      </div>
+
+      <details class="explain">
+        <summary>What counts as middle housing?</summary>
+        <p>Washington law defines middle housing as buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes: duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units are not on that list, so a house with an ADU is counted separately.</p>
+        <p>Building types here are worked out from permit descriptions, project names and units per building, so a few may be wrong. Project size counts every home in the project, across all its buildings.</p>
+      </details>
     </div>
 
-    <p class="tally" id="tally" aria-live="polite"></p>
+    <div class="tallyrow">
+      <p class="tally" id="tally" aria-live="polite"></p>
+      <button type="button" class="clear" id="clear-filters" hidden>Clear filters</button>
+    </div>
     <ol class="cards" id="cards"></ol>
     <p class="empty" id="empty" hidden>Nothing matches those filters. Clear the search or turn a stage back on.</p>
 

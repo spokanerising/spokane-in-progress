@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 
 import city_records as cr
 import display_tidy
+import housing_types
 
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
@@ -1126,6 +1127,8 @@ def main():
     # Last pass: tidy raw city text (abbreviations, shouting, stray notes in
     # addresses). Sheet-typed names and descriptions are left alone.
     display_tidy.polish(projects)
+    # Building type and the middle-housing flag (see housing_types.py).
+    housing_types.classify_all(projects)
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
