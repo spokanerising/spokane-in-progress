@@ -35,7 +35,15 @@ const state = {
   query: "",
   selected: null,
   builtAt: null,
+  measure: "homes", // what the stage bar is sized by: "homes" or "projects"
 };
+
+// Stages that count toward "in the pipeline": filed, not finished, not stalled.
+// Pre-Application is reported separately as "proposed".
+const PIPELINE = ["Applied", "Approved", "Under Construction"];
+
+const unitsOf = (list) => list.reduce((sum, p) => sum + (p.units > 0 ? p.units : 0), 0);
+const unknownUnits = (list) => list.filter((p) => !(p.units > 0)).length;
 
 const el = {
   cards: document.getElementById("cards"),
@@ -64,6 +72,9 @@ const escapeHtml = (value) =>
   );
 
 const numberWithCommas = (n) => n.toLocaleString("en-US");
+
+// "Address · Neighborhood", without a stray dot when either is missing.
+const where = (p) => [p.address, p.neighborhood].filter(Boolean).join(" · ");
 
 const plural = (n, one, many) => `${numberWithCommas(n)} ${n === 1 ? one : many}`;
 
@@ -136,27 +147,63 @@ function visible() {
 // --------------------------------------------------------------------------
 
 function drawSpine() {
-  const counts = STAGES.map((s) => ({
-    ...s,
-    n: state.projects.filter((p) => p.status === s.name).length,
-  }));
+  const homes = state.measure === "homes";
+  const counts = STAGES.map((s) => {
+    const inStage = state.projects.filter((p) => p.status === s.name);
+    return { ...s, projects: inStage.length, homes: unitsOf(inStage) };
+  });
+  const value = (s) => (homes ? s.homes : s.projects);
+  const noun = homes ? "homes" : "projects";
 
-  el.countStamp.textContent = `${numberWithCommas(state.projects.length)} projects, by stage`;
+  el.countStamp.textContent = homes
+    ? `${numberWithCommas(unitsOf(state.projects))} homes, by stage`
+    : `${numberWithCommas(state.projects.length)} projects, by stage`;
+  el.spine.setAttribute("aria-label", homes ? "Homes by stage" : "Projects by stage");
 
   el.spine.innerHTML = counts
-    .filter((s) => s.n > 0)
+    .filter((s) => value(s) > 0)
     .map(
       (s) =>
-        `<div class="spine__seg" style="flex-grow:${s.n};background:${s.color}" title="${s.n} ${escapeHtml(s.name.toLowerCase())}"></div>`
+        `<div class="spine__seg" style="flex-grow:${value(s)};background:${s.color}" title="${numberWithCommas(value(s))} ${noun}: ${escapeHtml(s.name.toLowerCase())}"></div>`
     )
     .join("");
 
   el.spineKey.innerHTML = counts
     .map(
       (s) =>
-        `<li><i style="background:${s.color}"></i><b>${s.n}</b> ${escapeHtml(s.name.toLowerCase())}</li>`
+        `<li><i style="background:${s.color}"></i><b>${numberWithCommas(value(s))}</b> ${escapeHtml(s.name.toLowerCase())}</li>`
     )
     .join("");
+
+  document.querySelectorAll("#measure button").forEach((b) =>
+    b.setAttribute("aria-pressed", String(b.dataset.measure === state.measure))
+  );
+}
+
+// The headline sentence. "At least" because projects with no reported unit
+// count add nothing to the totals.
+function drawLede() {
+  const box = document.getElementById("lede");
+  if (!box || !state.projects.length) return;
+  const inStages = (names) => state.projects.filter((p) => names.includes(p.status));
+  const pipeline = unitsOf(inStages(PIPELINE));
+  const building = unitsOf(inStages(["Under Construction"]));
+  const proposed = unitsOf(inStages(["Pre-Application"]));
+  const n = (x) => `<b>${numberWithCommas(x)}</b>`;
+  box.innerHTML =
+    `At least ${n(pipeline)} homes are working their way through Spokane’s permit process, ` +
+    `${n(building)} of them under construction.` +
+    (proposed ? ` Developers have proposed ${n(proposed)} more.` : "");
+}
+
+function drawNote() {
+  const note = document.getElementById("spine-source");
+  if (!note) return;
+  const missing = unknownUnits(state.projects);
+  note.textContent =
+    "Note: " +
+    (missing ? `Home totals leave out ${plural(missing, "project", "projects")} with no reported unit count. ` : "") +
+    `Construction status is estimated from permit activity. ${sourceLine()}`;
 }
 
 function drawChips() {
@@ -191,7 +238,7 @@ function drawCards(list) {
         <button class="card" data-id="${escapeHtml(p.id)}">
           <div class="card__stage"><i style="background:${colorOf(p.status)}"></i>${escapeHtml(p.status)}</div>
           <h3 class="card__name">${escapeHtml(p.name)}</h3>
-          <div class="card__where">${escapeHtml(p.address)}${p.neighborhood ? ` · ${escapeHtml(p.neighborhood)}` : ""}</div>
+          <div class="card__where">${escapeHtml(where(p))}</div>
           ${facts.length ? `<div class="card__facts">${facts.map((f) => `<span>${f}</span>`).join("")}</div>` : ""}
         </button>
       </li>`;
@@ -203,10 +250,12 @@ function drawCards(list) {
   });
 
   el.empty.hidden = list.length > 0;
+  const homes = unitsOf(list);
   el.tally.textContent =
-    list.length === state.projects.length
-      ? `${list.length} projects`
-      : `${list.length} of ${state.projects.length} projects`;
+    (list.length === state.projects.length
+      ? plural(list.length, "project", "projects")
+      : `${numberWithCommas(list.length)} of ${plural(state.projects.length, "project", "projects")}`) +
+    (homes ? ` · ${plural(homes, "home", "homes")}` : "");
 }
 
 function render() {
@@ -262,7 +311,7 @@ function select(id, flyTo) {
 
   el.detailBody.innerHTML = `
     <h2>${escapeHtml(project.name)}</h2>
-    <p class="detail__where">${escapeHtml(project.address)}${project.neighborhood ? ` · ${escapeHtml(project.neighborhood)}` : ""}</p>
+    <p class="detail__where">${escapeHtml(where(project))}</p>
 
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
@@ -514,6 +563,13 @@ async function start() {
   });
 
   document.getElementById("detail-close").addEventListener("click", closeDetail);
+
+  document.querySelectorAll("#measure button").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.measure = button.dataset.measure;
+      drawSpine();
+    });
+  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !el.detail.hidden) closeDetail();
   });
@@ -575,10 +631,8 @@ async function start() {
 
   if (payload) {
     state.builtAt = payload.builtAt ? new Date(payload.builtAt) : null;
-    const spineSource = document.getElementById("spine-source");
-    if (spineSource) {
-      spineSource.textContent = `Note: Construction status is estimated from permit activity. ${sourceLine()}`;
-    }
+    drawLede();
+    drawNote();
     drawMapKey();
     render();
   }

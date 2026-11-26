@@ -23,8 +23,15 @@
 
     <!-- The spine: every tracked project, stacked by where it is in its life. -->
     <div class="figure">
-      <p class="figure__title" id="count-stamp">Loading projects</p>
-      <div class="spine" id="spine" role="img" aria-label="Projects by stage"></div>
+      <p class="lede" id="lede" aria-live="polite"></p>
+      <div class="figure__head">
+        <p class="figure__title" id="count-stamp">Loading projects</p>
+        <div class="measure" id="measure" role="group" aria-label="Size the bar by">
+          <button type="button" data-measure="homes" aria-pressed="true">Homes</button>
+          <button type="button" data-measure="projects" aria-pressed="false">Projects</button>
+        </div>
+      </div>
+      <div class="spine" id="spine" role="img" aria-label="Homes by stage"></div>
       <ul class="spine__key" id="spine-key"></ul>
       <p class="source" id="spine-source">Note: Construction status is estimated from permit activity. Source: City of Spokane permit records.</p>
     </div>

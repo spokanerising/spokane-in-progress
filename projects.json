@@ -118,7 +118,7 @@
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
-      "description": "New 8 Bedroom New Duplex with garage, finished basement, and air conditioning.",
+      "description": "New 8 Bedroom Duplex with garage, finished basement, and air conditioning.",
       "permitNumbers": [
         "B2616976BLDR"
       ],
@@ -184,7 +184,7 @@
       "units": 22,
       "unitsSource": "city weekly permit report",
       "stories": 3,
-      "description": "New 3 story, 12 unit apartment building. / New 3 story, 10 unit apartment building.",
+      "description": "New 3 story, 12 unit apartment building. New 3 story, 10 unit apartment building.",
       "permitNumbers": [
         "B2604501BLDC",
         "B2604503BLDC",
@@ -432,7 +432,7 @@
     },
     {
       "id": "city-b26m0109pdev",
-      "name": "Cook St 6-Plex",
+      "name": "Cook St Sixplex",
       "address": "3007 N Cook St",
       "neighborhood": "Bemiss",
       "parcelId": "35091.0502",
@@ -604,7 +604,7 @@
     },
     {
       "id": "city-b25m0093pdev",
-      "name": "Walter 4-Plex",
+      "name": "Walter Fourplex",
       "address": "3005 E 14th Ave",
       "neighborhood": "Lincoln Heights",
       "parcelId": "35223.3901",
@@ -803,7 +803,7 @@
     },
     {
       "id": "city-b26m0095pdev",
-      "name": "4406 W Indian Trail Multi-Family",
+      "name": "4406 W Indian Trail Multifamily",
       "address": "4404 W Indian Trail Rd",
       "neighborhood": "Balboa-South Indian Trail",
       "parcelId": "26276.0052",
@@ -970,7 +970,7 @@
     },
     {
       "id": "city-b2614022bldc",
-      "name": "New 3 Unit Townhouse - 3199 E 10th",
+      "name": "3199 E 10th Ave Townhouses",
       "address": "3199 E 10th Ave",
       "neighborhood": "East Central",
       "parcelId": "35223.1429",
@@ -1029,7 +1029,7 @@
     },
     {
       "id": "city-b26m0091pdev",
-      "name": "F Street Multi Family",
+      "name": "F Street Multifamily",
       "address": "7811 N F St",
       "neighborhood": "Five Mile Prairie",
       "parcelId": "26261.0803",
@@ -2150,7 +2150,7 @@
         },
         {
           "label": "Source",
-          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
       ]
@@ -2209,7 +2209,7 @@
         },
         {
           "label": "Source",
-          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
       ]
@@ -2268,7 +2268,7 @@
         },
         {
           "label": "Source",
-          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
       ]
@@ -2327,7 +2327,7 @@
         },
         {
           "label": "Source",
-          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
           "kind": "text"
         }
       ]
@@ -3252,7 +3252,7 @@
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
-      "description": "New 6 Bedroom New Duplex - Apartment building 2 units with garage, covered entry area, and air conditioning.",
+      "description": "New 6 Bedroom Duplex - Apartment building 2 units with garage, covered entry area, and air conditioning.",
       "permitNumbers": [
         "B2604346BLDR"
       ],
@@ -3617,7 +3617,7 @@
     },
     {
       "id": "city-b26m0022pdev",
-      "name": "1320 W 12th Ave 4-Plex",
+      "name": "1320 W 12th Ave Fourplex",
       "address": "1320 W 12th Ave",
       "neighborhood": "Cliff-Cannon",
       "parcelId": "35193.1712",
@@ -3894,7 +3894,7 @@
     {
       "id": "city-b25m0096pdev",
       "name": "Falls Ave Multifamily",
-      "address": "2114 W Falls Ave & 2111 W Ohio Ave Secondary Address For This Parce",
+      "address": "2114 W Falls Ave & 2111 W Ohio Ave",
       "neighborhood": "West Central",
       "parcelId": "25133.1510",
       "lat": 47.66047045877881,
@@ -4022,7 +4022,7 @@
     },
     {
       "id": "city-b2600937bldc",
-      "name": "Norman/Jefferson Mixed Use COU",
+      "name": "Norman/Jefferson Mixed-Use Conversion",
       "address": "115 S Jefferson St",
       "neighborhood": "Riverside",
       "parcelId": "35192.1201",
@@ -4448,7 +4448,7 @@
       "units": 2,
       "unitsSource": "city weekly permit report",
       "stories": null,
-      "description": "New 6 Bedroom New Duplex - Apartment building 2 units with garage, covered deck, covered entry area, and air conditioning.",
+      "description": "New 6 Bedroom Duplex - Apartment building 2 units with garage, covered deck, covered entry area, and air conditioning.",
       "permitNumbers": [
         "B2517162BLDR"
       ],
@@ -4886,7 +4886,7 @@
       "units": 8,
       "unitsSource": "city weekly permit report",
       "stories": 2,
-      "description": "New 2 story Fourplex, 4286 SQFT.",
+      "description": "New 2 story Fourplex, 4286 sq. ft.",
       "permitNumbers": [
         "B2515401BLDC",
         "B2515403BLDC"
@@ -5293,7 +5293,7 @@
       "units": 24,
       "unitsSource": "city weekly permit report, permit description",
       "stories": 2,
-      "description": "New 2 story 4-Unit Townhome",
+      "description": "New 2 story 4-Unit Townhome.",
       "permitNumbers": [
         "B2511997BLDC",
         "B2512000BLDC",
@@ -5867,7 +5867,7 @@
     },
     {
       "id": "city-b2508117bldc",
-      "name": "8th Ave Apts Fire Restoration & New Basement Units",
+      "name": "8th Ave Apartments Fire Restoration & New Basement Units",
       "address": "1203 W 8th Ave",
       "neighborhood": "Cliff-Cannon",
       "parcelId": "35193.0712",
@@ -5935,7 +5935,7 @@
       "units": 4,
       "unitsSource": "city weekly permit report",
       "stories": 2,
-      "description": "NEW CONSTRUCTION FOR A SINGLE BUILDING 2 STORY- FOURPLEX",
+      "description": "New construction for a single building 2 story - fourplex.",
       "permitNumbers": [
         "B2506988BLDC"
       ],
@@ -6051,7 +6051,7 @@
     },
     {
       "id": "city-b25m0033pdev",
-      "name": "Pacific & Perry Multi-Family",
+      "name": "Pacific & Perry Multifamily",
       "address": "1408 E Pacific Ave",
       "neighborhood": "East Central",
       "parcelId": "35212.2204",
@@ -6228,7 +6228,7 @@
     },
     {
       "id": "city-b25m0010pdev",
-      "name": "NEPDA Mixed Use (Apts over Daycare)",
+      "name": "NEPDA Mixed-Use (Apartments over Daycare)",
       "address": "3011 E Wellesley Ave",
       "neighborhood": "Hillyard",
       "parcelId": "36343.3007",
@@ -6370,7 +6370,7 @@
     },
     {
       "id": "city-b2422146bldc",
-      "name": "Boswell 4-Plex",
+      "name": "Boswell Fourplex",
       "address": "227 E Lacrosse Ave",
       "neighborhood": "Nevada Heights",
       "parcelId": "35052.2721",
@@ -6547,7 +6547,7 @@
     },
     {
       "id": "city-b2415968bldc",
-      "name": "Madison & Sharp Multi-Family",
+      "name": "Madison & Sharp Multifamily",
       "address": "1009 W Sharp Ave",
       "neighborhood": "West Central",
       "parcelId": "35182.3201",
@@ -6630,7 +6630,7 @@
     },
     {
       "id": "city-b24m0105pdev",
-      "name": "007 Project (6-Story w/ Parking)",
+      "name": "007 Project (6-Story with Parking)",
       "address": "808 E Sprague Ave",
       "neighborhood": "East Central",
       "parcelId": "35201.0111",
@@ -6997,7 +6997,7 @@
     },
     {
       "id": "city-b2404761bldc",
-      "name": "Redband MF Bldgs C & D",
+      "name": "Redband Multifamily Buildings C & D",
       "address": "1620 N River Ridge Blvd",
       "neighborhood": "West Hills",
       "parcelId": "25116.0077",
@@ -7174,7 +7174,7 @@
     },
     {
       "id": "city-b2404005bldc",
-      "name": "Peyton Building COU",
+      "name": "Peyton Building Conversion",
       "address": "10 N Post St",
       "neighborhood": "Riverside",
       "parcelId": "35183.0507",
@@ -7324,7 +7324,7 @@
     },
     {
       "id": "city-b24m0008pdev",
-      "name": "East Cora Multi-Family",
+      "name": "East Cora Multifamily",
       "address": "316 W Cora Ave",
       "neighborhood": "Audubon-Downriver",
       "parcelId": "35064.3616",

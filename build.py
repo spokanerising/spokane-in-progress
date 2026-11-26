@@ -18,6 +18,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 import city_records as cr
+import display_tidy
 
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
@@ -1121,6 +1122,10 @@ def main():
             counts[p["status"]] = counts.get(p["status"], 0) + 1
         print(f"Published {len(auto)} project(s) from the city's permit records: "
               + ", ".join(f"{n} {s}" for s, n in counts.items()))
+
+    # Last pass: tidy raw city text (abbreviations, shouting, stray notes in
+    # addresses). Sheet-typed names and descriptions are left alone.
+    display_tidy.polish(projects)
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
