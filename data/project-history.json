@@ -1,0 +1,326 @@
+{
+ "city-b2321443bldr": {
+  "since": "2023-12-07",
+  "stage": "Approved"
+ },
+ "city-b2322426bldr": {
+  "since": "2025-11-10",
+  "stage": "Under Construction"
+ },
+ "city-b2404320bldc": {
+  "since": "2024-03-15",
+  "stage": "Under Construction"
+ },
+ "city-b2404761bldc": {
+  "since": "2024-03-22",
+  "stage": "Approved"
+ },
+ "city-b2405741bldc": {
+  "since": "2024-04-08",
+  "stage": "Under Construction"
+ },
+ "city-b2406272bldr": {
+  "since": "2024-04-16",
+  "stage": "Under Construction"
+ },
+ "city-b2406546bldc": {
+  "since": "2024-04-19",
+  "stage": "Under Construction"
+ },
+ "city-b2415962bldc": {
+  "since": "2025-05-29",
+  "stage": "Under Construction"
+ },
+ "city-b2415968bldc": {
+  "since": "2024-09-06",
+  "stage": "Approved"
+ },
+ "city-b2417372bldr": {
+  "since": "2024-09-27",
+  "stage": "Under Construction"
+ },
+ "city-b2422146bldc": {
+  "since": "2024-12-13",
+  "stage": "Approved"
+ },
+ "city-b2500228bldc": {
+  "since": "2026-04-24",
+  "stage": "Under Construction"
+ },
+ "city-b2502198bldc": {
+  "since": "2025-02-06",
+  "stage": "Applied"
+ },
+ "city-b2502922bldr": {
+  "since": "2025-02-21",
+  "stage": "Under Construction"
+ },
+ "city-b2505565bldc": {
+  "since": "2025-04-07",
+  "stage": "Under Construction"
+ },
+ "city-b2506988bldc": {
+  "since": "2025-05-01",
+  "stage": "Under Construction"
+ },
+ "city-b2508117bldc": {
+  "since": "2025-05-20",
+  "stage": "Under Construction"
+ },
+ "city-b2510514bldr": {
+  "since": "2025-07-01",
+  "stage": "Under Construction"
+ },
+ "city-b2511997bldc": {
+  "since": "2025-07-29",
+  "stage": "Under Construction"
+ },
+ "city-b2512924bldc": {
+  "since": "2025-08-01",
+  "stage": "Under Construction"
+ },
+ "city-b2514195bldr": {
+  "since": "2025-08-22",
+  "stage": "Approved"
+ },
+ "city-b2515144bldr": {
+  "since": "2025-11-05",
+  "stage": "Approved"
+ },
+ "city-b2515401bldc": {
+  "since": "2025-09-12",
+  "stage": "Under Construction"
+ },
+ "city-b2515748bldc": {
+  "since": "2025-09-19",
+  "stage": "Under Construction"
+ },
+ "city-b2515824bldr": {
+  "since": "2025-09-22",
+  "stage": "Under Construction"
+ },
+ "city-b2516195bldc": {
+  "since": "2025-09-26",
+  "stage": "Approved"
+ },
+ "city-b2516743bldr": {
+  "since": "2025-10-08",
+  "stage": "Approved"
+ },
+ "city-b2517162bldr": {
+  "since": "2025-10-13",
+  "stage": "Complete"
+ },
+ "city-b25m0052pdev": {
+  "since": "2025-05-30",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0055pdev": {
+  "since": "2025-06-03",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0061pdev": {
+  "since": "2025-06-17",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0066pdev": {
+  "since": "2025-06-20",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0073pdev": {
+  "since": "2026-02-24",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0075pdev": {
+  "since": "2025-07-15",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0076pdev": {
+  "since": "2025-07-21",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0085pdev": {
+  "since": "2025-08-26",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0086pdev": {
+  "since": "2025-08-26",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0090pdev": {
+  "since": "2025-09-03",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0091pdev": {
+  "since": "2026-02-12",
+  "stage": "Approved"
+ },
+ "city-b25m0093pdev": {
+  "since": "2026-09-28",
+  "stage": "Applied"
+ },
+ "city-b25m0094pdev": {
+  "since": "2026-03-17",
+  "stage": "Under Construction"
+ },
+ "city-b25m0096pdev": {
+  "since": "2026-01-26",
+  "stage": "Under Construction"
+ },
+ "city-b25m0112pdev": {
+  "since": "2026-03-31",
+  "stage": "Under Construction"
+ },
+ "city-b2600346bldc": {
+  "since": "2026-07-27",
+  "stage": "Approved"
+ },
+ "city-b2600511bldc": {
+  "since": "2026-01-13",
+  "stage": "Approved"
+ },
+ "city-b2600702bldr": {
+  "since": "2026-01-16",
+  "stage": "Under Construction"
+ },
+ "city-b2602760bldr": {
+  "since": "2026-02-25",
+  "stage": "Under Construction"
+ },
+ "city-b2602761bldr": {
+  "since": "2026-02-25",
+  "stage": "Under Construction"
+ },
+ "city-b2602789bldr": {
+  "since": "2026-05-29",
+  "stage": "Under Construction"
+ },
+ "city-b2603688bldc": {
+  "since": "2026-03-16",
+  "stage": "Applied"
+ },
+ "city-b2604346bldr": {
+  "since": "2026-03-27",
+  "stage": "Under Construction"
+ },
+ "city-b2604501bldc": {
+  "since": "2026-11-16",
+  "stage": "Approved"
+ },
+ "city-b2604790bldr": {
+  "since": "2026-04-06",
+  "stage": "Approved"
+ },
+ "city-b2604872bldc": {
+  "since": "2026-05-19",
+  "stage": "Under Construction"
+ },
+ "city-b2605678bldr": {
+  "since": "2026-04-20",
+  "stage": "Under Construction"
+ },
+ "city-b2606433bldr": {
+  "since": "2026-05-03",
+  "stage": "Approved"
+ },
+ "city-b2609293bldr": {
+  "since": "2026-06-21",
+  "stage": "Under Construction"
+ },
+ "city-b2609463bldr": {
+  "since": "2026-06-23",
+  "stage": "Under Construction"
+ },
+ "city-b2610907bldc": {
+  "since": "2026-07-27",
+  "stage": "Approved"
+ },
+ "city-b2614022bldc": {
+  "since": "2026-09-08",
+  "stage": "Applied"
+ },
+ "city-b2614510bldc": {
+  "since": "2026-09-15",
+  "stage": "Applied"
+ },
+ "city-b2615342bldc": {
+  "since": "2026-09-28",
+  "stage": "Applied"
+ },
+ "city-b2615612bldr": {
+  "since": "2026-10-01",
+  "stage": "Applied"
+ },
+ "city-b2616741bldr": {
+  "since": "2026-11-17",
+  "stage": "Approved"
+ },
+ "city-b2616976bldr": {
+  "since": "2026-11-17",
+  "stage": "Approved"
+ },
+ "city-b2617887bldr": {
+  "since": "2026-11-05",
+  "stage": "Applied"
+ },
+ "city-b26m0006pdev": {
+  "since": "2026-01-23",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0015pdev": {
+  "since": "2026-11-18",
+  "stage": "Applied"
+ },
+ "city-b26m0022pdev": {
+  "since": "2026-02-25",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0029pdev": {
+  "since": "2026-03-12",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0039pdev": {
+  "since": "2026-11-12",
+  "stage": "Applied"
+ },
+ "city-b26m0044pdev": {
+  "since": "2026-04-17",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0055pdev": {
+  "since": "2026-05-20",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0061pdev": {
+  "since": "2026-05-28",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0091pdev": {
+  "since": "2026-09-03",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0095pdev": {
+  "since": "2026-09-16",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0097pdev": {
+  "since": "2026-09-16",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0099pdev": {
+  "since": "2026-09-25",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0104pdev": {
+  "since": "2026-10-15",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0109pdev": {
+  "since": "2026-10-26",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0112pdev": {
+  "since": "2026-11-05",
+  "stage": "Pre-Application"
+ }
+}
