@@ -7,8 +7,20 @@
   "since": "2023-12-07",
   "stage": "Approved"
  },
+ "city-b2322189bldc": {
+  "since": "2023-12-20",
+  "stage": "Approved"
+ },
  "city-b2322426bldr": {
   "since": "2025-11-10",
+  "stage": "Under Construction"
+ },
+ "city-b2400924bldc": {
+  "since": "2024-01-17",
+  "stage": "Approved"
+ },
+ "city-b2404005bldc": {
+  "since": "2024-03-12",
   "stage": "Under Construction"
  },
  "city-b2404320bldc": {
@@ -46,6 +58,18 @@
  "city-b2422146bldc": {
   "since": "2024-12-13",
   "stage": "Approved"
+ },
+ "city-b24m0008pdev": {
+  "since": "2024-01-12",
+  "stage": "Pre-Application"
+ },
+ "city-b24m0105pdev": {
+  "since": "2024-08-23",
+  "stage": "Pre-Application"
+ },
+ "city-b24m0146pdev": {
+  "since": "2024-11-26",
+  "stage": "Pre-Application"
  },
  "city-b2500228bldc": {
   "since": "2026-04-24",
@@ -95,6 +119,10 @@
   "since": "2025-09-12",
   "stage": "Under Construction"
  },
+ "city-b2515747bldc": {
+  "since": "2025-09-19",
+  "stage": "Under Construction"
+ },
  "city-b2515748bldc": {
   "since": "2025-09-19",
   "stage": "Under Construction"
@@ -114,6 +142,18 @@
  "city-b2517162bldr": {
   "since": "2025-10-13",
   "stage": "Complete"
+ },
+ "city-b25m0010pdev": {
+  "since": "2025-02-07",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0021pdev": {
+  "since": "2025-03-06",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0033pdev": {
+  "since": "2025-03-25",
+  "stage": "Pre-Application"
  },
  "city-b25m0052pdev": {
   "since": "2025-05-30",
@@ -171,6 +211,10 @@
   "since": "2026-01-26",
   "stage": "Under Construction"
  },
+ "city-b25m0103pdev": {
+  "since": "2025-10-14",
+  "stage": "Pre-Application"
+ },
  "city-b25m0112pdev": {
   "since": "2026-03-31",
   "stage": "Under Construction"
@@ -186,6 +230,14 @@
  "city-b2600702bldr": {
   "since": "2026-01-16",
   "stage": "Under Construction"
+ },
+ "city-b2600937bldc": {
+  "since": "2026-01-21",
+  "stage": "Applied"
+ },
+ "city-b2602644bldc": {
+  "since": "2026-02-24",
+  "stage": "Approved"
  },
  "city-b2602760bldr": {
   "since": "2026-02-25",
@@ -325,6 +377,22 @@
  },
  "city-b26m0112pdev": {
   "since": "2026-11-05",
+  "stage": "Pre-Application"
+ },
+ "monthly-b23m0147pdev": {
+  "since": "2026-05-31",
+  "stage": "Pre-Application"
+ },
+ "monthly-b2600350": {
+  "since": "2026-05-31",
+  "stage": "Applied"
+ },
+ "monthly-b2601077": {
+  "since": "2026-05-31",
+  "stage": "Approved"
+ },
+ "monthly-b26m0031pdev": {
+  "since": "2026-05-31",
   "stage": "Pre-Application"
  }
 }

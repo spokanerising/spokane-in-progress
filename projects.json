@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-26T22:31:36.756901+00:00",
+  "builtAt": "2026-11-26T22:37:07.578737+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -2097,6 +2097,242 @@
       ]
     },
     {
+      "id": "monthly-b26m0031pdev",
+      "name": "Stirling Heights Townhomes",
+      "address": "3551 W 25th Ave",
+      "neighborhood": "",
+      "parcelId": "",
+      "lat": 47.631821513423,
+      "lng": -117.464078433307,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Housing",
+      "units": 111,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B26M0031PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B26M0031PDEV",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "111",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$49,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "monthly-b2601077",
+      "name": "Perry District Apartments",
+      "address": "1225 E Newark Ave",
+      "neighborhood": "",
+      "parcelId": "",
+      "lat": 47.649256498144,
+      "lng": -117.39220778469,
+      "status": "Approved",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Largest Projects 2026, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Housing",
+      "units": 40,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2601077"
+      ],
+      "permits": [
+        {
+          "id": "B2601077",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "40",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$5,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "monthly-b23m0147pdev",
+      "name": "Senior Housing",
+      "address": "315 W 9th Ave",
+      "neighborhood": "",
+      "parcelId": "",
+      "lat": 47.647149739062,
+      "lng": -117.416720393328,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Housing",
+      "units": 36,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B23M0147PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B23M0147PDEV",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "36",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$11,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "monthly-b2600350",
+      "name": "The Crest at Riverview Apartments",
+      "address": "1777 E Upriver Dr",
+      "neighborhood": "",
+      "parcelId": "",
+      "lat": 47.676954446968,
+      "lng": -117.383521981744,
+      "status": "Applied",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Largest Projects in Plan Review, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Housing",
+      "units": 31,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2600350"
+      ],
+      "permits": [
+        {
+          "id": "B2600350",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "31",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$10,455,258",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of 2026-05-31",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b26m0061pdev",
       "name": "Old Fort Dr Duplex Split",
       "address": "5406 W Old Fort Dr",
@@ -3514,6 +3750,65 @@
       ]
     },
     {
+      "id": "city-b2602644bldc",
+      "name": "Cancer Can't Lodge",
+      "address": "1404 W Mallon Ave",
+      "neighborhood": "West Central",
+      "parcelId": "25131.4308",
+      "lat": 47.66545798160785,
+      "lng": -117.43281162933512,
+      "status": "Approved",
+      "statusUpdated": "2026-02-24",
+      "stageSource": "city permit records: plan review approved",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 10,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2602644BLDC"
+      ],
+      "permits": [
+        {
+          "id": "B2602644BLDC",
+          "type": "Commercial Building New",
+          "status": "Plan Review Approved",
+          "opened": "2026-02-24",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00118&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "10",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00118&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b25m0091pdev",
       "name": "Moody Apartments",
       "address": "5484 S Freya St",
@@ -3525,9 +3820,9 @@
       "statusUpdated": "2026-02-12",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 24,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -3580,6 +3875,11 @@
           "kind": "text"
         },
         {
+          "label": "Housing units",
+          "value": "24",
+          "kind": "text"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00101&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -3593,7 +3893,7 @@
     },
     {
       "id": "city-b25m0096pdev",
-      "name": "Falls Ave Multi-Family",
+      "name": "Falls Ave Multifamily",
       "address": "2114 W Falls Ave & 2111 W Ohio Ave Secondary Address For This Parce",
       "neighborhood": "West Central",
       "parcelId": "25133.1510",
@@ -3603,9 +3903,9 @@
       "statusUpdated": "2026-01-26",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 12,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -3647,6 +3947,11 @@
         {
           "label": "Stage",
           "value": "Under Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "12",
           "kind": "text"
         },
         {
@@ -3706,6 +4011,73 @@
         {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00006&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "city-b2600937bldc",
+      "name": "Norman/Jefferson Mixed Use COU",
+      "address": "115 S Jefferson St",
+      "neighborhood": "Riverside",
+      "parcelId": "35192.1201",
+      "lat": 47.656085742623915,
+      "lng": -117.42940428352983,
+      "status": "Applied",
+      "statusUpdated": "2026-01-21",
+      "stageSource": "city permit records: in plan review",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 40,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2600937BLDC",
+        "B2600142SEPA"
+      ],
+      "permits": [
+        {
+          "id": "B2600937BLDC",
+          "type": "Commercial Change of Use",
+          "status": "Plan Review Extended",
+          "opened": "2026-01-21",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00025&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2600142SEPA",
+          "type": "SEPA Review",
+          "status": "Closed",
+          "opened": "2026-01-06",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BEP&capID2=00000&capID3=00001&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "40",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00025&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         },
         {
@@ -4002,6 +4374,65 @@
       ]
     },
     {
+      "id": "city-b25m0103pdev",
+      "name": "Grove on Grand",
+      "address": "3508 S Grand Blvd",
+      "neighborhood": "Comstock",
+      "parcelId": "35322.2803",
+      "lat": 47.622120793812364,
+      "lng": -117.40296823644564,
+      "status": "Pre-Application",
+      "statusUpdated": "2025-10-14",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 18,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B25M0103PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B25M0103PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2025-10-14",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00103&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "18",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00103&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b2517162bldr",
       "name": "3196 E 10th Ave Duplex",
       "address": "3196 E 10th Ave",
@@ -4154,9 +4585,9 @@
       "statusUpdated": "2025-09-26",
       "stageSource": "city permit records: building permit issued",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 24,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -4249,6 +4680,11 @@
           "kind": "text"
         },
         {
+          "label": "Housing units",
+          "value": "24",
+          "kind": "text"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00443&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -4320,9 +4756,9 @@
       ]
     },
     {
-      "id": "city-b2515748bldc",
-      "name": "River Family Haven",
-      "address": "2752 W Elliott Ct",
+      "id": "city-b2515747bldc",
+      "name": "River Family Haven Complex",
+      "address": "2752 W Elliott Ct & 2720 W Elliott Ct",
       "neighborhood": "West Hills",
       "parcelId": "25113.2107",
       "lat": 47.67627744844067,
@@ -4331,20 +4767,29 @@
       "statusUpdated": "2025-09-19",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 72,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
+        "B2515747BLDC",
         "B2515748BLDC",
         "B2515749BLDC",
+        "B2515751BLDC",
         "B2515757BLDC",
         "B2502889SEPA",
         "Z25-461BLA",
         "P2505664PDEV"
       ],
       "permits": [
+        {
+          "id": "B2515747BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2025-09-19",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00422&agencyCode=SPOKANE&IsToShowInspection="
+        },
         {
           "id": "B2515748BLDC",
           "type": "Commercial Building New",
@@ -4358,6 +4803,13 @@
           "status": "Issued",
           "opened": "2025-09-19",
           "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00424&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2515751BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2025-09-19",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00426&agencyCode=SPOKANE&IsToShowInspection="
         },
         {
           "id": "B2515757BLDC",
@@ -4402,8 +4854,13 @@
           "kind": "text"
         },
         {
+          "label": "Housing units",
+          "value": "72",
+          "kind": "text"
+        },
+        {
           "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00423&agencyCode=SPOKANE&IsToShowInspection=",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00422&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         },
         {
@@ -4733,14 +5190,15 @@
       "statusUpdated": "2025-08-01",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 97,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
         "B2512924BLDC",
         "B2512925BLDC",
+        "B2512926BLDC",
         "Z25-447BLA",
         "P2506702PDEV",
         "B2609901GRAD"
@@ -4759,6 +5217,13 @@
           "status": "Issued",
           "opened": "2025-08-01",
           "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00358&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2512926BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2025-08-01",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00359&agencyCode=SPOKANE&IsToShowInspection="
         },
         {
           "id": "Z25-447BLA",
@@ -4796,6 +5261,11 @@
           "kind": "text"
         },
         {
+          "label": "Housing units",
+          "value": "97",
+          "kind": "text"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BCN&capID2=00000&capID3=00357&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -4809,7 +5279,7 @@
     },
     {
       "id": "city-b2511997bldc",
-      "name": "10th Ave. Fourplexes",
+      "name": "10th Avenue Fourplexes Phase 2",
       "address": "3202 E 10th & 3155 E 10th Ave and 1 more",
       "neighborhood": "East Central",
       "parcelId": "35223.1617",
@@ -5580,6 +6050,124 @@
       ]
     },
     {
+      "id": "city-b25m0033pdev",
+      "name": "Pacific & Perry Multi-Family",
+      "address": "1408 E Pacific Ave",
+      "neighborhood": "East Central",
+      "parcelId": "35212.2204",
+      "lat": 47.65526454545045,
+      "lng": -117.38949942708157,
+      "status": "Pre-Application",
+      "statusUpdated": "2025-03-25",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 101,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B25M0033PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B25M0033PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2025-03-25",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00033&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "101",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00033&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "city-b25m0021pdev",
+      "name": "Garden Springs Apartments",
+      "address": "1805 S Rustle St",
+      "neighborhood": "West Hills",
+      "parcelId": "25262.0707",
+      "lat": 47.63915134487849,
+      "lng": -117.47274411975816,
+      "status": "Pre-Application",
+      "statusUpdated": "2025-03-06",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 76,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B25M0021PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B25M0021PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2025-03-06",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00021&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "76",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00021&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b2502922bldr",
       "name": "3823 E 27th Ave Duplex",
       "address": "3823 E 27th Ave",
@@ -5639,6 +6227,73 @@
       ]
     },
     {
+      "id": "city-b25m0010pdev",
+      "name": "NEPDA Mixed Use (Apts over Daycare)",
+      "address": "3011 E Wellesley Ave",
+      "neighborhood": "Hillyard",
+      "parcelId": "36343.3007",
+      "lat": 47.70076270247328,
+      "lng": -117.3658019345652,
+      "status": "Pre-Application",
+      "statusUpdated": "2025-02-07",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 30,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B25M0010PDEV",
+        "B2504980SEPA"
+      ],
+      "permits": [
+        {
+          "id": "B25M0010PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2025-02-07",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00010&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2504980SEPA",
+          "type": "SEPA Review",
+          "status": "Closed",
+          "opened": "2025-03-28",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BEP&capID2=00000&capID3=00004&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "30",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00010&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b2502198bldc",
       "name": "Riverpoint Multifamily",
       "address": "643 N Riverpoint Blvd",
@@ -5650,9 +6305,9 @@
       "statusUpdated": "2025-02-06",
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 64,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -5694,6 +6349,11 @@
         {
           "label": "Stage",
           "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "64",
           "kind": "text"
         },
         {
@@ -5768,6 +6428,65 @@
       ]
     },
     {
+      "id": "city-b24m0146pdev",
+      "name": "Baldwin Apartments",
+      "address": "130 E Baldwin Ave",
+      "neighborhood": "Logan",
+      "parcelId": "35083.2714",
+      "lat": 47.6759486060521,
+      "lng": -117.40812051836784,
+      "status": "Pre-Application",
+      "statusUpdated": "2024-11-26",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 60,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B24M0146PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B24M0146PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2024-11-26",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BPD&capID2=00000&capID3=00146&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "60",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BPD&capID2=00000&capID3=00146&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b2417372bldr",
       "name": "938 E Nora Ave Duplex",
       "address": "938 E Nora Ave",
@@ -5828,7 +6547,7 @@
     },
     {
       "id": "city-b2415968bldc",
-      "name": "Madison & Sharp Multifamily",
+      "name": "Madison & Sharp Multi-Family",
       "address": "1009 W Sharp Ave",
       "neighborhood": "West Central",
       "parcelId": "35182.3201",
@@ -5838,9 +6557,9 @@
       "statusUpdated": "2024-09-06",
       "stageSource": "city permit records: plan review approved",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 40,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -5893,6 +6612,11 @@
           "kind": "text"
         },
         {
+          "label": "Housing units",
+          "value": "40",
+          "kind": "text"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00568&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -5905,8 +6629,67 @@
       ]
     },
     {
+      "id": "city-b24m0105pdev",
+      "name": "007 Project (6-Story w/ Parking)",
+      "address": "808 E Sprague Ave",
+      "neighborhood": "East Central",
+      "parcelId": "35201.0111",
+      "lat": 47.65701025638099,
+      "lng": -117.39829555966377,
+      "status": "Pre-Application",
+      "statusUpdated": "2024-08-23",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 64,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B24M0105PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B24M0105PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2024-08-23",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BPD&capID2=00000&capID3=00105&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "64",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BPD&capID2=00000&capID3=00105&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "city-b2406546bldc",
-      "name": "Vistas Townhomes",
+      "name": "The Vistas Townhomes - Phase 3",
       "address": "4408 N Dapple St",
       "neighborhood": "Hillyard",
       "parcelId": "35022.0101",
@@ -5916,9 +6699,9 @@
       "statusUpdated": "2024-04-19",
       "stageSource": "city permit records: 8 of 14 buildings finaled",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 43,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -6048,6 +6831,11 @@
         {
           "label": "Stage",
           "value": "Under Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "43",
           "kind": "text"
         },
         {
@@ -6209,7 +6997,7 @@
     },
     {
       "id": "city-b2404761bldc",
-      "name": "Redband MF",
+      "name": "Redband MF Bldgs C & D",
       "address": "1620 N River Ridge Blvd",
       "neighborhood": "West Hills",
       "parcelId": "25116.0077",
@@ -6219,9 +7007,9 @@
       "statusUpdated": "2024-03-22",
       "stageSource": "city permit records: plan review approved",
       "lastVerified": "2026-11-26",
-      "projectType": "",
-      "units": null,
-      "unitsSource": "",
+      "projectType": "Housing",
+      "units": 48,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -6263,6 +7051,11 @@
         {
           "label": "Stage",
           "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "48",
           "kind": "text"
         },
         {
@@ -6370,6 +7163,274 @@
         {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00194&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "city-b2404005bldc",
+      "name": "Peyton Building COU",
+      "address": "10 N Post St",
+      "neighborhood": "Riverside",
+      "parcelId": "35183.0507",
+      "lat": 47.65755787310949,
+      "lng": -117.42330636037943,
+      "status": "Under Construction",
+      "statusUpdated": "2024-03-12",
+      "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 96,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2404005BLDC"
+      ],
+      "permits": [
+        {
+          "id": "B2404005BLDC",
+          "type": "Commercial Change of Use",
+          "status": "Issued",
+          "opened": "2024-03-12",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00165&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Under Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "96",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00165&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "city-b2400924bldc",
+      "name": "NODO Normandie",
+      "address": "115 W Mission Ave & 127 W Mission Ave",
+      "neighborhood": "Emerson-Garfield",
+      "parcelId": "35181.0208",
+      "lat": 47.67160485491862,
+      "lng": -117.41344325471684,
+      "status": "Approved",
+      "statusUpdated": "2024-01-17",
+      "stageSource": "city permit records: building permit issued",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 236,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2400924BLDC",
+        "B2400927BLDC",
+        "B2400929BLDC",
+        "B2400931BLDC",
+        "B2400932BLDC"
+      ],
+      "permits": [
+        {
+          "id": "B2400924BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2024-01-17",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00025&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2400927BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2024-01-17",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00026&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2400929BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2024-01-17",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00027&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2400931BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2024-01-17",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00028&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2400932BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2024-01-17",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00029&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "236",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BCN&capID2=00000&capID3=00025&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "city-b24m0008pdev",
+      "name": "East Cora Multi-Family",
+      "address": "316 W Cora Ave",
+      "neighborhood": "Audubon-Downriver",
+      "parcelId": "35064.3616",
+      "lat": 47.688075081046044,
+      "lng": -117.46552455834737,
+      "status": "Pre-Application",
+      "statusUpdated": "2024-01-12",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 108,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B24M0008PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B24M0008PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2024-01-12",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BPD&capID2=00000&capID3=00008&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "108",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=24BPD&capID2=00000&capID3=00008&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "city-b2322189bldc",
+      "name": "NODO Sinto",
+      "address": "1335 N Normandie St",
+      "neighborhood": "Emerson-Garfield",
+      "parcelId": "35181.0511",
+      "lat": 47.670409399332335,
+      "lng": -117.41486086181222,
+      "status": "Approved",
+      "statusUpdated": "2023-12-20",
+      "stageSource": "city permit records: building permit issued",
+      "lastVerified": "2026-11-26",
+      "projectType": "Housing",
+      "units": 24,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2322189BLDC"
+      ],
+      "permits": [
+        {
+          "id": "B2322189BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2023-12-20",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=23BCN&capID2=00000&capID3=00571&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "24",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=23BCN&capID2=00000&capID3=00571&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         },
         {

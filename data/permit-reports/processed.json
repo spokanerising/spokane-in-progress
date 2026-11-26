@@ -15,6 +15,14 @@
     "to": "4/5/2026",
     "units": 4
   },
+  "daily-activity-report-2026-04-05.pdf:e303d4cfa65c4a2d:v3": {
+    "from": "3/29/2026",
+    "permits": 114,
+    "read_at": "2026-11-26T22:36:41+00:00",
+    "summary_new_units": 4,
+    "to": "4/5/2026",
+    "units": 4
+  },
   "daily-activity-report-2026-04-13.pdf:80e80507e1638f5d": {
     "from": "4/6/2026",
     "permits": 114,
@@ -27,6 +35,14 @@
     "from": "4/6/2026",
     "permits": 114,
     "read_at": "2026-11-26T21:15:04+00:00",
+    "summary_new_units": 9,
+    "to": "4/13/2026",
+    "units": 9
+  },
+  "daily-activity-report-2026-04-13.pdf:80e80507e1638f5d:v3": {
+    "from": "4/6/2026",
+    "permits": 114,
+    "read_at": "2026-11-26T22:36:43+00:00",
     "summary_new_units": 9,
     "to": "4/13/2026",
     "units": 9
@@ -47,6 +63,14 @@
     "to": "6/7/2026",
     "units": 9
   },
+  "daily-activity-report-2026-06-07.pdf:4fea0c3f6e7d8a07:v3": {
+    "from": "5/31/2026",
+    "permits": 140,
+    "read_at": "2026-11-26T22:36:46+00:00",
+    "summary_new_units": 9,
+    "to": "6/7/2026",
+    "units": 9
+  },
   "daily-activity-report-2026-08-02.pdf:b3c9b63c07165573": {
     "from": "7/26/2026",
     "permits": 170,
@@ -59,6 +83,14 @@
     "from": "7/26/2026",
     "permits": 170,
     "read_at": "2026-11-26T21:15:09+00:00",
+    "summary_new_units": 121,
+    "to": "8/2/2026",
+    "units": 121
+  },
+  "daily-activity-report-2026-08-02.pdf:b3c9b63c07165573:v3": {
+    "from": "7/26/2026",
+    "permits": 170,
+    "read_at": "2026-11-26T22:36:50+00:00",
     "summary_new_units": 121,
     "to": "8/2/2026",
     "units": 121
@@ -78,5 +110,17 @@
     "summary_new_units": 43,
     "to": "11/22/2026",
     "units": 43
+  },
+  "daily-activity-report-2026-11-23.pdf:1ac7808cc1c619cb:v3": {
+    "from": "11/15/2026",
+    "permits": 125,
+    "read_at": "2026-11-26T22:36:53+00:00",
+    "summary_new_units": 43,
+    "to": "11/22/2026",
+    "units": 43
+  },
+  "monthly/monthly-permit-report-2026-10.pdf:8ffee256c749fc5a:v3": {
+    "read_at": "2026-11-26T22:36:53+00:00",
+    "rows": 37
   }
 }
