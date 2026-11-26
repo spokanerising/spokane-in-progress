@@ -1,0 +1,42 @@
+{
+  "daily-activity-report-2026-04-05.pdf:e303d4cfa65c4a2d": {
+    "from": "3/29/2026",
+    "permits": 114,
+    "read_at": "2026-11-26T21:09:39+00:00",
+    "summary_new_units": 4,
+    "to": "4/5/2026",
+    "units": 4
+  },
+  "daily-activity-report-2026-04-13.pdf:80e80507e1638f5d": {
+    "from": "4/6/2026",
+    "permits": 114,
+    "read_at": "2026-11-26T21:09:40+00:00",
+    "summary_new_units": 9,
+    "to": "4/13/2026",
+    "units": 8
+  },
+  "daily-activity-report-2026-06-07.pdf:4fea0c3f6e7d8a07": {
+    "from": "5/31/2026",
+    "permits": 140,
+    "read_at": "2026-11-26T21:09:42+00:00",
+    "summary_new_units": 9,
+    "to": "6/7/2026",
+    "units": 8
+  },
+  "daily-activity-report-2026-08-02.pdf:b3c9b63c07165573": {
+    "from": "7/26/2026",
+    "permits": 170,
+    "read_at": "2026-11-26T21:09:44+00:00",
+    "summary_new_units": 121,
+    "to": "8/2/2026",
+    "units": 121
+  },
+  "daily-activity-report-2026-11-23.pdf:1ac7808cc1c619cb": {
+    "from": "11/15/2026",
+    "permits": 125,
+    "read_at": "2026-11-26T21:09:46+00:00",
+    "summary_new_units": 43,
+    "to": "11/22/2026",
+    "units": 30
+  }
+}
