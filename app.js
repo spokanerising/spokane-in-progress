@@ -3,13 +3,15 @@
 
 // Stages are defined in build.py and travel with the data, so this list is only
 // a fallback for when the data fails to load. Edit build.py, not this.
+// The five live stages are one hue stepping from light to dark, so the order
+// reads in the color itself. Stalled sits off the ramp in neutral gray.
 let STAGES = [
-  { name: "Pre-Application",     color: "#c9a227" },
-  { name: "Applied",             color: "#bd7a24" },
-  { name: "Approved",            color: "#14666b" },
-  { name: "Under Construction",  color: "#a2472f" },
-  { name: "Complete",            color: "#4a5d52" },
-  { name: "Stalled",             color: "#868c90" },
+  { name: "Pre-Application",     color: "#ea957a" },
+  { name: "Applied",             color: "#d66a48" },
+  { name: "Approved",            color: "#b6451f" },
+  { name: "Under Construction",  color: "#8a2f10" },
+  { name: "Complete",            color: "#592211" },
+  { name: "Stalled",             color: "#8f8c86" },
 ];
 
 // Roughly the City of Spokane limits. The map opens here.
@@ -32,6 +34,7 @@ const state = {
   hidden: new Set(),
   query: "",
   selected: null,
+  builtAt: null,
 };
 
 const el = {
@@ -45,7 +48,6 @@ const el = {
   detail: document.getElementById("detail"),
   detailBody: document.getElementById("detail-body"),
   countStamp: document.getElementById("count-stamp"),
-  builtStamp: document.getElementById("built-stamp"),
 };
 
 let map;
@@ -62,6 +64,55 @@ const escapeHtml = (value) =>
   );
 
 const numberWithCommas = (n) => n.toLocaleString("en-US");
+
+const plural = (n, one, many) => `${numberWithCommas(n)} ${n === 1 ? one : many}`;
+
+// Dates in newspaper (AP) style: "Nov. 18, 2026", "March 4, 2026".
+const AP_MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+function apDate(value) {
+  if (!value) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(value));
+  const d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(value);
+  if (isNaN(d)) return String(value);
+  return `${AP_MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+// Circle area is proportional to housing units. The same numbers drive the map
+// layer (as a MapLibre expression) and the map key (as plain JavaScript), so
+// the key always matches the map. Each stop: [zoom, pixels per sqrt(unit), smallest radius].
+const SIZE_STOPS = [
+  [10, 0.75, 3],
+  [13, 1.1, 4.5],
+  [17, 1.8, 7],
+];
+const UNKNOWN_BOOST = 0.5; // hollow rings get a touch more radius so they read as rings
+
+function radiusAt(zoom, units) {
+  const stops = SIZE_STOPS;
+  let lo = stops[0], hi = stops[stops.length - 1];
+  if (zoom <= lo[0]) hi = lo;
+  else if (zoom >= hi[0]) lo = hi;
+  else {
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (zoom >= stops[i][0] && zoom <= stops[i + 1][0]) { lo = stops[i]; hi = stops[i + 1]; break; }
+    }
+  }
+  const at = (s) => (units > 0 ? Math.max(s[2], s[1] * Math.sqrt(units)) : s[2] + UNKNOWN_BOOST);
+  if (lo === hi) return at(lo);
+  const t = (zoom - lo[0]) / (hi[0] - lo[0]);
+  return at(lo) + t * (at(hi) - at(lo));
+}
+
+function radiusExpression() {
+  const units = ["get", "units"];
+  const at = (s) => [
+    "case",
+    [">", units, 0],
+    ["max", s[2], ["*", s[1], ["sqrt", units]]],
+    s[2] + UNKNOWN_BOOST,
+  ];
+  return ["interpolate", ["linear"], ["zoom"], ...SIZE_STOPS.flatMap((s) => [s[0], at(s)])];
+}
 
 // Developer, architect, cost and the rest arrive inside fields[], not as
 // top-level keys, so search reads the field values instead of naming keys that
@@ -90,6 +141,8 @@ function drawSpine() {
     n: state.projects.filter((p) => p.status === s.name).length,
   }));
 
+  el.countStamp.textContent = `${numberWithCommas(state.projects.length)} projects, by stage`;
+
   el.spine.innerHTML = counts
     .filter((s) => s.n > 0)
     .map(
@@ -109,7 +162,7 @@ function drawSpine() {
 function drawChips() {
   el.chips.innerHTML = STAGES.map(
     (s) =>
-      `<button class="chip" type="button" aria-pressed="true" data-status="${escapeHtml(s.name)}" style="color:${s.color}">
+      `<button class="chip" type="button" aria-pressed="true" data-status="${escapeHtml(s.name)}" style="--stage:${s.color}">
          <i></i>${escapeHtml(s.name)}
        </button>`
   ).join("");
@@ -129,17 +182,17 @@ function drawCards(list) {
   el.cards.innerHTML = list
     .map((p) => {
       const facts = [
-        p.projectType,
-        p.units ? `${numberWithCommas(p.units)} units` : null,
-        p.stories ? `${p.stories} stories` : null,
+        p.units ? `<b>${numberWithCommas(p.units)}</b> ${p.units === 1 ? "unit" : "units"}` : null,
+        p.projectType ? escapeHtml(p.projectType) : null,
+        p.stories ? escapeHtml(plural(p.stories, "story", "stories")) : null,
       ].filter(Boolean);
 
       return `<li>
-        <button class="card" data-id="${escapeHtml(p.id)}" style="border-left-color:${colorOf(p.status)}">
-          <div class="card__stage" style="color:${colorOf(p.status)}">${escapeHtml(p.status)}</div>
+        <button class="card" data-id="${escapeHtml(p.id)}">
+          <div class="card__stage"><i style="background:${colorOf(p.status)}"></i>${escapeHtml(p.status)}</div>
           <h3 class="card__name">${escapeHtml(p.name)}</h3>
           <div class="card__where">${escapeHtml(p.address)}${p.neighborhood ? ` · ${escapeHtml(p.neighborhood)}` : ""}</div>
-          ${facts.length ? `<div class="card__facts">${facts.map((f) => `<span>${escapeHtml(f)}</span>`).join("")}</div>` : ""}
+          ${facts.length ? `<div class="card__facts">${facts.map((f) => `<span>${f}</span>`).join("")}</div>` : ""}
         </button>
       </li>`;
     })
@@ -174,7 +227,13 @@ function toGeoJson(list) {
     features: list.map((p) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [p.lng, p.lat] },
-      properties: { id: p.id, name: p.name, color: colorOf(p.status), status: p.status },
+      properties: {
+        id: p.id,
+        name: p.name,
+        color: colorOf(p.status),
+        status: p.status,
+        units: p.units > 0 ? p.units : 0,
+      },
     })),
   };
 }
@@ -208,7 +267,7 @@ function select(id, flyTo) {
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
     </div>
-    <p class="track__label" style="--stage:${color}">${escapeHtml(project.status)}${project.statusUpdated ? ` since ${escapeHtml(project.statusUpdated)}` : ""}</p>
+    <p class="track__label"><b>${escapeHtml(project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}</p>
 
     ${
       project.imageUrl
@@ -255,13 +314,13 @@ function select(id, flyTo) {
                  : ""
              }
              ${project.parcelId ? `<dt>Parcel</dt><dd>${escapeHtml(project.parcelId)}</dd>` : ""}
-             ${project.lastVerified ? `<dt>Verified</dt><dd>${escapeHtml(project.lastVerified)}</dd>` : ""}
+             ${project.lastVerified ? `<dt>Verified</dt><dd>${escapeHtml(apDate(project.lastVerified))}</dd>` : ""}
            </dl>`
         : ""
     }
 
     <p class="detail__note">This page displays available information at the time of project entry.${
-      project.lastVerified ? ` Last checked ${escapeHtml(project.lastVerified)}.` : ""
+      project.lastVerified ? ` Last checked ${escapeHtml(apDate(project.lastVerified))}.` : ""
     }</p>
 
     ${
@@ -336,6 +395,28 @@ function setBasemap(mode) {
   }
 }
 
+// The key's sample circles are drawn at the map's current zoom, so they are
+// the same size as the circles on screen.
+function drawMapKey() {
+  const box = document.getElementById("mapkey");
+  if (!box) return;
+  const zoom = map ? map.getZoom() : 12;
+  const samples = [10, 50, 200];
+  const dot = (r, cls = "") =>
+    `<span class="mapkey__dot ${cls}" style="width:${(2 * r).toFixed(1)}px;height:${(2 * r).toFixed(1)}px"></span>`;
+  box.innerHTML = `
+    <p class="mapkey__title">Circle size shows housing units</p>
+    <ul class="mapkey__sizes">
+      ${samples.map((n) => `<li>${dot(radiusAt(zoom, n))}<span>${n}</span></li>`).join("")}
+      <li>${dot(radiusAt(zoom, 0), "mapkey__dot--unknown")}<span>Not reported</span></li>
+    </ul>
+    <p class="source">${escapeHtml(sourceLine())}</p>`;
+}
+
+function sourceLine() {
+  return `Source: City of Spokane permit records${state.builtAt ? `. Data as of ${apDate(state.builtAt)}` : ""}.`;
+}
+
 function startMap() {
   map = new maplibregl.Map({
     container: "map",
@@ -374,28 +455,26 @@ function startMap() {
 
     map.addSource("projects", { type: "geojson", data: toGeoJson(visible()) });
 
-    map.addLayer({
-      id: "project-halo",
-      type: "circle",
-      source: "projects",
-      paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 7, 16, 15],
-        "circle-color": ["get", "color"],
-        "circle-opacity": 0.22,
-      },
-    });
-
+    // One layer. Filled circles sized by units; projects with no unit count
+    // are hollow rings at the smallest size rather than a guessed size.
+    // Bigger projects draw first so small ones on top stay clickable.
+    const known = [">", ["get", "units"], 0];
     map.addLayer({
       id: "project-dot",
       type: "circle",
       source: "projects",
+      layout: { "circle-sort-key": ["-", 0, ["get", "units"]] },
       paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 4, 16, 8],
-        "circle-color": ["get", "color"],
-        "circle-stroke-width": 1.5,
-        "circle-stroke-color": "#f5f6f2",
+        "circle-radius": radiusExpression(),
+        "circle-color": ["case", known, ["get", "color"], "#faf8f3"],
+        "circle-opacity": ["case", known, 0.9, 1],
+        "circle-stroke-color": ["case", known, "#ffffff", ["get", "color"]],
+        "circle-stroke-width": ["case", known, 1, 1.8],
       },
     });
+
+    map.on("zoomend", drawMapKey);
+    drawMapKey();
 
     document.querySelectorAll(".basemap button").forEach((button) => {
       button.addEventListener("click", () => setBasemap(button.dataset.basemap));
@@ -495,10 +574,12 @@ async function start() {
   }
 
   if (payload) {
-    el.countStamp.textContent = `${state.projects.length} projects tracked`;
-    el.builtStamp.textContent = payload.builtAt
-      ? `Updated ${new Date(payload.builtAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`
-      : "";
+    state.builtAt = payload.builtAt ? new Date(payload.builtAt) : null;
+    const spineSource = document.getElementById("spine-source");
+    if (spineSource) {
+      spineSource.textContent = `Note: Construction status is estimated from permit activity. ${sourceLine()}`;
+    }
+    drawMapKey();
     render();
   }
 }
