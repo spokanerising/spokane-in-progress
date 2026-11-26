@@ -984,6 +984,7 @@ body.page {
 
 .article__dek b { color: var(--ink); font-weight: 600; }
 
+.byline__by { display: block; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
 .byline { font-size: 13px; color: var(--muted); padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 
 /* Big numbers. */
