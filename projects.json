@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-26T21:21:13.988679+00:00",
+  "builtAt": "2026-11-26T21:23:01.491066+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -436,6 +436,62 @@
       ]
     },
     {
+      "id": "permit-b2600346bldc",
+      "name": "The Riverview Heights",
+      "address": "1841 E Upriver",
+      "neighborhood": "",
+      "parcelId": "35093.1002",
+      "lat": 47.677880963306656,
+      "lng": -117.38165587161993,
+      "status": "Approved",
+      "statusUpdated": "2026-07-27",
+      "lastVerified": "2026-08-02",
+      "projectType": "Housing",
+      "units": 82,
+      "unitsSource": "city permit report",
+      "stories": 4,
+      "description": "New 4 story, 82 unit independent senior housing building.",
+      "permitNumbers": [
+        "B2600346BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "82",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$42,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "permit-b2610907bldc",
       "name": "Legacy CO Khinda 4-unit Apartments",
       "address": "3133 N Stuart",
@@ -628,6 +684,79 @@
         {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00075&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B26M0062PDEV",
+      "name": "Lincoln Street Lofts",
+      "address": "170 S Lincoln St",
+      "neighborhood": "Riverside (Downtown)",
+      "parcelId": "35192.1923",
+      "lat": 47.6548869339195,
+      "lng": -117.42519774704047,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-07-09",
+      "lastVerified": "2026-08-29",
+      "projectType": "Housing",
+      "units": 10,
+      "unitsSource": "sheet",
+      "stories": 1,
+      "description": "Conversion of an old office building into a dormitory for travel nurses. This is an SRO-style development.",
+      "permitNumbers": [
+        "B26M0062PDEV"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "10",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "4,377 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "1",
+          "kind": "text"
+        },
+        {
+          "label": "Parking stalls",
+          "value": "0",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$100,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Swanson Enterprise LLC",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00062&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
         }
       ]
@@ -1227,6 +1356,135 @@
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00238&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "B2606909BLDC",
+      "name": "The Threshold",
+      "address": "1727 E Hartson Ave",
+      "neighborhood": "South Perry",
+      "parcelId": "35212.2910",
+      "lat": 47.6502158462097,
+      "lng": -117.38517121558361,
+      "status": "Applied",
+      "statusUpdated": "2026-05-11",
+      "lastVerified": "2026-08-28",
+      "projectType": "Housing",
+      "units": 43,
+      "unitsSource": "sheet",
+      "stories": 4,
+      "description": "New 43-unit, 4-story apartment building and associated site improvements.",
+      "permitNumbers": [
+        "B2606909BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "Project documents (PDF)",
+      "sourceUrls": [],
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "label": "Type",
+          "value": "Housing",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "43",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "40,457 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$3,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "CM Development & Construction",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "PRESS Architecture",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00231&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2506988bldc",
+      "name": "South Pittsburg Fourplex",
+      "address": "335 S Pittsburg",
+      "neighborhood": "",
+      "parcelId": "35212.3417",
+      "lat": 47.65282542754864,
+      "lng": -117.38389742876525,
+      "status": "Approved",
+      "statusUpdated": "2026-04-10",
+      "lastVerified": "2026-04-13",
+      "projectType": "Middle housing",
+      "units": 4,
+      "unitsSource": "city permit report",
+      "stories": 2,
+      "description": "NEW CONSTRUCTION FOR A SINGLE BUILDING 2 STORY- FOURPLEX",
+      "permitNumbers": [
+        "B2506988BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-04-13.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$750,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
         }
       ]
     },
