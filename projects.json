@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-26T21:15:14.680511+00:00",
+  "builtAt": "2026-11-26T21:21:13.988679+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -27,6 +27,114 @@
     }
   ],
   "projects": [
+    {
+      "id": "permit-b2616976bldr",
+      "name": "4332 W Indian Trail Duplex",
+      "address": "4332 W Indian Trail",
+      "neighborhood": "",
+      "parcelId": "26266.1519",
+      "lat": 47.729585695654954,
+      "lng": -117.47512634764091,
+      "status": "Approved",
+      "statusUpdated": "2026-11-17",
+      "lastVerified": "2026-11-22",
+      "projectType": "Middle housing",
+      "units": 2,
+      "unitsSource": "city permit report",
+      "stories": null,
+      "description": "New 8 Bedroom New Duplex with garage, finished basement, and air conditioning.",
+      "permitNumbers": [
+        "B2616976BLDR"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,196,488",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2604501bldc",
+      "name": "Bethany Apartments",
+      "address": "3203 E 27th & 3215 E 27th",
+      "neighborhood": "",
+      "parcelId": "35273.0618",
+      "lat": 47.63060967395577,
+      "lng": -117.36252185819127,
+      "status": "Approved",
+      "statusUpdated": "2026-11-16",
+      "lastVerified": "2026-11-22",
+      "projectType": "Housing",
+      "units": 22,
+      "unitsSource": "city permit report",
+      "stories": 3,
+      "description": "New 3 story, 12 unit apartment building. / New 3 story, 10 unit apartment building.",
+      "permitNumbers": [
+        "B2604501BLDC",
+        "B2604503BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "22",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$5,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
     {
       "id": "B26M0088PDEV",
       "name": "Northpointe Assisted Living",
@@ -160,6 +268,216 @@
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00087&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2600702bldr",
+      "name": "6127 N Howard Duplex",
+      "address": "6127 N Howard",
+      "neighborhood": "",
+      "parcelId": "36311.0831",
+      "lat": 47.71414906638581,
+      "lng": -117.4210253051614,
+      "status": "Approved",
+      "statusUpdated": "2026-07-30",
+      "lastVerified": "2026-08-02",
+      "projectType": "Middle housing",
+      "units": 2,
+      "unitsSource": "city permit report",
+      "stories": null,
+      "description": "New 5 Bedroom Duplex - One Duplex with covered entry area, and air conditioning.",
+      "permitNumbers": [
+        "B2600702BLDR"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$384,592",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2603763bldc",
+      "name": "619 South Cedar - Multifamily",
+      "address": "619 S Cedar",
+      "neighborhood": "",
+      "parcelId": "35193.5010",
+      "lat": 47.649697470579234,
+      "lng": -117.43194755305088,
+      "status": "Approved",
+      "statusUpdated": "2026-07-28",
+      "lastVerified": "2026-08-02",
+      "projectType": "Housing",
+      "units": 20,
+      "unitsSource": "city permit report",
+      "stories": 4,
+      "description": "New 20 Unit Multifamily Building, 4 stories above grade.",
+      "permitNumbers": [
+        "B2603763BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "20",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$2,976,992",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2515401bldc",
+      "name": "1st Avenue Fourplex",
+      "address": "1429 E 1st & 1441 E 1st",
+      "neighborhood": "",
+      "parcelId": "35212.1916",
+      "lat": 47.65656082490651,
+      "lng": -117.388865785155,
+      "status": "Approved",
+      "statusUpdated": "2026-07-27",
+      "lastVerified": "2026-08-02",
+      "projectType": "Middle housing",
+      "units": 8,
+      "unitsSource": "city permit report",
+      "stories": 2,
+      "description": "New 2 story Fourplex, 4286 SQFT.",
+      "permitNumbers": [
+        "B2515401BLDC",
+        "B2515403BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "8",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,348,952",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2610907bldc",
+      "name": "Legacy CO Khinda 4-unit Apartments",
+      "address": "3133 N Stuart",
+      "neighborhood": "",
+      "parcelId": "35053.3614",
+      "lat": 47.68721770983025,
+      "lng": -117.4103869682666,
+      "status": "Approved",
+      "statusUpdated": "2026-07-27",
+      "lastVerified": "2026-08-02",
+      "projectType": "Middle housing",
+      "units": 3,
+      "unitsSource": "city permit report",
+      "stories": null,
+      "description": "Legacy CO /Change of use from SFR to 4 Unit Apartment Building to include Life/fire safety and property maintenance corrections as redlined on plans.",
+      "permitNumbers": [
+        "B2610907BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
         }
       ]
     },
@@ -665,6 +983,108 @@
       ]
     },
     {
+      "id": "permit-b2517162bldr",
+      "name": "3196 E 10th Duplex",
+      "address": "3196 E 10th",
+      "neighborhood": "",
+      "parcelId": "35223.1615",
+      "lat": 47.646546732768606,
+      "lng": -117.3644658119841,
+      "status": "Approved",
+      "statusUpdated": "2026-06-01",
+      "lastVerified": "2026-06-07",
+      "projectType": "Middle housing",
+      "units": 2,
+      "unitsSource": "city permit report",
+      "stories": null,
+      "description": "New 6 Bedroom New Duplex - Apartment building 2 units with garage, covered deck, covered entry area, and air conditioning.",
+      "permitNumbers": [
+        "B2517162BLDR"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-06-07.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$558,127",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2604346bldr",
+      "name": "3116 W 18th Duplex",
+      "address": "3116 W 18th",
+      "neighborhood": "",
+      "parcelId": "25261.1521",
+      "lat": 47.638631714171225,
+      "lng": -117.45898544209189,
+      "status": "Approved",
+      "statusUpdated": "2026-06-01",
+      "lastVerified": "2026-06-07",
+      "projectType": "Middle housing",
+      "units": 2,
+      "unitsSource": "city permit report",
+      "stories": null,
+      "description": "New 6 Bedroom New Duplex - Apartment building 2 units with garage, covered entry area, and air conditioning.",
+      "permitNumbers": [
+        "B2604346BLDR"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-06-07.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$546,244",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
+        }
+      ]
+    },
+    {
       "id": "B2607616BLDC",
       "name": "MHIG Sinto Multi-Family",
       "address": "506 W Sinto Ave",
@@ -807,6 +1227,62 @@
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00238&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
+        }
+      ]
+    },
+    {
+      "id": "permit-b2512636bldc",
+      "name": "10th Ave. Fourplexes",
+      "address": "3202 E 10th",
+      "neighborhood": "",
+      "parcelId": "35223.1617",
+      "lat": 47.64654792427757,
+      "lng": -117.3651213909925,
+      "status": "Approved",
+      "statusUpdated": "2026-04-01",
+      "lastVerified": "2026-04-05",
+      "projectType": "Middle housing",
+      "units": 4,
+      "unitsSource": "city permit report",
+      "stories": 2,
+      "description": "New 2 story 4-Unit Townhome",
+      "permitNumbers": [
+        "B2512636BLDC"
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-04-05.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "label": "Housing units",
+          "value": "4",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$900,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane weekly permit report",
+          "kind": "text"
         }
       ]
     }
