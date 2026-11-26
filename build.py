@@ -228,6 +228,56 @@ def house_number(text):
     return first if first.isdigit() else ""
 
 
+# ---------------------------------------------------------------------------
+# Unit counts and job values from the city's weekly permit reports.
+#
+# permit_reports.py reads those PDFs and saves data/permit-units.csv. Here,
+# any project whose units or est_cost cell is blank gets them filled from the
+# permits listed in its permit_numbers cell. Anything you type by hand always
+# wins; if the city's number disagrees with yours, the build says so.
+# ---------------------------------------------------------------------------
+
+PERMIT_UNITS_PATH = os.path.join("data", "permit-units.csv")
+NOT_ON_SITE_PATH = os.path.join("data", "housing-permits-not-on-site.csv")
+
+
+def load_city_permits():
+    try:
+        with open(PERMIT_UNITS_PATH, encoding="utf-8", newline="") as handle:
+            return {row["permit"].upper(): row for row in csv.DictReader(handle)}
+    except OSError:
+        return {}
+
+
+def is_building_permit(permit):
+    return permit.endswith("BLDC") or permit.endswith("BLDR")
+
+
+def write_not_on_site(city, sheet_permits):
+    """Issued permits with 2+ units that no row in the sheet mentions yet."""
+    missing = [
+        row for permit, row in city.items()
+        if (to_int(row.get("units")) or 0) >= 2 and permit not in sheet_permits
+    ]
+
+    def when(row):
+        try:
+            return datetime.strptime(row.get("issue_date", ""), "%m/%d/%Y")
+        except ValueError:
+            return datetime.min
+
+    missing.sort(key=when, reverse=True)
+    columns = ["issue_date", "permit", "units", "valuation", "address",
+               "brief_description", "detailed_description", "owner", "parcel",
+               "status", "report_url"]
+    os.makedirs(os.path.dirname(NOT_ON_SITE_PATH), exist_ok=True)
+    with open(NOT_ON_SITE_PATH, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=columns, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(missing)
+    return len(missing)
+
+
 def load_rows():
     if SHEET_CSV_URL:
         print("Reading the Google Sheet...")
@@ -261,6 +311,24 @@ def main():
     seen_ids = set()
     geocache = load_geocache()
     cache_dirty = False
+
+    city = load_city_permits()
+    if city:
+        print(f"Read {len(city)} permits from the city's weekly reports.")
+
+    # Every permit number in the sheet, published or not, and who uses it.
+    permit_owners = {}
+    for raw in rows:
+        row = {(k or "").strip(): (v or "").strip() for k, v in raw.items()}
+        name = row.get("name", "")
+        for permit in semicolon_list(row.get("permit_numbers")):
+            permit_owners.setdefault(permit.upper(), []).append(name or "(unnamed row)")
+    for permit, names in permit_owners.items():
+        if len(set(names)) > 1:
+            warnings.append(
+                f'Permit {permit} is listed on more than one project: {", ".join(sorted(set(names)))}. '
+                f"Usually a copy-paste slip."
+            )
 
     for offset, row in enumerate(rows):
         row = {(k or "").strip(): (v or "").strip() for k, v in row.items()}
@@ -359,6 +427,41 @@ def main():
         parking = to_int(row.get("parking"))
         cost = to_int(row.get("est_cost"))
 
+        # Fill blanks from the city's weekly permit reports.
+        units_source = "sheet" if units is not None else ""
+        listed = [p.upper() for p in semicolon_list(row.get("permit_numbers"))]
+        found = [city[p] for p in listed if p in city]
+        if found:
+            city_units = sum(to_int(r.get("units")) or 0 for r in found)
+            city_cost = sum(
+                to_int(r.get("valuation")) or 0
+                for r in found if is_building_permit(r["permit"].upper())
+            )
+            pending = [
+                p for p in listed if is_building_permit(p) and p not in city
+            ]
+            partial = (
+                f" Building permit(s) {', '.join(pending)} not issued yet, "
+                f"so this may grow." if pending else ""
+            )
+            if units is None and city_units:
+                units = city_units
+                units_source = "city permit report"
+                warnings.append(
+                    f"{label}: housing units set to {units:,} from the city's permit reports.{partial}"
+                )
+            elif units is not None and city_units and units != city_units:
+                warnings.append(
+                    f"{label}: the sheet says {units:,} units; the city's permit reports add up "
+                    f"to {city_units:,} for {', '.join(r['permit'] for r in found)}.{partial} "
+                    f"Kept the sheet's number."
+                )
+            if cost is None and city_cost:
+                cost = city_cost
+                warnings.append(
+                    f"{label}: estimated cost set to ${cost:,} from the city's permit reports.{partial}"
+                )
+
         fields = [
             f
             for f in [
@@ -390,6 +493,7 @@ def main():
                 "lastVerified": row.get("last_verified", ""),
                 "projectType": row.get("project_type", ""),
                 "units": units,
+                "unitsSource": units_source,
                 "stories": stories,
                 "description": row.get("description", ""),
                 "permitNumbers": semicolon_list(row.get("permit_numbers")),
@@ -405,6 +509,14 @@ def main():
 
     if cache_dirty:
         save_geocache(geocache)
+
+    if city:
+        count = write_not_on_site(city, set(permit_owners))
+        if count:
+            warnings.append(
+                f"{count} issued permit(s) with 2+ units aren't on the site yet. "
+                f"See {NOT_ON_SITE_PATH}."
+            )
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 
