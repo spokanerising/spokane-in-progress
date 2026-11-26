@@ -207,7 +207,7 @@ def _quoted(values):
     return ",".join("'%s'" % v.replace("'", "''") for v in values)
 
 
-def fetch(sheet_permits, sheet_parcels, weekly_permits):
+def fetch(sheet_permits, sheet_parcels, weekly_permits, monthly_ids=()):
     """Pull today's records and merge them into the cache. Returns
     (records by id, list of warnings). On failure, the cache alone."""
     cache = load_json(CACHE_PATH, {"records": {}})
@@ -230,7 +230,13 @@ def fetch(sheet_permits, sheet_parcels, weekly_permits):
             "OR UPPER(DetailShortNotes) LIKE '%CONVER%')"
         )
         found += query(f"PermitTypeAlias='Pre-Development Conference' AND OpenDate > DATE '{since}'")
-        ids = sorted(set(sheet_permits) | set(weekly_permits))
+        # Permits the monthly report names, however old: full IDs (PDEVs)
+        # directly, 8-character stems by prefix.
+        stems = sorted({m for m in monthly_ids if len(m) == 8})
+        full = {m for m in monthly_ids if len(m) > 8}
+        for i in range(0, len(stems), 40):
+            found += query(" OR ".join(f"SpokanePermitID LIKE '{s_}%'" for s_ in stems[i:i + 40]))
+        ids = sorted(set(sheet_permits) | set(weekly_permits) | full)
         for i in range(0, len(ids), 150):
             found += query(f"SpokanePermitID IN ({_quoted(ids[i:i + 150])})")
 
@@ -258,6 +264,37 @@ def fetch(sheet_permits, sheet_parcels, weekly_permits):
             f"{cache.get('fetchedAt', 'the last good build')}; stages may be a day behind."
         )
     return records, warnings
+
+
+LOCATORS = [
+    "https://services.spokanegis.org/arcgis/rest/services/Locator/AddressPoint/GeocodeServer/findAddressCandidates",
+    "https://services.spokanegis.org/arcgis/rest/services/Locator/CompositeAddress/GeocodeServer/findAddressCandidates",
+]
+
+
+def geocode(address):
+    """(lat, lng, matched address) from the city's own address locators, or
+    None. Only an exact house number and direction with a strong score is
+    accepted: a near miss can land on the wrong side of town."""
+    match = re.match(r"^\s*(\d+)(?:-\d+)?\s+([NSEW])\b", address or "", re.I)
+    if not match:
+        return None
+    number, direction = match.group(1), match.group(2).upper()
+    clean = re.sub(r"^(\d+)-\d+", r"\1", address.strip())
+    for url in LOCATORS:
+        query_ = urllib.parse.urlencode({"SingleLine": clean, "outSR": "4326", "maxLocations": "3", "f": "json"})
+        try:
+            request = urllib.request.Request(url + "?" + query_, headers={
+                "User-Agent": "spokane-in-progress (projects.spokanerising.com)"})
+            with urllib.request.urlopen(request, timeout=30) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+        except Exception:
+            continue
+        for c in payload.get("candidates") or []:
+            got = re.match(r"^\s*(\d+)\s+([NSEW])\b", c.get("address", ""), re.I)
+            if c.get("score", 0) >= 97 and got and got.group(1) == number and got.group(2).upper() == direction:
+                return c["location"]["y"], c["location"]["x"], c["address"]
+    return None
 
 
 def load_json(path, default):

@@ -53,7 +53,7 @@ REPORT_LINK = re.compile(
 
 INBOX = "permit-reports"
 # Bump when the parser changes, and every uploaded report is read again.
-PARSER_VERSION = 2
+PARSER_VERSION = 3
 OUT_CSV = os.path.join("data", "permit-units.csv")
 STATE_DIR = os.path.join("data", "permit-reports")
 PROCESSED = os.path.join(STATE_DIR, "processed.json")
@@ -451,6 +451,158 @@ def fingerprint(pdf_bytes):
     return hashlib.sha256(pdf_bytes).hexdigest()[:16]
 
 
+# ---------------------------------------------------------------------------
+# Monthly DSC permit reports (permit-reports/monthly/)
+#
+# The monthly report is a slide deck, but the city's spreadsheets ride along
+# inside it as file attachments. Some tabs list projects with a permit or
+# pre-development number and a unit count: largest projects issued, largest
+# in plan review, significant PDEV/MFTE proposals. Every such table is read,
+# whatever its tab is called, and saved to data/monthly-units.csv.
+# ---------------------------------------------------------------------------
+
+MONTHLY_INBOX = os.path.join(INBOX, "monthly")
+MONTHLY_CSV = os.path.join("data", "monthly-units.csv")
+MONTHLY_COLUMNS = ["key", "permits", "title", "address", "units", "valuation",
+                   "approved", "table", "as_of", "report"]
+PERMIT_CELL = re.compile(r"^([A-Z]\d{2}[A-Z0-9]\d{4})([A-Z]{3,5})?\s*(?:([+-])\s*(\d+))?", re.I)
+
+
+def expand_permits(cell):
+    """'B2515747+5' -> B2515747..B2515752; 'B2512924-9' -> ..24 to ..29;
+    'B26M0031PDEV' -> itself. Returns the 8-character stems (or full IDs
+    when a suffix like PDEV is written)."""
+    text = str(cell or "").strip().upper()
+    match = PERMIT_CELL.match(text)
+    if not match:
+        return []
+    stem, suffix, sign, n = match.groups()
+    if suffix and not sign:
+        return [stem + suffix]
+    head, tail = stem[:-4], int(stem[-4:])
+    if sign == "+":
+        last = tail + int(n)
+    elif sign == "-":
+        last = int(str(tail)[: -len(n)] + n) if len(n) < len(str(tail)) else int(n)
+    else:
+        last = tail
+    if last < tail or last - tail > 60:
+        last = tail
+    return [f"{head}{i:04d}" for i in range(tail, last + 1)]
+
+
+def attachments(pdf_bytes):
+    import pikepdf
+    with pikepdf.open(io.BytesIO(pdf_bytes)) as pdf:
+        for page in pdf.pages:
+            for annot in page.get("/Annots", []) or []:
+                if annot.get("/Subtype") != "/FileAttachment":
+                    continue
+                spec = annot.get("/FS")
+                if spec is None or "/EF" not in spec:
+                    continue
+                yield spec["/EF"]["/F"].read_bytes()
+
+
+def monthly_tables(pdf_bytes):
+    import openpyxl
+    for blob in attachments(pdf_bytes):
+        try:
+            book = openpyxl.load_workbook(io.BytesIO(blob), data_only=True, read_only=True)
+        except Exception:
+            continue
+        for sheet in book.worksheets:
+            rows = [list(r) for r in sheet.iter_rows(values_only=True)]
+            as_of = ""
+            for r in rows:
+                for i, c in enumerate(r):
+                    if isinstance(c, str) and c.strip().lower().startswith("last update"):
+                        later = [x for x in r[i + 1:] if x is not None]
+                        if later and hasattr(later[0], "date"):
+                            as_of = later[0].date().isoformat()
+            header_at = cols = None
+            for n, r in enumerate(rows):
+                labels = [str(c or "").strip().lower() for c in r]
+                permit = next((i for i, c in enumerate(labels) if re.search(r"permit|pdev|mfte", c)), None)
+                units = next((i for i, c in enumerate(labels) if "units" in c), None)
+                if permit is not None and units is not None:
+                    header_at = n
+                    cols = {
+                        "permit": permit, "units": units,
+                        "title": next((i for i, c in enumerate(labels) if "title" in c), None),
+                        "address": next((i for i, c in enumerate(labels) if "address" in c), None),
+                        "valuation": next((i for i, c in enumerate(labels) if "valuation" in c), None),
+                    }
+                    break
+            if header_at is None:
+                continue
+            for r in rows[header_at + 1:]:
+                cell = lambda k: r[cols[k]] if cols[k] is not None and cols[k] < len(r) else None
+                if any(isinstance(c, str) and re.search(r"expired|withdrawn|cancel", c, re.I) for c in r):
+                    continue
+                permits = expand_permits(cell("permit"))
+                units = cell("units")
+                if not permits or not isinstance(units, (int, float)) or units <= 0:
+                    continue
+                value = cell("valuation")
+                yield {
+                    "key": permits[0],
+                    "permits": ";".join(permits),
+                    "title": str(cell("title") or "").replace("*", "").strip(),
+                    "address": str(cell("address") or "").strip(),
+                    "units": int(units),
+                    "valuation": int(value) if isinstance(value, (int, float)) else "",
+                    "approved": "*" in str(cell("title") or ""),
+                    "table": sheet.title,
+                    "as_of": as_of,
+                }
+
+
+def read_monthly(processed, problems):
+    if not os.path.isdir(MONTHLY_INBOX):
+        return 0
+    try:
+        with open(MONTHLY_CSV, encoding="utf-8", newline="") as handle:
+            saved = {r["key"]: r for r in csv.DictReader(handle)}
+    except OSError:
+        saved = {}
+    read = 0
+    for name in sorted(os.listdir(MONTHLY_INBOX)):
+        if not name.lower().endswith(".pdf"):
+            continue
+        path = os.path.join(MONTHLY_INBOX, name)
+        with open(path, "rb") as handle:
+            pdf_bytes = handle.read()
+        key = f"monthly/{name}:{fingerprint(pdf_bytes)}:v{PARSER_VERSION}"
+        if key in processed:
+            continue
+        try:
+            rows = list(monthly_tables(pdf_bytes))
+        except Exception as error:
+            problems.append(f"{path}: could not read its attached spreadsheets ({error}).")
+            continue
+        if not rows:
+            problems.append(f"{path}: no project tables with permit numbers and units found.")
+        month = re.search(r"(\d{4}-\d{2})", name)
+        for row in rows:
+            row["report"] = name
+            row["as_of"] = row["as_of"] or (month.group(1) + "-01" if month else "")
+            old = saved.get(row["key"])
+            if old and old.get("as_of", "") > row["as_of"]:
+                continue        # an older report uploaded later doesn't win
+            saved[row["key"]] = row
+        processed[key] = {"rows": len(rows), "read_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+        print(f"{name}: {len(rows)} projects with unit counts")
+        read += 1
+    if read:
+        os.makedirs(os.path.dirname(MONTHLY_CSV), exist_ok=True)
+        with open(MONTHLY_CSV, "w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=MONTHLY_COLUMNS, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(sorted(saved.values(), key=lambda r: -int(r["units"])))
+    return read
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--fetch", action="store_true",
@@ -557,8 +709,14 @@ def main():
             newest_to = this_to
             newest_sample = info["sample"]
 
+    if not args.file and not args.fetch:
+        if read_monthly(processed, problems):
+            os.makedirs(STATE_DIR, exist_ok=True)
+            with open(PROCESSED, "w", encoding="utf-8") as handle:
+                json.dump(processed, handle, indent=2, sort_keys=True)
+
     if not read_count:
-        print("No new reports to read.")
+        print("No new weekly reports to read.")
         for problem in problems:
             print(f"  - {problem}")
         return

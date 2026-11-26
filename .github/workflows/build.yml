@@ -33,7 +33,7 @@ jobs:
       - name: Read the weekly permit reports
         continue-on-error: true
         run: |
-          pip install --quiet pdfplumber
+          pip install --quiet pdfplumber pikepdf openpyxl
           python3 permit_reports.py
 
       - run: python3 build.py

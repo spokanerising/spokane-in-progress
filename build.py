@@ -428,20 +428,70 @@ MULTI_SIGNAL = re.compile(
 )
 
 
+MONTHLY_PATH = os.path.join("data", "monthly-units.csv")
+
+
+def load_monthly():
+    """stem or full permit ID -> row of data/monthly-units.csv."""
+    index = {}
+    try:
+        with open(MONTHLY_PATH, encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle):
+                for permit in row["permits"].split(";"):
+                    if permit:
+                        index.setdefault(permit, []).append(row)
+    except OSError:
+        pass
+    return index
+
+
+def _numbers(text):
+    return set(re.findall(r"\b\d{2,5}\b", text or ""))
+
+
+def _words(text):
+    return {w for w in re.findall(r"[a-z]{4,}", (text or "").lower())
+            if w not in {"apartments", "apartment", "multi", "family", "multifamily", "building",
+                         "phase", "project", "townhomes", "housing", "mixed", "units", "with"}}
+
+
+def monthly_match(records, monthly):
+    """A unit count from the monthly report for this project, but only when
+    the report's address or name agrees with the permit records too: the
+    report's own tables have typos in their permit numbers."""
+    found = {}
+    for r in records:
+        for key in (r["id"], r["id"][:8]):
+            for row in monthly.get(key, []):
+                found[row["key"]] = row
+    best = None
+    for row in found.values():
+        addresses = " ".join(r["address"] for r in records)
+        notes = " ".join(r["notes"] for r in records)
+        if (_numbers(row["address"]) & _numbers(addresses)) or (_words(row["title"]) & _words(notes)):
+            if best is None or row["as_of"] > best["as_of"]:
+                best = row
+    return best
+
+
 def stage_rank(stage):
     return cr.STAGES.index(stage) if stage in cr.STAGES else -1
 
 
-def annotate(records, weekly):
+def annotate(records, weekly, monthly=None):
     for r in records.values():
         r["kind"] = cr.kind_of(r)
+        r["monthly"] = bool(monthly) and r["kind"] in ("building", "predev", "other") and bool(
+            monthly_match([r], monthly))
+        if r["monthly"] and r["kind"] == "other" and "Change of Use" in r["type"]:
+            r["kind"] = "building"
         row = weekly.get(r["id"])
         units = None
         if row and str(row.get("units", "")).lstrip("-").isdigit():
             units = int(row["units"])
             if r["kind"] == "other" and units >= 2:
                 r["kind"] = "building"   # e.g. a residential permit worded unusually
-        r["housing"] = r["kind"] in ("building", "predev") and cr.is_housing(r, units)
+        r["housing"] = r["kind"] in ("building", "predev") and (r["monthly"] or cr.is_housing(r, units))
 
 
 def by_parcel_index(records):
@@ -497,7 +547,7 @@ def since_for(history, pid, stage, fallback):
 
 
 def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
-                  history, previously_shown, geocache):
+                  history, previously_shown, geocache, monthly=None, monthly_used=None):
     """Every active housing project in the city's records that no sheet row
     covers. Returns (projects, warnings, geocache_changed)."""
     warnings = []
@@ -509,7 +559,7 @@ def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
     for r in records.values():
         if not r["housing"] or r["id"] in claimed_ids or r["parcel"] in claimed_parcels:
             continue
-        if r["kind"] == "predev" and (not r["opened"] or
+        if r["kind"] == "predev" and not r.get("monthly") and (not r["opened"] or
                                        datetime.fromisoformat(r["opened"]).toordinal() < since_predev):
             continue
         candidates.append(r)
@@ -536,6 +586,13 @@ def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
         stage, units, unit_sources, cost, evidence = cr.assess(own, siblings, weekly)
         if stage is None:
             continue
+        row = monthly_match(own, monthly) if monthly else None
+        if row and monthly_used is not None:
+            monthly_used.add(row["key"])
+        if units is None and row:
+            if row:
+                units = int(row["units"])
+                unit_sources = [f"city monthly permit report (as of {row['as_of']})"]
         buildings = [r for r in own if r["kind"] == "building"]
         if units is not None and units < 2:
             continue
@@ -590,6 +647,8 @@ def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
                     break
         address = " & ".join(addresses[:2]) + (f" and {len(addresses) - 2} more" if len(addresses) > 2 else "")
         name = cr.name_for(own, units, addresses[0] if addresses else "")
+        if row and row.get("title") and len(row["title"]) > 3:
+            name = row["title"]          # the city's own name for the project
 
         descriptions = []
         for r in buildings:
@@ -652,6 +711,87 @@ def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
     return projects, warnings, changed
 
 
+def address_key(text):
+    """'2607 S Ray St' -> '2607 S RAY'. Empty when there's no house number."""
+    match = re.match(r"^\s*(\d+)(?:-\d+)?\s+([NSEW])\.?\s+([A-Za-z0-9]+)", text or "")
+    return f"{match.group(1)} {match.group(2).upper()} {match.group(3).upper()}" if match else ""
+
+
+MONTHLY_STAGE = [
+    (re.compile(r"pdev|mfte|future|proposed", re.I), "Pre-Application"),
+    (re.compile(r"plan review", re.I), "Applied"),
+    (re.compile(r"largest projects|issued", re.I), "Approved"),
+]
+
+
+def monthly_only_projects(monthly, used, records, projects, history):
+    """Projects the monthly report lists that neither the permit map nor the
+    sheet covers, placed by the city's address locator."""
+    warnings, out = [], []
+    rows = {}
+    for entries in monthly.values():
+        for row in entries:
+            rows[row["key"]] = row
+    shown_ids = {p for project in projects for p in project.get("permitNumbers", [])}
+    taken = set()
+    for project in projects:
+        for part in re.split(r"\s*&\s*|\s+and\s+", project.get("address", "")):
+            if address_key(part):
+                taken.add(address_key(part))
+    for key in used:
+        if key in rows and address_key(rows[key]["address"]):
+            taken.add(address_key(rows[key]["address"]))
+    cutoff = (datetime.now(timezone.utc).date().toordinal() - 270)
+    for key, row in sorted(rows.items(), key=lambda kv: -int(kv[1]["units"])):
+        permits = row["permits"].split(";")
+        if key in used or any(p in records or any(s.startswith(p) for s in shown_ids) for p in permits):
+            continue
+        if int(row["units"]) < 2 or not row.get("as_of"):
+            continue
+        if datetime.fromisoformat(row["as_of"]).toordinal() < cutoff:
+            continue
+        akey = address_key(row["address"])
+        if not akey:
+            warnings.append(f"Monthly: {row['title']} ({row['units']} units) has no street address. Not mapped.")
+            continue
+        if akey in taken:
+            continue
+        found = cr.geocode(row["address"])
+        if not found:
+            warnings.append(f"Monthly: couldn't place {row['title']} at \"{row['address']}\". Not mapped.")
+            continue
+        lat, lng, matched = found
+        stage = next((st for rx, st in MONTHLY_STAGE if rx.search(row["table"])), "Applied")
+        if stage == "Applied" and str(row.get("approved")).lower() == "true":
+            stage = "Approved"
+        units = int(row["units"])
+        pid = "monthly-" + key.lower()
+        since = since_for(history, pid, stage, row["as_of"])
+        fields = [f for f in [
+            field("Stage", stage),
+            field("Housing units", f"{units:,}"),
+            field("Estimated cost", f"${int(row['valuation']):,}" if str(row.get("valuation", "")).isdigit() else ""),
+            field("Source", f"City of Spokane monthly permit report, as of {row['as_of']}"),
+        ] if f]
+        out.append({
+            "id": pid, "name": row["title"], "address": cr.nice_case(matched.split(",")[0]),
+            "neighborhood": "", "parcelId": "", "lat": lat, "lng": lng,
+            "status": stage, "statusUpdated": since,
+            "stageSource": f"city monthly permit report ({row['table']}, as of {row['as_of']})",
+            "lastVerified": row["as_of"],
+            "projectType": "Housing" if units >= 10 else "Middle housing",
+            "units": units, "unitsSource": f"city monthly permit report (as of {row['as_of']})",
+            "stories": None, "description": "",
+            "permitNumbers": [p for p in permits if len(p) > 8] or permits[:1],
+            "permits": [{"id": p, "type": "", "status": "", "opened": "", "url": ""}
+                        for p in ([p for p in permits if len(p) > 8] or permits[:1])],
+            "drbFile": "", "imageUrl": "", "imageCredit": "", "docUrl": "", "docLabel": "",
+            "sourceUrls": [], "autoAdded": True, "fields": fields,
+        })
+        taken.add(akey)
+    return out, warnings
+
+
 def load_rows():
     if SHEET_CSV_URL:
         print("Reading the Google Sheet...")
@@ -707,11 +847,13 @@ def main():
     # Today's city permit records, and what the last build published.
     sheet_rows = [{(k or "").strip(): (v or "").strip() for k, v in raw.items()} for raw in rows]
     sheet_parcels = {r.get("parcel_id") for r in sheet_rows if r.get("parcel_id")}
-    records, record_warnings = cr.fetch(set(permit_owners), sheet_parcels, set(city))
+    monthly = load_monthly()
+    records, record_warnings = cr.fetch(set(permit_owners), sheet_parcels, set(city), set(monthly))
     warnings.extend(record_warnings)
-    annotate(records, city)
+    annotate(records, city, monthly)
     by_parcel = by_parcel_index(records)
     history = cr.load_json(cr.HISTORY_PATH, {})
+    monthly_used = set()
     previous = cr.load_json("projects.json", {}).get("projects", [])
     previously_shown = {p for project in previous for p in project.get("permitNumbers", [])}
     claimed_parcels = set(sheet_parcels)
@@ -835,6 +977,9 @@ def main():
             stage = city_stage
             stage_source = "city permit records: " + "; ".join(evidence)
         permits_shown = shown_permits(own, siblings, listed)
+        matched_m = monthly_match(own, monthly) if own else None
+        if matched_m:
+            monthly_used.add(matched_m["key"])
 
         project_id = row.get("id") or "".join(
             c if c.isalnum() else "-" for c in row["name"].lower()
@@ -893,6 +1038,14 @@ def main():
                     f"{label}: estimated cost set to ${cost:,} from the city's permit reports.{partial}"
                 )
 
+        if units is None and own:
+            row_m = monthly_match(own, monthly)
+            if row_m:
+                units = int(row_m["units"])
+                units_source = f"city monthly permit report (as of {row_m['as_of']})"
+                warnings.append(f"{label}: housing units set to {units:,} from the city's monthly "
+                                f"permit report ({row_m['title']}, as of {row_m['as_of']}).")
+
         fields = [
             f
             for f in [
@@ -948,7 +1101,7 @@ def main():
         write_not_on_site(city, set(permit_owners))
     auto, auto_warnings, auto_cache = city_projects(
         records, by_parcel, city, set(permit_owners), claimed_parcels, history,
-        previously_shown, geocache,
+        previously_shown, geocache, monthly, monthly_used,
     )
     warnings.extend(auto_warnings)
     if auto_cache:
@@ -956,6 +1109,11 @@ def main():
     taken = {p["id"] for p in projects}
     auto = [p for p in auto if p["id"] not in taken]
     projects.extend(auto)
+    extra, extra_warnings = monthly_only_projects(monthly, monthly_used, records, projects, history)
+    warnings.extend(extra_warnings)
+    projects.extend(extra)
+    if extra:
+        print(f"Published {len(extra)} project(s) known only from the city's monthly report.")
     cr.save_json(cr.HISTORY_PATH, history)
     if auto:
         counts = {}
