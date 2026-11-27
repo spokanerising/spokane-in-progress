@@ -43,6 +43,7 @@ jobs:
         run: |
           pip install --quiet playwright pillow
           python -m playwright install --with-deps chromium
+          sudo apt-get install -y --no-install-recommends poppler-utils   # pdf_thumbs.py
 
       - name: Run the tests
         run: python3 tests/run.py

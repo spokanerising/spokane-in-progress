@@ -26,40 +26,51 @@ def make_pdf(pages, color):
     buf = io.BytesIO(); ims[0].save(buf, "PDF", save_all=True, append_images=ims[1:]); return buf.getvalue()
 
 root = tempfile.mkdtemp(prefix="thumbs-")
-pdf = make_pdf(3, (200, 60, 40))
-calls = []
-def fake_fetch(url):
-    calls.append(url)
-    if "broken" in url: raise ValueError("not a PDF")
-    return DOCS[url]
-DOCS = {"https://example.org/a.pdf": pdf}
-projects = [
-    {"id": "A1", "name": "Has permission", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True},
-    {"id": "B2", "name": "No permission", "docUrl": "https://example.org/a.pdf", "_docThumbOk": False},
-    {"id": "C3", "name": "Broken", "docUrl": "https://example.org/broken.pdf", "_docThumbOk": True},
-    {"id": "D4", "name": "No document"},
-]
-now = datetime(2026, 11, 27, tzinfo=timezone.utc)
-warns = pdf_thumbs.add(projects, root, now=now, fetch=fake_fetch)
-a, b_, c, d = projects
-check(all("_docThumbOk" not in p for p in projects), "internal flag removed from every project")
-check(a.get("docThumb", "").startswith("/p/A1/doc-") and a["docThumb"].endswith(".jpg") and a.get("docPages") == 3, a)
-im = Image.open(os.path.join(root, a["docThumb"].lstrip("/")))
-check(im.size[0] == 600 and im.format == "JPEG", f"600 wide JPEG {im.size}")
-check("docThumb" not in b_ and "docThumb" not in c and "docThumb" not in d, "no thumbnail without permission, on failure, or without a PDF")
-check(len(warns) == 1 and "Broken" in warns[0], warns)
-check(calls.count("https://example.org/a.pdf") == 1, "PDFs without permission aren't downloaded")
-# Next day: cached, not fetched again.
-calls.clear()
-again = [{"id": "A1", "name": "x", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True}]
-pdf_thumbs.add(again, root, now=now + timedelta(days=1), fetch=fake_fetch)
-check(not calls and again[0]["docThumb"] == a["docThumb"], "cached for a month")
-# After a month, with a changed PDF: redrawn under a new name, old file removed.
-DOCS["https://example.org/a.pdf"] = make_pdf(5, (40, 60, 200))
-later = [{"id": "A1", "name": "x", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True}]
-pdf_thumbs.add(later, root, now=now + timedelta(days=40), fetch=fake_fetch)
-check(later[0]["docThumb"] != a["docThumb"] and later[0]["docPages"] == 5, "redrawn when the PDF changes")
-check(not os.path.exists(os.path.join(root, a["docThumb"].lstrip("/"))), "old thumbnail removed")
+if not (shutil.which("pdftoppm") and shutil.which("pdfinfo")):
+    # Without poppler: no thumbnails, one warning each, nothing downloaded.
+    calls_np = []
+    nop = [{"id": "A1", "name": "Has permission", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True}]
+    w = pdf_thumbs.add(nop, root, fetch=lambda u: calls_np.append(u))
+    check("docThumb" not in nop[0] and "_docThumbOk" not in nop[0] and not calls_np and "poppler" in w[0], "fails soft without poppler")
+    print("poppler not installed: skipping the thumbnail drawing checks")
+    skip_thumbs = True
+else:
+    skip_thumbs = False
+pdf = make_pdf(3, (200, 60, 40)) if not skip_thumbs else b""
+if not skip_thumbs:
+    calls = []
+    def fake_fetch(url):
+        calls.append(url)
+        if "broken" in url: raise ValueError("not a PDF")
+        return DOCS[url]
+    DOCS = {"https://example.org/a.pdf": pdf}
+    projects = [
+        {"id": "A1", "name": "Has permission", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True},
+        {"id": "B2", "name": "No permission", "docUrl": "https://example.org/a.pdf", "_docThumbOk": False},
+        {"id": "C3", "name": "Broken", "docUrl": "https://example.org/broken.pdf", "_docThumbOk": True},
+        {"id": "D4", "name": "No document"},
+    ]
+    now = datetime(2026, 11, 27, tzinfo=timezone.utc)
+    warns = pdf_thumbs.add(projects, root, now=now, fetch=fake_fetch)
+    a, b_, c, d = projects
+    check(all("_docThumbOk" not in p for p in projects), "internal flag removed from every project")
+    check(a.get("docThumb", "").startswith("/p/A1/doc-") and a["docThumb"].endswith(".jpg") and a.get("docPages") == 3, a)
+    im = Image.open(os.path.join(root, a["docThumb"].lstrip("/")))
+    check(im.size[0] == 600 and im.format == "JPEG", f"600 wide JPEG {im.size}")
+    check("docThumb" not in b_ and "docThumb" not in c and "docThumb" not in d, "no thumbnail without permission, on failure, or without a PDF")
+    check(len(warns) == 1 and "Broken" in warns[0], warns)
+    check(calls.count("https://example.org/a.pdf") == 1, "PDFs without permission aren't downloaded")
+    # Next day: cached, not fetched again.
+    calls.clear()
+    again = [{"id": "A1", "name": "x", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True}]
+    pdf_thumbs.add(again, root, now=now + timedelta(days=1), fetch=fake_fetch)
+    check(not calls and again[0]["docThumb"] == a["docThumb"], "cached for a month")
+    # After a month, with a changed PDF: redrawn under a new name, old file removed.
+    DOCS["https://example.org/a.pdf"] = make_pdf(5, (40, 60, 200))
+    later = [{"id": "A1", "name": "x", "docUrl": "https://example.org/a.pdf", "_docThumbOk": True}]
+    pdf_thumbs.add(later, root, now=now + timedelta(days=40), fetch=fake_fetch)
+    check(later[0]["docThumb"] != a["docThumb"] and later[0]["docPages"] == 5, "redrawn when the PDF changes")
+    check(not os.path.exists(os.path.join(root, a["docThumb"].lstrip("/"))), "old thumbnail removed")
 shutil.rmtree(root)
 
 # ---- the page -------------------------------------------------------------------
