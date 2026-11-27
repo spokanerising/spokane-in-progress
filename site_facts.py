@@ -254,15 +254,14 @@ ZONE_GROUPS = [
 ZONE_NAMES = {
     "RA": "Residential Agriculture", "RSF": "Residential Single-Family", "RTF": "Residential Two-Family",
     "RMF": "Residential Multifamily", "RHD": "Residential High Density",
-    "R1": "Residential 1", "R2": "Residential 2",
-    "CC1": "Centers & Corridors Core", "CC2": "Centers & Corridors Core", "CC3": "Centers & Corridors Transition",
-    "CC4": "Centers & Corridors Transition",
-    "CA1": "Centers & Corridors (pedestrian)", "CA2": "Centers & Corridors (district center)",
-    "CA3": "Centers & Corridors (auto-oriented)", "CA4": "Centers & Corridors (district center)",
-    "DTC": "Downtown Core", "DTG": "Downtown General", "DTU": "Downtown Urban", "DTS": "Downtown South",
+    "R1": "Residential", "R2": "Residential",
+    "CC1": "Centers & Corridors", "CC2": "Centers & Corridors", "CC3": "Centers & Corridors",
+    "CC4": "Centers & Corridors",
+    "CA1": "Centers & Corridors", "CA2": "Centers & Corridors", "CA3": "Centers & Corridors", "CA4": "Centers & Corridors",
+    "DTC": "Downtown", "DTG": "Downtown", "DTU": "Downtown", "DTS": "Downtown",
     "NR": "Neighborhood Retail", "NMU": "Neighborhood Mixed Use", "CB": "Community Business",
     "GC": "General Commercial", "O": "Office", "OR": "Office Retail",
-    "LI": "Light Industrial", "HI": "Heavy Industrial", "PO": "Parking Only",
+    "LI": "Light Industrial", "HI": "Heavy Industrial",
 }
 
 
@@ -426,11 +425,16 @@ def fill_zoning(projects, discover=discover_zoning, ask=ask_zone, source=None, c
         if not found or not found.get("zone"):
             continue
         code = found["zone"]
+        label = found.get("name") or ""
         base = zone_base(code)
+        # The city's label field holds the full designation with its height
+        # limit or center type ("CB-150", "CC2-DC"), not a description.
+        if re.fullmatch(r"[A-Z0-9]+(?:-[A-Z0-9]+)*", label.strip().upper()) and zone_base(label) == base:
+            code, label = label.strip().upper(), ""
         p["zone"] = code
         p["zoneBase"] = base or code
         p["zoneGroup"] = zone_group(code)
-        name = found.get("name") or ZONE_NAMES.get(base, "")
+        name = label or ZONE_NAMES.get(base, "")
         if name and name.upper() != code.upper():
             p["zoneName"] = name
     if changed:

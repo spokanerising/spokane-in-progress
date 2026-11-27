@@ -199,7 +199,8 @@ const FILTERS = {
         .sort((a, b) => order(a) - order(b) || a.localeCompare(b, "en", { numeric: true }))
         .map((b) => ({
           key: slug(b),
-          label: bases.get(b).name ? `${b} · ${bases.get(b).name}` : b,
+          // "RMF · Residential Multifamily", but just "DTC" under a Downtown heading.
+          label: bases.get(b).name && bases.get(b).name !== bases.get(b).group ? `${b} · ${bases.get(b).name}` : b,
           short: b,
           group: slug(bases.get(b).group),
           test: (p) => (p.zoneBase || p.zone) === b,
@@ -1265,7 +1266,7 @@ function siteFacts(p) {
   if (p.acres > 0) {
     const acres = p.acres < 1 ? p.acres.toFixed(2) : p.acres < 10 ? p.acres.toFixed(1) : Math.round(p.acres);
     const lots = (p.parcels || []).length > 1 ? ` across ${p.parcels.length} parcels` : "";
-    rows.push(["Lot size", `${acres} ${+acres === 1 ? "acre" : "acres"}${lots}${p.homesPerAcre ? ` · ${numberWithCommas(p.homesPerAcre)} homes per acre` : ""}`]);
+    rows.push(["Lot size", `${acres} ${+acres === 1 ? "acre" : "acres"}${lots}${p.homesPerAcre ? ` · ${p.homesPerAcre >= 10 ? numberWithCommas(Math.round(p.homesPerAcre)) : p.homesPerAcre.toFixed(1)} homes per acre` : ""}`]);
   }
   if (Number.isFinite(p.transitMiles)) {
     const m = p.transitMiles;
