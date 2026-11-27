@@ -1390,3 +1390,211 @@ body.page {
 @media (max-width: 860px) and (max-width: 1179px) {
   .detail { padding-top: max(14px, env(safe-area-inset-top)); }
 }
+
+/* ---------- filters, round 2: checklists everywhere, pills, Near ---------- */
+
+/* Stage chips carry a live count and an "only" shortcut. */
+.chipwrap { position: relative; display: inline-flex; flex: none; -webkit-tap-highlight-color: transparent; }
+.chip__n { margin-left: 2px; font-size: 12px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip.is-zero { opacity: 0.55; }
+
+.only {
+  padding: 0 4px;
+  background: none;
+  border: none;
+  font: 600 11px var(--sans);
+  letter-spacing: 0.02em;
+  color: var(--link);
+  cursor: pointer;
+  opacity: 0;
+}
+.only:hover { text-decoration: underline; text-underline-offset: 3px; }
+.only:focus-visible { opacity: 1; }
+
+/* On a chip it floats over the chip's right edge, on hover only. */
+.only--chip {
+  position: absolute;
+  top: -9px;
+  right: -4px;
+  padding: 1px 5px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-size: 10.5px;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .chipwrap:hover .only--chip, .chipwrap:focus-within .only--chip { opacity: 1; pointer-events: auto; }
+  .picker__item:hover .only, .picker__item:focus-within .only { opacity: 1; }
+}
+/* Touch screens: always show it in the checklists (chips use long-press). */
+@media (hover: none) {
+  .picker__item .only { opacity: 1; color: var(--muted); }
+  .only--chip { display: none; }
+}
+
+/* A dropdown that's narrowing the list reads as "on". */
+.picker.is-on .picker__button { border-color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); font-weight: 600; }
+
+.picker__item { grid-template-columns: auto 1fr auto auto; -webkit-tap-highlight-color: transparent; }
+.picker__n { min-width: 2.6ch; text-align: right; font-variant-numeric: tabular-nums; }
+.picker__item[hidden] { display: none; }
+.picker__item.is-zero .picker__text, .picker__item.is-zero .picker__n { color: var(--muted); }
+.picker__item.is-zero .picker__text { opacity: 0.75; }
+.picker__item--head { padding-left: 0; font-weight: 600; font-size: 13px; }
+.picker__text { min-width: 0; }
+
+.picker__part + .picker__part { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--ink); }
+.picker__part > .picker__group:last-of-type { border-bottom: none; }
+.picker__head {
+  margin: 8px 0 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.picker__note { margin: 0 0 4px; font-size: 12px; line-height: 1.4; color: var(--muted); }
+.picker__nomatch { margin: 6px 0; font-size: 13px; color: var(--muted); }
+
+.picker__search {
+  width: 100%;
+  min-height: 34px;
+  margin: 6px 0 2px;
+  padding: 5px 9px;
+  border: 1px solid var(--rule);
+  border-bottom-color: var(--ink-2);
+  border-radius: 0;
+  background: #fff;
+  font: 400 14px var(--sans);
+  color: var(--ink);
+}
+.picker__search:focus { outline: 2px solid var(--link); outline-offset: 1px; }
+
+/* A dropdown in the right-hand column opens leftwards. */
+.picker--right .picker__panel { left: auto; right: 0; }
+
+/* "Near" */
+.near { display: grid; gap: 4px; }
+.near__row { display: flex; gap: 6px; align-items: center; }
+.near__row .picker__search { margin: 0; flex: 1; }
+.near__find {
+  min-height: 34px;
+  padding: 0 12px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  font: 600 13px var(--sans);
+  cursor: pointer;
+}
+.near__find:hover { background: var(--ink-2); }
+.near__alt { display: flex; flex-wrap: wrap; gap: 2px 16px; margin: 4px 0 2px; }
+.near__alt button, .near__clear {
+  min-height: 30px;
+  padding: 0;
+  background: none;
+  border: none;
+  font: 600 12.5px var(--sans);
+  color: var(--link);
+  cursor: pointer;
+  text-align: left;
+}
+.near__alt button:hover, .near__clear:hover { text-decoration: underline; text-underline-offset: 3px; }
+.near__radius { margin: 4px 0 0; padding: 0; border: none; }
+.near__radius legend { padding: 0; }
+.near__status { margin: 4px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-2); }
+.near__status:empty { display: none; }
+.near__clear[hidden] { display: none; }
+
+/* A row of joined toggle buttons (used for the Near radius). */
+.seg { display: flex; margin-top: 4px; }
+.seg label { flex: 1; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 6px;
+  border: 1px solid var(--rule);
+  margin-left: -1px;
+  font: 500 12.5px var(--sans);
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.seg label:first-child span { margin-left: 0; }
+.seg input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); position: relative; }
+.seg input:focus-visible + span { outline: 2px solid var(--link); outline-offset: 1px; position: relative; }
+
+/* Active-filter pills, under the tally. */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; padding: 0; list-style: none; }
+.pills[hidden] { display: none; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 30px;
+  padding: 4px 6px 4px 10px;
+  background: #fff;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  font: 400 12.5px var(--sans);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.pill > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pill b { font-weight: 600; margin-right: 2px; }
+.pill__x { font-size: 16px; line-height: 1; color: var(--muted); padding: 0 2px; }
+.pill:hover { background: var(--paper-2); }
+.pill:hover .pill__x { color: var(--ink); }
+.pill:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+
+/* "Only what's in map view", in the sort row. */
+.listtools { flex-wrap: wrap; row-gap: 4px; }
+.inviewonly { display: inline-flex; align-items: center; gap: 6px; margin-right: auto; margin-left: 14px; color: var(--ink-2); cursor: pointer; }
+.inviewonly input { width: 15px; height: 15px; margin: 0; accent-color: var(--ink); }
+
+/* While choosing a spot for "Near". */
+.pickhint {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 8px 7px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 2px;
+  font: 600 13px var(--sans);
+  white-space: nowrap;
+}
+.pickhint[hidden] { display: none; }
+.pickhint button {
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid rgba(250, 248, 243, 0.6);
+  border-radius: 2px;
+  color: var(--paper);
+  font: 600 12px var(--sans);
+  cursor: pointer;
+}
+body[data-picking="on"] .inview { display: none; }
+
+@media (max-width: 860px) {
+  .pill { min-height: 36px; }
+  .inviewonly { min-height: 40px; margin-left: 0; }
+  .near__find, .seg span { min-height: 40px; }
+  .near__alt button, .near__clear { min-height: 40px; }
+  .picker__search { font-size: 16px; min-height: 40px; }
+  .chipwrap { flex: none; }
+}
+@media (max-width: 520px) {
+  .pickhint { top: 54px; font-size: 12.5px; }
+}

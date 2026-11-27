@@ -43,6 +43,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add projects.json data/
+          [ -f boundaries.geojson ] && git add boundaries.geojson
           git diff --staged --quiet && exit 0
           git commit -m "Refresh project data"
           git pull --rebase origin "$GITHUB_REF_NAME"

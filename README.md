@@ -20,6 +20,8 @@ You only ever touch the sheet.
 | `build.py` | Reads the sheet, checks the rows, writes `projects.json`. Python 3, nothing to install. |
 | `index.html`, `styles.css`, `app.js` | The site itself. |
 | `.github/workflows/build.yml` | Rebuilds the data every morning, and on demand. |
+| `site_facts.py` | Adds zoning, lot size (homes per acre) and distance to frequent transit to each project, for the filters. Caches in `data/parcel-acres.json`, `data/zoning-*.json`, `data/transit-*`. |
+| `boundaries.py` | Neighborhood council and council district for each project, and `boundaries.geojson`, the outlines the map draws when you filter to one. |
 
 The sample projects are made up. Delete them once you have real ones.
 

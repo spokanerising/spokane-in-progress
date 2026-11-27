@@ -21,6 +21,7 @@ import city_records as cr
 import display_tidy
 import housing_types
 import boundaries
+import site_facts
 import milestones
 
 # ---------------------------------------------------------------------------
@@ -1136,6 +1137,11 @@ def main():
     housing_types.classify_all(projects)
     # Official neighborhood council and council district (see boundaries.py).
     warnings.extend(boundaries.assign(projects))
+    # Outlines of those areas, drawn on the map when someone filters to one.
+    warnings.extend(boundaries.write_outlines())
+    # Lot size and homes per acre, zoning, and distance to frequent transit
+    # (see site_facts.py). Each source fails soft.
+    warnings.extend(site_facts.assign(projects, records, cr.kind_of))
     # Dated milestones for each project's timeline (see milestones.py).
     milestones.add_milestones(projects, records, by_parcel, city, stage_history)
 

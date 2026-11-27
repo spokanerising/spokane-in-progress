@@ -74,29 +74,9 @@
       <!-- On phones these sit behind "More filters" so the list starts sooner. -->
       <button type="button" class="morefilters__toggle" id="more-filters" aria-expanded="false" aria-controls="more-filters-panel">More filters</button>
       <div class="morefilters" id="more-filters-panel">
-      <div class="selects">
-          <div class="select">
-            <span class="select__label" id="type-label">Building type</span>
-            <!-- A checklist rather than a plain dropdown, so types can be combined:
-                 all middle housing, or just duplexes and fourplexes, and so on. -->
-            <details class="picker" id="type-picker">
-              <summary class="picker__button" aria-describedby="type-label"><span id="type-summary">All building types</span></summary>
-              <div class="picker__panel" id="type-panel" role="group" aria-labelledby="type-label"></div>
-            </details>
-          </div>
-          <label class="select">
-            <span class="select__label">Project size</span>
-            <select id="size-filter"></select>
-          </label>
-          <label class="select">
-            <span class="select__label">Timeline</span>
-            <select id="time-filter"></select>
-          </label>
-          <label class="select">
-            <span class="select__label">Where</span>
-            <select id="place-filter"></select>
-          </label>
-        </div>
+      <!-- Every filter is a checklist dropdown, drawn by app.js. Only filters
+           the data can support appear (zoning, say, after its first lookup). -->
+      <div class="selects" id="pickers"></div>
   
         <details class="explain">
           <summary>What counts as middle housing?</summary>
@@ -106,10 +86,14 @@
         </details>
   
         <details class="explain">
-          <summary>How the timeline and places work</summary>
+          <summary>How the timeline, places and site filters work</summary>
           <p><b>First filed</b> is the date of the earliest city record for the project, including a pre-development meeting. The city's public permit map keeps about three years of records, so nothing here shows a filing before December 2023. A few projects known only from the city's monthly report have no filing date.</p>
           <p><b>Reached its current stage</b> is when this site first saw the project at that stage. Dates from before November 2026 are estimates.</p>
           <p><b>Neighborhoods</b> are the city's 29 neighborhood councils and three City Council districts, worked out from each project's map point. Where the list shows a more familiar name, like Kendall Yards, the filter still uses the official council.</p>
+          <p><b>Near</b> finds projects within a distance of an address, your location or a spot you pick on the map, measured in a straight line.</p>
+          <p><b>Frequent transit</b> is the straight-line distance to the nearest bus stop where at least one route comes every 15 minutes or better between 10 a.m. and 2 p.m. on weekdays, from Spokane Transit's published schedule. Walking distance is usually a bit longer.</p>
+          <p><b>Zoning</b> is the City of Spokane's zoning at the project's map point. A project on a lot with two zones shows only one.</p>
+          <p><b>Homes per acre</b> divides the project's homes by the size of the parcels named in its permits, from the Spokane County Assessor. Projects that share a big parcel, or whose permits don't list every lot, can look less or more dense than they are.</p>
         </details>
       </div>
     </div>
@@ -118,6 +102,7 @@
       <p class="tally" id="tally" aria-live="polite"></p>
       <button type="button" class="clear" id="clear-filters" hidden>Clear filters</button>
     </div>
+    <ul class="pills" id="pills" hidden aria-label="Filters that are on"></ul>
 
     <div class="listtools">
       <label class="sort">
@@ -127,13 +112,15 @@
           <option value="homes">Most homes</option>
           <option value="stage">Furthest along</option>
           <option value="filed">Newest filing</option>
+          <option value="density">Most homes per acre</option>
           <option value="name">Name, A to Z</option>
         </select>
       </label>
+      <label class="inviewonly"><input type="checkbox" id="inview-only"><span>Only what’s in map view</span></label>
       <button type="button" class="sharebtn" id="share-view">Share this view</button>
     </div>
     <ol class="cards" id="cards"></ol>
-    <p class="empty" id="empty" hidden>Nothing matches those filters. Clear the search or turn a stage back on.</p>
+    <p class="empty" id="empty" hidden>Nothing matches those filters. Remove one of them above, or clear them all.</p>
 
 <footer class="colophon">
   <p><strong>Spokane in Progress</strong> is produced by Anthony Gill, writer of Spokane Rising. It is an independent project, not affiliated with, endorsed by, or speaking for the City of Spokane.</p>
@@ -162,6 +149,12 @@
     <!-- Size key: circle area is proportional to housing units. Redrawn on
          zoom so the sample circles match what is on the map. -->
     <div class="mapkey" id="mapkey" aria-label="Map key"></div>
+
+    <!-- Shown while choosing a spot for the "Near" filter. -->
+    <div class="pickhint" id="pickhint" hidden>
+      <span>Click the map to choose a spot</span>
+      <button type="button" id="pickhint-cancel">Cancel</button>
+    </div>
 
     <!-- How many of the filtered projects are inside the current map view. -->
     <p class="inview" id="inview" aria-live="polite"></p>
