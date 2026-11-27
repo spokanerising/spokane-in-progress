@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T05:39:09.897206+00:00",
+  "builtAt": "2026-11-27T08:07:04.710681+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -5467,6 +5467,85 @@
       "stageSinceExact": true
     },
     {
+      "id": "city-b26m0050pdev",
+      "name": "Delaney Two-Home Development",
+      "address": "1805 W Main Ave",
+      "neighborhood": "Peaceful Valley",
+      "parcelId": "25134.3009",
+      "lat": 47.65889537467094,
+      "lng": -117.43865801073125,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-05-05",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-27",
+      "projectType": "Not yet known",
+      "units": null,
+      "unitsSource": "",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B26M0050PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B26M0050PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2026-05-05",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00050&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00050&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "Peaceful Valley",
+      "councilDistrict": 3,
+      "parcels": [
+        "25134.3009"
+      ],
+      "zone": "RMF",
+      "zoneBase": "RMF",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential Multifamily",
+      "transitMiles": 0.23,
+      "transitStop": "Pacific @ Oak",
+      "transitRoutes": [
+        "1"
+      ],
+      "milestones": [
+        {
+          "date": "2026-05-05",
+          "label": "Pre-development conference filed",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
+    },
+    {
       "id": "city-b2606433bldr",
       "name": "2020 E Francis Ave Duplex",
       "address": "2020 E Francis Ave",
@@ -6012,6 +6091,85 @@
         }
       ],
       "stageSinceExact": false
+    },
+    {
+      "id": "city-b26m0032pdev",
+      "name": "E Sharp Unit Lot Subdivision",
+      "address": "1904 E Sharp Ave",
+      "neighborhood": "Chief Garry Park",
+      "parcelId": "35162.1501",
+      "lat": 47.66942853876274,
+      "lng": -117.38229940762147,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-03-18",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-27",
+      "projectType": "Not yet known",
+      "units": null,
+      "unitsSource": "",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B26M0032PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B26M0032PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2026-03-18",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00032&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00032&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "Chief Garry Park",
+      "councilDistrict": 1,
+      "parcels": [
+        "35162.1501"
+      ],
+      "zone": "R1",
+      "zoneBase": "R1",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential",
+      "transitMiles": 0.17,
+      "transitStop": "Mission @ Napa",
+      "transitRoutes": [
+        "1"
+      ],
+      "milestones": [
+        {
+          "date": "2026-03-18",
+          "label": "Pre-development conference filed",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
     },
     {
       "id": "city-b2417372bldr",
@@ -7524,6 +7682,85 @@
       "stageSinceExact": false
     },
     {
+      "id": "city-b25m0111pdev",
+      "name": "Hamblen Condos",
+      "address": "2345 W Centennial Pl",
+      "neighborhood": "West Central",
+      "parcelId": "25133.3603",
+      "lat": 47.66094614111004,
+      "lng": -117.44650749866703,
+      "status": "Pre-Application",
+      "statusUpdated": "2025-10-29",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-27",
+      "projectType": "Not yet known",
+      "units": null,
+      "unitsSource": "",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B25M0111PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B25M0111PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2025-10-29",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00111&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00111&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "West Central",
+      "councilDistrict": 3,
+      "parcels": [
+        "25133.3603"
+      ],
+      "zone": "RMF",
+      "zoneBase": "RMF",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential Multifamily",
+      "transitMiles": 0.24,
+      "transitStop": "Broadway @ Nettleton",
+      "transitRoutes": [
+        "21"
+      ],
+      "milestones": [
+        {
+          "date": "2025-10-29",
+          "label": "Pre-development conference filed",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
+    },
+    {
       "id": "city-b25m0103pdev",
       "name": "Grove on Grand",
       "address": "3508 S Grand Blvd",
@@ -7828,6 +8065,85 @@
         }
       ],
       "stageSinceExact": false
+    },
+    {
+      "id": "city-b25m0098pdev",
+      "name": "Sharp/Nettleton Unit Lot Subdivision",
+      "address": "2301 W Sharp",
+      "neighborhood": "West Central",
+      "parcelId": "25132.2115",
+      "lat": 47.66873279776036,
+      "lng": -117.44602909547258,
+      "status": "Pre-Application",
+      "statusUpdated": "2025-10-07",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-27",
+      "projectType": "Not yet known",
+      "units": null,
+      "unitsSource": "",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B25M0098PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B25M0098PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2025-10-07",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00098&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00098&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "West Central",
+      "councilDistrict": 3,
+      "parcels": [
+        "25132.2115"
+      ],
+      "zone": "R1",
+      "zoneBase": "R1",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential",
+      "transitMiles": 0.2,
+      "transitStop": "Mission @ Nettleton",
+      "transitRoutes": [
+        "21"
+      ],
+      "milestones": [
+        {
+          "date": "2025-10-07",
+          "label": "Pre-development conference filed",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
     },
     {
       "id": "city-b2516195bldc",

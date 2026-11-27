@@ -211,8 +211,18 @@
   "since": "2026-01-26",
   "stage": "Under Construction"
  },
+ "city-b25m0098pdev": {
+  "exact": false,
+  "since": "2025-10-07",
+  "stage": "Pre-Application"
+ },
  "city-b25m0103pdev": {
   "since": "2025-10-14",
+  "stage": "Pre-Application"
+ },
+ "city-b25m0111pdev": {
+  "exact": false,
+  "since": "2025-10-29",
   "stage": "Pre-Application"
  },
  "city-b25m0112pdev": {
@@ -335,12 +345,22 @@
   "since": "2026-03-12",
   "stage": "Pre-Application"
  },
+ "city-b26m0032pdev": {
+  "exact": false,
+  "since": "2026-03-18",
+  "stage": "Pre-Application"
+ },
  "city-b26m0039pdev": {
   "since": "2026-11-12",
   "stage": "Applied"
  },
  "city-b26m0044pdev": {
   "since": "2026-04-17",
+  "stage": "Pre-Application"
+ },
+ "city-b26m0050pdev": {
+  "exact": false,
+  "since": "2026-05-05",
   "stage": "Pre-Application"
  },
  "city-b26m0055pdev": {
