@@ -25,6 +25,7 @@ import site_facts
 import pages
 import milestones
 import pdf_thumbs
+import pipeline_history
 
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
@@ -1194,6 +1195,12 @@ def main():
         )
 
     print(f"\nWrote projects.json with {len(projects)} projects.")
+    # Today's count of projects and homes by stage (see pipeline_history.py).
+    try:
+        day = pipeline_history.record(projects, STAGE_NAMES)
+        print(f"Pipeline on {day['date']}: {day['projects']} projects, {day['homes']:,} homes.")
+    except Exception as error:  # never let the log stop the build
+        warnings.append(f"Could not update data/pipeline-history.csv: {error}")
     # A page per project, neighborhood and district, for link previews.
     warnings.extend(pages.write_all(projects))
     if warnings:
