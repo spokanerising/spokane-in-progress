@@ -275,7 +275,7 @@
         session.state = "out";
         throw new Error('Your sign-in has run out. Open <a href="/admin/" target="_blank" rel="noopener">the editor page</a> in a new tab to sign in again, then press Save.');
       }
-      if (!res.ok) throw new Error(esc(body.error || `The save failed (HTTP ${res.status}).`));
+      if (!res.ok) throw new Error(body.error || `The save failed (HTTP ${res.status}).`);
       session.state = "in";
       setPending([...pending(), { id: p.id, name: p.name, at: body.at, hide }]);
       dialog.close();
