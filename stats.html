@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stats — Spokane in Progress</title>
+<meta name="description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district, neighborhood and project size, updated every morning from the city's permit records.">
+<link rel="canonical" href="https://projects.spokanerising.com/stats.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Spokane in Progress">
+<meta property="og:url" content="https://projects.spokanerising.com/stats.html">
+<meta property="og:title" content="Stats · Spokane in Progress">
+<meta property="og:description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district, neighborhood and project size, updated every morning from the city's permit records.">
+<meta property="og:image" content="https://projects.spokanerising.com/og-card.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Spokane in Progress: a map of Spokane with every tracked housing project as a dot, colored by stage.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://projects.spokanerising.com/og-card.png">
+
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#faf8f3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+</head>
+<body class="page">
+
+<header class="masthead masthead--page">
+  <div class="masthead__page">
+    <a class="masthead__home" href="./">
+      <span class="masthead__title">Spokane <em>in Progress</em></span>
+    </a>
+    <nav class="pagenav" aria-label="Site">
+      <a href="./">Map</a>
+      <a href="stats.html" aria-current="page">Stats</a>
+      <a href="about.html">About</a>
+      <a href="glossary.html">Glossary</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article">
+  <p class="kicker">Stats</p>
+  <h1 class="article__hed">What’s being built in Spokane</h1>
+  <p class="article__dek" id="dek">Loading the latest numbers…</p>
+  <p class="byline"><span class="byline__by">By Anthony Gill, writer of Spokane Rising.</span> <span id="asof"></span></p>
+
+  <div class="stats" id="stats" aria-live="polite"></div>
+
+  <section class="section" aria-labelledby="h-charts">
+    <h2 id="h-charts" class="section__hed">The pipeline, by the numbers</h2>
+    <p>Every bar below counts homes in projects this map tracks, colored by how far along each project is. Darker means further along.</p>
+    <p class="aside">These counts have limits. Some projects are missing or have no unit count yet, and they won’t match the city’s own reports. <a href="about.html#h-limits">What this map can’t tell you</a> · <a href="about.html#h-differ">Why these numbers differ from the city’s</a></p>
+    <ul class="legend" id="legend"></ul>
+
+    <figure class="chart" id="chart-type"></figure>
+    <figure class="chart" id="chart-district"></figure>
+    <figure class="chart" id="chart-hood"></figure>
+    <figure class="chart" id="chart-quarter"></figure>
+    <figure class="chart" id="chart-size"></figure>
+  </section>
+
+  <section class="section" aria-labelledby="h-data">
+    <h2 id="h-data" class="section__hed">Use the data</h2>
+    <p>Download every project on the map as a spreadsheet, with stage, building type, units, neighborhood council, council district, first filing date and permit numbers. Each chart above also has its own download, as an image or as data.</p>
+    <p><button type="button" class="button" id="download">Download projects (CSV)</button></p>
+    <p>Words like “plan review” or “finaled” are defined in the <a href="glossary.html">Glossary</a>. Spot a mistake? Email <a href="mailto:spokanerising@gmail.com">spokanerising@gmail.com</a>.</p>
+  </section>
+</main>
+
+<footer class="colophon colophon--page">
+  <p><strong>Spokane in Progress</strong> is produced by Anthony Gill, writer of Spokane Rising. It is an independent project, not affiliated with, endorsed by, or speaking for the City of Spokane. Corrections: <a href="mailto:spokanerising@gmail.com">spokanerising@gmail.com</a>.</p>
+</footer>
+
+<script src="share.js"></script>
+<script src="stats.js"></script>
+</body>
+</html>

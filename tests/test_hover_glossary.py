@@ -2,8 +2,8 @@
 
 Hover card: stage, name, homes and type, address on hover and on [ / ];
 none on touch screens. Glossary: every id the page can ask for exists in
-glossary.json, terms open and close by click, hover and Escape, and the About
-page lists every term with an anchor. How to read: opens, lists the stages,
+glossary.json, terms open and close by click, hover and Escape, and the
+Glossary page lists every term with an anchor. How to read: opens, lists the stages,
 Escape returns focus."""
 import json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -109,7 +109,7 @@ with sync_playwright() as pw:
     check(pop.locator(".glosspop__term").inner_text() == "Final (finaled)", "popover shows the term")
     check("final inspection" in pop.locator(".glosspop__def").inner_text(), "and its definition")
     check(final.get_attribute("aria-expanded") == "true", "term says it's open")
-    check(pop.locator("a").get_attribute("href") == "about.html#g-finaled", "links to the About glossary")
+    check(pop.locator("a").get_attribute("href") == "glossary.html#g-finaled", "links to the Glossary page")
     pb, fb = pop.bounding_box(), final.bounding_box()
     check(pb["x"] >= 0 and pb["x"] + pb["width"] <= 1280 and abs(pb["y"] - (fb["y"] + fb["height"])) < 12, f"popover under the term {pb} {fb}")
     pg.screenshot(path=os.path.join(SHOTS, "glossary-popover.png"))
@@ -146,10 +146,11 @@ with sync_playwright() as pw:
     pg.keyboard.press("Escape")
     check(not panel.is_visible() and pg.evaluate("document.activeElement.id") == "how-to-read", "Escape closes and returns focus")
 
-    # ---- About page list ------------------------------------------------------
+    # ---- Glossary page list (an old About link forwards to it) ----------------
     pg.goto(SITE + "/about.html#g-finaled")
+    pg.wait_for_url("**/glossary.html#g-finaled")
     pg.wait_for_selector("#glossary dt")
-    check(pg.locator("#glossary dt").count() == len(IDS), "About lists every term")
+    check(pg.locator("#glossary dt").count() == len(IDS), "the Glossary lists every term")
     check(pg.locator("#g-finaled.is-target").count() == 1, "the linked term is marked")
     check(pg.evaluate("document.getElementById('g-finaled').getBoundingClientRect().top") < 300, "and scrolled to")
     check(not errors, errors)

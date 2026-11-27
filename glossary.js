@@ -1,10 +1,11 @@
 // Glossary: dotted-underlined terms that open a short definition, and the
-// full list on the About page. Definitions live in glossary.json.
+// full list on the Glossary page (glossary.html). Definitions live in glossary.json.
 //
 //   Gloss.term(id, html)   wrap already-escaped html in a term button
 //   Gloss.stage(status) / Gloss.type(buildingType) / Gloss.permitKind(type) /
 //   Gloss.permitStatus(status)   the glossary id for a value, or ""
-//   Gloss.list(box)        draw every term into box (About page)
+//   Gloss.list(box)        draw every term into box (Glossary page)
+//   Gloss.load()           the glossary data, once loaded (About's stage list)
 (function () {
   "use strict";
 
@@ -60,7 +61,7 @@
   // ---- the popover ---------------------------------------------------------
   let pop = null, openFor = null, pinned = false, hoverTimer = 0, leaveTimer = 0;
   const canHover = () => window.matchMedia("(hover: hover)").matches;
-  const onAbout = () => !!document.getElementById("glossary");
+  const onGlossaryPage = () => !!document.getElementById("glossary");
 
   function ensurePop() {
     if (pop) return pop;
@@ -94,7 +95,7 @@
     if (!t) return;
     close();
     ensurePop();
-    const more = onAbout() ? `#g-${t.id}` : `about.html#g-${t.id}`;
+    const more = onGlossaryPage() ? `#g-${t.id}` : `glossary.html#g-${t.id}`;
     pop.setAttribute("aria-label", t.term);
     pop.innerHTML = `<p class="glosspop__term">${esc(t.term)}</p>
       <p class="glosspop__def">${esc(t.definition)}</p>
@@ -155,19 +156,38 @@
     window.addEventListener("resize", () => close());
   }
 
-  // ---- the About page list -------------------------------------------------
+  // ---- the Glossary page list ----------------------------------------------
+  // Jump links to each group, then each group as a section with its own
+  // heading. Every term has an anchor (#g-finaled) so popovers, project pages
+  // and readers can link straight to it.
   async function list(box) {
     if (!box) return;
-    try { await load(); } catch (e) { box.innerHTML = ""; return; }
-    box.innerHTML = data.groups.map((g) => `
-      <h3 class="subhed">${esc(g.title)}</h3>
-      <dl class="deflist deflist--gloss">${g.terms.map((t) =>
-        `<dt id="g-${esc(t.id)}">${esc(t.term)}</dt><dd>${esc(t.definition)}</dd>`).join("")}</dl>`).join("");
-    // Arriving from a popover's "All terms" link: the target exists only now.
-    if (location.hash.startsWith("#g-")) {
-      const el = document.getElementById(location.hash.slice(1));
-      if (el) { el.scrollIntoView(); el.classList.add("is-target"); }
+    try { await load(); } catch (e) {
+      box.innerHTML = `<p>The glossary didn’t load. Please refresh the page.</p>`;
+      return;
     }
+    const jumps = document.getElementById("glossary-jumps");
+    if (jumps) {
+      jumps.innerHTML = data.groups.map((g) =>
+        `<li><a href="#${esc(g.id)}">${esc(g.title)}</a> <span>${g.terms.length}</span></li>`).join("");
+    }
+    box.innerHTML = data.groups.map((g) => `
+      <section class="section" aria-labelledby="${esc(g.id)}">
+        <h2 class="section__hed" id="${esc(g.id)}">${esc(g.title)}</h2>
+        <dl class="deflist deflist--gloss">${g.terms.map((t) =>
+          `<dt id="g-${esc(t.id)}">${esc(t.term)}</dt><dd>${esc(t.definition)}</dd>`).join("")}</dl>
+      </section>`).join("");
+    // Arriving from a link to a term or group: the target exists only now.
+    // Later jumps within the page highlight the term they land on.
+    const mark = (scroll) => {
+      const el = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (!el || !box.contains(el)) return;
+      if (scroll) el.scrollIntoView();
+      box.querySelectorAll("dt.is-target").forEach((d) => d.classList.remove("is-target"));
+      if (el.tagName === "DT") el.classList.add("is-target");
+    };
+    mark(true);
+    window.addEventListener("hashchange", () => mark(false));
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);

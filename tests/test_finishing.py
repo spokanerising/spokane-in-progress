@@ -28,7 +28,7 @@ check(svg.startswith("<svg") and "<path" in svg and "<text" not in svg, "favicon
 man = json.load(open(os.path.join(REPO, "site.webmanifest")))
 check(man["name"] == "Spokane in Progress" and {i["src"] for i in man["icons"]} == {"/icon-192.png", "/icon-512.png", "/icon-maskable-512.png"}, man)
 check(any(i.get("purpose") == "maskable" for i in man["icons"]), "a maskable icon")
-for page in ["index.html", "about.html", "404.html"]:
+for page in ["index.html", "stats.html", "about.html", "glossary.html", "404.html"]:
     html = open(os.path.join(REPO, page)).read()
     for tag in ['rel="icon" href="/favicon.ico"', 'rel="icon" href="/favicon.svg"', 'rel="apple-touch-icon"', 'rel="manifest" href="/site.webmanifest"']:
         check(tag in html, f"{page}: {tag}")
