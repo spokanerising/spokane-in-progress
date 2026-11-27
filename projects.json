@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T19:17:31.666316+00:00",
+  "builtAt": "2026-11-27T19:38:45.774694+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -169,8 +169,8 @@
         }
       ],
       "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
+      "imageUrl": "https://projects.spokanerising.com/media/city-b26m0015pdev/20261127T193751Z-2fe8e789.jpg",
+      "imageCredit": "Matt Hutchins / CAST Architecture",
       "docUrl": "",
       "docLabel": "",
       "sourceUrls": [],
@@ -221,10 +221,12 @@
         "architect",
         "description",
         "developer",
+        "imageCredit",
+        "imageUrl",
         "stories",
         "units"
       ],
-      "editedAt": "2026-11-27T19:17:05Z",
+      "editedAt": "2026-11-27T19:38:19Z",
       "buildingType": "Fiveplex or sixplex",
       "buildingTypeInferred": true,
       "middleHousing": true,
