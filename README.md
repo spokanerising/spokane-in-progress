@@ -1,50 +1,42 @@
 # Spokane in Progress
 
-Tracking Spokane's housing progress. You keep the data in a Google Sheet; a build
-step turns the sheet into the site.
+Tracking Spokane's housing progress. A daily build combines hand-curated projects,
+the city's permit records and your edits into the site.
 
 ## How it fits together
 
 ```
-Google Sheet  ->  build.py  ->  projects.json  ->  the website
-  (you edit)     (checks it)    (what the site reads)
+data/projects/  (hand-curated, one file each) --+
+city permit records + permit reports -----------+->  build.py  ->  projects.json  ->  the website
+data/edits/     (your edits, applied last) -----+
 ```
 
-You only ever touch the sheet.
+The hand-curated projects were rows of a Google Sheet until Nov. 2026. The sheet is
+archived, and changes typed there no longer reach the site. Edits are applied last, so
+the daily rebuild never undoes them (rules in `edits.py` and `data/edits/README.md`).
 
 ## Files
 
 | File | What it is |
 | --- | --- |
-| `data/projects.sample.csv` | The column layout, with seven fictional example projects. |
-| `build.py` | Reads the sheet, checks the rows, writes `projects.json`. Python 3, nothing to install. |
+| `data/projects/` | Hand-curated projects, one JSON file each (the old sheet rows). |
+| `data/edits/` | One file per edit made on the site. Never changed or deleted. |
+| `build.py` | Reads the projects and city records, applies the edits, checks everything, writes `projects.json`. Python 3, nothing to install. |
+| `edits.py` | The rules for applying edits. |
 | `index.html`, `styles.css`, `app.js` | The site itself. |
 | `.github/workflows/build.yml` | Rebuilds the data every morning, and on demand. |
 | `site_facts.py` | Adds zoning, lot size (homes per acre) and distance to frequent transit to each project, for the filters. Caches in `data/parcel-acres.json`, `data/zoning-*.json`, `data/transit-*`. |
 | `boundaries.py` | Neighborhood council and council district for each project, and `boundaries.geojson`, the outlines the map draws when you filter to one. |
 
-The sample projects are made up. Delete them once you have real ones.
-
 ## Setup
 
-### 1. Make the sheet
-
-Open `data/projects.sample.csv` in Google Sheets (File > Import). Keep the header
-row exactly as it is — `build.py` looks for those column names.
-
-Then **File > Share > Publish to web**, pick the sheet, choose **Comma-separated
-values (.csv)**, publish, and copy the link.
-
-Open `build.py` and paste the link between the quotes on the `SHEET_CSV_URL` line
-near the top.
-
-### 2. Check your work
+### 1. Check your work
 
 ```
 python3 build.py
 ```
 
-It reports rows it skipped, stages it did not recognize, coordinates outside
+It reports projects it skipped, stages it did not recognize, coordinates outside
 Spokane, duplicate ids, and images it left off for lack of permission.
 
 To view the site locally:
@@ -55,7 +47,7 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000
 
-### 3. Put it on GitHub
+### 2. Put it on GitHub
 
 Create a repository and upload this folder. The web uploader is fine.
 
@@ -120,8 +112,9 @@ They get written into `projects.json` and the website reads them from there,
 so editing that one list changes the filters, the map dots, the header bar, and
 the project pages together. Do not edit the fallback list in `app.js`.
 
-After changing a stage name, update any rows in the sheet that used the old one,
-then run `python3 build.py` — it will tell you which rows still need fixing.
+After changing a stage name, update any files in `data/projects/` and `data/edits/`
+that used the old one, then run `python3 build.py`. It will tell you which ones still
+need fixing.
 
 ## Before launch
 
