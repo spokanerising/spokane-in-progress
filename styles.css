@@ -1694,20 +1694,8 @@ body[data-picking="on"] .inview { display: none; }
   .listtools__actions .sharebtn { min-height: 40px; }
 }
 
-/* "Download image · SVG · data" under each About chart. */
-.chart__tools { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
-.chart__tools button {
-  padding: 0;
-  background: none;
-  border: none;
-  font: 600 12.5px var(--sans);
-  color: var(--link);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.chart__tools button:hover { text-decoration: underline; text-underline-offset: 3px; }
-.chart__tools button[aria-busy="true"] { color: var(--muted); cursor: progress; }
-@media (max-width: 860px) { .chart__tools button { min-height: 36px; padding: 0 2px; } }
+/* The download icon under each About chart (see "Icon buttons" below). */
+.chart__tools { font-size: 12.5px; color: var(--muted); }
 
 /* ==========================================================================
    Controls (item 11): one look for every button, field, toggle and checkbox.
@@ -1835,14 +1823,14 @@ body[data-picking="on"] .inview { display: none; }
 /* Text buttons (Share, Clear, All/None, Use my location, chart downloads):
    link blue, underlined on hover. */
 .sharebtn, .clear, .only, .picker__quick button, .near__alt button, .near__clear,
-.chart__tools button, .explain summary {
+.explain summary {
   color: var(--link);
   text-decoration: none;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
 .sharebtn:hover, .clear:hover, .only:hover, .picker__quick button:hover, .near__alt button:hover,
-.near__clear:hover, .chart__tools button:hover, .explain summary:hover { text-decoration-line: underline; }
+.near__clear:hover, .explain summary:hover { text-decoration-line: underline; }
 .picker__quick { flex-wrap: nowrap; gap: 4px 14px; }
 .picker__quick button { white-space: nowrap; }
 
@@ -1874,3 +1862,81 @@ body[data-picking="on"] .inview { display: none; }
 
 /* Anything switched off. */
 button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: default; }
+
+/* ==========================================================================
+   Icon buttons (polish round, phase B). Icons from share.js (Share.icon),
+   20px glyph in a --ctl square. In the panel and on pages they're bare (no
+   border) so a row of them stays quiet; over the map they keep the ink border
+   of .mapbtn. The label shows as a tooltip (.tip-label).
+   ========================================================================== */
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  flex: none;
+}
+.iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--ctl);
+  height: var(--ctl);
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--ctl-radius);
+  color: var(--ink-2);
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.iconbtn:hover, .iconbtn[aria-expanded="true"] { background: var(--paper-2); color: var(--ink); border-color: var(--rule); }
+.iconbtn[aria-busy="true"] { cursor: progress; }
+.iconbtn[aria-busy="true"] .icon { animation: icon-busy 1s ease-in-out infinite alternate; }
+@keyframes icon-busy { from { opacity: 1; } to { opacity: 0.3; } }
+
+/* Over the map: the bordered map-button look. */
+.mapbtn.iconbtn { width: var(--ctl); height: var(--ctl); background: var(--paper); border-color: var(--ink); color: var(--ink); }
+.mapbtn.iconbtn:hover, .mapbtn.iconbtn[aria-expanded="true"] { background: var(--paper-2); }
+
+/* The list tools row: icons at the right end. */
+.listtools__actions { gap: 2px; margin-right: -8px; }
+.listtools { padding: 4px 0; }
+
+/* The project's top bar: share · link · mail on the left, close on the right. */
+.detail__bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 10px; padding-bottom: 6px; }
+.detail__tools { display: inline-flex; gap: 2px; margin-left: -8px; }
+.detail__close.iconbtn { margin-right: -8px; border-color: transparent; color: var(--ink); }
+.detail__close.iconbtn:hover { border-color: var(--rule); }
+.detail h2 { margin-top: 14px; }
+
+/* About charts: one download icon under each chart, at the left. */
+.chart__tools { margin: 6px 0 0 -8px; }
+
+/* Tooltip. */
+.tip-label {
+  position: fixed;
+  z-index: 60;
+  max-width: 240px;
+  padding: 4px 8px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--ctl-radius);
+  font: 500 12px/1.3 var(--sans);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.tip-label.is-on { opacity: 1; }
+@media (hover: none) { .tip-label { display: none; } }
+
+/* "N projects in view" stays centered, but never slides under the controls
+   at the top left when the map is narrow (e.g. with a project open). */
+@media (min-width: 521px) {
+  .inview { left: max(50%, 330px); }
+}

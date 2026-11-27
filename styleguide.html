@@ -114,12 +114,18 @@
   </section>
 
   <section>
-    <h2 class="label">Pills, text buttons, menus, notices</h2>
+    <h2 class="label">Pills, icon and text buttons, menus, notices</h2>
     <ul class="pills" style="margin:0">
       <li><button type="button" class="pill"><span><b>Stage:</b> Applied, Approved</span><span class="pill__x" aria-hidden="true">×</span></button></li>
     </ul>
     <div class="row" style="margin-top:12px">
-      <button type="button" class="sharebtn">Share</button>
+      <button type="button" class="iconbtn" aria-label="Share"><svg class="icon" aria-hidden="true"><use href="#i-share"></use></svg></button>
+      <button type="button" class="iconbtn" aria-label="Download"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg></button>
+      <button type="button" class="iconbtn" aria-label="Copy link"><svg class="icon" aria-hidden="true"><use href="#i-link"></use></svg></button>
+      <button type="button" class="iconbtn" aria-label="Report a correction"><svg class="icon" aria-hidden="true"><use href="#i-mail"></use></svg></button>
+      <button type="button" class="iconbtn" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      <span class="onmap" style="padding:6px"><button type="button" class="mapbtn iconbtn" aria-label="Save the map as an image"><svg class="icon" aria-hidden="true"><use href="#i-camera"></use></svg></button></span>
+      <button type="button" class="sharebtn">Text button</button>
       <button type="button" class="clear">Clear filters</button>
       <span class="near__alt" style="margin:0"><button type="button">Use my location</button></span>
       <span class="chart__tools" style="margin:0"><button type="button">Download image</button></span>
@@ -131,6 +137,7 @@
     </div>
   </section>
 </main>
+<script src="share.js"></script>
 <script>document.getElementById("sg-tri").indeterminate = true;</script>
 </body>
 </html>

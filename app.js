@@ -1305,6 +1305,40 @@ function placeLinks(p) {
     .join("")}</p>`;
 }
 
+// Share, copy link and report a correction: icon buttons in the project's top bar.
+function correctionMail(p) {
+  const url = Share.projectUrl(p.id);
+  const subject = `Correction: ${p.name} (${p.id})`;
+  const body = [
+    `Project: ${p.name}`,
+    `Page: ${url}`,
+    state.builtAt ? `Data as of: ${apDate(state.builtAt)}` : "",
+    "",
+    "What's wrong:",
+    "",
+    "What it should say:",
+    "",
+    "Source, if you have one:",
+    "",
+  ].filter((line, i, all) => line !== "" || all[i - 1] !== "").join("\n");
+  return `mailto:spokanerising@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function drawDetailTools(p) {
+  const box = document.getElementById("detail-tools");
+  if (!box) return;
+  box.innerHTML = `
+    <button type="button" class="iconbtn" data-share-project aria-label="Share this project" aria-haspopup="menu" aria-expanded="false">${Share.icon("share")}</button>
+    <button type="button" class="iconbtn" data-copy-project aria-label="Copy link to this project">${Share.icon("link")}</button>
+    <a class="iconbtn" data-correction href="${escapeHtml(correctionMail(p))}" aria-label="Report a correction">${Share.icon("mail")}</a>`;
+  box.querySelector("[data-share-project]").addEventListener("click", (e) => Share.share(e.currentTarget, projectShare(p)));
+  box.querySelector("[data-copy-project]").addEventListener("click", async () => {
+    const url = Share.projectUrl(p.id);
+    if (await Share.copyText(url)) Share.toast(`Link to ${p.name} copied`);
+    else Share.toast(`Copy this link: ${url}`, 8000);
+  });
+}
+
 function select(id, flyTo, fromHistory = false) {
   const project = state.projects.find((p) => p.id === id);
   if (!project) return;
@@ -1325,7 +1359,6 @@ function select(id, flyTo, fromHistory = false) {
     <h2>${escapeHtml(project.name)}</h2>
     <p class="detail__where">${escapeHtml(where(project))}</p>
     ${placeLinks(project)}
-    <p class="detail__share"><button type="button" class="sharebtn" data-share-project aria-haspopup="menu" aria-expanded="false">Share this project</button></p>
 
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
@@ -1407,9 +1440,7 @@ function select(id, flyTo, fromHistory = false) {
     }
   `;
 
-  el.detailBody.querySelector("[data-share-project]").addEventListener("click", (e) =>
-    Share.share(e.currentTarget, projectShare(project))
-  );
+  drawDetailTools(project);
 
   el.detail.hidden = false;
   el.detail.scrollTop = 0;
@@ -1971,8 +2002,8 @@ async function saveMapImage(size, button) {
     return Share.toast("The map is still loading. Try again in a moment.");
   }
   button.setAttribute("aria-busy", "true");
-  const label = button.textContent;
-  button.textContent = "Saving…";
+  button.dataset.tip = "Saving…";
+  Share.retip(button);
   let copy = null;
   try {
     await Share.fontsReady();
@@ -2009,7 +2040,8 @@ async function saveMapImage(size, button) {
   } finally {
     if (copy) copy.done();
     button.removeAttribute("aria-busy");
-    button.textContent = label;
+    delete button.dataset.tip;
+    Share.retip(button);
   }
 }
 

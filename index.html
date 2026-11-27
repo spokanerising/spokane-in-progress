@@ -118,8 +118,8 @@
       </label>
       <label class="inviewonly"><input type="checkbox" id="inview-only"><span>Only what’s in map view</span></label>
       <span class="listtools__actions">
-        <button type="button" class="sharebtn" id="download-list" aria-haspopup="menu" aria-expanded="false">Download</button>
-        <button type="button" class="sharebtn" id="share-view" aria-haspopup="menu" aria-expanded="false">Share</button>
+        <button type="button" class="iconbtn" id="download-list" aria-label="Download this list" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-download"></use></svg></button>
+        <button type="button" class="iconbtn" id="share-view" aria-label="Share this view" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-share"></use></svg></button>
       </span>
     </div>
     <ol class="cards" id="cards"></ol>
@@ -149,7 +149,7 @@
         <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
       </div>
       <!-- Saves the map as a picture (app.js, "Saving the map as an image"). -->
-      <button type="button" class="mapbtn" id="save-map" aria-haspopup="menu" aria-expanded="false">Save image</button>
+      <button type="button" class="mapbtn iconbtn" id="save-map" aria-label="Save the map as an image" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-camera"></use></svg></button>
     </div>
 
     <!-- Size key: circle area is proportional to housing units. Redrawn on
@@ -168,7 +168,8 @@
 
 <aside class="detail" id="detail" hidden aria-label="Project detail">
   <div class="detail__bar">
-    <button class="detail__close" id="detail-close" aria-label="Close project detail">Close</button>
+    <span class="detail__tools" id="detail-tools"></span>
+    <button type="button" class="iconbtn detail__close" id="detail-close" aria-label="Close project" data-tip="Close"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-close"></use></svg></button>
   </div>
   <div id="detail-body"></div>
 </aside>

@@ -499,10 +499,15 @@ function chartTools(id) {
   if (!fig || !CHARTS[id]) return;
   const p = document.createElement("p");
   p.className = "chart__tools";
-  p.innerHTML = `Download <button type="button" data-format="png">image</button> · <button type="button" data-format="svg">SVG</button> · <button type="button" data-format="csv">data</button>`;
-  p.addEventListener("click", (e) => {
-    const b = e.target.closest("button[data-format]");
-    if (b && b.getAttribute("aria-busy") !== "true") downloadChart(id, b.dataset.format, b);
+  p.innerHTML = `<button type="button" class="iconbtn" aria-label="Download this chart" aria-haspopup="menu" aria-expanded="false">${Share.icon("download")}</button>`;
+  const button = p.querySelector("button");
+  button.addEventListener("click", () => {
+    if (button.getAttribute("aria-busy") === "true") return;
+    Share.menu(button, [
+      { id: "png", label: "Image (PNG)", note: "For posts and slides", onSelect: () => downloadChart(id, "png", button) },
+      { id: "svg", label: "Vector (SVG)", note: "For print and editing", onSelect: () => downloadChart(id, "svg", button) },
+      { id: "csv", label: "Data (CSV)", note: "The numbers behind the chart", onSelect: () => downloadChart(id, "csv", button) },
+    ], { label: "Download this chart" });
   });
   fig.appendChild(p);
 }

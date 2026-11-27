@@ -29,7 +29,8 @@ with sync_playwright() as pw:
     pg.on("console", lambda m: logs.append(f"{m.type}: {m.text[:300]}"))
     wire(pg, site); pg.goto(f"{SITE}/about.html")
     pg.wait_for_selector("#chart-size .chart__tools")
-    check(pg.locator(".chart__tools").count() == 5, "a download row under each of the 5 charts")
+    check(pg.locator(".chart__tools").count() == 5, "a download button under each of the 5 charts")
+    check(pg.locator(".chart__tools .iconbtn[aria-label='Download this chart']").count() == 5, "each is a labelled icon")
     pg.locator("#chart-district").screenshot(path=f"{SHOTS}/p5-page-district.png")
 
     expect_rows = {"type": None, "district": len({p["councilDistrict"] for p in P if p.get("councilDistrict") is not None}),
@@ -40,7 +41,7 @@ with sync_playwright() as pw:
         # PNG
         try:
             with pg.expect_download(timeout=45000) as dl:
-                tools.locator('[data-format="png"]').click()
+                tools.locator(".iconbtn").click(); pg.locator('.menu [data-item="png"]').click()
         except Exception:
             print("page messages:", [l for l in logs if "GL Driver" not in l], "toast:", pg.evaluate("document.getElementById('toast') && document.getElementById('toast').textContent"))
             raise
@@ -53,7 +54,7 @@ with sync_playwright() as pw:
         check(all(abs(a - b) < 6 for a, b in zip(corner, (250, 248, 243))), f"{cid}: paper background {corner}")
         # SVG
         with pg.expect_download() as dl:
-            tools.locator('[data-format="svg"]').click()
+            tools.locator(".iconbtn").click(); pg.locator('.menu [data-item="svg"]').click()
         svg = open(dl.value.path(), encoding="utf-8").read()
         root = ET.fromstring(svg)
         texts = " ".join(("".join(el.itertext())) for el in root.iter("{http://www.w3.org/2000/svg}text"))
@@ -62,7 +63,7 @@ with sync_playwright() as pw:
         check(root.get("width") == "1200", "1200 wide")
         # CSV
         with pg.expect_download() as dl:
-            tools.locator('[data-format="csv"]').click()
+            tools.locator(".iconbtn").click(); pg.locator('.menu [data-item="csv"]').click()
         rows = list(csv.DictReader(io.StringIO(open(dl.value.path(), encoding="utf-8-sig").read())))
         if expect_rows[cid] is not None:
             check(len(rows) == expect_rows[cid], f"{cid}: {len(rows)} rows")

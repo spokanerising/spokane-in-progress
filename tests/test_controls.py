@@ -84,7 +84,7 @@ with sync_playwright() as pw:
     # The style guide renders every family without errors.
     pg.goto(SITE + "/styleguide.html")
     for sel in [".button", ".chip", ".picker__button", ".sort select", ".measure", ".seg", ".basemap", ".mapbtn",
-                ".picker__item input", ".pill", ".sharebtn", ".menu", ".toast"]:
+                ".picker__item input", ".pill", ".iconbtn", ".sharebtn", ".menu", ".toast"]:
         check(pg.locator(sel).count() > 0, f"style guide shows {sel}")
     check(pg.eval_on_selector('meta[name="robots"]', "e => e.content") == "noindex", "style guide is noindex")
     pg.screenshot(path=os.path.join(os.path.dirname(__file__), ".shots", "styleguide.png"), full_page=True)

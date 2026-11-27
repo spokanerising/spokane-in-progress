@@ -308,7 +308,10 @@
       const r = anchor.getBoundingClientRect();
       if (r.bottom < 0 || r.top > window.innerHeight || (!r.width && !r.height)) return false;
       const w = box.offsetWidth, h = box.offsetHeight;
-      const left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8));
+      // Line up with the button's left edge if it's on the left half of the
+      // screen, its right edge otherwise, so the menu opens toward the page.
+      const start = r.left + r.width / 2 < window.innerWidth / 2 ? r.left : r.right - w;
+      const left = Math.max(8, Math.min(start, window.innerWidth - w - 8));
       const below = r.bottom + 6 + h <= window.innerHeight - 8;
       box.style.left = `${left}px`;
       box.style.top = `${below ? r.bottom + 6 : Math.max(8, r.top - 6 - h)}px`;
@@ -375,7 +378,91 @@
     return "menu";
   }
 
+  // ---- icons and tooltips (polish round, phase B) -----------------------------------
+  //
+  // Our own line icons on a 20px grid, 1.5px strokes to match the hairline
+  // rules. The sprite is added to the page once; buttons use
+  // <svg class="icon"><use href="#i-NAME"></use></svg>, or Share.icon(name).
+
+  const ICONS = {
+    share: '<path d="M7 8H5v9h10V8h-2"/><path d="M10 12.5V3"/><path d="M6.5 6.5 10 3l3.5 3.5"/>',
+    download: '<path d="M10 3v10"/><path d="M6.5 9.5 10 13l3.5-3.5"/><path d="M4 16.5h12"/>',
+    link: '<path d="M8.6 11.4l2.8-2.8"/><path d="M9.3 6.4l1.2-1.2a3.1 3.1 0 0 1 4.4 4.4l-1.2 1.2"/><path d="M10.7 13.6l-1.2 1.2a3.1 3.1 0 0 1-4.4-4.4l1.2-1.2"/>',
+    mail: '<rect x="3" y="5" width="14" height="10"/><path d="M3.5 5.5 10 11l6.5-5.5"/>',
+    camera: '<path d="M3 7h3.2l1.4-2h4.8l1.4 2H17v9H3z"/><circle cx="10" cy="11.3" r="2.7"/>',
+    close: '<path d="M5 5l10 10M15 5 5 15"/>',
+  };
+
+  function addSprite() {
+    if (document.getElementById("icon-sprite")) return;
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `<svg id="icon-sprite" xmlns="http://www.w3.org/2000/svg" style="display:none">${
+      Object.entries(ICONS).map(([k, v]) => `<symbol id="i-${k}" viewBox="0 0 20 20">${v}</symbol>`).join("")}</svg>`;
+    document.body.prepend(wrap.firstChild);
+  }
+
+  const icon = (name) => `<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-${name}"></use></svg>`;
+
+  // Tooltips for icon buttons: the button's aria-label (or data-tip), shown
+  // after a short pause on hover and at once on keyboard focus. One floating
+  // label, kept on screen, under the button (above it if there's no room).
+  let tipEl = null, tipFor = null, tipTimer = 0;
+  function tipText(b) { return b.dataset.tip || b.getAttribute("aria-label") || ""; }
+  function showTip(b) {
+    clearTimeout(tipTimer);
+    if (openMenuState && openMenuState.anchor === b) return;
+    const text = tipText(b);
+    if (!text) return;
+    if (!tipEl) {
+      tipEl = document.createElement("div");
+      tipEl.className = "tip-label";
+      tipEl.setAttribute("aria-hidden", "true");
+      document.body.appendChild(tipEl);
+    }
+    tipEl.textContent = text;
+    tipEl.classList.add("is-on");
+    tipFor = b;
+    const r = b.getBoundingClientRect(), w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    const left = Math.max(6, Math.min(r.left + r.width / 2 - w / 2, window.innerWidth - w - 6));
+    const below = r.bottom + 6 + h <= window.innerHeight - 6;
+    tipEl.style.left = `${left}px`;
+    tipEl.style.top = `${below ? r.bottom + 6 : r.top - 6 - h}px`;
+  }
+  function hideTip() {
+    clearTimeout(tipTimer);
+    tipFor = null;
+    if (tipEl) tipEl.classList.remove("is-on");
+  }
+  function wireTips() {
+    const target = (e) => e.target && e.target.closest && e.target.closest(".iconbtn");
+    document.addEventListener("pointerover", (e) => {
+      if (e.pointerType === "touch") return;
+      const b = target(e);
+      if (!b || b === tipFor) return;
+      hideTip();
+      tipTimer = setTimeout(() => showTip(b), 400);
+    });
+    document.addEventListener("pointerout", (e) => {
+      const b = target(e);
+      if (b && !b.contains(e.relatedTarget)) hideTip();
+    });
+    document.addEventListener("focusin", (e) => {
+      const b = target(e);
+      if (b && b.matches(":focus-visible")) showTip(b);
+    });
+    document.addEventListener("focusout", (e) => { if (target(e)) hideTip(); });
+    document.addEventListener("pointerdown", hideTip, true);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
+    window.addEventListener("scroll", hideTip, true);
+  }
+  // A tooltip that's showing follows a label change (e.g. "Saving…").
+  function retip(b) { if (tipFor === b) showTip(b); }
+
+  if (document.body) { addSprite(); wireTips(); }
+  else document.addEventListener("DOMContentLoaded", () => { addSprite(); wireTips(); });
+
   window.Share = {
+    icon, retip, hideTip,
     SITE_NAME, SITE_HOST,
     shareLinks, nativeShare, prefersNativeShare,
     copyText,
