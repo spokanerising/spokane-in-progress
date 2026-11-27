@@ -20,6 +20,16 @@
   --panel: clamp(300px, 30vw, 440px);
   --detail: clamp(320px, 27vw, 440px);
   --gutter: clamp(14px, 2.6vw, 30px);
+
+  /* Controls (item 11): every button, field and toggle uses these. */
+  --ctl: 36px;        /* buttons, chips, fields, toggles */
+  --ctl-sm: 28px;     /* pills, the Homes|Projects toggle, Sort */
+  --ctl-radius: 2px;
+  --ctl-font: 500 13px/1.2 var(--sans);
+}
+
+@media (max-width: 860px) {
+  :root { --ctl: 40px; --ctl-sm: 36px; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -50,7 +60,8 @@ body { font-variant-numeric: lining-nums tabular-nums; }
 a { color: var(--link); text-underline-offset: 3px; text-decoration-thickness: 1px; }
 a:hover { text-decoration-thickness: 2px; }
 
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* One focus ring for everything, shown only when you're using the keyboard. */
+:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px;
@@ -1492,7 +1503,6 @@ body.page {
   font: 400 14px var(--sans);
   color: var(--ink);
 }
-.picker__search:focus { outline: 2px solid var(--link); outline-offset: 1px; }
 
 /* A dropdown in the right-hand column opens leftwards. */
 .picker--right .picker__panel { left: auto; right: 0; }
@@ -1549,7 +1559,6 @@ body.page {
 }
 .seg label:first-child span { margin-left: 0; }
 .seg input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); position: relative; }
-.seg input:focus-visible + span { outline: 2px solid var(--link); outline-offset: 1px; position: relative; }
 
 /* Active-filter pills, under the tally. */
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; padding: 0; list-style: none; }
@@ -1574,7 +1583,6 @@ body.page {
 .pill__x { font-size: 16px; line-height: 1; color: var(--muted); padding: 0 2px; }
 .pill:hover { background: var(--paper-2); }
 .pill:hover .pill__x { color: var(--ink); }
-.pill:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
 
 /* "Only what's in map view", in the sort row. */
 .listtools { flex-wrap: wrap; row-gap: 4px; }
@@ -1700,3 +1708,169 @@ body[data-picking="on"] .inview { display: none; }
 .chart__tools button:hover { text-decoration: underline; text-underline-offset: 3px; }
 .chart__tools button[aria-busy="true"] { color: var(--muted); cursor: progress; }
 @media (max-width: 860px) { .chart__tools button { min-height: 36px; padding: 0 2px; } }
+
+/* ==========================================================================
+   Controls (item 11): one look for every button, field, toggle and checkbox.
+   Sizes come from --ctl / --ctl-sm at the top of this file (36/28px on
+   desktop, 40/36px on phones). Rules:
+   - Corners: --ctl-radius (2px) everywhere; only filter pills are tags.
+   - In the panel: a --rule border at rest, ink on hover, ink + 600 when on.
+   - Over the map: always an ink border, so controls read against imagery.
+   - Fields (search, dropdowns): white, --rule border with an ink-2 underline.
+   - Toggles: one segmented style, the chosen part filled with ink.
+   - Off/empty options: 45% opacity.
+   ========================================================================== */
+
+/* Buttons and chips in the panel. */
+.chip, .detail__close, .morefilters__toggle {
+  min-height: var(--ctl);
+  border-radius: var(--ctl-radius);
+}
+.chip { padding: 0 11px 0 9px; font: var(--ctl-font); }
+.detail__close, .morefilters__toggle { padding: 0 12px; }
+.detail__close:hover, .morefilters__toggle:hover, .chip:hover { border-color: var(--ink); color: var(--ink); }
+.chip.is-zero { opacity: 0.45; }
+.chip.is-zero:hover { border-color: var(--rule); }
+.chip[aria-pressed="true"] { font-weight: 600; }
+
+/* Ink-filled action buttons. */
+.button, .near__find {
+  min-height: var(--ctl);
+  padding: 0 14px;
+  border-radius: var(--ctl-radius);
+  font: 600 13px/1.2 var(--sans);
+}
+
+/* Fields. */
+.search input, .select select, .picker__button, .picker__search {
+  min-height: var(--ctl);
+  border: 1px solid var(--rule);
+  border-bottom-color: var(--ink-2);
+  border-radius: var(--ctl-radius);
+  background-color: #fff;
+}
+.search input { padding: 0 12px; font-size: 14px; }
+.picker__button { padding-top: 0; padding-bottom: 0; font-size: 13.5px; }
+.search input:hover, .select select:hover, .picker__search:hover { border-color: var(--ink); }
+.picker.is-on .picker__button { font-weight: 600; }
+@media (max-width: 860px) {
+  .search input, .picker__search { font-size: 16px; } /* stops iOS zooming in */
+}
+
+/* Sort: a small field. */
+.sort select {
+  min-height: var(--ctl-sm);
+  padding-top: 0; padding-bottom: 0;
+  border-radius: var(--ctl-radius);
+  border-bottom-color: var(--ink-2);
+}
+.sort select:hover { border-color: var(--ink); }
+
+/* Segmented toggles: Homes | Projects, Map | Satellite, the Near radius. */
+.measure, .basemap, .seg {
+  display: flex;
+  border: 1px solid var(--ink);
+  border-radius: var(--ctl-radius);
+  overflow: hidden;
+  background: var(--paper);
+}
+.measure button, .basemap button, .seg span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font: var(--ctl-font);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+/* The group's 1px outline counts toward its height, so the parts are 2px shorter. */
+.measure button { min-height: calc(var(--ctl-sm) - 2px); padding: 0 10px; font-size: 12.5px; }
+.basemap button, .seg span { min-height: calc(var(--ctl) - 2px); }
+.seg span { padding: 0 6px; }
+.measure button + button, .basemap button + button, .seg label + label span { border-left: 1px solid var(--ink); }
+.measure button:hover, .basemap button:hover, .seg span:hover { background: var(--paper-2); color: var(--ink); }
+.measure button[aria-pressed="true"], .basemap button[aria-pressed="true"], .seg input:checked + span {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+}
+.seg input:focus-visible + span { outline: 2px solid var(--link); outline-offset: -4px; outline-color: var(--link); }
+.seg input:checked:focus-visible + span { outline-color: var(--paper); }
+.measure button:focus-visible, .basemap button:focus-visible { outline-offset: -4px; }
+.measure button[aria-pressed="true"]:focus-visible, .basemap button[aria-pressed="true"]:focus-visible { outline-color: var(--paper); }
+
+/* Over the map: the same buttons, always ink-bordered. */
+.mapbtn {
+  min-height: var(--ctl);
+  border-radius: var(--ctl-radius);
+  font: var(--ctl-font);
+}
+.mapbtn:hover { background: var(--paper-2); }
+.maplibregl-ctrl-group:not(:empty) {
+  border: 1px solid var(--ink);
+  border-radius: var(--ctl-radius) !important;
+  box-shadow: none !important;
+  background: var(--paper);
+}
+.maplibregl-ctrl-group button { width: var(--ctl); height: var(--ctl); }
+.maplibregl-ctrl-group button + button { border-top: 1px solid var(--ink) !important; }
+.maplibregl-ctrl-group button:not(:disabled):hover { background: var(--paper-2); }
+.maplibregl-ctrl-group button:focus-visible { box-shadow: none; outline: 2px solid var(--link); outline-offset: -4px; }
+.inview { border-radius: var(--ctl-radius); } /* a readout, not a control: keeps the light border */
+.pickhint button { min-height: var(--ctl-sm); padding: 0 10px; border-radius: var(--ctl-radius); }
+.pickhint button:focus-visible { outline-color: var(--paper); }
+.paneltoggle { border-radius: 0 var(--ctl-radius) var(--ctl-radius) 0; box-shadow: none; }
+.paneltoggle:hover { background: var(--paper-2); }
+
+/* Filter pills: removable tags, the one rounded control. */
+.pill { min-height: var(--ctl-sm); border-radius: 999px; padding: 0 8px 0 12px; }
+
+/* Text buttons (Share, Clear, All/None, Use my location, chart downloads):
+   link blue, underlined on hover. */
+.sharebtn, .clear, .only, .picker__quick button, .near__alt button, .near__clear,
+.chart__tools button, .explain summary {
+  color: var(--link);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.sharebtn:hover, .clear:hover, .only:hover, .picker__quick button:hover, .near__alt button:hover,
+.near__clear:hover, .chart__tools button:hover, .explain summary:hover { text-decoration-line: underline; }
+.picker__quick { flex-wrap: nowrap; gap: 4px 14px; }
+.picker__quick button { white-space: nowrap; }
+
+/* Checkboxes: one square, ink when ticked, a dash when partly ticked. */
+.picker__item input[type="checkbox"], .inviewonly input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid var(--ink-2);
+  border-radius: var(--ctl-radius);
+  background: #fff center / 11px 11px no-repeat;
+  cursor: pointer;
+}
+.picker__item input[type="checkbox"]:hover, .inviewonly input[type="checkbox"]:hover { border-color: var(--ink); }
+.picker__item input[type="checkbox"]:checked, .inviewonly input[type="checkbox"]:checked {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M2 5.6 4.4 8 9 3' fill='none' stroke='%23faf8f3' stroke-width='1.7'/%3E%3C/svg%3E");
+}
+.picker__item input[type="checkbox"]:indeterminate {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M2.5 5.5h6' stroke='%23faf8f3' stroke-width='1.7'/%3E%3C/svg%3E");
+}
+.picker__item.is-zero input[type="checkbox"] { opacity: 0.45; }
+
+/* Anything switched off. */
+button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: default; }

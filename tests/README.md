@@ -15,6 +15,7 @@ python3 tests/run.py filters      # files whose name contains "filters"
 | `test_filters.py` | Every filter, live counts, pills, Near, map view, old links, phones. Uses made-up zoning/transit/density so every filter shows. |
 | `test_real_data.py` | The real `projects.json`: unique ids, counts add up, outlines, project facts. |
 | `test_site_facts.py` | `site_facts.py` and the outlines in `boundaries.py`, against fake servers. |
+| `test_controls.py` | One look for every control: heights, corners, toggles, checkboxes, the focus ring, phones, and the unlinked `styleguide.html`. |
 | `test_share_toolkit.py` | `share.js`: share links, copying, downloads, CSV, notices; Copy link and the About CSV. |
 
 GitHub runs them on every code push and after every data refresh

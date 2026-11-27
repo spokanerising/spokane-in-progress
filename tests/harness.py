@@ -33,7 +33,7 @@ def h(s, n):
     return int(hashlib.md5(s.encode()).hexdigest(), 16) % n
 
 
-SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js", "og-card.png", "robots.txt"]
+SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js", "og-card.png", "robots.txt", "styleguide.html"]
 
 
 def make_site(with_facts=True):

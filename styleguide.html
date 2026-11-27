@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Controls · Spokane in Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+<style>
+  /* Page layout only; every control below uses the site's own classes. */
+  .sg { max-width: 760px; margin: 0 auto; padding: 24px var(--gutter) 60px; }
+  .sg h1 { font: 600 34px/1.1 var(--serif); margin: 0 0 6px; }
+  .sg > p { color: var(--ink-2); margin: 0 0 8px; }
+  .sg section { border-top: 1px solid var(--ink); margin-top: 28px; padding-top: 10px; }
+  .sg h2 { margin: 0 0 12px; }
+  .sg .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .sg .onmap { padding: 14px; background: #d9d4c8; display: flex; gap: 8px; align-items: flex-start; position: relative; }
+  .sg .onmap .maptools { position: static; }
+  .sg .picker__panel { position: static; width: 300px; }
+  .sg .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .sg .menu { position: static; display: inline-block; }
+  .sg .toast { position: static; transform: none; opacity: 1; display: inline-block; }
+  .sg dl { font-size: 13px; display: grid; grid-template-columns: 110px 1fr; gap: 4px 12px; margin: 0; }
+  .sg dt { color: var(--muted); }
+  .sg dd { margin: 0; }
+</style>
+</head>
+<body class="page">
+<main class="sg">
+  <h1>Controls</h1>
+  <p>Every control on Spokane in Progress, side by side. This page isn't linked anywhere; it's here to check that they all match. Press Tab to see the focus ring.</p>
+  <dl>
+    <dt>Height</dt><dd>36px (28px small); 40px (36px small) on phones</dd>
+    <dt>Corners</dt><dd>2px; filter pills are the only rounded control</dd>
+    <dt>Borders</dt><dd>light rule at rest, ink on hover, ink and bold when on; ink over the map</dd>
+    <dt>Focus</dt><dd>2px blue ring, keyboard only</dd>
+  </dl>
+
+  <section>
+    <h2 class="label">Buttons</h2>
+    <div class="row">
+      <button type="button" class="button">Ink button</button>
+      <button type="button" class="near__find">Find</button>
+      <button type="button" class="detail__close">Close</button>
+      <button type="button" class="button" disabled>Switched off</button>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="label">Stage chips</h2>
+    <div class="chips" style="margin:0">
+      <span class="chipwrap"><button type="button" class="chip" aria-pressed="true" style="--stage:#d66a48"><i></i>Applied <span class="chip__n">18</span></button></span>
+      <span class="chipwrap"><button type="button" class="chip" aria-pressed="false" style="--stage:#b6451f"><i></i>Approved <span class="chip__n">20</span></button></span>
+      <span class="chipwrap"><button type="button" class="chip is-zero" aria-pressed="true" style="--stage:#8f8c86"><i></i>Stalled <span class="chip__n">0</span></button></span>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="label">Fields</h2>
+    <label class="search"><span class="visually-hidden">Search</span><input type="search" placeholder="Search by name, street, or developer"></label>
+    <div class="grid2" style="margin-top:10px">
+      <div class="select"><span class="select__label">A dropdown</span><details class="picker"><summary class="picker__button">All building types</summary></details></div>
+      <div class="select"><span class="select__label">One that's on</span><details class="picker is-on"><summary class="picker__button">Middle housing</summary></details></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="sort"><span>Sort</span><select><option>Recently changed</option><option>Most homes</option></select></label>
+      <label class="inviewonly" style="margin-left:0"><input type="checkbox"><span>Only what’s in map view</span></label>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="label">Toggles</h2>
+    <div class="row">
+      <div class="measure" role="group" aria-label="Size the bar by">
+        <button type="button" aria-pressed="true">Homes</button><button type="button" aria-pressed="false">Projects</button>
+      </div>
+      <fieldset class="near__radius" style="min-width:240px"><legend class="visually-hidden">Distance</legend>
+        <div class="seg">
+          <label><input type="radio" name="r" value=".25"><span>¼ mi</span></label>
+          <label><input type="radio" name="r" value=".5" checked><span>½ mi</span></label>
+          <label><input type="radio" name="r" value="1"><span>1 mi</span></label>
+          <label><input type="radio" name="r" value="2"><span>2 mi</span></label>
+        </div>
+      </fieldset>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="label">Over the map</h2>
+    <div class="onmap">
+      <div class="maptools">
+        <div class="basemap" role="group" aria-label="Base map"><button type="button" aria-pressed="true">Map</button><button type="button" aria-pressed="false">Satellite</button></div>
+        <button type="button" class="mapbtn">Save image</button>
+      </div>
+      <p class="inview" style="position:static;transform:none">105 projects · 2,106 homes in view</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="label">Checklist</h2>
+    <div class="picker__panel">
+      <div class="picker__quick"><button type="button">All</button><button type="button">None</button><button type="button">Only middle housing</button></div>
+      <div class="picker__group">
+        <label class="picker__item picker__item--group"><input type="checkbox" id="sg-tri"><span class="picker__text">Middle housing</span><span></span><span class="picker__n">55</span></label>
+        <label class="picker__item"><input type="checkbox" checked><span class="picker__text">Duplex</span><button type="button" class="only">only</button><span class="picker__n">23</span></label>
+        <label class="picker__item"><input type="checkbox"><span class="picker__text">Townhomes</span><button type="button" class="only">only</button><span class="picker__n">19</span></label>
+        <label class="picker__item is-zero"><input type="checkbox" checked><span class="picker__text">Cottage housing</span><button type="button" class="only">only</button><span class="picker__n">0</span></label>
+      </div>
+      <input class="picker__search" type="search" placeholder="Type to find a neighborhood">
+    </div>
+  </section>
+
+  <section>
+    <h2 class="label">Pills, text buttons, menus, notices</h2>
+    <ul class="pills" style="margin:0">
+      <li><button type="button" class="pill"><span><b>Stage:</b> Applied, Approved</span><span class="pill__x" aria-hidden="true">×</span></button></li>
+    </ul>
+    <div class="row" style="margin-top:12px">
+      <button type="button" class="sharebtn">Share</button>
+      <button type="button" class="clear">Clear filters</button>
+      <span class="near__alt" style="margin:0"><button type="button">Use my location</button></span>
+      <span class="chart__tools" style="margin:0"><button type="button">Download image</button></span>
+    </div>
+    <details class="explain"><summary>What counts as middle housing?</summary><p>An explainer opens here.</p></details>
+    <div class="row" style="margin-top:12px;align-items:flex-start">
+      <div class="menu" role="menu"><button type="button" class="menu__item" role="menuitem">Copy link</button><div class="menu__rule"></div><button type="button" class="menu__item" role="menuitem">Bluesky</button></div>
+      <div class="toast is-on" role="status">Link copied</div>
+    </div>
+  </section>
+</main>
+<script>document.getElementById("sg-tri").indeterminate = true;</script>
+</body>
+</html>
