@@ -24,6 +24,7 @@ import boundaries
 import site_facts
 import pages
 import milestones
+import pdf_thumbs
 
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
@@ -1110,6 +1111,7 @@ def main():
                 "imageUrl": row.get("image_url", "") if image_ok else "",
                 "imageCredit": row.get("image_credit", ""),
                 "docUrl": row.get("doc_url", ""),
+                "_docThumbOk": image_ok,   # pdf_thumbs.py: page thumbnail allowed (removed before writing)
                 "docLabel": row.get("doc_label") or "Project documents (PDF)",
                 "sourceUrls": semicolon_list(row.get("source_urls")),
                 "fields": fields,
@@ -1174,6 +1176,9 @@ def main():
             warnings.append(f'{p["name"]}: id "{p["id"]}" was already used; published as "{p["id"]}-{n}".')
             p["id"] = f'{p["id"]}-{n}'
         taken_ids.add(p["id"])
+
+    # First-page thumbnails for linked design PDFs (see pdf_thumbs.py).
+    warnings.extend(pdf_thumbs.add(projects))
 
     # Written to the project root, not into data/, so that every deployment
     # method serves it. Some upload flows drop subfolders.

@@ -2073,3 +2073,89 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 .skip:focus { transform: none; }
 #cards:focus { outline: none; }
 @media (max-width: 520px) { .keyhint { top: 90px; } }
+
+/* ==========================================================================
+   Project page (polish round, phase E).
+   ========================================================================== */
+
+.pkicker { margin: 14px 0 6px !important; font-size: 11.5px; color: var(--ink-2); }
+.detail .pkicker + h2 { margin-top: 0; }
+.standfirst {
+  margin: 4px 0 6px;
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.35vw, 19px);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+.pdesc { margin: 0 0 4px; }
+
+/* Picture: the project's image, or the satellite view. */
+.detail .pfig { margin: 4px 0 18px; }
+.sitemap__map {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: #e9e5dc;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+@media (max-width: 860px) { .sitemap__map { aspect-ratio: 4 / 3; } }
+.sitemap__map .maplibregl-canvas { outline: none; }
+.sitemap figcaption a { color: inherit; }
+.sitemap__pin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1.5px var(--ink), inset 0 0 0 2px var(--ink);
+  background: radial-gradient(circle, var(--stage) 0 4px, transparent 4.5px);
+}
+
+/* Sections of specs. */
+.psec { margin-top: 24px; padding-top: 9px; border-top: 1px solid var(--ink); scroll-margin-top: 64px; }
+.psec__hed {
+  margin: 0 0 10px;
+  font: 700 11.5px/1.3 var(--sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.psec .specs { margin: 0; padding-top: 0; border-top: none; }
+.psec .timeline { margin-top: 18px; }
+.psec__sub {
+  margin: 0 0 8px;
+  font: 600 11px/1.3 var(--sans);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Permits table. */
+.permitsbox { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--rule); scroll-margin-top: 64px; }
+.ptable { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.35; }
+.ptable th, .ptable td { padding: 6px 10px 6px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); font-weight: 400; }
+.ptable thead th { padding-top: 0; font: 600 11px/1.3 var(--sans); letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); border-bottom-color: var(--ink); }
+.ptable tbody th { white-space: nowrap; font-weight: 600; }
+.ptable td:last-child, .ptable th:last-child { padding-right: 0; }
+.ptable__date { white-space: nowrap; color: var(--ink-2); }
+.ptable__kind { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; white-space: normal; }
+.ptable tr[hidden] { display: none; }
+.ptable__more { margin-top: 8px; }
+.permitsbox .source { margin-top: 8px; }
+
+/* Design documents: a page thumbnail when the build made one. */
+.doc--thumb { align-items: flex-start; padding: 10px; }
+.doc__thumb { width: 72px !important; height: auto; border: 1px solid var(--rule); flex: none; }
+.doc__text { display: grid; gap: 2px; }
+.doc__text small { font-size: 12px; color: var(--muted); }
+
+/* The foot. */
+.pfoot { margin-top: 26px; padding-top: 10px; border-top: 1px solid var(--ink); font-size: 13px; color: var(--ink-2); }
+.pfoot p { margin: 0 0 8px; line-height: 1.5; }
+.pfoot__fix { font-weight: 500; color: var(--ink); }
+.pfoot .detail__note { margin-top: 12px; }
+
+@media print {
+  .sitemap__map { break-inside: avoid; }
+  .ptable tr[hidden] { display: table-row; }
+  .ptable__more { display: none !important; }
+}

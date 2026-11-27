@@ -1341,11 +1341,239 @@ function drawDetailTools(p) {
   });
 }
 
+// ---- the project page (polish round, phase E) -------------------------------
+//
+// Kicker, name, a one-sentence standfirst, the stage track, a picture (the
+// project's image, or a satellite view of the site), then the specs in four
+// sections: The building, The site, Who's behind it, Progress (timeline and
+// permits table). Empty fields and empty sections don't appear. The foot says
+// where the data came from and how to send a correction.
+
+// The standfirst: "96 homes, likely under construction." Only what the data
+// holds; the same wording as the share pages (pages.py project_description).
+function standfirst(p) {
+  let stage = STAGE_PHRASE[p.status] || (p.status || "").toLowerCase();
+  if (stageInferred(p)) stage = "likely under construction";
+  else if (p.statusUpdated && p.stageSinceExact) {
+    const event = ["Pre-Application", "Approved", "Complete"].includes(p.status);
+    stage += `${event ? " " : " since "}${apDate(p.statusUpdated)}`;
+  }
+  const first = [p.units > 0 ? plural(p.units, "home", "homes") : "", stage].filter(Boolean).join(", ");
+  return first ? first[0].toUpperCase() + first.slice(1) + "." : "";
+}
+
+// Plain names for the city's permit types; anything else keeps the city's
+// own name in sentence case.
+const PERMIT_KIND = {
+  "Commercial Building New": "New building (commercial)",
+  "Residential Building Permit": "Building (residential)",
+  "Commercial Change of Use": "Change of use (commercial)",
+  "Pre-Development Conference": "Pre-development conference",
+  "SEPA Review": "Environmental review (SEPA)",
+  "Boundary Line Adjustment": "Lot line adjustment",
+  "Grading Permit": "Grading",
+  "Design Review Board": "Design review",
+  "Final Short Plat": "Short plat (final)",
+};
+const sentenceCase = (t) => (t ? t[0].toUpperCase() + t.slice(1).toLowerCase() : "");
+const permitKind = (type) => PERMIT_KIND[type] || sentenceCase(type || "");
+
+const PERMITS_SHOWN = 6;
+
+function permitsTable(p) {
+  const rows = [...(p.permits || [])].sort((a, b) => (b.opened || "").localeCompare(a.opened || ""));
+  if (!rows.length) return "";
+  const tr = (x, i) => {
+    const num = x.url ? `<a href="${escapeHtml(x.url)}" target="_blank" rel="noopener">${escapeHtml(x.id)}</a>` : escapeHtml(x.id);
+    const kind = escapeHtml(permitKind(x.type)) || "—";
+    return `<tr${i >= PERMITS_SHOWN ? " hidden" : ""}>
+        <th scope="row">${num}<small class="ptable__kind">${kind}</small></th>
+        <td class="ptable__date">${x.opened ? `<time datetime="${escapeHtml(x.opened)}">${escapeHtml(apDate(x.opened))}</time>` : "—"}</td>
+        <td>${escapeHtml(x.status || "—")}</td>
+      </tr>`;
+  };
+  const more = rows.length > PERMITS_SHOWN
+    ? `<button type="button" class="sharebtn ptable__more" data-show-permits aria-expanded="false">Show all ${rows.length} permits</button>` : "";
+  return `<div class="permitsbox" id="permits">
+      <h4 class="psec__sub">Permits</h4>
+      <table class="ptable">
+        <thead><tr><th scope="col">Permit and kind</th><th scope="col">Filed</th><th scope="col">Status</th></tr></thead>
+        <tbody>${rows.map(tr).join("")}</tbody>
+      </table>
+      ${more}
+      <p class="source">Source: City of Spokane permit records. Status is the city’s own word; finaled permits carry no date in the public records.</p>
+    </div>`;
+}
+
+// One section of specs. rows: [[label, html]] (html already escaped);
+// a section with no rows and no extra doesn't appear.
+function specSection(id, title, rows, extra = "") {
+  const body = rows.filter(Boolean).map(([dt, dd]) => `<dt>${escapeHtml(dt)}</dt><dd>${dd}</dd>`).join("");
+  if (!body && !extra) return "";
+  return `<section class="psec" id="${id}" aria-labelledby="h-${id}">
+      <h3 class="psec__hed" id="h-${id}">${escapeHtml(title)}</h3>
+      ${body ? `<dl class="specs">${body}</dl>` : ""}${extra}
+    </section>`;
+}
+
+function projectPage(project, stage, color) {
+  const field = (label) => project.fields.find((f) => f.label === label);
+  const used = new Set();
+  const row = (label) => {
+    const f = field(label);
+    if (!f) return null;
+    used.add(label);
+    const html = renderField(f, project);           // "<dt>…</dt><dd>…</dd>"
+    return [label, html.replace(/^<dt>.*?<\/dt><dd>/, "").replace(/<\/dd>$/, "")];
+  };
+  const plainRow = (label, text) => (text ? [label, escapeHtml(text)] : null);
+
+  const building = ["Building type", "Housing units", "Stories", "Floor area", "Parking stalls"].map(row);
+  const people = ["Developer", "Architect", "Estimated cost"].map(row);
+
+  const facts = [];
+  siteFacts(project).replace(/<dt>(.*?)<\/dt><dd>(.*?)<\/dd>/g, (_, dt, dd) => facts.push([dt.replace(/&amp;/g, "&"), dd]));
+  const parcel = project.parcelId
+    ? ["Parcel", /^\d{5}\.\d{4}$/.test(project.parcelId)
+        ? `<a href="https://cp.spokanecounty.org/scout/propertyinformation/Summary.aspx?PID=${encodeURIComponent(project.parcelId)}" target="_blank" rel="noopener">${escapeHtml(project.parcelId)}</a>`
+        : escapeHtml(project.parcelId)]
+    : null;
+  const site = [
+    plainRow("Neighborhood council", councilOf(project)),
+    project.councilDistrict ? ["Council district", `District ${escapeHtml(project.councilDistrict)}`] : null,
+    ...facts,
+    parcel,
+  ];
+
+  const hasPermits = project.permits && project.permits.length;
+  used.add("Source");                                  // goes in the foot
+  if (hasPermits) used.add("Permit application");     // the table links each permit
+  // The stage is already in the line above the picture; repeat it only to
+  // carry its "from trade permits" note.
+  const progress = [
+    stageInferred(project) ? row("Stage") : (used.add("Stage"), null),
+    plainRow("First filed", firstFiled(project) ? apDate(firstFiled(project)) : ""),
+    plainRow("Design review", project.drbFile),
+    hasPermits ? null : row("Permit application"),
+    !hasPermits && project.permitNumbers.length ? plainRow("Permit numbers", project.permitNumbers.join(", ")) : null,
+  ];
+  // Anything new in the sheet that no section names yet still shows.
+  const others = project.fields.filter((f) => !used.has(f.label) && !["Building type", "Housing units", "Stories", "Floor area",
+    "Parking stalls", "Developer", "Architect", "Estimated cost", "Stage"].includes(f.label)).map((f) => row(f.label));
+
+  const kicker = [project.buildingType && project.buildingType !== UNKNOWN_TYPE ? project.buildingType : "Housing project",
+    project.middleHousing ? "Middle housing" : ""].filter(Boolean).join(" · ");
+
+  const picture = project.imageUrl
+    ? `<figure class="pfig">
+         <img src="${escapeHtml(project.imageUrl)}" alt="Rendering of ${escapeHtml(project.name)}" loading="lazy">
+         ${project.imageCredit ? `<figcaption>Image: ${escapeHtml(project.imageCredit)}</figcaption>` : ""}
+       </figure>`
+    : Number.isFinite(project.lat) && Number.isFinite(project.lng)
+    ? `<figure class="pfig sitemap">
+         <div class="sitemap__map" id="site-map" role="img" aria-label="Satellite view of the site of ${escapeHtml(project.name)}"></div>
+         <figcaption>Satellite view of the site; the ring marks the map point. ${SATELLITE_CREDIT}</figcaption>
+       </figure>`
+    : "";
+
+  const doc = project.docUrl
+    ? `<a class="doc${project.docThumb ? " doc--thumb" : ""}" href="${escapeHtml(project.docUrl)}" target="_blank" rel="noopener">
+         ${project.docThumb
+           ? `<img class="doc__thumb" src="${escapeHtml(project.docThumb)}" alt="" loading="lazy">`
+           : `<span class="doc__icon" aria-hidden="true">PDF</span>`}
+         <span class="doc__text"><span>${escapeHtml(project.docLabel)}</span>${project.docPages ? `<small>${plural(project.docPages, "page", "pages")} · PDF</small>` : ""}</span>
+       </a>`
+    : "";
+
+  const origin = project.autoAdded
+    ? "From the City of Spokane’s permit records, checked every morning."
+    : "From Spokane in Progress’s hand-kept list, with permit details from the City of Spokane’s records.";
+
+  return `
+    <p class="kicker pkicker">${escapeHtml(kicker)}</p>
+    <h2>${escapeHtml(project.name)}</h2>
+    ${standfirst(project) ? `<p class="standfirst">${escapeHtml(standfirst(project))}</p>` : ""}
+    <p class="detail__where">${escapeHtml(where(project))}</p>
+    ${placeLinks(project)}
+
+    <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
+      ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
+    </div>
+    <p class="track__label"><b>${escapeHtml(project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}${
+      stageInferred(project) || (project.statusUpdated && !project.stageSinceExact)
+        ? ` ${est(stageInferred(project) ? EST_TITLE : "This date comes from permit records, not from a build that saw the change happen.")}`
+        : ""
+    }</p>
+
+    ${picture}
+    ${doc}
+    ${project.description ? `<p class="pdesc">${escapeHtml(project.description)}</p>` : ""}
+
+    ${specSection("building", "The building", [...building, ...others])}
+    ${specSection("site", "The site", site)}
+    ${specSection("people", "Who’s behind it", people)}
+    ${specSection("progress", "Progress", progress, timeline(project) + permitsTable(project))}
+
+    <footer class="pfoot">
+      <p class="pfoot__fix">Something wrong or missing? <a href="${escapeHtml(correctionMail(project))}">Send a correction</a>.</p>
+      <p>${state.builtAt ? `Data as of ${escapeHtml(apDate(state.builtAt))}. ` : ""}${escapeHtml(origin)}</p>
+      <p class="detail__note">This page displays available information at the time of project entry.${
+        project.lastVerified ? ` Last checked ${escapeHtml(apDate(project.lastVerified))}.` : ""
+      }</p>
+      ${
+        project.sourceUrls.length
+          ? `<div class="detail__sources">Sources
+               <ul>${project.sourceUrls
+                 .map((u) => `<li><a href="${escapeHtml(u)}" rel="noopener">${escapeHtml(u.replace(/^https?:\/\//, "").slice(0, 60))}</a></li>`)
+                 .join("")}</ul>
+             </div>`
+          : ""
+      }
+    </footer>`;
+}
+
+// The satellite view: a small, still MapLibre map of Esri imagery centered
+// on the project, drawn live (not saved), with a ring at the map point.
+let siteView = null;
+function stopSiteView() {
+  if (siteView) { try { siteView.remove(); } catch (e) { /* already gone */ } siteView = null; }
+}
+function startSiteView(p) {
+  stopSiteView();
+  const box = document.getElementById("site-map");
+  if (!box) return;
+  if (typeof maplibregl === "undefined") { box.closest("figure").remove(); return; }
+  try {
+    siteView = new maplibregl.Map({
+      container: box,
+      style: {
+        version: 8,
+        sources: { sat: { type: "raster", tiles: [SATELLITE_TILES], tileSize: 256, maxzoom: 19 } },
+        layers: [{ id: "paper", type: "background", paint: { "background-color": "#e9e5dc" } },
+                 { id: "sat", type: "raster", source: "sat" }],
+      },
+      center: [p.lng, p.lat],
+      zoom: 17.6,
+      interactive: false,
+      attributionControl: false,
+      fadeDuration: 0,
+    });
+    const ring = document.createElement("div");
+    ring.className = "sitemap__pin";
+    ring.style.setProperty("--stage", colorOf(p.status));
+    new maplibregl.Marker({ element: ring }).setLngLat([p.lng, p.lat]).addTo(siteView);
+  } catch (error) {
+    console.warn(error);
+    box.closest("figure").remove();
+  }
+}
+
 function select(id, flyTo, fromHistory = false) {
   const project = state.projects.find((p) => p.id === id);
   if (!project) return;
 
   const wasOpen = !!state.selected;
+  const hash = location.hash;                    // read before writeUrl can change the address
   // Where focus goes back to when the project closes (a list row, the map).
   const from = document.activeElement;
   if (!wasOpen || !el.detail.contains(from)) {
@@ -1362,100 +1590,26 @@ function select(id, flyTo, fromHistory = false) {
   const stage = indexOf(project.status);
   const color = colorOf(project.status);
 
-  el.detailBody.innerHTML = `
-    <h2>${escapeHtml(project.name)}</h2>
-    <p class="detail__where">${escapeHtml(where(project))}</p>
-    ${placeLinks(project)}
-
-    <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
-      ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
-    </div>
-    <p class="track__label"><b>${escapeHtml(project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}${
-      stageInferred(project) || (project.statusUpdated && !project.stageSinceExact)
-        ? ` ${est(stageInferred(project) ? EST_TITLE : "This date comes from permit records, not from a build that saw the change happen.")}`
-        : ""
-    }</p>
-
-    ${
-      project.imageUrl
-        ? `<figure>
-             <img src="${escapeHtml(project.imageUrl)}" alt="Rendering of ${escapeHtml(project.name)}" loading="lazy">
-             ${project.imageCredit ? `<figcaption>Image: ${escapeHtml(project.imageCredit)}</figcaption>` : ""}
-           </figure>`
-        : ""
-    }
-
-    ${
-      project.docUrl
-        ? `<a class="doc" href="${escapeHtml(project.docUrl)}" target="_blank" rel="noopener">
-             <span class="doc__icon" aria-hidden="true">PDF</span>
-             <span>${escapeHtml(project.docLabel)}</span>
-           </a>`
-        : ""
-    }
-
-    ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ""}
-
-    <dl class="specs">
-      ${project.fields.map((f) => renderField(f, project)).join("")}
-    </dl>
-
-    ${timeline(project)}
-
-    ${
-      project.drbFile || project.permitNumbers.length || project.parcelId || project.lastVerified || councilOf(project) || siteFacts(project)
-        ? `<dl class="specs specs--quiet">
-             ${project.drbFile ? `<dt>Design review</dt><dd>${escapeHtml(project.drbFile)}</dd>` : ""}
-             ${
-               project.permits && project.permits.length
-                 ? `<dt>Permits</dt><dd><ul class="permits">${project.permits
-                     .map(
-                       (p) =>
-                         `<li>${
-                           p.url
-                             ? `<a href="${escapeHtml(p.url)}" target="_blank" rel="noopener">${escapeHtml(p.id)}</a>`
-                             : escapeHtml(p.id)
-                         }${p.type ? ` · ${escapeHtml(p.type)}` : ""}${p.status ? ` · <span class="permits__status">${escapeHtml(p.status)}</span>` : ""}</li>`
-                     )
-                     .join("")}</ul></dd>`
-                 : project.permitNumbers.length
-                 ? `<dt>Permit numbers</dt><dd>${escapeHtml(project.permitNumbers.join(", "))}</dd>`
-                 : ""
-             }
-             ${firstFiled(project) ? `<dt>First filed</dt><dd>${escapeHtml(apDate(firstFiled(project)))}</dd>` : ""}
-             ${councilOf(project) ? `<dt>Neighborhood council</dt><dd>${escapeHtml(councilOf(project))}</dd>` : ""}
-             ${project.councilDistrict ? `<dt>Council district</dt><dd>District ${escapeHtml(project.councilDistrict)}</dd>` : ""}
-             ${siteFacts(project)}
-             ${project.parcelId ? `<dt>Parcel</dt><dd>${/^\d{5}\.\d{4}$/.test(project.parcelId) ? `<a href="https://cp.spokanecounty.org/scout/propertyinformation/Summary.aspx?PID=${encodeURIComponent(project.parcelId)}" target="_blank" rel="noopener">${escapeHtml(project.parcelId)}</a>` : escapeHtml(project.parcelId)}</dd>` : ""}
-             ${project.lastVerified ? `<dt>Verified</dt><dd>${escapeHtml(apDate(project.lastVerified))}</dd>` : ""}
-           </dl>`
-        : ""
-    }
-
-    <p class="detail__note">This page displays available information at the time of project entry.${
-      project.lastVerified ? ` Last checked ${escapeHtml(apDate(project.lastVerified))}.` : ""
-    }</p>
-
-    ${
-      project.sourceUrls.length
-        ? `<div class="detail__sources">Sources
-             <ul>${project.sourceUrls
-               .map((u) => `<li><a href="${escapeHtml(u)}" rel="noopener">${escapeHtml(u.replace(/^https?:\/\//, "").slice(0, 60))}</a></li>`)
-               .join("")}</ul>
-           </div>`
-        : ""
-    }
-  `;
+  el.detailBody.innerHTML = projectPage(project, stage, color);
 
   drawDetailTools(project);
+  const more = el.detailBody.querySelector("[data-show-permits]");
+  if (more) more.addEventListener("click", () => {
+    el.detailBody.querySelectorAll(".ptable tr[hidden]").forEach((r) => (r.hidden = false));
+    more.remove();
+  });
 
   el.detail.hidden = false;
   el.detail.dataset.url = Share.projectUrl(project.id);   // printed at the foot
   el.detail.scrollTop = 0;
   document.body.dataset.detail = "open";
+  startSiteView(project);   // once the panel is showing, so the view knows its size
   document.getElementById("detail-close").focus();
 
   if (flyTo) flyToProject(project);
+  // A link to a section (?p=…#permits) scrolls the project to it.
+  const target = hash.length > 1 && el.detailBody.querySelector(`[id="${CSS.escape(hash.slice(1))}"]`);
+  if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
 }
 
 // Fly after the layout settles: on wide screens the detail column opens and the
@@ -1515,6 +1669,7 @@ function closeDetailAndReturn() {
 }
 
 function closeDetail(fromHistory = false) {
+  stopSiteView();
   el.detail.hidden = true;
   document.body.dataset.detail = "closed";
   state.selected = null;
@@ -2449,9 +2604,13 @@ async function start() {
     drawNote();
     drawMapKey();
     const openId = readUrl();
+    const known = openId && state.projects.some((p) => p.id === openId);
+    // Set before the first render, whose address-bar update would otherwise
+    // drop ?p= (and any #section) from a shared link.
+    if (known) state.selected = openId;
     urlReady = true;
     render();
-    if (openId && state.projects.some((p) => p.id === openId)) select(openId, false, true);
+    if (known) select(openId, false, true);
     else if (openId) writeUrl(); // drop a link to a project that no longer exists
   }
 }

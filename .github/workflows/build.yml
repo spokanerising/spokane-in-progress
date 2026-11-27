@@ -36,6 +36,12 @@ jobs:
           pip install --quiet pdfplumber pikepdf openpyxl
           python3 permit_reports.py
 
+      # Poppler draws thumbnails of linked design PDFs (pdf_thumbs.py).
+      # Without it the PDFs are still linked, just without a picture.
+      - name: Install poppler
+        continue-on-error: true
+        run: sudo apt-get install -y --no-install-recommends poppler-utils
+
       - run: python3 build.py
 
       # Share images: a card per project (only new or changed ones are drawn)

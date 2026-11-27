@@ -88,6 +88,15 @@ def make_site(with_facts=True):
     return d, data
 
 
+def _grey_tile():
+    import io, zlib, struct
+    w = h = 256
+    raw = b"".join(b"\x00" + bytes([120, 128, 110]) * w for _ in range(h))
+    chunk = lambda t, d: struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
+GREY_TILE = _grey_tile()
+
+
 def wire(page, site_dir, geocode_fail=False):
     def site(route):
         path = route.request.url.split("site.test/", 1)[1].split("?")[0].split("#")[0]
@@ -109,7 +118,9 @@ def wire(page, site_dir, geocode_fail=False):
     page.route("https://unpkg.com/**", lambda r: r.fulfill(status=200, body=open(os.path.join(VENDOR, "maplibre-gl.js" if r.request.url.endswith(".js") else "maplibre-gl.css"), "rb").read(),
                                                          content_type="application/javascript" if r.request.url.endswith(".js") else "text/css"))
     page.route("https://tiles.openfreemap.org/**", lambda r: r.fulfill(status=200, body=json.dumps(STYLE), content_type="application/json"))
-    page.route("https://server.arcgisonline.com/**", lambda r: r.abort())
+    # Satellite tiles: a plain grey square (the project page's satellite view
+    # asks for them every time a project opens).
+    page.route("https://server.arcgisonline.com/**", lambda r: r.fulfill(status=200, body=GREY_TILE, content_type="image/png"))
     page.route("https://fonts.googleapis.com/**", lambda r: r.fulfill(status=200, body="", content_type="text/css"))
     page.route("https://fonts.gstatic.com/**", lambda r: r.abort())
 

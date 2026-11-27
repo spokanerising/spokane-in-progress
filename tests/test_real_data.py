@@ -73,8 +73,8 @@ with sync_playwright() as pw:
     with_facts = next((p for p in P if p.get("zone") and p.get("transitMiles") is not None), None)
     if with_facts:
         pg.goto(f"{SITE}/?p={with_facts['id']}")
-        pg.wait_for_selector(".specs--quiet")
-        quiet = pg.locator(".specs--quiet").inner_text()
+        pg.wait_for_selector("#site .specs")
+        quiet = pg.locator("#site .specs").inner_text()
         check("ZONING" in quiet.upper() and "FREQUENT TRANSIT" in quiet.upper(), "project page shows zoning and transit")
     check(not errors, f"console errors: {errors}")
     b.close()

@@ -19,6 +19,7 @@ python3 tests/run.py filters      # files whose name contains "filters"
 | `test_icons.py` | Icon buttons: labels, icons drawn, sizes, tooltips on hover and keyboard focus, the project bar's Copy link and Report a correction, the About chart download menu, phones. |
 | `test_finishing.py` | Site icons and manifest, loading placeholders, the 404 page, the no-JavaScript note, printing a project. |
 | `test_map_tools.py` | Scale bar, the Whole city button, skip links, and the map by keyboard: [ ] to step through projects, Enter to open, 0 for the whole city, Escape back to the row or map. |
+| `test_project_page.py` | The project page: kicker, standfirst, spec sections, the permits table, the satellite view, PDF thumbnails (`pdf_thumbs.py`, offline), the foot, links to a section, print, phones. |
 | `test_share_toolkit.py` | `share.js`: share links, copying, downloads, CSV, notices; Copy link and the About CSV. |
 
 GitHub runs them on every code push and after every data refresh

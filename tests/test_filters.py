@@ -236,8 +236,8 @@ with sync_playwright() as pw:
     # project click still works, and Back closes it
     page.locator(".card").first.click()
     check(page.evaluate("state.selected") is not None and "p" in params(page), "project opens")
-    check(page.locator(".specs--quiet dt", has_text="Zoning").count() == 1, "zoning shown on the project page")
-    check(page.locator(".specs--quiet dt", has_text="Frequent transit").count() == 1, "transit shown")
+    check(page.locator("#site dt", has_text="Zoning").count() == 1, "zoning shown on the project page")
+    check(page.locator("#site dt", has_text="Frequent transit").count() == 1, "transit shown")
     page.screenshot(path=f"{OUT}/06-detail.png")
     page.go_back()
     check(page.evaluate("state.selected") is None, "back closes")
