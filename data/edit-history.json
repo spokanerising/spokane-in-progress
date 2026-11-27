@@ -96,5 +96,19 @@
    "unset": [],
    "note": ""
   }
+ ],
+ "city-b2604501bldc": [
+  {
+   "at": "2026-11-27T21:18:42Z",
+   "file": "2026/11/20261127T211842Z-city-b2604501bldc-870946.json",
+   "set": {
+    "status": "Under Construction"
+   },
+   "was": {
+    "status": "Approved"
+   },
+   "unset": [],
+   "note": ""
+  }
  ]
 }

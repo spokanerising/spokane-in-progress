@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T21:17:57.056388+00:00",
+  "builtAt": "2026-11-27T21:19:09.568422+00:00",
   "sourceDates": {
     "monthlyTables": "2026-05-31",
     "zoning": "2026-11-27",
@@ -32,6 +32,134 @@
     }
   ],
   "projects": [
+    {
+      "id": "city-b2604501bldc",
+      "name": "Bethany Apartments",
+      "address": "3203 E 27th Ave & 3215 E 27th Ave",
+      "neighborhood": "Lincoln Heights",
+      "parcelId": "35273.0618",
+      "lat": 47.63045279006967,
+      "lng": -117.36267714754433,
+      "status": "Under Construction",
+      "statusUpdated": "2026-11-27",
+      "stageSource": "edited by hand on 2026-11-27",
+      "lastVerified": "2026-11-27",
+      "projectType": "Apartments",
+      "units": 22,
+      "unitsSource": "city weekly permit report",
+      "stories": 3,
+      "description": "New 3 story, 12 unit apartment building. New 3 story, 10 unit apartment building.",
+      "permitNumbers": [
+        "B2604501BLDC",
+        "B2604503BLDC",
+        "B2610946GRAD"
+      ],
+      "permits": [
+        {
+          "id": "B2604501BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2026-03-31",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00170&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2604503BLDC",
+          "type": "Commercial Building New",
+          "status": "Issued",
+          "opened": "2026-03-31",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00171&agencyCode=SPOKANE&IsToShowInspection="
+        },
+        {
+          "id": "B2610946GRAD",
+          "type": "Grading Permit",
+          "status": "Issued",
+          "opened": "2026-07-17",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BGR&capID2=00000&capID3=00006&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Under Construction",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
+          "label": "Housing units",
+          "value": "22",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$5,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00170&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records and weekly permit report",
+          "kind": "text"
+        }
+      ],
+      "edited": [
+        "status"
+      ],
+      "editedAt": "2026-11-27T21:18:42Z",
+      "buildingType": "Apartments",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "Lincoln Heights",
+      "councilDistrict": 2,
+      "parcels": [
+        "35273.0618"
+      ],
+      "acres": 1.43,
+      "homesPerAcre": 15.4,
+      "zone": "R1",
+      "zoneBase": "R1",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential",
+      "transitMiles": 0.56,
+      "transitStop": "Southeast Blvd @ Regal",
+      "transitRoutes": [
+        "4"
+      ],
+      "milestones": [
+        {
+          "date": "2026-03-31",
+          "label": "First of 2 building permits filed",
+          "estimated": false
+        },
+        {
+          "date": "2026-11-16",
+          "label": "Building permit issued",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
+    },
     {
       "id": "city-b2404005bldc",
       "name": "Peyton Building Conversion",
@@ -473,130 +601,6 @@
         },
         {
           "date": "2026-11-17",
-          "label": "Building permit issued",
-          "estimated": false
-        }
-      ],
-      "stageSinceExact": true
-    },
-    {
-      "id": "city-b2604501bldc",
-      "name": "Bethany Apartments",
-      "address": "3203 E 27th Ave & 3215 E 27th Ave",
-      "neighborhood": "Lincoln Heights",
-      "parcelId": "35273.0618",
-      "lat": 47.63045279006967,
-      "lng": -117.36267714754433,
-      "status": "Approved",
-      "statusUpdated": "2026-11-16",
-      "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-27",
-      "projectType": "Apartments",
-      "units": 22,
-      "unitsSource": "city weekly permit report",
-      "stories": 3,
-      "description": "New 3 story, 12 unit apartment building. New 3 story, 10 unit apartment building.",
-      "permitNumbers": [
-        "B2604501BLDC",
-        "B2604503BLDC",
-        "B2610946GRAD"
-      ],
-      "permits": [
-        {
-          "id": "B2604501BLDC",
-          "type": "Commercial Building New",
-          "status": "Issued",
-          "opened": "2026-03-31",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00170&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2604503BLDC",
-          "type": "Commercial Building New",
-          "status": "Issued",
-          "opened": "2026-03-31",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00171&agencyCode=SPOKANE&IsToShowInspection="
-        },
-        {
-          "id": "B2610946GRAD",
-          "type": "Grading Permit",
-          "status": "Issued",
-          "opened": "2026-07-17",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BGR&capID2=00000&capID3=00006&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
-      ],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Approved",
-          "kind": "text"
-        },
-        {
-          "kind": "text",
-          "label": "Building type",
-          "value": "Apartments"
-        },
-        {
-          "label": "Housing units",
-          "value": "22",
-          "kind": "text"
-        },
-        {
-          "label": "Stories",
-          "value": "3",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$5,500,000",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00170&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records and weekly permit report",
-          "kind": "text"
-        }
-      ],
-      "buildingType": "Apartments",
-      "buildingTypeInferred": true,
-      "middleHousing": false,
-      "neighborhoodCouncil": "Lincoln Heights",
-      "councilDistrict": 2,
-      "parcels": [
-        "35273.0618"
-      ],
-      "acres": 1.43,
-      "homesPerAcre": 15.4,
-      "zone": "R1",
-      "zoneBase": "R1",
-      "zoneGroup": "Residential",
-      "zoneName": "Residential",
-      "transitMiles": 0.56,
-      "transitStop": "Southeast Blvd @ Regal",
-      "transitRoutes": [
-        "4"
-      ],
-      "milestones": [
-        {
-          "date": "2026-03-31",
-          "label": "First of 2 building permits filed",
-          "estimated": false
-        },
-        {
-          "date": "2026-11-16",
           "label": "Building permit issued",
           "estimated": false
         }
