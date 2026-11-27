@@ -22,6 +22,11 @@
 <meta name="twitter:image" content="https://projects.spokanerising.com/og-card.png">
 <meta name="twitter:image:alt" content="Spokane in Progress: a map of Spokane with every tracked housing project as a dot, colored by stage.">
 
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#faf8f3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
@@ -29,6 +34,7 @@
 <link href="styles.css" rel="stylesheet">
 </head>
 <body>
+<noscript><p class="noscript">This map needs JavaScript. You can still read <a href="about.html">how Spokane in Progress works</a>, or see each project in the <a href="https://notifymespokane.org">city’s permit activity map</a>.</p></noscript>
 
 <header class="masthead">
   <div class="masthead__bar">
@@ -42,7 +48,7 @@
 
     <!-- The spine: every tracked project, stacked by where it is in its life. -->
     <div class="figure">
-      <p class="lede" id="lede" aria-live="polite"></p>
+      <p class="lede is-loading" id="lede" aria-live="polite">Counting homes…</p>
       <div class="figure__head">
         <p class="figure__title" id="count-stamp">Loading projects</p>
         <div class="measure" id="measure" role="group" aria-label="Size the bar by">
@@ -122,7 +128,17 @@
         <button type="button" class="iconbtn" id="share-view" aria-label="Share this view" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-share"></use></svg></button>
       </span>
     </div>
-    <ol class="cards" id="cards"></ol>
+    <!-- Grey placeholder rows until projects.json arrives; drawCards() replaces them. -->
+    <ol class="cards" id="cards" aria-busy="true">
+      <li class="skel" aria-hidden="true"><span></span><span style="width:72%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:58%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:80%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:64%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:50%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:76%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:61%"></span><span></span><span></span></li>
+      <li class="skel" aria-hidden="true"><span></span><span style="width:69%"></span><span></span><span></span></li>
+    </ol>
     <p class="empty" id="empty" hidden>Nothing matches those filters. Remove one of them above, or clear them all.</p>
 
 <footer class="colophon">

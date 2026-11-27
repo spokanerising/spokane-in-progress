@@ -484,6 +484,7 @@ function drawLede() {
   const building = unitsOf(inStages(["Under Construction"]));
   const proposed = unitsOf(inStages(["Pre-Application"]));
   const n = (x) => `<b>${numberWithCommas(x)}</b>`;
+  box.classList.remove("is-loading");
   box.innerHTML =
     `At least ${n(pipeline)} homes are working their way through Spokane’s permit process, ` +
     `${n(building)} of them under construction.` +
@@ -1060,6 +1061,7 @@ function clearFilters() {
 }
 
 function drawCards(list) {
+  el.cards.removeAttribute("aria-busy");
   el.cards.innerHTML = list
     .map((p) => {
       const facts = [
@@ -1443,6 +1445,7 @@ function select(id, flyTo, fromHistory = false) {
   drawDetailTools(project);
 
   el.detail.hidden = false;
+  el.detail.dataset.url = Share.projectUrl(project.id);   // printed at the foot
   el.detail.scrollTop = 0;
   document.body.dataset.detail = "open";
   document.getElementById("detail-close").focus();
@@ -1618,6 +1621,7 @@ function projectShare(p) {
   ].filter(Boolean).join(", ");
   return {
     url: Share.projectUrl(p.id),
+    copied: p.name,
     title: `${p.name} · ${Share.SITE_NAME}`,
     text: `${p.name}${what ? `: ${what}` : ""}. Via ${Share.SITE_NAME}`,
   };
@@ -1655,6 +1659,7 @@ function viewShare() {
   const filters = filtersInWords();
   return {
     url: areaPageUrl() || new URL(urlFromState(), location.href).href,
+    copied: "this view",
     title: Share.SITE_NAME,
     text: filters
       ? `Spokane housing projects, ${filters}: ${tally}. Via ${Share.SITE_NAME}`
@@ -2195,6 +2200,10 @@ function startMap() {
 function showProblem(message) {
   el.countStamp.textContent = "Something is wrong";
   el.tally.textContent = "";
+  el.cards.innerHTML = "";
+  el.cards.removeAttribute("aria-busy");
+  const lede = document.getElementById("lede");
+  if (lede) { lede.classList.remove("is-loading"); lede.textContent = ""; }
   el.empty.hidden = false;
   el.empty.textContent = message;
   console.error(message);

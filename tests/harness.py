@@ -33,7 +33,8 @@ def h(s, n):
     return int(hashlib.md5(s.encode()).hexdigest(), 16) % n
 
 
-SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js", "og-card.png", "robots.txt", "styleguide.html"]
+SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js", "og-card.png", "robots.txt", "styleguide.html",
+              "404.html", "favicon.ico", "favicon.svg", "apple-touch-icon.png", "site.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"]
 
 
 def make_site(with_facts=True):
@@ -98,6 +99,10 @@ def wire(page, site_dir, geocode_fail=False):
                 return route.fulfill(status=308, headers={"Location": f"{SITE}/{path}/"})
             full = os.path.join(full, "index.html")
         if not os.path.isfile(full):
+            # Cloudflare Pages serves the site's 404.html, when there is one.
+            nf = os.path.join(site_dir, "404.html")
+            if os.path.isfile(nf):
+                return route.fulfill(status=404, body=open(nf, "rb").read(), content_type="text/html")
             return route.fulfill(status=404, body="nope")
         route.fulfill(status=200, body=open(full, "rb").read(), content_type=mimetypes.guess_type(full)[0] or "application/octet-stream")
     page.route(f"{SITE}/**", site)

@@ -358,14 +358,15 @@
   // link and each network. Desktop browsers that have a share sheet get it
   // as a last "More options" item.
 
-  async function share(anchor, { url, title, text }) {
+  // `copied` names the thing in the notice: "Link to this view copied".
+  async function share(anchor, { url, title, text, copied = "" }) {
     if (prefersNativeShare()) {
       const result = await nativeShare({ url, title, text });
       if (result !== "unavailable") return result;
     }
     const items = [
       { id: "copy", label: "Copy link", onSelect: async () => {
-          if (await window.Share.copyText(url)) toast("Link copied");
+          if (await window.Share.copyText(url)) toast(copied ? `Link to ${copied} copied` : "Link copied");
           else toast(`Copy this link: ${url}`, 8000);
         } },
       { divider: true },

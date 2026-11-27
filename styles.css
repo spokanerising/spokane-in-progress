@@ -1940,3 +1940,61 @@ button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: defaul
 @media (min-width: 521px) {
   .inview { left: max(50%, 330px); }
 }
+
+/* ==========================================================================
+   Finishing touches (polish round, phase C).
+   ========================================================================== */
+
+/* Loading: grey rows the same height as a project row (118px), so nothing
+   jumps when the list arrives, and a muted headline. */
+.lede.is-loading { color: var(--muted); }
+.skel { display: flex; flex-direction: column; align-items: flex-start; padding: 13px 0; } /* flex so the gaps between bars add up, not collapse */
+.skel span {
+  display: block;
+  height: 12px;
+  margin: 4px 0;
+  background: linear-gradient(90deg, var(--paper-2) 0%, #ebe6db 50%, var(--paper-2) 100%) 0 0 / 200% 100%;
+  animation: skel 1.6s ease-in-out infinite;
+}
+.skel span:nth-child(1) { width: 34%; height: 10px; margin: 3px 0 7px; }
+.skel span:nth-child(2) { height: 18px; margin: 3px 0 5px; }
+.skel span:nth-child(3) { width: 46%; margin: 4px 0 11px; }
+.skel span:nth-child(4) { width: 38%; height: 11px; margin: 4px 0; }
+@keyframes skel { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .skel span { animation: none; } }
+
+/* Shown only without JavaScript. */
+.noscript { margin: 0; padding: 10px var(--gutter); background: var(--ink); color: var(--paper); font-size: 14px; }
+.noscript a { color: inherit; }
+
+/* 404 page: the ink button is a link here. */
+.notfound__map { display: inline-flex; align-items: center; color: var(--paper); text-decoration: none; }
+.notfound__map:hover { color: var(--paper); }
+
+/* Printing. With a project open, the printout is that project's page: no
+   map, list or buttons, with its address at the foot. Otherwise the list. */
+@media print {
+  @page { margin: 16mm 14mm; }
+  body, body.page { display: block; height: auto; overflow: visible; background: #fff; }
+  .viewswitch, .mapwrap, .filters, .tallyrow .clear, .pills, .listtools, .paneltoggle, .detail__bar,
+  .iconbtn, .chart__tools, .toast, .tip-label, .menu, .noscript, .skel { display: none !important; }
+  .layout { display: block; }
+  .panel { overflow: visible; border: none; padding: 0; }
+  .masthead { border-bottom: 1px solid #000; }
+  .masthead__nav, .measure { display: none; }
+  body[data-detail="open"] .masthead, body[data-detail="open"] .panel { display: none; }
+  .detail { position: static !important; width: auto !important; box-shadow: none !important; border: none; overflow: visible; padding: 0; }
+  .detail[data-url]::after {
+    content: "Spokane in Progress · " attr(data-url);
+    display: block;
+    margin-top: 18px;
+    padding-top: 8px;
+    border-top: 1px solid #000;
+    font-size: 10pt;
+    color: #444;
+  }
+  .card { break-inside: avoid; }
+  .specs, .timeline li { break-inside: avoid; }
+  a { color: inherit; }
+  * { animation: none !important; transition: none !important; }
+}

@@ -62,7 +62,7 @@ with sync_playwright() as pw:
     pg.locator("#share-view").click()
     pg.locator('.menu [data-item="copy"]').click()
     pg.wait_for_selector("#toast.is-on")
-    check(pg.locator("#toast").inner_text() == "Link copied", pg.locator("#toast").inner_text())
+    check(pg.locator("#toast").inner_text() == "Link to this view copied", pg.locator("#toast").inner_text())
     check(pg.evaluate("navigator.clipboard.readText()") == pg.url, "clipboard holds the page address")
     pg.wait_for_timeout(2900)
     check(not pg.locator("#toast").evaluate("e => e.classList.contains('is-on')"), "notice goes away")
