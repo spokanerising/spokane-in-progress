@@ -55,7 +55,7 @@ with sync_playwright() as pw:
         check(dots(img) > 20, f"{item}: project dots drawn ({dots(img)})")
         check(pg.locator(".maplibregl-map").count() == 1, "the hidden map is removed")
         check(pg.locator("#save-map").inner_text() == "Save image" and pg.locator("#save-map").get_attribute("aria-busy") is None, "button back to normal")
-        pg.wait_for_selector("#toast.is-on")
+        pg.wait_for_function("document.getElementById('toast') && document.getElementById('toast').textContent === 'Map image saved'")
 
     # Title text matches the filters: compare a crop of the band with what the page would say
     check(pg.evaluate("filtersInWords()") == "Riverside", pg.evaluate("filtersInWords()"))
