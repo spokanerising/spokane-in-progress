@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T08:07:04.710681+00:00",
+  "builtAt": "2026-11-27T08:23:38.106155+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -6541,8 +6541,8 @@
       "stageSource": "city permit records: pre-development meeting held",
       "lastVerified": "2026-11-27",
       "projectType": "Duplex",
-      "units": 2,
-      "unitsSource": "permit description",
+      "units": null,
+      "unitsSource": "",
       "stories": null,
       "description": "",
       "permitNumbers": [
@@ -6592,11 +6592,6 @@
           "value": "Duplex (middle housing)"
         },
         {
-          "label": "Housing units",
-          "value": "2",
-          "kind": "text"
-        },
-        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=25BPD&capID2=00000&capID3=00073&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -6616,7 +6611,6 @@
         "25242.1015"
       ],
       "acres": 0.18,
-      "homesPerAcre": 11.1,
       "zone": "RHD-35",
       "zoneBase": "RHD",
       "zoneGroup": "Residential",
