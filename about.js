@@ -210,34 +210,8 @@ function draw() {
 // CSV download, built in the browser from the same data.
 
 function downloadCsv() {
-  const cols = [
-    ["id", (p) => p.id],
-    ["name", (p) => p.name],
-    ["address", (p) => p.address],
-    ["neighborhood", (p) => p.neighborhood],
-    ["neighborhood_council", (p) => p.neighborhoodCouncil],
-    ["council_district", (p) => p.councilDistrict],
-    ["stage", (p) => p.status],
-    ["stage_since", (p) => p.statusUpdated],
-    ["building_type", (p) => p.buildingType],
-    ["middle_housing", (p) => (p.middleHousing ? "yes" : "no")],
-    ["units", (p) => (p.units > 0 ? p.units : "")],
-    ["stories", (p) => p.stories || ""],
-    ["first_filed", (p) => firstFiled(p)],
-    ["permits", (p) => (p.permitNumbers || []).join("; ")],
-    ["parcel", (p) => p.parcelId],
-    ["zoning", (p) => p.zone || ""],
-    ["lot_acres", (p) => p.acres ?? ""],
-    ["homes_per_acre", (p) => p.homesPerAcre ?? ""],
-    ["miles_to_frequent_transit", (p) => p.transitMiles ?? ""],
-    ["lat", (p) => p.lat],
-    ["lng", (p) => p.lng],
-  ];
-  Share.downloadText(
-    Share.toCsv(projects, cols.map(([label, value]) => ({ label, value }))),
-    Share.filename([], "csv", builtAt || new Date()),
-    "text/csv"
-  );
+  // Same columns as the map page's download (see share.js).
+  Share.downloadText(Share.projectsCsv(projects), Share.filename([], "csv", builtAt || new Date()), "text/csv");
   Share.toast(`Downloaded ${projects.length} projects`);
 }
 

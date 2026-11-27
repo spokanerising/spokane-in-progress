@@ -169,6 +169,208 @@
     return Promise.race([loads, new Promise((r) => setTimeout(() => r(false), ms))]);
   }
 
+  // ---- projects as data files ----------------------------------------------------
+  //
+  // One column list for every download (the map's filtered list and the
+  // About page's full list), so the files always match.
+
+  // A project's own link. Phase 2 of the sharing plan moves this to /p/<id>/.
+  function projectUrl(id, origin = location.origin) {
+    return `${origin}/?p=${encodeURIComponent(id)}`;
+  }
+
+  const firstFiled = (p) => ((p.permits || []).map((x) => x.opened).filter(Boolean).sort()[0] || "");
+  const blank = (v) => (v === null || v === undefined ? "" : v);
+
+  const PROJECT_COLUMNS = [
+    ["id", (p) => p.id],
+    ["name", (p) => p.name],
+    ["address", (p) => p.address],
+    ["neighborhood", (p) => p.neighborhood],
+    ["neighborhood_council", (p) => p.neighborhoodCouncil],
+    ["council_district", (p) => blank(p.councilDistrict)],
+    ["stage", (p) => p.status],
+    ["stage_since", (p) => p.statusUpdated],
+    ["building_type", (p) => p.buildingType],
+    ["middle_housing", (p) => (p.middleHousing ? "yes" : "no")],
+    ["units", (p) => (p.units > 0 ? p.units : "")],
+    ["stories", (p) => p.stories || ""],
+    ["first_filed", (p) => firstFiled(p)],
+    ["permits", (p) => (p.permitNumbers || []).join("; ")],
+    ["parcel", (p) => p.parcelId],
+    ["zoning", (p) => p.zone || ""],
+    ["lot_acres", (p) => blank(p.acres)],
+    ["homes_per_acre", (p) => blank(p.homesPerAcre)],
+    ["miles_to_frequent_transit", (p) => blank(p.transitMiles)],
+    ["lat", (p) => p.lat],
+    ["lng", (p) => p.lng],
+    ["link", (p) => projectUrl(p.id)],
+  ].map(([label, value]) => ({ label, value }));
+
+  const projectsCsv = (projects) => toCsv(projects, PROJECT_COLUMNS);
+
+  // GeoJSON for GIS tools: a point per project with the same fields, plus a
+  // note at the top saying where it came from and what was filtered.
+  function projectsGeoJson(projects, meta = {}) {
+    const props = PROJECT_COLUMNS.filter((c) => c.label !== "lat" && c.label !== "lng");
+    const value = (c, p) => {
+      const v = c.value(p);
+      return v === "" ? null : v;
+    };
+    return JSON.stringify({
+      type: "FeatureCollection",
+      name: SITE_NAME,
+      source: `${SITE_NAME}, ${SITE_HOST}`,
+      ...meta,
+      features: projects
+        .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng))
+        .map((p) => ({
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [+p.lng.toFixed(6), +p.lat.toFixed(6)] },
+          properties: Object.fromEntries(props.map((c) => [c.label, value(c, p)])),
+        })),
+    }, null, 1);
+  }
+
+  // ---- small pop-up menus (Share, Download) -------------------------------------
+  //
+  // menu(button, items): opens a list under the button. Each item is
+  // { label, href } (a link; opens in a new tab except mailto:) or
+  // { label, onSelect }. Arrow keys move, Enter picks, Escape and Tab close,
+  // a click outside closes, and focus goes back to the button.
+
+  let openMenuState = null;
+
+  function closeMenu(returnFocus = true) {
+    if (!openMenuState) return;
+    const { box, anchor, cleanup } = openMenuState;
+    openMenuState = null;
+    cleanup();
+    box.remove();
+    anchor.setAttribute("aria-expanded", "false");
+    if (returnFocus) anchor.focus();
+  }
+
+  function menu(anchor, items, { label = "" } = {}) {
+    const same = openMenuState && openMenuState.anchor === anchor;
+    closeMenu(false);
+    if (same) return null;   // a second click on the same button closes it
+
+    const box = document.createElement("div");
+    box.className = "menu";
+    box.setAttribute("role", "menu");
+    if (label) box.setAttribute("aria-label", label);
+    items.forEach((item) => {
+      if (item.divider) {
+        const hr = document.createElement("div");
+        hr.className = "menu__rule";
+        hr.setAttribute("role", "separator");
+        box.appendChild(hr);
+        return;
+      }
+      const el = document.createElement(item.href ? "a" : "button");
+      el.className = "menu__item";
+      el.setAttribute("role", "menuitem");
+      el.tabIndex = -1;
+      el.textContent = item.label;
+      if (item.id) el.dataset.item = item.id;
+      if (item.note) {
+        const small = document.createElement("small");
+        small.textContent = item.note;
+        el.appendChild(small);
+      }
+      if (item.href) {
+        el.href = item.href;
+        if (!item.href.startsWith("mailto:")) {
+          el.target = "_blank";
+          el.rel = "noopener";
+        }
+        el.addEventListener("click", () => closeMenu(false));
+      } else {
+        el.type = "button";
+        el.addEventListener("click", () => {
+          closeMenu();
+          item.onSelect && item.onSelect();
+        });
+      }
+      box.appendChild(el);
+    });
+    document.body.appendChild(box);
+
+    // Under the button, kept on screen; above it if there's no room below.
+    // If the page scrolls, the menu follows its button, and closes once the
+    // button has scrolled out of sight.
+    const place = () => {
+      const r = anchor.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight || (!r.width && !r.height)) return false;
+      const w = box.offsetWidth, h = box.offsetHeight;
+      const left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8));
+      const below = r.bottom + 6 + h <= window.innerHeight - 8;
+      box.style.left = `${left}px`;
+      box.style.top = `${below ? r.bottom + 6 : Math.max(8, r.top - 6 - h)}px`;
+      return true;
+    };
+    place();
+
+    const entries = () => [...box.querySelectorAll(".menu__item")];
+    const onKey = (e) => {
+      const list = entries();
+      const i = list.indexOf(document.activeElement);
+      if (e.key === "ArrowDown") { e.preventDefault(); list[(i + 1) % list.length].focus(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); list[(i - 1 + list.length) % list.length].focus(); }
+      else if (e.key === "Home") { e.preventDefault(); list[0].focus(); }
+      else if (e.key === "End") { e.preventDefault(); list[list.length - 1].focus(); }
+      else if (e.key === "Escape") { e.preventDefault(); closeMenu(); }
+      else if (e.key === "Tab") closeMenu(false);
+    };
+    const onDown = (e) => {
+      if (!box.contains(e.target) && !anchor.contains(e.target)) closeMenu(false);
+    };
+    const onMove = () => { if (!place()) closeMenu(false); };
+    box.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown, true);
+    window.addEventListener("resize", onMove);
+    window.addEventListener("scroll", onMove, true);
+    openMenuState = {
+      box, anchor,
+      cleanup: () => {
+        document.removeEventListener("pointerdown", onDown, true);
+        window.removeEventListener("resize", onMove);
+        window.removeEventListener("scroll", onMove, true);
+      },
+    };
+    anchor.setAttribute("aria-expanded", "true");
+    entries()[0].focus();
+    return box;
+  }
+
+  // ---- sharing, put together --------------------------------------------------------
+  //
+  // share(button, {url, title, text}): on phones, the phone's own share
+  // sheet; elsewhere (or if the sheet isn't available), a menu with Copy
+  // link and each network. Desktop browsers that have a share sheet get it
+  // as a last "More options" item.
+
+  async function share(anchor, { url, title, text }) {
+    if (prefersNativeShare()) {
+      const result = await nativeShare({ url, title, text });
+      if (result !== "unavailable") return result;
+    }
+    const items = [
+      { id: "copy", label: "Copy link", onSelect: async () => {
+          if (await window.Share.copyText(url)) toast("Link copied");
+          else toast(`Copy this link: ${url}`, 8000);
+        } },
+      { divider: true },
+      ...shareLinks(url, text, title).map((l) => ({ id: l.id, label: l.label, href: l.href })),
+    ];
+    if (navigator.share) {
+      items.push({ divider: true }, { id: "more", label: "More options…", onSelect: () => nativeShare({ url, title, text }) });
+    }
+    menu(anchor, items, { label: "Share" });
+    return "menu";
+  }
+
   window.Share = {
     SITE_NAME, SITE_HOST,
     shareLinks, nativeShare, prefersNativeShare,
@@ -176,5 +378,7 @@
     downloadBlob, downloadText, downloadCanvas, filename, toCsv,
     toast,
     creditLine, fontsReady,
+    projectUrl, PROJECT_COLUMNS, projectsCsv, projectsGeoJson,
+    menu, closeMenu, share,
   };
 })();

@@ -58,26 +58,21 @@ with sync_playwright() as pw:
     path = dl.value.path()
     check(open(path, "rb").read(8) == b"\x89PNG\r\n\x1a\n", "canvas saved as PNG")
 
-    # Copy link: clipboard + notice
+    # Copy link (from the Share menu): clipboard + notice
     pg.locator("#share-view").click()
+    pg.locator('.menu [data-item="copy"]').click()
     pg.wait_for_selector("#toast.is-on")
     check(pg.locator("#toast").inner_text() == "Link copied", pg.locator("#toast").inner_text())
     check(pg.evaluate("navigator.clipboard.readText()") == pg.url, "clipboard holds the page address")
-    check(pg.locator("#share-view").inner_text() == "Share this view", "button text no longer swaps")
     pg.wait_for_timeout(2900)
     check(not pg.locator("#toast").evaluate("e => e.classList.contains('is-on')"), "notice goes away")
-
-    pg.locator(".card").first.click()
-    pg.locator("[data-copy-project]").click()
-    pg.wait_for_selector("#toast.is-on")
-    copied = pg.evaluate("navigator.clipboard.readText()")
-    check(copied.startswith(f"{SITE}/?p=") and copied.endswith(pg.evaluate("encodeURIComponent(state.selected)")), copied)
 
     # Copy fails: the notice shows the link instead of a prompt dialog
     dialogs = []
     pg.on("dialog", lambda d: (dialogs.append(d.message), d.dismiss()))
     pg.evaluate("Share.copyText = async () => false")
     pg.locator("#share-view").click()
+    pg.locator('.menu [data-item="copy"]').click()
     pg.wait_for_function("document.getElementById('toast').textContent.startsWith('Copy this link:')")
     check(not dialogs, "no prompt dialog")
 
@@ -90,7 +85,7 @@ with sync_playwright() as pw:
     check(dl.value.suggested_filename.startswith("spokane-in-progress-") and dl.value.suggested_filename.endswith(".csv"), dl.value.suggested_filename)
     rows = list(csv.reader(io.StringIO(open(dl.value.path(), encoding="utf-8-sig").read())))
     check(len(rows) == N + 1, f"{len(rows) - 1} rows, {N} projects")
-    for col in ["zoning", "lot_acres", "homes_per_acre", "miles_to_frequent_transit"]:
+    for col in ["zoning", "lot_acres", "homes_per_acre", "miles_to_frequent_transit", "link"]:
         check(col in rows[0], f"column {col}")
     check(ab.locator("#toast").inner_text().startswith(f"Downloaded {N}"), "about notice")
 

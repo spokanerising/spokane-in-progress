@@ -117,7 +117,10 @@
         </select>
       </label>
       <label class="inviewonly"><input type="checkbox" id="inview-only"><span>Only what’s in map view</span></label>
-      <button type="button" class="sharebtn" id="share-view">Share this view</button>
+      <span class="listtools__actions">
+        <button type="button" class="sharebtn" id="download-list" aria-haspopup="menu" aria-expanded="false">Download</button>
+        <button type="button" class="sharebtn" id="share-view" aria-haspopup="menu" aria-expanded="false">Share</button>
+      </span>
     </div>
     <ol class="cards" id="cards"></ol>
     <p class="empty" id="empty" hidden>Nothing matches those filters. Remove one of them above, or clear them all.</p>

@@ -1324,7 +1324,7 @@ function select(id, flyTo, fromHistory = false) {
     <h2>${escapeHtml(project.name)}</h2>
     <p class="detail__where">${escapeHtml(where(project))}</p>
     ${placeLinks(project)}
-    <p class="detail__share"><button type="button" class="sharebtn" data-copy-project>Copy link to this project</button></p>
+    <p class="detail__share"><button type="button" class="sharebtn" data-share-project aria-haspopup="menu" aria-expanded="false">Share this project</button></p>
 
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
@@ -1406,8 +1406,8 @@ function select(id, flyTo, fromHistory = false) {
     }
   `;
 
-  el.detailBody.querySelector("[data-copy-project]").addEventListener("click", (e) =>
-    copyLink(e.currentTarget, `${location.origin}${location.pathname}?p=${encodeURIComponent(project.id)}`)
+  el.detailBody.querySelector("[data-share-project]").addEventListener("click", (e) =>
+    Share.share(e.currentTarget, projectShare(project))
   );
 
   el.detail.hidden = false;
@@ -1566,12 +1566,79 @@ function readUrl() {
   return params.get("p");
 }
 
-// Copies a link and says so. If the browser won't copy, the link is shown in
-// the notice so it can be copied by hand.
-async function copyLink(button, url = location.href) {
-  const full = new URL(url, location.href).href;
-  if (await Share.copyText(full)) Share.toast("Link copied");
-  else Share.toast(`Copy this link: ${full}`, 8000);
+// ---- sharing and downloads (share.js does the work) -------------------------
+
+// How each stage reads in a sentence: "96 homes, under construction in Riverside".
+const STAGE_PHRASE = {
+  "Pre-Application": "proposed",
+  "Applied": "in permit review",
+  "Approved": "approved",
+  "Under Construction": "under construction",
+  "Complete": "complete",
+  "Stalled": "stalled",
+};
+
+function projectShare(p) {
+  const place = p.neighborhood || councilOf(p);
+  const what = [
+    p.units > 0 ? plural(p.units, "home", "homes") : "",
+    [STAGE_PHRASE[p.status] || (p.status || "").toLowerCase(), place ? `in ${place}` : ""].filter(Boolean).join(" "),
+  ].filter(Boolean).join(", ");
+  return {
+    url: Share.projectUrl(p.id),
+    title: `${p.name} · ${Share.SITE_NAME}`,
+    text: `${p.name}${what ? `: ${what}` : ""}. Via ${Share.SITE_NAME}`,
+  };
+}
+
+// The filters in words, from the pills: "Riverside, Middle housing".
+function filtersInWords() {
+  const bits = [];
+  if (state.query.trim()) bits.push(`“${state.query.trim()}”`);
+  if (filterOn("stage")) bits.push(stageSummary());
+  PICKERS.filter((pk) => pickerAvailable(pk) && pickerOn(pk)).forEach((pk) =>
+    bits.push(pk.custom ? `within ${radiusLabel(state.near.miles)} of ${state.near.label}` : pickerSummary(pk))
+  );
+  if (state.inViewOnly) bits.push("in one part of the map");
+  return bits.join(", ");
+}
+
+function viewShare() {
+  const list = state.list || [];
+  const homes = unitsOf(list);
+  const tally = `${plural(list.length, "project", "projects")}${homes ? `, ${plural(homes, "home", "homes")}` : ""}`;
+  const filters = filtersInWords();
+  return {
+    url: new URL(urlFromState(), location.href).href,
+    title: Share.SITE_NAME,
+    text: filters
+      ? `Spokane housing projects, ${filters}: ${tally}. Via ${Share.SITE_NAME}`
+      : `Spokane’s housing pipeline: ${tally}. Via ${Share.SITE_NAME}`,
+  };
+}
+
+// Download what the list is showing now: every filter, and "only what's in
+// map view" too.
+function downloadList(anchor) {
+  const list = state.list || [];
+  const filtered = list.length !== state.projects.length;
+  const date = state.builtAt || new Date();
+  const label = `${filtered ? "these " : "all "}${plural(list.length, "project", "projects")}`;
+  Share.menu(anchor, [
+    { id: "csv", label: "Spreadsheet (CSV)", note: label, onSelect: () => {
+        Share.downloadText(Share.projectsCsv(list), Share.filename(filtered ? ["filtered"] : [], "csv", date), "text/csv");
+        Share.toast(`Downloaded ${label}`);
+      } },
+    { id: "geojson", label: "Map data (GeoJSON)", note: "For GIS tools", onSelect: () => {
+        const meta = {
+          dataAsOf: state.builtAt ? state.builtAt.toISOString() : null,
+          view: new URL(urlFromState(), location.href).href,
+          filters: filtersInWords() || "none",
+        };
+        Share.downloadText(Share.projectsGeoJson(list, meta), Share.filename(filtered ? ["filtered"] : [], "geojson", date), "application/geo+json");
+        Share.toast(`Downloaded ${label}`);
+      } },
+  ], { label: "Download" });
 }
 
 function setView(view) {
@@ -1906,7 +1973,8 @@ async function start() {
     state.sort = e.target.value;
     render();
   });
-  document.getElementById("share-view").addEventListener("click", (e) => copyLink(e.currentTarget));
+  document.getElementById("share-view").addEventListener("click", (e) => Share.share(e.currentTarget, viewShare()));
+  document.getElementById("download-list").addEventListener("click", (e) => downloadList(e.currentTarget));
   window.addEventListener("popstate", () => {
     const id = readUrl();
     if (id) select(id, true, true);
