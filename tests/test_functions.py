@@ -152,6 +152,7 @@ check((await send("?project=city-b1", new TextEncoder().encode("<html><script>")
 check((await send("?project=../x", jpeg)).status === 400, "bad project");
 check((await send("?project=p", new Uint8Array(0))).status === 400, "empty");
 check((await send("?project=p", new Uint8Array(25 * 1024 * 1024 + 1).fill(0xff))).status === 413, "over 25 MB");
+{ const big = new Uint8Array(10 * 1024 * 1024 + 1); big.set(new TextEncoder().encode("%PDF-1.7")); check((await send("?project=p&name=big.pdf", big)).status === 413, "PDF over 10 MB refused"); }
 check((await send("?project=p", jpeg, env)).status === 503, "no bucket says so");
 check((await send("?project=p", jpeg, menv, token({ email: "x@y.z" }))).status === 401, "only the editor uploads");
 const n = store.size;

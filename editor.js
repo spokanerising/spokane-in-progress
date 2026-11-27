@@ -181,18 +181,20 @@
   // way up) before they go anywhere; PDFs go as they are. /api/upload stores
   // the file and answers with its address, which goes into the field. Nothing
   // changes on the project until Save.
-  const MAX_BYTES = 25 * 1024 * 1024;
+  // PDFs are link-first: paste the city's or developer's copy when there is
+  // one, and upload only when there isn't. PDF uploads are capped at 10 MB.
+  const MB = 1024 * 1024;
   const LONG_SIDE = 2400;
   const UPLOADS = {
-    imageUrl: { label: "Upload a photo", accept: "image/jpeg,image/png,image/webp,image/heic,image/*" },
-    docUrl: { label: "Upload a PDF", accept: "application/pdf,.pdf" },
+    imageUrl: { label: "Upload a photo…", accept: "image/jpeg,image/png,image/webp,image/heic,image/*", max: 25 * MB },
+    docUrl: { label: "Or upload a PDF (10 MB max)", accept: "application/pdf,.pdf", max: 10 * MB, quiet: true },
   };
   const kb = (n) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
 
   function uploadHtml(key) {
     const u = UPLOADS[key];
     return `<div class="edupload">
-        <label class="btn btn--small"><input type="file" class="visually-hidden" data-upload="${key}" accept="${u.accept}">${esc(u.label)}…</label>
+        <label class="${u.quiet ? "linkbtn" : "btn btn--small"}"><input type="file" class="visually-hidden" data-upload="${key}" accept="${u.accept}">${esc(u.label)}</label>
         <span class="edupload__status" aria-live="polite"></span>
       </div>`;
   }
@@ -233,7 +235,12 @@
         body = s.blob;
         size = `${s.w}×${s.h}, `;
       }
-      if (body.size > MAX_BYTES) throw new Error(`That file is ${kb(body.size)}; the limit is 25 MB.`);
+      const max = UPLOADS[key].max;
+      if (body.size > max) {
+        throw new Error(photo
+          ? `That file is ${kb(body.size)}; the limit is ${kb(max)}.`
+          : `That PDF is ${kb(body.size)}; the limit is ${kb(max)}. Paste a link to it instead, or compress it first.`);
+      }
       status.textContent = `Uploading ${kb(body.size)}…`;
       const res = await fetch(`/api/upload?project=${encodeURIComponent(p.id)}&name=${encodeURIComponent(file.name)}`, {
         method: "POST",
@@ -308,6 +315,7 @@
         ${note && !edited.has(key) ? `<p class="edfield__note">From: ${esc(note)}</p>` : ""}
         ${edited.has(key) ? `<p class="edfield__note">You edited this. <button type="button" class="linkbtn" data-reset="${key}">Reset to automatic</button></p>` : ""}
       </div>`;
+      if (key === "docUrl") html += `<p class="edfield__hint">Link to the PDF where it already lives (the city's permit portal, a design review packet, the developer's site) when you can. Upload only when there's no stable link.</p>`;
       if (key === "imagePermission") html += `<p class="edfield__hint">This also decides whether the PDF's first page is shown as a preview.</p>`;
       if (key === "status") html += `<p class="edfield__hint">The city's permit records can still move the stage forward from what you pick, but never back and never off Stalled.</p>`;
     }

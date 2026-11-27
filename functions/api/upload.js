@@ -8,7 +8,8 @@
 // Setting (Cloudflare Pages > the project > Settings > Bindings):
 //   MEDIA   an R2 bucket binding (the bucket is sip-media)
 
-const MAX_BYTES = 25 * 1024 * 1024;
+const MAX_BYTES = 25 * 1024 * 1024;     // photos (already shrunk in the browser)
+const MAX_PDF_BYTES = 10 * 1024 * 1024; // PDFs: link first, upload only small ones
 const ID = /^[A-Za-z0-9._-]{1,120}$/;
 const TYPES = {
   jpg: { type: "image/jpeg", test: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff },
@@ -41,6 +42,9 @@ export async function onRequestPost({ request, env, data }) {
   // What the file really is, from its first bytes, not its name.
   const ext = Object.keys(TYPES).find((k) => TYPES[k].test(bytes));
   if (!ext) return json({ error: "Only JPEG, PNG or WebP photos and PDFs can be uploaded." }, 415);
+  if (ext === "pdf" && bytes.length > MAX_PDF_BYTES) {
+    return json({ error: "That PDF is over 10 MB. Paste a link to it instead, or compress it first." }, 413);
+  }
 
   const original = (url.searchParams.get("name") || "").replace(/[^\w .()-]/g, "").slice(0, 120);
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");

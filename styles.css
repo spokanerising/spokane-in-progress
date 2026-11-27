@@ -2407,6 +2407,7 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
 .admin p.muted { color: var(--muted); font-size: 14px; }
 
 /* Editor uploads (phase 2). */
+.edupload label.linkbtn { position: relative; font-size: 13px; }
 .edupload { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 2px; }
 .editor .btn--small { position: relative; display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; font-size: 12.5px; }
 .editor .btn--small:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
