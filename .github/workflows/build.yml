@@ -4,10 +4,12 @@ on:
   workflow_dispatch:        # the "Run workflow" button
   schedule:
     - cron: "0 12 * * *"    # every day, about 5am Pacific
-  push:                     # a weekly permit report was uploaded
-    branches: [main]
+  push:                     # a permit report was uploaded, or a project was
+    branches: [main]        # added or edited (data/projects/, data/edits/)
     paths:
       - "permit-reports/**"
+      - "data/projects/**"
+      - "data/edits/**"
 
 permissions:
   contents: write

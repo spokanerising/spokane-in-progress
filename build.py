@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
-Reads your Google Sheet, checks every row, and writes projects.json.
+Reads the hand-curated projects in data/projects/ and the city's permit
+records, applies your edits from data/edits/, checks everything, and writes
+projects.json.
+
+The hand-curated projects lived in a Google Sheet until Nov. 2026; each row is
+now a file in data/projects/ (see tools/import_sheet.py). Edits made on the
+site land in data/edits/ and are applied last (see edits.py).
 
 Run it with:   python3 build.py
 
@@ -8,7 +14,6 @@ Uses only the Python standard library. Nothing to install.
 """
 
 import csv
-import io
 import json
 import os
 import re
@@ -19,6 +24,7 @@ from datetime import datetime, timezone
 
 import city_records as cr
 import display_tidy
+import edits
 import housing_types
 import boundaries
 import site_facts
@@ -27,12 +33,8 @@ import milestones
 import pdf_thumbs
 import pipeline_history
 
-# ---------------------------------------------------------------------------
-# SETTING: paste your published Google Sheet CSV link between the quotes.
-# In Sheets: File > Share > Publish to web > pick the sheet > choose CSV.
-# Leave it empty to build from data/projects.sample.csv instead.
-# ---------------------------------------------------------------------------
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVMhbLFK8Gl1Uc3siqKq6kim0RT8JTYTmIAR5IR3D9uJzNF3qoRLPUdhwTixHpoGLQ2cZIm3aiyg7r/pub?gid=883083305&single=true&output=csv"
+# Hand-curated projects, one JSON file each (formerly rows of the Google Sheet).
+PROJECTS_DIR = os.path.join("data", "projects")
 
 # The single source of truth for stages. The website reads this list out of
 # projects.json, so changing a name or colour here changes it everywhere.
@@ -804,23 +806,40 @@ def monthly_only_projects(monthly, used, records, projects, history):
     return out, warnings
 
 
-def load_rows():
-    if SHEET_CSV_URL:
-        print("Reading the Google Sheet...")
-        try:
-            with urllib.request.urlopen(SHEET_CSV_URL, timeout=30) as response:
-                text = response.read().decode("utf-8")
-        except Exception as error:
-            sys.exit(f"The sheet did not load: {error}\nCheck that it is published to the web as CSV.")
-    else:
-        fallback = os.path.join("data", "projects.sample.csv")
-        if not os.path.exists(fallback):
-            sys.exit("No sheet link set and data/projects.sample.csv is missing.")
-        print("No sheet link set yet - building from data/projects.sample.csv.")
-        with open(fallback, encoding="utf-8") as handle:
-            text = handle.read()
+def as_text(value):
+    """Project files hold the sheet's columns. The build reads them as text,
+    the way it read the sheet, so numbers and true/false work either way."""
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        return "TRUE" if value else "FALSE"
+    if isinstance(value, list):
+        return "; ".join(as_text(v) for v in value)
+    return str(value)
 
-    return list(csv.DictReader(io.StringIO(text)))
+
+def load_rows():
+    """Every file in data/projects/, in the sheet's old row order (new
+    projects, which have no order, come after, by file name)."""
+    if not os.path.isdir(PROJECTS_DIR):
+        sys.exit(f"{PROJECTS_DIR}/ is missing. Run tools/import_sheet.py first.")
+    rows = []
+    for name in sorted(os.listdir(PROJECTS_DIR)):
+        if not name.endswith(".json"):
+            continue
+        path = os.path.join(PROJECTS_DIR, name)
+        try:
+            with open(path, encoding="utf-8") as handle:
+                data = json.load(handle)
+        except ValueError as error:
+            sys.exit(f"{path} is not valid JSON: {error}")
+        order = data.pop("order", None)
+        row = {k: as_text(v) for k, v in data.items()}
+        row["_file"] = name
+        rows.append((order if isinstance(order, (int, float)) else float("inf"), name, row))
+    rows.sort(key=lambda r: (r[0], r[1]))
+    print(f"Read {len(rows)} hand-curated project file(s) from {PROJECTS_DIR}/.")
+    return [r[2] for r in rows]
 
 
 def field(label, value, kind="text"):
@@ -876,7 +895,7 @@ def main():
     for offset, row in enumerate(rows):
         row = {(k or "").strip(): (v or "").strip() for k, v in row.items()}
         line = offset + 2
-        label = row.get("name") or f"row {line}"
+        label = row.get("name") or row.get("_file") or f"row {line}"
 
         if not truthy(row.get("published")):
             continue
@@ -1100,6 +1119,7 @@ def main():
                 "statusUpdated": (since_for(history, project_id, stage, row.get("status_updated", ""))
                                   if stage_source != "sheet" else row.get("status_updated", "")),
                 "stageSource": stage_source,
+                "_cityStage": city_stage,  # edits.py: the city's own stage (removed before writing)
                 "lastVerified": row.get("last_verified", ""),
                 "projectType": row.get("project_type", ""),
                 "units": units,
@@ -1137,6 +1157,12 @@ def main():
     extra, extra_warnings = monthly_only_projects(monthly, monthly_used, records, projects, history)
     warnings.extend(extra_warnings)
     projects.extend(extra)
+
+    # Your edits from the site (data/edits/), applied after everything above so
+    # the daily rebuild can't undo them, and before the steps below so zoning,
+    # housing type, density and the pipeline counts all use the edited values.
+    projects, edit_warnings = edits.apply(projects, normalise_stage, stage_rank)
+    warnings.extend(edit_warnings)
     stage_history = history  # milestones.py reads it after the last pass
     if extra:
         print(f"Published {len(extra)} project(s) known only from the city's monthly report.")

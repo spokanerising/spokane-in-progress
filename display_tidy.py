@@ -115,9 +115,14 @@ def tidy_fields(fields):
 
 def polish(projects):
     for p in projects:
-        p["address"] = tidy_address(p.get("address"))
+        # Text you typed in an edit is left exactly as typed.
+        edited = set(p.get("edited") or [])
+        if "address" not in edited:
+            p["address"] = tidy_address(p.get("address"))
         p["fields"] = tidy_fields(p.get("fields"))
         if p.get("autoAdded"):
-            p["name"] = tidy_name(p.get("name"), p["address"], p.get("units"))
-            p["description"] = tidy_description(p.get("description"))
+            if "name" not in edited:
+                p["name"] = tidy_name(p.get("name"), p["address"], p.get("units"))
+            if "description" not in edited:
+                p["description"] = tidy_description(p.get("description"))
     return projects
