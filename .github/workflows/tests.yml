@@ -41,7 +41,7 @@ jobs:
 
       - name: Install the test browser
         run: |
-          pip install --quiet playwright
+          pip install --quiet playwright pillow
           python -m playwright install --with-deps chromium
 
       - name: Run the tests

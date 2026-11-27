@@ -143,9 +143,13 @@
 
     <!-- Base map switcher. Sits over the canvas rather than in the header so it
          stays with the map when the narrow layout tabs the panel away. -->
-    <div class="basemap" id="basemap" role="group" aria-label="Base map">
-      <button type="button" data-basemap="map" aria-pressed="true">Map</button>
-      <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
+    <div class="maptools">
+      <div class="basemap" id="basemap" role="group" aria-label="Base map">
+        <button type="button" data-basemap="map" aria-pressed="true">Map</button>
+        <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
+      </div>
+      <!-- Saves the map as a picture (app.js, "Saving the map as an image"). -->
+      <button type="button" class="mapbtn" id="save-map" aria-haspopup="menu" aria-expanded="false">Save image</button>
     </div>
 
     <!-- Size key: circle area is proportional to housing units. Redrawn on

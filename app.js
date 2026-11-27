@@ -1827,6 +1827,202 @@ function addOverlayLayers() {
     paint: { "circle-radius": 4, "circle-color": "#275b84", "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } });
 }
 
+// ---- saving the map as an image ------------------------------------------------
+//
+// "Save image" offers the current view or three sizes made for social posts.
+// The picture is drawn by a hidden second map of exactly that size (the
+// visible map's WebGL drawing is cleared after every frame, and resizing it
+// would make the page jump), using the visible map's style: same dots,
+// filters, outlines and Near circle. Always the plain map: Esri's terms for
+// saving satellite imagery haven't been checked. Then a title band, a key
+// and the required map credits are drawn around it, and it's saved as a
+// JPEG (on phones, offered to the share sheet so it can go to Photos).
+
+const EXPORT_SIZES = [
+  { id: "view", label: "Current view", note: "The map as you see it" },
+  { id: "square", label: "Square", note: "1080 × 1080, for Instagram", w: 1080, h: 1080 },
+  { id: "landscape", label: "Landscape", note: "1200 × 630, for links and X", w: 1200, h: 630 },
+  { id: "portrait", label: "Portrait", note: "1080 × 1350, for Instagram", w: 1080, h: 1350 },
+];
+
+// Required credits for the base map (OpenFreeMap's tiles, built from
+// OpenMapTiles and OpenStreetMap data).
+const MAP_CREDIT = "Map: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors";
+
+// Room the title band and the key take, in output pixels per 1,000 pixels of
+// width; the hidden map leaves that much padding so no dot hides under them.
+const BAND = { top: 112, bottom: 78 };
+
+function waitForIdle(m, ms = 9000) {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => { if (!done) { done = true; resolve(); } };
+    m.once("idle", finish);
+    setTimeout(finish, ms); // a tile that never arrives shouldn't block the save
+  });
+}
+
+// Draws the visible map's style into a hidden map of cssW x cssH at the given
+// pixel ratio, covering the visible map's view. Returns its canvas, the area
+// it shows, and a function to clean up.
+async function renderMapCopy(cssW, cssH, ratio, pad) {
+  const box = document.createElement("div");
+  box.style.cssText = `position:fixed;left:-10000px;top:0;width:${cssW}px;height:${cssH}px;`;
+  document.body.appendChild(box);
+  const style = map.getStyle();
+  style.layers = style.layers.map((l) =>
+    l.id === "satellite" ? { ...l, layout: { ...(l.layout || {}), visibility: "none" } } : l
+  );
+  const copy = new maplibregl.Map({
+    container: box, style, interactive: false, attributionControl: false,
+    preserveDrawingBuffer: true, pixelRatio: ratio, fadeDuration: 0,
+    bounds: map.getBounds(), fitBoundsOptions: { padding: pad },
+  });
+  await new Promise((resolve, reject) => {
+    copy.once("load", resolve);
+    setTimeout(() => reject(new Error("the map copy didn't load")), 15000);
+  });
+  // Plain-map label halos, in case the visible map is on satellite.
+  labelLayers.forEach((layer) => {
+    try {
+      copy.setPaintProperty(layer.id, "text-halo-width", layer.haloWidth);
+      copy.setPaintProperty(layer.id, "text-halo-color", layer.haloColor);
+    } catch (error) { /* not every label has a halo */ }
+  });
+  if (state.selected && copy.getSource("projects")) {
+    copy.setFeatureState({ source: "projects", id: state.selected }, { selected: true });
+  }
+  await waitForIdle(copy);
+  return { canvas: copy.getCanvas(), bounds: copy.getBounds(), done: () => { copy.remove(); box.remove(); } };
+}
+
+function fitText(ctx, text, maxW) {
+  if (ctx.measureText(text).width <= maxW) return text;
+  let t = text;
+  while (t.length > 1 && ctx.measureText(`${t}…`).width > maxW) t = t.slice(0, -1);
+  return `${t.trimEnd()}…`;
+}
+
+// Title band, key and credits around the map picture.
+function composeMapImage(mapCanvas, outW, outH, inView) {
+  const out = document.createElement("canvas");
+  out.width = outW;
+  out.height = outH;
+  const ctx = out.getContext("2d");
+  const u = outW / 1000; // layout unit: everything scales with the width
+  ctx.fillStyle = "#faf8f3";
+  ctx.fillRect(0, 0, outW, outH);
+  ctx.drawImage(mapCanvas, 0, 0, outW, outH);
+
+  const top = BAND.top * u, bottom = BAND.bottom * u, side = 32 * u;
+  ctx.fillStyle = "rgba(250, 248, 243, 0.95)";
+  ctx.fillRect(0, 0, outW, top);
+  ctx.fillRect(0, outH - bottom, outW, bottom);
+  ctx.fillStyle = "#121212";
+  ctx.fillRect(0, top - Math.max(1, u), outW, Math.max(1, u));
+  ctx.fillRect(0, outH - bottom, outW, Math.max(1, u));
+
+  // Title: "Spokane in Progress", then what's shown.
+  ctx.textBaseline = "alphabetic";
+  ctx.font = `600 ${34 * u}px Newsreader, Georgia, serif`;
+  ctx.fillText("Spokane ", side, 48 * u);
+  const w1 = ctx.measureText("Spokane ").width;
+  ctx.font = `italic 500 ${34 * u}px Newsreader, Georgia, serif`;
+  ctx.fillText("in Progress", side + w1, 48 * u);
+
+  const homes = unitsOf(inView);
+  const tally = `${plural(inView.length, "housing project", "housing projects")}${homes ? `, at least ${plural(homes, "home", "homes")}` : ""}`;
+  const filters = filtersInWords();
+  const line = filters ? `${filters[0].toUpperCase()}${filters.slice(1)}: ${tally}` : `${tally[0].toUpperCase()}${tally.slice(1)} on this map`;
+  ctx.font = `500 ${21 * u}px "Libre Franklin", Arial, sans-serif`;
+  ctx.fillStyle = "#3a3936";
+  ctx.fillText(fitText(ctx, line, outW - 2 * side), side, 84 * u);
+
+  // Key: the stages on this map.
+  const present = STAGES.filter((s) => inView.some((p) => p.status === s.name));
+  ctx.font = `500 ${15 * u}px "Libre Franklin", Arial, sans-serif`;
+  let x = side;
+  const ky = outH - bottom + 28 * u;
+  present.forEach((s) => {
+    const label = s.name;
+    const w = 14 * u + ctx.measureText(label).width + 18 * u;
+    if (x + w > outW - side) return;
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.arc(x + 5 * u, ky - 5 * u, 5 * u, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = "#121212";
+    ctx.fillText(label, x + 14 * u, ky);
+    x += w;
+  });
+
+  // Credits: the site and data date, then the map's required credit.
+  ctx.fillStyle = "#6b6964";
+  ctx.font = `500 ${12.5 * u}px "Libre Franklin", Arial, sans-serif`;
+  ctx.fillText(fitText(ctx, `${Share.creditLine(state.builtAt)} · Circle size shows homes`, outW - 2 * side), side, outH - 30 * u);
+  ctx.fillText(fitText(ctx, MAP_CREDIT, outW - 2 * side), side, outH - 13 * u);
+  return out;
+}
+
+async function saveMapImage(size, button) {
+  // Only the style needs to be in; the copy waits for its own tiles.
+  if (!map || !map.isStyleLoaded() || !map.getSource("projects")) {
+    return Share.toast("The map is still loading. Try again in a moment.");
+  }
+  button.setAttribute("aria-busy", "true");
+  const label = button.textContent;
+  button.textContent = "Saving…";
+  let copy = null;
+  try {
+    await Share.fontsReady();
+    const container = map.getContainer();
+    const outW = size.w || Math.round(container.clientWidth * Math.min(2, window.devicePixelRatio || 1));
+    const outH = size.h || Math.round(container.clientHeight * Math.min(2, window.devicePixelRatio || 1));
+    // Draw the map at a size where labels read naturally: a 1080-wide image
+    // gets a ~540-wide map at twice the detail.
+    const ratio = size.w ? 2 : Math.min(2, window.devicePixelRatio || 1);
+    const cssW = Math.round(outW / ratio), cssH = Math.round(outH / ratio);
+    const pad = { top: (BAND.top * outW / 1000) / ratio + 8, bottom: (BAND.bottom * outW / 1000) / ratio + 8, left: 12, right: 12 };
+    copy = await renderMapCopy(cssW, cssH, ratio, pad);
+    const inView = (state.onMap || []).filter((p) => Number.isFinite(p.lng) && copy.bounds.contains([p.lng, p.lat]));
+    const image = composeMapImage(copy.canvas, outW, outH, inView);
+    const name = Share.filename(["map", size.id === "view" ? "" : size.id], "jpg", state.builtAt || new Date());
+    const blob = await new Promise((resolve, reject) =>
+      image.toBlob((b) => (b ? resolve(b) : reject(new Error("no image"))), "image/jpeg", 0.92)
+    );
+    // Phones: the share sheet, which can save to Photos. Elsewhere: a download.
+    const file = new File([blob], name, { type: "image/jpeg" });
+    if (Share.prefersNativeShare() && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: Share.SITE_NAME });
+        return;
+      } catch (error) {
+        if (error && error.name === "AbortError") return;
+      }
+    }
+    Share.downloadBlob(blob, name);
+    Share.toast("Map image saved");
+  } catch (error) {
+    console.warn(error);
+    Share.toast("Couldn’t save the map image. Please try again.");
+  } finally {
+    if (copy) copy.done();
+    button.removeAttribute("aria-busy");
+    button.textContent = label;
+  }
+}
+
+function wireSaveMap() {
+  const button = document.getElementById("save-map");
+  if (!button) return;
+  button.addEventListener("click", () => {
+    if (button.getAttribute("aria-busy") === "true") return;
+    Share.menu(button, EXPORT_SIZES.map((s) => ({
+      id: s.id, label: s.label, note: s.note, onSelect: () => saveMapImage(s, button),
+    })), { label: "Save the map as an image" });
+  });
+}
+
 function startMap() {
   map = new maplibregl.Map({
     container: "map",
@@ -1999,6 +2195,7 @@ async function start() {
   wireNear();
   wirePills();
   wireChips();
+  wireSaveMap();
   document.getElementById("inview-only").addEventListener("change", (e) => {
     setInViewOnly(e.target.checked);
     render();

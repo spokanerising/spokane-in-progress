@@ -309,11 +309,34 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
 /* Base map switcher: map vs satellite, over the top-left of the canvas.
    MapLibre's own controls own the top-right corner. */
-.basemap {
+/* Top left of the map: the base map switch and "Save image". */
+.maptools {
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 2;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.mapbtn {
+  min-height: 30px;
+  padding: 0 12px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  font: 500 13px var(--sans);
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.mapbtn:hover, .mapbtn[aria-expanded="true"] { background: var(--paper-2); }
+.mapbtn[aria-busy="true"] { color: var(--muted); cursor: progress; }
+@media (max-width: 860px) { .mapbtn { min-height: 36px; } }
+
+.basemap {
   display: flex;
   background: var(--paper);
   border: 1px solid var(--ink);
