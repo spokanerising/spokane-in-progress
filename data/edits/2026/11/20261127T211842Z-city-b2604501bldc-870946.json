@@ -1,0 +1,18 @@
+{
+  "project": "city-b2604501bldc",
+  "permits": [
+    "B2604501BLDC",
+    "B2604503BLDC",
+    "B2610946GRAD"
+  ],
+  "at": "2026-11-27T21:18:42Z",
+  "by": "spokanerising@gmail.com",
+  "set": {
+    "status": "Under Construction"
+  },
+  "was": {
+    "status": "Approved"
+  },
+  "unset": [],
+  "note": ""
+}
