@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T04:25:59.519661+00:00",
+  "builtAt": "2026-11-27T04:28:25.381547+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -100,6 +100,9 @@
       ],
       "acres": 0.35,
       "homesPerAcre": 274.3,
+      "zone": "DTC",
+      "zoneBase": "DTC",
+      "zoneGroup": "Downtown",
       "transitMiles": 0.02,
       "transitStop": "Plaza Bay 13",
       "transitRoutes": [
@@ -2704,6 +2707,10 @@
       ],
       "acres": 0.28,
       "homesPerAcre": 28.6,
+      "zone": "CC2",
+      "zoneBase": "CC2",
+      "zoneGroup": "Centers & Corridors",
+      "zoneName": "CC2-EC",
       "transitMiles": 0.08,
       "transitStop": "Sprague @ Helena",
       "transitRoutes": [
@@ -3262,6 +3269,9 @@
       "parcels": [
         "35192.1923"
       ],
+      "zone": "DTG",
+      "zoneBase": "DTG",
+      "zoneGroup": "Downtown",
       "transitMiles": 0.16,
       "transitStop": "1st @ Monroe",
       "transitRoutes": [
@@ -6794,6 +6804,9 @@
       ],
       "acres": 0.18,
       "homesPerAcre": 222.2,
+      "zone": "DTG",
+      "zoneBase": "DTG",
+      "zoneGroup": "Downtown",
       "transitMiles": 0.1,
       "transitStop": "1st @ Adams",
       "transitRoutes": [
@@ -7029,6 +7042,10 @@
         "36343.2918"
       ],
       "acres": 0.4,
+      "zone": "CC2",
+      "zoneBase": "CC2",
+      "zoneGroup": "Centers & Corridors",
+      "zoneName": "CC2-DC",
       "transitMiles": 0.02,
       "transitStop": "Wellesley @ Haven",
       "transitRoutes": [
@@ -7869,6 +7886,9 @@
         "35191.3147"
       ],
       "acres": 0.19,
+      "zone": "DTS",
+      "zoneBase": "DTS",
+      "zoneGroup": "Downtown",
       "transitMiles": 0.14,
       "transitStop": "Stevens @ 4th",
       "transitRoutes": [
@@ -8750,6 +8770,10 @@
         "25134.0201"
       ],
       "acres": 0.15,
+      "zone": "CC1",
+      "zoneBase": "CC1",
+      "zoneGroup": "Centers & Corridors",
+      "zoneName": "CC1-NC",
       "transitMiles": 0.02,
       "transitStop": "Broadway @ Walnut",
       "transitRoutes": [
@@ -9187,6 +9211,10 @@
       ],
       "acres": 0.48,
       "homesPerAcre": 62.5,
+      "zone": "CC2",
+      "zoneBase": "CC2",
+      "zoneGroup": "Centers & Corridors",
+      "zoneName": "CC2-DC",
       "transitMiles": 0.02,
       "transitStop": "Wellesley @ Haven",
       "transitRoutes": [
@@ -9290,6 +9318,9 @@
       ],
       "acres": 0.7,
       "homesPerAcre": 91.4,
+      "zone": "DTU",
+      "zoneBase": "DTU",
+      "zoneGroup": "Downtown",
       "transitMiles": 0.19,
       "transitStop": "Spokane Falls @ Sherman",
       "transitRoutes": [

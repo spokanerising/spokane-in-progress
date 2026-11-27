@@ -1,0 +1,7 @@
+{
+  "descField": "ZoneLabel",
+  "field": "ZoneCode",
+  "found": "2026-11-27",
+  "layer": "Planning/PedestrianPlan / City Zoning",
+  "url": "https://services.spokanegis.org/arcgis/rest/services/Planning/PedestrianPlan/MapServer/24/query"
+}
