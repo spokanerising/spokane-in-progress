@@ -285,9 +285,36 @@ CODE_FIELD = re.compile(r"^(zone|zoning|zone_?code|zoning_?code|zone_?class|zone
 DESC_FIELD = re.compile(r"desc|label|long|full", re.I)
 
 
-def discover_zoning(get=get_json):
-    """Finds the city's zoning layer by name. Returns {url, field, descField,
-    layer} or None."""
+# A known spot to check a candidate layer against: Riverside & Post, downtown.
+# The real zoning layer says a downtown zone (DTC, DTG...) here; a layer that
+# only maps one district, or a plan map, says nothing or something else.
+CHECK_POINT = (47.65755, -117.42330)
+
+
+def _layer_score(service_name, layer_name):
+    name = layer_name.strip().lower()
+    score = 0
+    if re.fullmatch(r"(city\s+(of\s+spokane\s+)?)?zoning(\s+(districts?|map|boundaries))?", name):
+        score += 100
+    elif "zoning" in name:
+        score += 50
+    else:
+        score += 10
+    if re.search(r"zoning", service_name, re.I):
+        score += 30
+    if re.search(r"plan|public", service_name, re.I):
+        score += 5
+    if re.search(r"pedestrian|retail|plan\b|proposed|draft|old|former|county", name):
+        score -= 40
+    return score
+
+
+def discover_zoning(get=get_json, check=None):
+    """Finds the city's zoning layer. Every polygon layer with "zon" in its
+    name is a candidate; the best-named ones are tried first, and the first
+    that reports a downtown zone at CHECK_POINT wins. Returns {url, field,
+    descField, layer} or None. Prints what it considered, for the build log."""
+    check = check or (lambda source: ask_zone(source, *CHECK_POINT, get=get))
     root = get(CITY_GIS, {"f": "json"})
     services = list(root.get("services") or [])
     for folder in root.get("folders") or []:
@@ -295,15 +322,10 @@ def discover_zoning(get=get_json):
             services += get(f"{CITY_GIS}/{folder}", {"f": "json"}).get("services") or []
         except Exception:
             continue
-    services = [s for s in services if s.get("type") in ("MapServer", "FeatureServer")]
+    services = [s for s in services if s.get("type") in ("MapServer", "FeatureServer")][:200]
 
-    def rank(s):
-        name = s.get("name", "")
-        return (0 if re.search(r"zon", name, re.I) else 1 if re.search(r"plan|landuse|public", name, re.I) else 2, name)
-
-    for service in sorted(services, key=rank)[:25]:
-        if rank(service)[0] == 2:
-            break
+    candidates = []
+    for service in services:
         try:
             layers = get(f"{CITY_GIS}/{service['name']}/{service['type']}/layers", {"f": "json"}).get("layers") or []
         except Exception:
@@ -321,14 +343,30 @@ def discover_zoning(get=get_json):
             if not code:
                 continue
             desc = next((f["name"] for f in fields if f["name"] != code and DESC_FIELD.search(f["name"])), None)
-            return {
+            candidates.append((_layer_score(service["name"], name), {
                 "url": f"{CITY_GIS}/{service['name']}/{service['type']}/{layer['id']}/query",
                 "field": code,
                 "descField": desc,
                 "layer": f"{service['name']} / {name}",
                 "found": today().isoformat(),
-            }
-    return None
+            }))
+
+    candidates.sort(key=lambda c: -c[0])
+    print(f"Zoning: {len(candidates)} candidate layer(s): "
+          + "; ".join(f"{c['layer']} [{c['field']}]" for _, c in candidates[:12]))
+    fallback = None
+    for _, source in candidates[:15]:
+        try:
+            got = (check(source) or {}).get("zone", "")
+        except Exception as error:
+            print(f"Zoning:   {source['layer']}: no answer ({error})")
+            continue
+        print(f"Zoning:   {source['layer']} says {got or 'nothing'} at Riverside & Post")
+        if zone_base(got).startswith("DT"):
+            return source
+        if got and fallback is None and zone_group(got) != "Other":
+            fallback = source
+    return fallback
 
 
 def ask_zone(source, lat, lng, get=get_json):
@@ -393,6 +431,17 @@ def fill_zoning(projects, discover=discover_zoning, ask=ask_zone, source=None, c
             p["zoneName"] = name
     if changed:
         save(ZONING_CACHE_PATH, cache)
+    # A layer that answers nothing for every project is the wrong layer:
+    # forget it so the next build looks again.
+    looked = [v for v in points.values() if v is not None]
+    if source and len(looked) >= 10 and not any(v.get("zone") for v in looked):
+        for path in (ZONING_SOURCE_PATH, ZONING_CACHE_PATH):
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+        warnings.append(f"Zoning: {source.get('layer')} gave no zone for any project; "
+                        "dropped it, and the next build will look for the zoning layer again.")
     return warnings
 
 
