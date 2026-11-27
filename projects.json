@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-26T22:37:07.578737+00:00",
+  "builtAt": "2026-11-27T04:25:59.519661+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -38,7 +38,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-11-23",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Conversion or addition",
       "units": 96,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -91,10 +91,20 @@
         }
       ],
       "buildingType": "Conversion or addition",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Riverside",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35183.0507"
+      ],
+      "acres": 0.35,
+      "homesPerAcre": 274.3,
+      "transitMiles": 0.02,
+      "transitStop": "Plaza Bay 13",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2024-03-12",
@@ -120,7 +130,7 @@
       "status": "Applied",
       "statusUpdated": "2026-11-18",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Fiveplex or sixplex",
       "units": 6,
       "unitsSource": "permit description",
@@ -189,10 +199,20 @@
         }
       ],
       "buildingType": "Fiveplex or sixplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Cliff-Cannon",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25244.4303"
+      ],
+      "acres": 0.33,
+      "homesPerAcre": 18.2,
+      "transitMiles": 0.47,
+      "transitStop": "Cannon @ 4th",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-02-11",
@@ -202,95 +222,6 @@
         {
           "date": "2026-11-18",
           "label": "Building permit filed",
-          "estimated": false
-        }
-      ],
-      "stageSinceExact": true
-    },
-    {
-      "id": "city-b2616976bldr",
-      "name": "4332 W Indian Trail Rd Duplex",
-      "address": "4332 W Indian Trail Rd",
-      "neighborhood": "Balboa/South Indian Trail",
-      "parcelId": "26266.1519",
-      "lat": 47.7294331676296,
-      "lng": -117.47513959244763,
-      "status": "Approved",
-      "statusUpdated": "2026-11-17",
-      "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
-      "projectType": "Duplex",
-      "units": 2,
-      "unitsSource": "city weekly permit report",
-      "stories": null,
-      "description": "New 8 Bedroom Duplex with garage, finished basement, and air conditioning.",
-      "permitNumbers": [
-        "B2616976BLDR"
-      ],
-      "permits": [
-        {
-          "id": "B2616976BLDR",
-          "type": "Residential Building Permit",
-          "status": "Issued",
-          "opened": "2026-10-22",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01199&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [
-        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
-      ],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Approved",
-          "kind": "text"
-        },
-        {
-          "kind": "text",
-          "label": "Building type",
-          "value": "Duplex (middle housing)"
-        },
-        {
-          "label": "Housing units",
-          "value": "2",
-          "kind": "text"
-        },
-        {
-          "label": "Estimated cost",
-          "value": "$1,196,488",
-          "kind": "text"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01199&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records and weekly permit report",
-          "kind": "text"
-        }
-      ],
-      "buildingType": "Duplex",
-      "middleHousing": true,
-      "neighborhoodCouncil": "Balboa/South Indian Trail",
-      "councilDistrict": 3,
-      "buildingTypeInferred": true,
-      "milestones": [
-        {
-          "date": "2026-10-22",
-          "label": "Building permit filed",
-          "estimated": false
-        },
-        {
-          "date": "2026-11-17",
-          "label": "Building permit issued",
           "estimated": false
         }
       ],
@@ -307,7 +238,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-11-17",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -371,10 +302,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Nevada Heights",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36322.1018"
+      ],
+      "acres": 0.17,
+      "transitMiles": 0.09,
+      "transitStop": "Division @ Dalke",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2025-10-30",
@@ -395,6 +335,105 @@
       "stageSinceExact": false
     },
     {
+      "id": "city-b2616976bldr",
+      "name": "4332 W Indian Trail Rd Duplex",
+      "address": "4332 W Indian Trail Rd",
+      "neighborhood": "Balboa/South Indian Trail",
+      "parcelId": "26266.1519",
+      "lat": 47.7294331676296,
+      "lng": -117.47513959244763,
+      "status": "Approved",
+      "statusUpdated": "2026-11-17",
+      "stageSource": "city permit records: building permit issued",
+      "lastVerified": "2026-11-27",
+      "projectType": "Duplex",
+      "units": 2,
+      "unitsSource": "city weekly permit report",
+      "stories": null,
+      "description": "New 8 Bedroom Duplex with garage, finished basement, and air conditioning.",
+      "permitNumbers": [
+        "B2616976BLDR"
+      ],
+      "permits": [
+        {
+          "id": "B2616976BLDR",
+          "type": "Residential Building Permit",
+          "status": "Issued",
+          "opened": "2026-10-22",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01199&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [
+        "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-11-23.pdf"
+      ],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Duplex (middle housing)"
+        },
+        {
+          "label": "Housing units",
+          "value": "2",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,196,488",
+          "kind": "text"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BRN&capID2=00000&capID3=01199&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records and weekly permit report",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Duplex",
+      "buildingTypeInferred": true,
+      "middleHousing": true,
+      "neighborhoodCouncil": "Balboa/South Indian Trail",
+      "councilDistrict": 3,
+      "parcels": [
+        "26266.1519"
+      ],
+      "acres": 0.38,
+      "homesPerAcre": 5.3,
+      "transitMiles": 1.98,
+      "transitStop": "5 Mile Park & Ride",
+      "transitRoutes": [
+        "4"
+      ],
+      "milestones": [
+        {
+          "date": "2026-10-22",
+          "label": "Building permit filed",
+          "estimated": false
+        },
+        {
+          "date": "2026-11-17",
+          "label": "Building permit issued",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
+    },
+    {
       "id": "city-b2604501bldc",
       "name": "Bethany Apartments",
       "address": "3203 E 27th Ave & 3215 E 27th Ave",
@@ -405,7 +444,7 @@
       "status": "Approved",
       "statusUpdated": "2026-11-16",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 22,
       "unitsSource": "city weekly permit report",
@@ -486,10 +525,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Lincoln Heights",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35273.0618"
+      ],
+      "acres": 1.43,
+      "homesPerAcre": 15.4,
+      "transitMiles": 0.56,
+      "transitStop": "Southeast Blvd @ Regal",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-03-31",
@@ -515,7 +564,7 @@
       "status": "Applied",
       "statusUpdated": "2026-11-12",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -571,10 +620,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Browne's Addition",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25242.0306"
+      ],
+      "acres": 0.26,
+      "transitMiles": 0.04,
+      "transitStop": "Spruce @ 2nd",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-04-08",
@@ -600,7 +658,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-11-06",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -653,10 +711,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Five Mile Prairie",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "26244.4414"
+      ],
+      "acres": 0.19,
+      "homesPerAcre": 10.5,
+      "transitMiles": 1.26,
+      "transitStop": "5 Mile Park & Ride",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-06-23",
@@ -682,7 +750,7 @@
       "status": "Applied",
       "statusUpdated": "2026-11-05",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "House + ADU",
       "units": 2,
       "unitsSource": "permit description",
@@ -735,10 +803,20 @@
         }
       ],
       "buildingType": "House + ADU",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Latah/Hangman",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "34062.2405"
+      ],
+      "acres": 0.54,
+      "homesPerAcre": 3.7,
+      "transitMiles": 1.98,
+      "transitStop": "29th @ Grand",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-11-05",
@@ -759,7 +837,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-11-05",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
@@ -802,10 +880,19 @@
         }
       ],
       "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Chief Garry Park",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35162.3502"
+      ],
+      "acres": 0.13,
+      "transitMiles": 0.38,
+      "transitStop": "Mission @ Perry",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-11-05",
@@ -826,7 +913,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-10-26",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Fiveplex or sixplex",
       "units": 6,
       "unitsSource": "permit description",
@@ -879,10 +966,20 @@
         }
       ],
       "buildingType": "Fiveplex or sixplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Bemiss",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35091.0502"
+      ],
+      "acres": 0.16,
+      "homesPerAcre": 37.5,
+      "transitMiles": 0.4,
+      "transitStop": "Market @ Euclid",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2026-10-26",
@@ -903,7 +1000,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-10-15",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -951,10 +1048,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35201.5323"
+      ],
+      "acres": 0.25,
+      "transitMiles": 0.45,
+      "transitStop": "Sprague @ Pride Prep",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2026-10-15",
@@ -975,7 +1081,7 @@
       "status": "Applied",
       "statusUpdated": "2026-10-01",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -1028,10 +1134,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Audubon/Downriver",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25013.3010"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 13.3,
+      "transitMiles": 0.08,
+      "transitStop": "Alberta @ Courtland",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2026-10-01",
@@ -1052,7 +1168,7 @@
       "status": "Applied",
       "statusUpdated": "2026-09-28",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
@@ -1121,10 +1237,20 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Lincoln Heights",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35223.3901"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 26.7,
+      "transitMiles": 0.99,
+      "transitStop": "Sprague @ Haven",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-09-11",
@@ -1150,7 +1276,7 @@
       "status": "Applied",
       "statusUpdated": "2026-09-28",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -1214,10 +1340,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "",
       "councilDistrict": null,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35212.2920"
+      ],
+      "acres": 0.65,
+      "transitMiles": 0.76,
+      "transitStop": "57th @ Regal",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-09-28",
@@ -1238,7 +1373,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-09-25",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
@@ -1281,10 +1416,19 @@
         }
       ],
       "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35031.0310"
+      ],
+      "acres": 0.5,
+      "transitMiles": 0.67,
+      "transitStop": "Market @ Heroy",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2026-09-25",
@@ -1305,7 +1449,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-09-16",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
@@ -1348,10 +1492,19 @@
         }
       ],
       "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Balboa/South Indian Trail",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "26276.0052"
+      ],
+      "acres": 0.47,
+      "transitMiles": 2.0,
+      "transitStop": "5 Mile Park & Ride",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-09-16",
@@ -1372,7 +1525,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-09-16",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -1420,10 +1573,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Chief Garry Park",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35094.0715"
+      ],
+      "acres": 0.13,
+      "transitMiles": 0.37,
+      "transitStop": "Mission @ Cook",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-09-16",
@@ -1444,7 +1606,7 @@
       "status": "Applied",
       "statusUpdated": "2026-09-15",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 3,
       "unitsSource": "permit description",
@@ -1497,10 +1659,20 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35081.0617"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 20.0,
+      "transitMiles": 0.1,
+      "transitStop": "Nevada @ Euclid (Gonzaga Prep)",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2026-09-15",
@@ -1521,7 +1693,7 @@
       "status": "Applied",
       "statusUpdated": "2026-09-08",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": 3,
       "unitsSource": "permit description",
@@ -1574,10 +1746,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35223.1429"
+      ],
+      "acres": 0.17,
+      "homesPerAcre": 17.6,
+      "transitMiles": 0.72,
+      "transitStop": "Sprague @ Haven",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2026-09-08",
@@ -1598,7 +1780,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-09-03",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
@@ -1641,10 +1823,19 @@
         }
       ],
       "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Five Mile Prairie",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "26261.0803"
+      ],
+      "acres": 0.58,
+      "transitMiles": 1.32,
+      "transitStop": "5 Mile Park & Ride",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-09-03",
@@ -1665,7 +1856,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-09-02",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -1726,10 +1917,18 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "North Hill",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36312.2022"
+      ],
+      "transitMiles": 0.11,
+      "transitStop": "Francis @ Cedar",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-06-21",
@@ -1817,10 +2016,19 @@
         }
       ],
       "buildingType": "Senior & group living",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Shiloh Hills",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36174.1615"
+      ],
+      "acres": 0.78,
+      "transitMiles": 0.1,
+      "transitStop": "9671 N Nevada",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2026-08-27",
@@ -1841,7 +2049,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-08-26",
       "stageSource": "city permit records: 3 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
@@ -1901,10 +2109,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "North Hill",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36311.0831"
+      ],
+      "acres": 0.11,
+      "homesPerAcre": 18.2,
+      "transitMiles": 0.23,
+      "transitStop": "Francis @ Monroe",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-01-16",
@@ -2007,10 +2225,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Minnehaha",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35103.0117"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 26.7,
+      "transitMiles": 0.19,
+      "transitStop": "Greene @ Carlisle",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [],
       "stageSinceExact": true
     },
@@ -2025,7 +2253,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-08-19",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 72,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -2134,10 +2362,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Hills",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25113.2107"
+      ],
+      "transitMiles": 0.25,
+      "transitStop": "Whistalks Way @ Elliot",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2025-09-19",
@@ -2163,7 +2399,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-08-12",
       "stageSource": "city permit records: 3 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -2216,10 +2452,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35082.4701"
+      ],
+      "acres": 0.07,
+      "homesPerAcre": 28.6,
+      "transitMiles": 0.34,
+      "transitStop": "Division @ Bridgeport",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2026-04-20",
@@ -2245,7 +2491,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-08-11",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 20,
       "unitsSource": "city weekly permit report",
@@ -2326,10 +2572,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Cliff-Cannon",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35193.5010"
+      ],
+      "acres": 0.2,
+      "homesPerAcre": 100.0,
+      "transitMiles": 0.48,
+      "transitStop": "1st @ Adams",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2025-09-12",
@@ -2365,7 +2621,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-08-06",
       "stageSource": "city permit records: 6 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 8,
       "unitsSource": "city weekly permit report",
@@ -2438,10 +2694,21 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35212.1916",
+        "35212.1917"
+      ],
+      "acres": 0.28,
+      "homesPerAcre": 28.6,
+      "transitMiles": 0.08,
+      "transitStop": "Sprague @ Helena",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-09-12",
@@ -2472,7 +2739,7 @@
       "status": "Approved",
       "statusUpdated": "2026-07-27",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 82,
       "unitsSource": "city weekly permit report",
@@ -2537,10 +2804,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35093.1002"
+      ],
+      "transitMiles": 0.41,
+      "transitStop": "Mission @ Napa",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-01-09",
@@ -2643,10 +2918,21 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35183.0801"
+      ],
+      "acres": 2.11,
+      "homesPerAcre": 94.8,
+      "transitMiles": 0.16,
+      "transitStop": "Monroe @ Summit",
+      "transitRoutes": [
+        "4",
+        "21"
+      ],
       "milestones": [],
       "stageSinceExact": true
     },
@@ -2661,7 +2947,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-07-10",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 97,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -2754,10 +3040,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35204.0715"
+      ],
+      "transitMiles": 0.51,
+      "transitStop": "Grand @ 14th",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-08-01",
@@ -2855,10 +3149,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25134.1608"
+      ],
+      "acres": 0.13,
+      "homesPerAcre": 30.8,
+      "transitMiles": 0.08,
+      "transitStop": "Broadway @ Oak",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2026-07-09",
@@ -2951,10 +3255,18 @@
         }
       ],
       "buildingType": "Conversion or addition",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Riverside",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35192.1923"
+      ],
+      "transitMiles": 0.16,
+      "transitStop": "1st @ Monroe",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-05-29",
@@ -2975,7 +3287,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-07-01",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -3028,10 +3340,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25122.3214"
+      ],
+      "acres": 0.17,
+      "homesPerAcre": 11.8,
+      "transitMiles": 0.3,
+      "transitStop": "Alberta @ Northwest Blvd",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2026-02-25",
@@ -3129,10 +3451,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35063.2826"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 28.6,
+      "transitMiles": 0.17,
+      "transitStop": "Monroe @ Alice",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [],
       "stageSinceExact": true
     },
@@ -3219,10 +3551,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35063.2825"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 28.6,
+      "transitMiles": 0.18,
+      "transitStop": "Monroe @ Alice",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-06-24",
@@ -3323,10 +3665,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35063.2824"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 28.6,
+      "transitMiles": 0.19,
+      "transitStop": "Monroe @ Alice",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-02-20",
@@ -3352,7 +3704,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-06-22",
       "stageSource": "city permit records: 5 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
@@ -3412,10 +3764,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Grandview/Thorpe",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25261.1521"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 13.3,
+      "transitMiles": 1.09,
+      "transitStop": "Riverside @ A St",
+      "transitRoutes": [
+        "20"
+      ],
       "milestones": [
         {
           "date": "2026-03-27",
@@ -3446,7 +3808,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-06-19",
       "stageSource": "city permit records: 5 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -3499,10 +3861,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35203.1406"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 13.3,
+      "transitMiles": 0.64,
+      "transitStop": "Sprague @ Julia",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2026-02-25",
@@ -3585,10 +3957,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35183.1804"
+      ],
+      "acres": 0.17,
+      "homesPerAcre": 94.1,
+      "transitMiles": 0.08,
+      "transitStop": "Broadway @ Cedar",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2026-05-29",
@@ -3681,10 +4063,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Lincoln Heights",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35342.2801"
+      ],
+      "acres": 0.2,
+      "homesPerAcre": 90.0,
+      "transitMiles": 0.09,
+      "transitStop": "Southeast Blvd @ Regal",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-05-27",
@@ -3705,7 +4097,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-06-10",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -3777,10 +4169,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Peaceful Valley",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25136.2075",
+        "25136.2080"
+      ],
+      "transitMiles": 0.23,
+      "transitStop": "Pacific @ Hemlock (MAC Museum)",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2024-09-06",
@@ -3859,10 +4260,16 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Grandview/Thorpe",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [],
+      "transitMiles": 1.6,
+      "transitStop": "Riverside @ A St",
+      "transitRoutes": [
+        "20"
+      ],
       "milestones": [],
       "stageSinceExact": false
     },
@@ -3930,10 +4337,16 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [],
+      "transitMiles": 0.55,
+      "transitStop": "Sprague @ Ivory",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [],
       "stageSinceExact": false
     },
@@ -4001,10 +4414,16 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Cliff-Cannon",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [],
+      "transitMiles": 0.07,
+      "transitStop": "9th @ McClellan",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [],
       "stageSinceExact": false
     },
@@ -4072,10 +4491,16 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [],
+      "transitMiles": 0.36,
+      "transitStop": "Mission @ Napa",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [],
       "stageSinceExact": false
     },
@@ -4090,7 +4515,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-05-28",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -4143,10 +4568,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Northwest",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "26273.4001"
+      ],
+      "acres": 0.28,
+      "homesPerAcre": 7.1,
+      "transitMiles": 2.05,
+      "transitStop": "Wellesley @ Driscoll",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2026-05-28",
@@ -4167,7 +4602,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-05-27",
       "stageSource": "city permit records: 11 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "city weekly permit report",
@@ -4232,10 +4667,18 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35212.3417"
+      ],
+      "transitMiles": 0.33,
+      "transitStop": "Sprague @ Napa",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-05-01",
@@ -4338,10 +4781,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35181.2923"
+      ],
+      "acres": 0.46,
+      "homesPerAcre": 19.6,
+      "transitMiles": 0.1,
+      "transitStop": "Washington @ Sinto",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2026-05-22",
@@ -4351,78 +4804,6 @@
         {
           "date": "2026-11-18",
           "label": "Building permit issued",
-          "estimated": false
-        }
-      ],
-      "stageSinceExact": true
-    },
-    {
-      "id": "city-b26m0055pdev",
-      "name": "Denver St Apartments",
-      "address": "648 S Denver St",
-      "neighborhood": "East Central",
-      "parcelId": "35204.0203",
-      "lat": 47.64967934250985,
-      "lng": -117.39143720813378,
-      "status": "Pre-Application",
-      "statusUpdated": "2026-05-20",
-      "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
-      "projectType": "Apartments",
-      "units": null,
-      "unitsSource": "",
-      "stories": null,
-      "description": "",
-      "permitNumbers": [
-        "B26M0055PDEV"
-      ],
-      "permits": [
-        {
-          "id": "B26M0055PDEV",
-          "type": "Pre-Development Conference",
-          "status": "Final",
-          "opened": "2026-05-20",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00055&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Pre-Application",
-          "kind": "text"
-        },
-        {
-          "kind": "text",
-          "label": "Building type",
-          "value": "Apartments"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00055&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records",
-          "kind": "text"
-        }
-      ],
-      "buildingType": "Apartments",
-      "middleHousing": false,
-      "neighborhoodCouncil": "East Central",
-      "councilDistrict": 2,
-      "buildingTypeInferred": true,
-      "milestones": [
-        {
-          "date": "2026-05-20",
-          "label": "Pre-development conference filed",
           "estimated": false
         }
       ],
@@ -4439,7 +4820,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-05-20",
       "stageSource": "city permit records: 1 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Fiveplex or sixplex",
       "units": 12,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -4508,10 +4889,20 @@
         }
       ],
       "buildingType": "Fiveplex or sixplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25133.1510"
+      ],
+      "acres": 0.29,
+      "homesPerAcre": 41.4,
+      "transitMiles": 0.27,
+      "transitStop": "Broadway @ Cannon",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2025-09-25",
@@ -4530,6 +4921,87 @@
         }
       ],
       "stageSinceExact": false
+    },
+    {
+      "id": "city-b26m0055pdev",
+      "name": "Denver St Apartments",
+      "address": "648 S Denver St",
+      "neighborhood": "East Central",
+      "parcelId": "35204.0203",
+      "lat": 47.64967934250985,
+      "lng": -117.39143720813378,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-05-20",
+      "stageSource": "city permit records: pre-development meeting held",
+      "lastVerified": "2026-11-27",
+      "projectType": "Apartments",
+      "units": null,
+      "unitsSource": "",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B26M0055PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B26M0055PDEV",
+          "type": "Pre-Development Conference",
+          "status": "Final",
+          "opened": "2026-05-20",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00055&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BPD&capID2=00000&capID3=00055&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Apartments",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "East Central",
+      "councilDistrict": 2,
+      "parcels": [
+        "35204.0203"
+      ],
+      "acres": 0.15,
+      "transitMiles": 0.52,
+      "transitStop": "Sprague @ Ivory",
+      "transitRoutes": [
+        "9"
+      ],
+      "milestones": [
+        {
+          "date": "2026-05-20",
+          "label": "Pre-development conference filed",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
     },
     {
       "id": "B2607178BLDC",
@@ -4622,10 +5094,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Southgate",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "34031.9012"
+      ],
+      "acres": 2.98,
+      "homesPerAcre": 9.7,
+      "transitMiles": 0.47,
+      "transitStop": "57th @ Freya",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-05-14",
@@ -4750,10 +5232,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35212.2910"
+      ],
+      "transitMiles": 0.49,
+      "transitStop": "Sprague @ Helena",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-10-02",
@@ -4779,7 +5269,7 @@
       "status": "Approved",
       "statusUpdated": "2026-05-03",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -4832,10 +5322,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Whitman",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36332.0103"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 14.3,
+      "transitMiles": 0.74,
+      "transitStop": "Nevada @ Francis",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2026-05-03",
@@ -4960,10 +5460,18 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Nevada Heights",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36323.2130"
+      ],
+      "transitMiles": 0.12,
+      "transitStop": "Division @ Rowan",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2026-07-02",
@@ -4989,7 +5497,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-04-17",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Senior & group living",
       "units": null,
       "unitsSource": "",
@@ -5037,10 +5545,19 @@
         }
       ],
       "buildingType": "Senior & group living",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35171.1614"
+      ],
+      "acres": 0.11,
+      "transitMiles": 0.14,
+      "transitStop": "Cincinnati @ Desmet",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-04-17",
@@ -5061,7 +5578,7 @@
       "status": "Approved",
       "statusUpdated": "2026-04-06",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -5114,10 +5631,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "West Hills",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25231.4304"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 14.3,
+      "transitMiles": 0.27,
+      "transitStop": "Government Way @ G St.",
+      "transitRoutes": [
+        "20"
+      ],
       "milestones": [
         {
           "date": "2026-04-06",
@@ -5138,7 +5665,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-04-03",
       "stageSource": "city permit records: 2 of 6 buildings finaled",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 10,
       "unitsSource": "permit description",
@@ -5231,10 +5758,19 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25132.1126",
+        "25124.0907"
+      ],
+      "transitMiles": 0.04,
+      "transitStop": "Summit @ Cochran",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2023-12-27",
@@ -5250,78 +5786,6 @@
       "stageSinceExact": false
     },
     {
-      "id": "city-b2603688bldc",
-      "name": "Tremmel Apartments Myrtle 8",
-      "address": "4002 E 5th Ave",
-      "neighborhood": "East Central",
-      "parcelId": "35221.2511",
-      "lat": 47.65142353910842,
-      "lng": -117.35216872811424,
-      "status": "Applied",
-      "statusUpdated": "2026-03-16",
-      "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
-      "projectType": "Apartments",
-      "units": null,
-      "unitsSource": "",
-      "stories": null,
-      "description": "",
-      "permitNumbers": [
-        "B2603688BLDC"
-      ],
-      "permits": [
-        {
-          "id": "B2603688BLDC",
-          "type": "Commercial Building New",
-          "status": "Plan Review Extended",
-          "opened": "2026-03-16",
-          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00143&agencyCode=SPOKANE&IsToShowInspection="
-        }
-      ],
-      "drbFile": "",
-      "imageUrl": "",
-      "imageCredit": "",
-      "docUrl": "",
-      "docLabel": "",
-      "sourceUrls": [],
-      "autoAdded": true,
-      "fields": [
-        {
-          "label": "Stage",
-          "value": "Applied",
-          "kind": "text"
-        },
-        {
-          "kind": "text",
-          "label": "Building type",
-          "value": "Apartments"
-        },
-        {
-          "label": "Permit application",
-          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00143&agencyCode=SPOKANE&IsToShowInspection=",
-          "kind": "link"
-        },
-        {
-          "label": "Source",
-          "value": "City of Spokane permit records",
-          "kind": "text"
-        }
-      ],
-      "buildingType": "Apartments",
-      "middleHousing": false,
-      "neighborhoodCouncil": "East Central",
-      "councilDistrict": 2,
-      "buildingTypeInferred": true,
-      "milestones": [
-        {
-          "date": "2026-03-16",
-          "label": "Building permit filed",
-          "estimated": false
-        }
-      ],
-      "stageSinceExact": true
-    },
-    {
       "id": "city-b2417372bldr",
       "name": "938 E Nora Ave Duplex",
       "address": "938 E Nora Ave",
@@ -5332,7 +5796,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-03-16",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -5385,10 +5849,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35084.3403"
+      ],
+      "acres": 0.16,
+      "homesPerAcre": 12.5,
+      "transitMiles": 0.1,
+      "transitStop": "Hamilton @ Indiana",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2024-09-27",
@@ -5404,6 +5878,87 @@
       "stageSinceExact": false
     },
     {
+      "id": "city-b2603688bldc",
+      "name": "Tremmel Apartments Myrtle 8",
+      "address": "4002 E 5th Ave",
+      "neighborhood": "East Central",
+      "parcelId": "35221.2511",
+      "lat": 47.65142353910842,
+      "lng": -117.35216872811424,
+      "status": "Applied",
+      "statusUpdated": "2026-03-16",
+      "stageSource": "city permit records: in plan review",
+      "lastVerified": "2026-11-27",
+      "projectType": "Apartments",
+      "units": null,
+      "unitsSource": "",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2603688BLDC"
+      ],
+      "permits": [
+        {
+          "id": "B2603688BLDC",
+          "type": "Commercial Building New",
+          "status": "Plan Review Extended",
+          "opened": "2026-03-16",
+          "url": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00143&agencyCode=SPOKANE&IsToShowInspection="
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
+          "label": "Permit application",
+          "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00143&agencyCode=SPOKANE&IsToShowInspection=",
+          "kind": "link"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane permit records",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Apartments",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "East Central",
+      "councilDistrict": 2,
+      "parcels": [
+        "35221.2511"
+      ],
+      "acres": 0.15,
+      "transitMiles": 0.41,
+      "transitStop": "Sprague @ Julia",
+      "transitRoutes": [
+        "9"
+      ],
+      "milestones": [
+        {
+          "date": "2026-03-16",
+          "label": "Building permit filed",
+          "estimated": false
+        }
+      ],
+      "stageSinceExact": true
+    },
+    {
       "id": "city-b26m0029pdev",
       "name": "Maxwell Apartments",
       "address": "1101 W Maxwell Ave",
@@ -5414,7 +5969,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-03-12",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -5462,10 +6017,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35182.2301"
+      ],
+      "acres": 0.16,
+      "transitMiles": 0.08,
+      "transitStop": "Monroe @ Maxwell",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-03-12",
@@ -5486,7 +6050,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-02-25",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
@@ -5539,10 +6103,20 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Cliff-Cannon",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35193.1712"
+      ],
+      "acres": 0.11,
+      "homesPerAcre": 36.4,
+      "transitMiles": 0.69,
+      "transitStop": "Stevens @ 6th",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2026-02-25",
@@ -5563,7 +6137,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-02-24",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -5632,10 +6206,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Browne's Addition",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25242.1015"
+      ],
+      "acres": 0.18,
+      "homesPerAcre": 11.1,
+      "transitMiles": 0.17,
+      "transitStop": "Spruce @ 2nd",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2025-07-08",
@@ -5656,7 +6240,7 @@
       "status": "Approved",
       "statusUpdated": "2026-02-24",
       "stageSource": "city permit records: plan review approved",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Senior & group living",
       "units": 10,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -5709,10 +6293,18 @@
         }
       ],
       "buildingType": "Senior & group living",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25131.4308"
+      ],
+      "transitMiles": 0.07,
+      "transitStop": "Broadway @ Cedar",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2026-02-24",
@@ -5733,7 +6325,7 @@
       "status": "Approved",
       "statusUpdated": "2026-02-12",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 24,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -5810,10 +6402,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Southgate",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "34032.0402"
+      ],
+      "acres": 0.71,
+      "homesPerAcre": 33.8,
+      "transitMiles": 0.18,
+      "transitStop": "57th @ Freya",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-09-05",
@@ -5839,7 +6441,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-02-02",
       "stageSource": "city permit records: 9 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": 3,
       "unitsSource": "permit description",
@@ -5908,10 +6510,22 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Nevada Heights",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36323.2901",
+        "36323.2903",
+        "36323.2902"
+      ],
+      "acres": 0.18,
+      "homesPerAcre": 16.7,
+      "transitMiles": 0.23,
+      "transitStop": "Division @ Rowan",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2025-06-26",
@@ -5937,7 +6551,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-01-30",
       "stageSource": "city permit records: 5 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
@@ -5990,10 +6604,20 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Nevada Heights",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35053.0722"
+      ],
+      "acres": 0.13,
+      "homesPerAcre": 30.8,
+      "transitMiles": 0.25,
+      "transitStop": "Division @ Empire",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2025-04-07",
@@ -6019,7 +6643,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2026-01-23",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -6067,10 +6691,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35082.0936"
+      ],
+      "acres": 0.51,
+      "transitMiles": 0.21,
+      "transitStop": "Hamilton @ North Foothills",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2026-01-23",
@@ -6091,7 +6724,7 @@
       "status": "Applied",
       "statusUpdated": "2026-01-21",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Conversion or addition",
       "units": 40,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -6152,10 +6785,20 @@
         }
       ],
       "buildingType": "Conversion or addition",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Riverside",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35192.1201"
+      ],
+      "acres": 0.18,
+      "homesPerAcre": 222.2,
+      "transitMiles": 0.1,
+      "transitStop": "1st @ Adams",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2026-01-21",
@@ -6181,7 +6824,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-01-20",
       "stageSource": "city permit records: 3 of 6 buildings finaled",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": 24,
       "unitsSource": "city weekly permit report, permit description",
@@ -6286,10 +6929,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35223.1617"
+      ],
+      "acres": 0.22,
+      "homesPerAcre": 109.1,
+      "transitMiles": 0.74,
+      "transitStop": "Sprague @ Haven",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-07-18",
@@ -6320,7 +6973,7 @@
       "status": "Approved",
       "statusUpdated": "2026-01-13",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -6368,10 +7021,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36343.2918"
+      ],
+      "acres": 0.4,
+      "transitMiles": 0.02,
+      "transitStop": "Wellesley @ Haven",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2026-01-13",
@@ -6392,7 +7054,7 @@
       "status": "Under Construction",
       "statusUpdated": "2026-01-12",
       "stageSource": "city permit records: 3 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -6445,10 +7107,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Bemiss",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35042.2102"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 13.3,
+      "transitMiles": 0.14,
+      "transitStop": "Wellesley @ Crestline",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2025-09-22",
@@ -6474,7 +7146,7 @@
       "status": "Approved",
       "statusUpdated": "2025-11-05",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -6535,10 +7207,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35031.0413"
+      ],
+      "acres": 0.25,
+      "homesPerAcre": 8.0,
+      "transitMiles": 0.8,
+      "transitStop": "Market @ Heroy",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2025-09-09",
@@ -6564,7 +7246,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-10-14",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 18,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -6617,10 +7299,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Comstock",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35322.2803"
+      ],
+      "acres": 0.16,
+      "homesPerAcre": 112.5,
+      "transitMiles": 0.42,
+      "transitStop": "29th @ Grand",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-10-14",
@@ -6641,7 +7333,7 @@
       "status": "Complete",
       "statusUpdated": "2025-10-13",
       "stageSource": "city permit records: every building permit is finaled",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "city weekly permit report",
@@ -6701,10 +7393,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35223.1615"
+      ],
+      "acres": 0.13,
+      "homesPerAcre": 15.4,
+      "transitMiles": 0.74,
+      "transitStop": "Sprague @ Haven",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-10-13",
@@ -6735,7 +7437,7 @@
       "status": "Approved",
       "statusUpdated": "2025-10-08",
       "stageSource": "city permit records: plan review approved",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": 2,
       "unitsSource": "permit description",
@@ -6804,10 +7506,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35203.2402"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 14.3,
+      "transitMiles": 0.23,
+      "transitStop": "Grand @ 12th",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-10-06",
@@ -6828,7 +7540,7 @@
       "status": "Approved",
       "statusUpdated": "2025-09-26",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": 24,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -6945,10 +7657,18 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Five Mile Prairie",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "26251.3211"
+      ],
+      "transitMiles": 0.84,
+      "transitStop": "5 Mile Park & Ride",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-09-26",
@@ -6969,7 +7689,7 @@
       "status": "Under Construction",
       "statusUpdated": "2025-09-25",
       "stageSource": "city permit records: 6 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -7049,10 +7769,20 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35031.0416",
+        "35031.1205"
+      ],
+      "acres": 0.52,
+      "transitMiles": 0.81,
+      "transitStop": "Market @ Heroy",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2025-01-06",
@@ -7083,7 +7813,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-09-03",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -7131,10 +7861,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Riverside",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35191.3147"
+      ],
+      "acres": 0.19,
+      "transitMiles": 0.14,
+      "transitStop": "Stevens @ 4th",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-09-03",
@@ -7155,7 +7894,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-08-26",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -7203,10 +7942,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Rockwood",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35294.1608"
+      ],
+      "acres": 0.28,
+      "transitMiles": 0.02,
+      "transitStop": "29th Av @ Garfield St (Manito Center)",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-08-26",
@@ -7227,7 +7975,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-08-26",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Cottage housing",
       "units": null,
       "unitsSource": "",
@@ -7283,10 +8031,18 @@
         }
       ],
       "buildingType": "Cottage housing",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "North Hill",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36311.0206"
+      ],
+      "transitMiles": 0.08,
+      "transitStop": "Division @ Dalke",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2025-08-26",
@@ -7307,7 +8063,7 @@
       "status": "Approved",
       "statusUpdated": "2025-08-22",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -7360,10 +8116,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Lincoln Heights",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35341.1140"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 13.3,
+      "transitMiles": 0.78,
+      "transitStop": "Southeast Blvd @ Regal",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-08-22",
@@ -7384,7 +8150,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-07-21",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -7432,10 +8198,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "North Hill",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35064.0901"
+      ],
+      "acres": 0.14,
+      "transitMiles": 0.3,
+      "transitStop": "Division @ Empire",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2025-07-21",
@@ -7456,7 +8231,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-07-15",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -7504,10 +8279,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36334.1718"
+      ],
+      "acres": 0.14,
+      "transitMiles": 0.21,
+      "transitStop": "Wellesley @ Lacey",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2025-07-15",
@@ -7528,7 +8312,7 @@
       "status": "Under Construction",
       "statusUpdated": "2025-06-27",
       "stageSource": "city permit records: 17 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -7624,10 +8408,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Five Mile Prairie",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "26252.0064"
+      ],
+      "acres": 2.09,
+      "transitMiles": 1.06,
+      "transitStop": "5 Mile Park & Ride",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2024-03-15",
@@ -7653,7 +8446,7 @@
       "status": "Under Construction",
       "statusUpdated": "2025-06-24",
       "stageSource": "city permit records: 2 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Conversion or addition",
       "units": null,
       "unitsSource": "",
@@ -7701,10 +8494,19 @@
         }
       ],
       "buildingType": "Conversion or addition",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Cliff-Cannon",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35193.0712"
+      ],
+      "acres": 0.29,
+      "transitMiles": 0.5,
+      "transitStop": "Stevens @ 6th",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-05-20",
@@ -7730,7 +8532,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-06-20",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": null,
       "unitsSource": "",
@@ -7778,10 +8580,19 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Lincoln Heights",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35282.0606"
+      ],
+      "acres": 0.17,
+      "transitMiles": 0.83,
+      "transitStop": "29th @ Pinecrest",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-06-20",
@@ -7802,7 +8613,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-06-17",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Cottage housing",
       "units": null,
       "unitsSource": "",
@@ -7850,10 +8661,19 @@
         }
       ],
       "buildingType": "Cottage housing",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "North Hill",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35064.3015"
+      ],
+      "acres": 0.33,
+      "transitMiles": 0.19,
+      "transitStop": "Division @ Bridgeport",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2025-06-17",
@@ -7874,7 +8694,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-06-03",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -7922,10 +8742,19 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25134.0201"
+      ],
+      "acres": 0.15,
+      "transitMiles": 0.02,
+      "transitStop": "Broadway @ Walnut",
+      "transitRoutes": [
+        "21"
+      ],
       "milestones": [
         {
           "date": "2025-06-03",
@@ -7946,7 +8775,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-05-30",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Not yet known",
       "units": null,
       "unitsSource": "",
@@ -7989,10 +8818,19 @@
         }
       ],
       "buildingType": "Not yet known",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Chief Garry Park",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35152.0507"
+      ],
+      "acres": 0.29,
+      "transitMiles": 0.08,
+      "transitStop": "Mission @ Regal",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2025-05-30",
@@ -8013,7 +8851,7 @@
       "status": "Under Construction",
       "statusUpdated": "2025-05-19",
       "stageSource": "city permit records: 4 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -8066,10 +8904,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Lincoln Heights",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35274.1123"
+      ],
+      "acres": 0.15,
+      "homesPerAcre": 13.3,
+      "transitMiles": 0.85,
+      "transitStop": "Southeast Blvd @ Regal",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2025-02-21",
@@ -8095,7 +8943,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-03-25",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 101,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8148,10 +8996,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35212.2204"
+      ],
+      "acres": 0.14,
+      "homesPerAcre": 721.4,
+      "transitMiles": 0.16,
+      "transitStop": "Sprague @ Helena",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2025-03-25",
@@ -8172,7 +9030,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-03-06",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 76,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8225,10 +9083,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Hills",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25262.0707"
+      ],
+      "acres": 0.37,
+      "homesPerAcre": 205.4,
+      "transitMiles": 1.25,
+      "transitStop": "Government Way @ G St.",
+      "transitRoutes": [
+        "20"
+      ],
       "milestones": [
         {
           "date": "2025-03-06",
@@ -8249,7 +9117,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2025-02-07",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 30,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8310,10 +9178,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36343.3007"
+      ],
+      "acres": 0.48,
+      "homesPerAcre": 62.5,
+      "transitMiles": 0.02,
+      "transitStop": "Wellesley @ Haven",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2025-02-07",
@@ -8334,7 +9212,7 @@
       "status": "Applied",
       "statusUpdated": "2025-02-06",
       "stageSource": "city permit records: in plan review",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 64,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8403,10 +9281,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35173.3003"
+      ],
+      "acres": 0.7,
+      "homesPerAcre": 91.4,
+      "transitMiles": 0.19,
+      "transitStop": "Spokane Falls @ Sherman",
+      "transitRoutes": [
+        "1"
+      ],
       "milestones": [
         {
           "date": "2025-02-06",
@@ -8427,7 +9315,7 @@
       "status": "Under Construction",
       "statusUpdated": "2025-01-22",
       "stageSource": "city permit records: 8 of 14 buildings finaled",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Townhomes",
       "units": 43,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8584,10 +9472,18 @@
         }
       ],
       "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35022.0101"
+      ],
+      "transitMiles": 0.95,
+      "transitStop": "Market @ Heroy",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2024-04-19",
@@ -8613,7 +9509,7 @@
       "status": "Approved",
       "statusUpdated": "2024-12-13",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Triplex or fourplex",
       "units": 4,
       "unitsSource": "permit description",
@@ -8666,10 +9562,20 @@
         }
       ],
       "buildingType": "Triplex or fourplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Nevada Heights",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35052.2721"
+      ],
+      "acres": 0.13,
+      "homesPerAcre": 30.8,
+      "transitMiles": 0.26,
+      "transitStop": "Division @ Garland",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2024-12-13",
@@ -8690,7 +9596,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2024-11-26",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 60,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8743,10 +9649,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Logan",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35083.2714"
+      ],
+      "acres": 0.33,
+      "homesPerAcre": 181.8,
+      "transitMiles": 0.1,
+      "transitStop": "Ruby @ Indiana",
+      "transitRoutes": [
+        "25"
+      ],
       "milestones": [
         {
           "date": "2024-11-26",
@@ -8767,7 +9683,7 @@
       "status": "Under Construction",
       "statusUpdated": "2024-10-23",
       "stageSource": "city permit records: 6 trade permit(s) issued since the building permit",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -8820,10 +9736,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35223.1219"
+      ],
+      "acres": 0.38,
+      "homesPerAcre": 5.3,
+      "transitMiles": 0.74,
+      "transitStop": "Sprague @ Freya",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2024-04-16",
@@ -8849,7 +9775,7 @@
       "status": "Approved",
       "statusUpdated": "2024-09-06",
       "stageSource": "city permit records: plan review approved",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 40,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -8926,10 +9852,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Central",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35182.3201"
+      ],
+      "transitMiles": 0.06,
+      "transitStop": "Monroe @ Boone",
+      "transitRoutes": [
+        "4"
+      ],
       "milestones": [
         {
           "date": "2024-09-06",
@@ -8950,7 +9884,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2024-08-23",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 64,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -9003,10 +9937,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "East Central",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35201.0111"
+      ],
+      "acres": 1.07,
+      "homesPerAcre": 59.8,
+      "transitMiles": 0.04,
+      "transitStop": "Sprague @ Pride Prep",
+      "transitRoutes": [
+        "9"
+      ],
       "milestones": [
         {
           "date": "2024-08-23",
@@ -9027,7 +9971,7 @@
       "status": "Under Construction",
       "statusUpdated": "2024-04-08",
       "stageSource": "city permit records: 2 of 4 buildings finaled",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": null,
       "unitsSource": "",
@@ -9107,10 +10051,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35022.0114"
+      ],
+      "transitMiles": 0.9,
+      "transitStop": "Market @ Heroy",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2024-04-08",
@@ -9131,7 +10083,7 @@
       "status": "Approved",
       "statusUpdated": "2024-03-22",
       "stageSource": "city permit records: plan review approved",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 48,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -9200,10 +10152,18 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "West Hills",
       "councilDistrict": 2,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "25116.0077"
+      ],
+      "transitMiles": 0.07,
+      "transitStop": "Whistalks Way @ Randolph",
+      "transitRoutes": [
+        "20"
+      ],
       "milestones": [
         {
           "date": "2024-03-22",
@@ -9224,7 +10184,7 @@
       "status": "Approved",
       "statusUpdated": "2024-01-17",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 236,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -9309,10 +10269,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35181.0208"
+      ],
+      "acres": 1.58,
+      "homesPerAcre": 149.4,
+      "transitMiles": 0.08,
+      "transitStop": "Mission @ Division",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2024-01-17",
@@ -9333,7 +10303,7 @@
       "status": "Pre-Application",
       "statusUpdated": "2024-01-12",
       "stageSource": "city permit records: pre-development meeting held",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 108,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -9386,10 +10356,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Audubon/Downriver",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35064.3616"
+      ],
+      "acres": 4.1,
+      "homesPerAcre": 26.3,
+      "transitMiles": 0.69,
+      "transitStop": "Driscoll @ Garland",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2024-01-12",
@@ -9410,7 +10390,7 @@
       "status": "Approved",
       "statusUpdated": "2023-12-20",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Apartments",
       "units": 24,
       "unitsSource": "city monthly permit report (as of 2026-05-31)",
@@ -9463,10 +10443,20 @@
         }
       ],
       "buildingType": "Apartments",
+      "buildingTypeInferred": true,
       "middleHousing": false,
       "neighborhoodCouncil": "Emerson/Garfield",
       "councilDistrict": 3,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "35181.0511"
+      ],
+      "acres": 0.49,
+      "homesPerAcre": 49.0,
+      "transitMiles": 0.09,
+      "transitStop": "Mission @ Calispel",
+      "transitRoutes": [
+        "28"
+      ],
       "milestones": [
         {
           "date": "2023-12-20",
@@ -9487,7 +10477,7 @@
       "status": "Approved",
       "statusUpdated": "2023-12-07",
       "stageSource": "city permit records: building permit issued",
-      "lastVerified": "2026-11-26",
+      "lastVerified": "2026-11-27",
       "projectType": "Duplex",
       "units": 2,
       "unitsSource": "permit description",
@@ -9548,10 +10538,20 @@
         }
       ],
       "buildingType": "Duplex",
+      "buildingTypeInferred": true,
       "middleHousing": true,
       "neighborhoodCouncil": "Hillyard",
       "councilDistrict": 1,
-      "buildingTypeInferred": true,
+      "parcels": [
+        "36334.1913"
+      ],
+      "acres": 0.08,
+      "homesPerAcre": 25.0,
+      "transitMiles": 0.14,
+      "transitStop": "Wellesley @ Lacey",
+      "transitRoutes": [
+        "33"
+      ],
       "milestones": [
         {
           "date": "2023-12-07",

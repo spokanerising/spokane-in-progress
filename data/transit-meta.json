@@ -1,0 +1,7 @@
+{
+  "fetched": "2026-11-27",
+  "rule": "16+ departures, 10am-2pm, one route in one direction (every 15 minutes or better)",
+  "serviceDay": "2026-12-02",
+  "source": "https://www.spokanetransit.com/gtfs",
+  "stops": 418
+}

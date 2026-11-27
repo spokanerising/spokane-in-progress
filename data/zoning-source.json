@@ -1,0 +1,7 @@
+{
+  "descField": "ZoneLabel",
+  "field": "ZoneCode",
+  "found": "2026-11-27",
+  "layer": "Planning/PedestrianPlan / Neighborhood Retail Zone",
+  "url": "https://services.spokanegis.org/arcgis/rest/services/Planning/PedestrianPlan/MapServer/22/query"
+}
