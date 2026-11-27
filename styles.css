@@ -1685,3 +1685,18 @@ body[data-picking="on"] .inview { display: none; }
   .menu__item { min-height: 44px; font-size: 15px; }
   .listtools__actions .sharebtn { min-height: 40px; }
 }
+
+/* "Download image · SVG · data" under each About chart. */
+.chart__tools { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
+.chart__tools button {
+  padding: 0;
+  background: none;
+  border: none;
+  font: 600 12.5px var(--sans);
+  color: var(--link);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.chart__tools button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.chart__tools button[aria-busy="true"] { color: var(--muted); cursor: progress; }
+@media (max-width: 860px) { .chart__tools button { min-height: 36px; padding: 0 2px; } }
