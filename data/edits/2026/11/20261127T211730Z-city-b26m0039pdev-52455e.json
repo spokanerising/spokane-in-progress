@@ -1,0 +1,31 @@
+{
+  "project": "city-b26m0039pdev",
+  "permits": [
+    "B2618248BLDC",
+    "B26M0039PDEV"
+  ],
+  "at": "2026-11-27T21:17:30Z",
+  "by": "spokanerising@gmail.com",
+  "set": {
+    "name": "2nd Ave Apartments",
+    "description": "New 18-unit apartment building with carport parking.",
+    "units": 18,
+    "stories": 3,
+    "sqft": 7072,
+    "estCost": 1600000,
+    "developer": "Steve Widmyer",
+    "architect": "Fusion Architecture"
+  },
+  "was": {
+    "name": "2314 W 2nd Ave Apartments",
+    "description": null,
+    "units": null,
+    "stories": null,
+    "sqft": null,
+    "estCost": null,
+    "developer": null,
+    "architect": null
+  },
+  "unset": [],
+  "note": ""
+}
