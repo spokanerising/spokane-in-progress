@@ -31,6 +31,16 @@ pictured["imageUrl"] = "/media/x.jpg"
 json.dump(data, open(os.path.join(site, "projects.json"), "w"))
 json.dump([{"id": "gone-one", "name": "Gone One", "at": "2026-11-20T10:00:00Z"}], open(os.path.join(site, "data", "hidden.json"), "w"))
 detailed = next(p for p in projects if any(f["label"] == "Floor area" for f in p["fields"]))
+# History and build notes for the detailed project (phase 3).
+HIST = [
+    {"at": "2026-11-20T10:00:00Z", "file": "a.json", "set": {"units": 50}, "was": {"units": 44}, "unset": [], "note": "First count"},
+    {"at": "2026-11-21T10:00:00Z", "file": "b.json", "set": {"units": 60, "stories": 4}, "was": {"units": 50, "stories": None}, "unset": [], "note": ""},
+    {"at": "2026-11-22T10:00:00Z", "file": "c.json", "set": {}, "was": {"stories": 4}, "unset": ["stories"], "note": "Back to the city's"},
+]
+json.dump({detailed["id"]: HIST}, open(os.path.join(site, "data", "edit-history.json"), "w"))
+json.dump({"builtAt": "2026-11-27T19:00:00Z", "projects": {detailed["id"]: [f"{detailed['name']}: you set 60 units; city permit report says 44. Yours is shown."]},
+           "other": ["Monthly: Canyon Bluff Apartments (168 units) has no street address. Not mapped."]},
+          open(os.path.join(site, "data", "build-notes.json"), "w"))
 
 posts = []
 uploads = []
@@ -38,6 +48,11 @@ api = {"me": (200, {"email": "spokanerising@gmail.com"}), "edit": (200, None), "
 
 def fake_api(route):
     url = route.request.url
+    if "/api/project" in url:
+        posts.append({"add": json.loads(route.request.post_data)})
+        status, reply = api.get("project", (200, None))
+        reply = reply or {"ok": True, "id": "hand-new-place", "at": "2026-11-27T19:30:00Z"}
+        return route.fulfill(status=status, content_type="application/json", body=json.dumps(reply))
     if "/api/upload" in url:
         body = route.request.post_data_buffer
         uploads.append({"url": url, "type": route.request.headers.get("content-type"), "body": body})
@@ -219,6 +234,90 @@ with sync_playwright() as pw:
     sent = posts[-1]["set"]
     check(sent["imageUrl"].endswith(".jpg") and sent["docUrl"].endswith(".pdf") and sent["imagePermission"] == "granted", f"Save sends the uploads {sent}")
 
+    # ---- phase 3: build notes, History and Undo ----
+    pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(detailed['id'])}))")
+    notes = pg.locator(".ednotes")
+    check(notes.count() == 1 and "you set 60 units; city permit report says 44" in notes.inner_text(), "build notes at the top")
+    check(detailed["name"] + ":" not in notes.inner_text(), "note shown without the name prefix")
+    check(pg.locator('[data-tab="history"]').inner_text() == "History (3)", "history count")
+    pg.click('[data-tab="history"]')
+    check(pg.locator('[data-panel="edit"]').is_hidden() and pg.locator(".editor__actions").is_hidden(), "edit form hidden on History")
+    items = pg.locator(".edhist__item")
+    check(items.count() == 3 and "Nov 22, 2026" in items.nth(0).inner_text(), "newest first")
+    check("Stories: reset to automatic" in items.nth(0).inner_text() and "Back to the city's" in items.nth(0).inner_text(), "reset and note shown")
+    check("Housing units: 50 → 60" in items.nth(1).inner_text() and "Stories: blank → 4" in items.nth(1).inner_text(), "old → new")
+    check("Changed again since" in items.nth(2).inner_text() and items.nth(2).locator("[data-undo]").count() == 0, "older edit can't be undone")
+    n = len(posts)
+    items.nth(1).locator("[data-undo]").click()
+    check(len(posts) == n and items.nth(1).locator("[data-undo]").inner_text() == "Press again to undo", "undo arms first")
+    items.nth(1).locator("[data-undo]").click()
+    pg.wait_for_function("!document.querySelector('dialog.editor').open")
+    u = posts[-1]
+    check(u["set"] == {"units": 50} and u["unset"] == [] and u["was"] == {"units": 60}, f"undo goes back to the earlier edit, skips later-changed {u}")
+    check(u["note"] == "Undo of the edit on Nov 21, 2026", "undo note")
+    pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(detailed['id'])}))")
+    pg.click('[data-tab="history"]')
+    pg.locator(".edhist__item").nth(0).locator("[data-undo]").click()
+    pg.locator(".edhist__item").nth(0).locator("[data-undo]").click()
+    pg.wait_for_function("!document.querySelector('dialog.editor').open")
+    check(posts[-1]["set"] == {"stories": 4} and posts[-1]["unset"] == [], f"undoing a reset puts the value back {posts[-1]}")
+    first_only = pg.evaluate("SIPEditor.undoFor([{set:{units:50},was:{units:44},unset:[]}], 0)")
+    check(first_only["unset"] == ["units"] and first_only["set"] == {}, "undoing the only edit goes back to automatic")
+    pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(projects[5]['id'])}))")
+    pg.click('[data-tab="history"]')
+    check("No edits yet" in pg.locator(".editor__history").inner_text() and pg.locator(".ednotes").count() == 0, "no history, no notes")
+    pg.keyboard.press("Escape")
+
+    # ---- phase 3: adding a project ----
+    add = pg.locator("[data-add-project]")
+    check(add.count() == 1 and add.get_attribute("aria-label") == "Add a project", "Add a project button")
+    add.click()
+    check(pg.evaluate("document.activeElement.name") == "name", "name field first")
+    n = len(posts)
+    pg.click("[data-save]")
+    check(len(posts) == n and "name" in pg.locator(".editor__msg").inner_text(), "name required")
+    pg.fill("#ed-name", "New Place Townhomes")
+    pg.click("[data-save]")
+    check(len(posts) == n and "map knows where" in pg.locator(".editor__msg").inner_text(), "location required")
+    pg.click("[data-pick]")
+    check(not dlg.is_visible() and pg.evaluate("document.body.dataset.picking") == "on", "picking on the map")
+    check("new project" in pg.inner_text("#pickhint"), "pick hint says what for")
+    pg.keyboard.press("Escape")
+    pg.wait_for_function("document.querySelector('dialog.editor').open")
+    check(pg.input_value("#ed-name") == "New Place Townhomes" and "No pin yet" in pg.inner_text("[data-pin-status]"), "cancel keeps the form, no pin")
+    check(pg.inner_text("#pickhint span") == "Click the map to choose a spot", "hint text restored")
+    pg.click("[data-pick]")
+    mb = pg.locator("#map canvas").bounding_box()
+    pg.mouse.click(mb["x"] + mb["width"] / 2 + 40, mb["y"] + mb["height"] / 2 + 30)
+    pg.wait_for_function("document.querySelector('dialog.editor').open")
+    check("Pin at 47." in pg.inner_text("[data-pin-status]"), "pin placed " + pg.inner_text("[data-pin-status]"))
+    check(pg.locator("#ed-near").count() == 0 and pg.evaluate("document.body.dataset.picking") == "off", "Near not touched, picking off")
+    pg.fill("#ed-permits", "b2600001bldc")
+    pg.fill("#ed-units", "8")
+    pg.select_option("#ed-status", "Applied")
+    pg.fill("#ed-sourceUrls", "https://news.example/a\nhttps://news.example/b")
+    pg.screenshot(path=os.path.join(SHOTS, "editor-add.png"))
+    pg.click("[data-save]")
+    pg.wait_for_function("!document.querySelector('dialog.editor').open")
+    body = posts[-1]["add"]
+    check(body["name"] == "New Place Townhomes" and body["units"] == "8" and body["status"] == "Applied" and body["permits"] == "b2600001bldc", f"add sends {body}")
+    check(isinstance(body["lat"], float) and 47.5 < body["lat"] < 47.8 and -117.6 < body["lng"] < -117.2, "add sends the pin")
+    check(body["sourceUrls"] == ["https://news.example/a", "https://news.example/b"] and "address" not in body, "blank fields left out")
+    check("added" in pg.locator("#toast").inner_text(), "added notice")
+    check(any(e.get("add") and e["id"] == "hand-new-place" for e in pg.evaluate("JSON.parse(localStorage.getItem('sip-editor-pending'))")), "add remembered until live")
+    api["project"] = (409, {"error": "There's already a project file called hand-new-place-townhomes. Give this one a different name."})
+    add.click()
+    pg.fill("#ed-name", "New Place Townhomes")
+    pg.fill("#ed-parcelId", "35192.0101")
+    pg.click("[data-save]")
+    pg.wait_for_selector(".editor__msg.is-bad")
+    check("already a project file" in pg.locator(".editor__msg").inner_text() and dlg.is_visible(), "duplicate refused, form kept")
+    pg.keyboard.press("Escape")
+    del api["project"]
+    # Escape during picking also closes an open project, as it always has; reopen it.
+    pg.goto(f"{SITE}/?p={detailed['id']}")
+    pg.wait_for_selector("[data-edit-project]")
+
     # Hide takes two presses.
     n = len(posts)
     pg.click("[data-edit-project]")
@@ -270,6 +369,7 @@ with sync_playwright() as pw:
     pg.click("[data-unhide]")
     pg.wait_for_function("document.querySelector('[data-unhide]').textContent.includes('few minutes')")
     check(posts[-1]["unset"] == ["hidden"] and posts[-1]["project"] == "gone-one", "put back sent")
+    check("Canyon Bluff" in pg.inner_text("#notes") and "1 note(s) about 1 project(s)" in pg.inner_text("#notes"), "admin shows build notes")
     pg.screenshot(path=os.path.join(SHOTS, "editor-admin.png"))
     api["me"] = (401, {"error": "Not signed in."})
     pg.evaluate("localStorage.removeItem('sip-editor')")

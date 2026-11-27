@@ -12,6 +12,7 @@ const edit = await import("./edit.mjs");
 const me = await import("./me.mjs");
 const up = await import("./upload.mjs");
 const media = await import("./media.mjs");
+const proj = await import("./project.mjs");
 let ok = 0;
 const check = (cond, what) => { if (!cond) { console.log("FAIL: " + what); process.exit(1); } ok++; };
 
@@ -36,6 +37,7 @@ globalThis.fetch = async (url, init = {}) => {
   if (url.startsWith("https://api.github.com/")) {
     github.push({ url, init, body: JSON.parse(init.body) });
     if (env.FAIL_GITHUB) return new Response("nope", { status: 403 });
+    if (env.EXISTS) return new Response('{"message":"sha wasn\'t supplied"}', { status: 422 });
     return new Response(JSON.stringify({ commit: { sha: "abc" } }), { status: 201 });
   }
   throw new Error("unexpected fetch " + url);
@@ -171,11 +173,46 @@ res = await get(jpgKey, { "if-none-match": '"e-' + jpgKey.length + '"' });
 check(res.status === 304, "304 when unchanged");
 check((await get("city-b1/20261127T191705Z-deadbeef.jpg")).status === 404, "missing file 404");
 check((await get("../secret")).status === 404 && (await get("city-b1/notes.txt")).status === 404, "odd paths 404");
+// ---- adding a project (phase 3) ----
+github = [];
+const add = (body, e = env, tok = token({})) => call(proj.onRequestPost, { tok, method: "POST", body, e });
+r = await add({ name: "Corner Flats Phase 2!", address: "1 W Main Ave", status: "Applied", units: "24",
+                lat: 47.6588, lng: -117.4260, permits: "b2600001bldc; B26M0001PDEV", sourceUrls: "https://news.example/a",
+                developer: "Acme", statusUpdated: "2026-11-01" });
+check(r.status === 200 && r.body.id === "hand-corner-flats-phase-2", "added " + JSON.stringify(r));
+let g2 = github[0];
+check(g2.url.endsWith("/contents/data/projects/hand-corner-flats-phase-2.json") && !("sha" in g2.body), "new file, never overwrites");
+check(g2.body.message === "Add project: Corner Flats Phase 2!", "commit message");
+let row = JSON.parse(Buffer.from(g2.body.content, "base64").toString("utf8"));
+check(row.id === "hand-corner-flats-phase-2" && row.published === "TRUE" && row.name === "Corner Flats Phase 2!", "row basics " + JSON.stringify(row));
+check(row.permit_numbers === "B2600001BLDC; B26M0001PDEV" && row.units === "24" && row.lat === "47.6588" && row.status_updated === "2026-11-01", "row columns");
+check(row.source_urls === "https://news.example/a" && row.developer === "Acme" && row.added_by === "spokanerising@gmail.com", "row extras");
+r = await add({ name: "Parcel Only", parcelId: "35192.0101" });
+row = JSON.parse(Buffer.from(github[1].body.content, "base64").toString("utf8"));
+check(r.status === 200 && row.parcel_id === "35192.0101" && row.status === "Pre-Application" && /^\d{4}-\d{2}-\d{2}$/.test(row.status_updated), "parcel only, defaults");
+github = [];
+const refuse = async (body, what) => {
+  const res = await add(body);
+  check(res.status === 400 && res.body.error, what + " " + JSON.stringify(res));
+};
+await refuse({ address: "1 W Main", lat: 47.66, lng: -117.42 }, "no name");
+await refuse({ name: "Nowhere" }, "no location");
+await refuse({ name: "Half pin", lat: 47.66 }, "half a pin");
+await refuse({ name: "Seattle", lat: 47.6, lng: -122.3 }, "outside Spokane");
+await refuse({ name: "Bad permit", permits: "B26<script>" }, "bad permit");
+await refuse({ name: "Bad link", lat: 47.66, lng: -117.42, permitUrl: "javascript:x" }, "bad link");
+await refuse({ name: "Bad stage", lat: 47.66, lng: -117.42, status: "Soon" }, "bad stage");
+check(github.length === 0, "nothing committed for refused projects");
+env.EXISTS = 1;
+r = await add({ name: "Corner Flats Phase 2", lat: 47.66, lng: -117.42 });
+check(r.status === 409 && /already a project file/.test(r.body.error), "existing file not overwritten");
+delete env.EXISTS;
+check((await add({ name: "X", lat: 47.66, lng: -117.42 }, env, token({ email: "x@y.z" }))).status === 401, "only the editor adds");
 console.log(`${ok} checks passed`);
 """
 
 d = tempfile.mkdtemp(prefix="funcs-")
-for name in ("_middleware", "edit", "me", "upload"):
+for name in ("_middleware", "edit", "me", "upload", "project"):
     shutil.copy(os.path.join(FUNCS, f"{name}.js"), os.path.join(d, f"{name}.mjs"))
 shutil.copy(os.path.join(FUNCS, "..", "media", "[[path]].js"), os.path.join(d, "media.mjs"))
 open(os.path.join(d, "run.mjs"), "w").write(SCRIPT)

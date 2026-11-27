@@ -146,4 +146,19 @@ with tempfile.TemporaryDirectory() as d:
     edits.apply(copy.deepcopy(BASE), normalise, rank, edits_dir=d, hidden_out=hidden)
 check(hidden == [{"id": "other", "name": "Other", "at": "2026-11-27T10:00:00Z"}], f"hidden list {hidden}")
 
+# History for the editor, oldest first, under the project's id even when found by permit.
+history = {}
+with tempfile.TemporaryDirectory() as d:
+    os.makedirs(os.path.join(d, "x"))
+    json.dump({"project": "city-b1bldc", "at": "2026-11-27T10:00:00Z", "set": {"units": 50}, "was": {"units": 44}, "note": "a"},
+              open(os.path.join(d, "x", "2.json"), "w"))
+    json.dump({"project": "old-id", "permits": ["B1PDEV"], "at": "2026-11-26T10:00:00Z", "set": {"stories": 5}},
+              open(os.path.join(d, "x", "1.json"), "w"))
+    _, w = edits.apply(copy.deepcopy(BASE), normalise, rank, edits_dir=d, history_out=history)
+h = history.get("city-b1bldc", [])
+check([e["at"] for e in h] == ["2026-11-26T10:00:00Z", "2026-11-27T10:00:00Z"] and h[1]["was"] == {"units": 44} and h[1]["note"] == "a",
+      f"history {history}")
+# A unit count that disagrees with the city's is noted (yours still shown).
+check(any("you set 50 units; city permit report says 44" in x for x in w), f"units disagreement noted {w}")
+
 print(f"{checks} checks passed")

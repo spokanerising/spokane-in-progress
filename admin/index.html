@@ -31,6 +31,10 @@
     city's permit records can still move forward (never back, and never off Stalled). Each edit is saved as its own
     file in <code>data/edits/</code> on GitHub, so there's a full history.</p>
 
+  <h2>Notes from the last build</h2>
+  <p class="muted" id="notes-intro">Things the daily build thought worth a look. A project's own notes also show at the top of its edit panel.</p>
+  <ul class="admin__notes" id="notes"><li>Loading…</li></ul>
+
   <h2>Hidden from the map</h2>
   <p class="muted">Projects you hid with "Hide from map". Putting one back takes a few minutes, like any edit.</p>
   <ul class="admin__hidden" id="hidden"><li>Loading…</li></ul>
@@ -61,6 +65,18 @@
     setFlag(false);
     location.href = "/cdn-cgi/access/logout";
   });
+
+  // The build's notes: everything not tied to one project, then a count per project.
+  const notesEl = document.getElementById("notes");
+  try {
+    const notes = await (await fetch("/data/build-notes.json", { cache: "no-store" })).json();
+    const per = Object.values(notes.projects || {}).reduce((n, l) => n + l.length, 0);
+    const items = (notes.other || []).map((n) => `<li>${esc(n)}</li>`);
+    if (per) items.push(`<li>${per} note(s) about ${Object.keys(notes.projects).length} project(s); open a project's edit panel to see its own.</li>`);
+    notesEl.innerHTML = items.join("") || "<li>None.</li>";
+    if (notes.builtAt) document.getElementById("notes-intro").insertAdjacentText("afterbegin",
+      `Built ${new Date(notes.builtAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}. `);
+  } catch { notesEl.innerHTML = "<li>None yet. They appear after the next build.</li>"; }
 
   const list = document.getElementById("hidden");
   let hidden = [];

@@ -918,7 +918,12 @@ async function geocode(text) {
 let picking = false;
 let pickedAt = 0;   // when a spot was last picked for "Near"
 
+// Someone else waiting for the picked spot (the editor's "Add a project"),
+// instead of Near. Called with {lat, lng}, or null when picking is cancelled.
+let pickFor = null;
+
 function setPicking(on) {
+  if (!on && pickFor) { const done = pickFor; pickFor = null; if (picking) done(null); }
   picking = on;
   document.body.dataset.picking = on ? "on" : "off";
   const hint = document.getElementById("pickhint");
@@ -2477,6 +2482,13 @@ function startMap() {
       // The same click also reaches the dot layer's handler; pickedAt tells
       // it to ignore this one, so picking a spot never opens a project.
       pickedAt = Date.now();
+      if (pickFor) {
+        const done = pickFor;
+        pickFor = null;
+        setPicking(false);
+        done({ lat: e.lngLat.lat, lng: e.lngLat.lng });
+        return;
+      }
       setPicking(false);
       setNear({ lat: e.lngLat.lat, lng: e.lngLat.lng, label: "the spot you picked" });
     });
@@ -2560,6 +2572,16 @@ window.SIPApp = {
   stages: () => STAGES,
   projectById: (id) => projectById(id),
   redrawTools: () => { const p = state.selected && projectById(state.selected); if (p) drawDetailTools(p); },
+  // One click on the map for the editor: done({lat, lng}), or done(null) on Cancel/Escape.
+  pickPoint: (done, text = "Click the map where the project is") => {
+    if (!map) return done(null);
+    setView("map");
+    const hint = document.querySelector("#pickhint span");
+    const old = hint ? hint.textContent : "";
+    if (hint) hint.textContent = text;
+    pickFor = (point) => { if (hint) hint.textContent = old; done(point); };
+    setPicking(true);
+  },
 };
 function loadEditor() {
   let on = false;
