@@ -10,6 +10,8 @@ import { generateKeyPairSync, createSign } from "node:crypto";
 const mw = await import("./_middleware.mjs");
 const edit = await import("./edit.mjs");
 const me = await import("./me.mjs");
+const up = await import("./upload.mjs");
+const media = await import("./media.mjs");
 let ok = 0;
 const check = (cond, what) => { if (!cond) { console.log("FAIL: " + what); process.exit(1); } ok++; };
 
@@ -111,12 +113,71 @@ check(r.status === 502 && /GitHub/.test(r.body.error), "GitHub failure reported"
 delete env.FAIL_GITHUB;
 r = await call(edit.onRequestPost, { tok: token({}), method: "POST", body: good, e: { ...env, GITHUB_TOKEN: "" } });
 check(r.status === 503, "no token says so");
+// ---- uploads (phase 2) ----
+const store = new Map();
+const MEDIA = {
+  async put(key, bytes, opts) { store.set(key, { bytes: new Uint8Array(bytes), opts }); },
+  async get(key, opts) {
+    const hit = store.get(key);
+    if (!hit) return null;
+    const etag = '"e-' + key.length + '"';
+    const obj = { httpEtag: etag, customMetadata: hit.opts.customMetadata,
+                  writeHttpMetadata: (h) => h.set("content-type", hit.opts.httpMetadata.contentType) };
+    const inm = opts && opts.onlyIf && opts.onlyIf.get && opts.onlyIf.get("if-none-match");
+    if (inm === etag) return obj;           // precondition failed: no body
+    return { ...obj, body: new Blob([hit.bytes]).stream() };
+  },
+};
+const menv = { ...env, MEDIA };
+async function send(query, bytes, e = menv, tok = token({})) {
+  const headers = { "content-type": "application/octet-stream" };
+  if (tok) headers["cf-access-jwt-assertion"] = tok;
+  const request = new Request("https://projects.spokanerising.com/api/upload" + query, { method: "POST", headers, body: bytes });
+  const context = { request, env: e, data: {}, next: () => up.onRequestPost({ request, env: e, data: context.data }) };
+  const res = await mw.onRequest(context);
+  return { status: res.status, body: await res.json() };
+}
+const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3, 4]);
+const pdf = new TextEncoder().encode("%PDF-1.7\n...");
+r = await send("?project=city-b1&name=Site%20plan.pdf", pdf);
+check(r.status === 200 && /^https:\/\/projects\.spokanerising\.com\/media\/city-b1\/\d{8}T\d{6}Z-[0-9a-f]{8}\.pdf$/.test(r.body.url), "pdf stored " + JSON.stringify(r));
+const pdfKey = r.body.key;
+check(store.get(pdfKey).opts.httpMetadata.contentType === "application/pdf" && store.get(pdfKey).opts.customMetadata.by === "spokanerising@gmail.com", "pdf type and uploader");
+r = await send("?project=city-b1&name=photo.png", jpeg);
+check(r.status === 200 && r.body.url.endsWith(".jpg"), "type from the bytes, not the name");
+const jpgKey = r.body.key;
+check((await send("?project=city-b1", new TextEncoder().encode("<html><script>"))).status === 415, "html refused");
+check((await send("?project=../x", jpeg)).status === 400, "bad project");
+check((await send("?project=p", new Uint8Array(0))).status === 400, "empty");
+check((await send("?project=p", new Uint8Array(25 * 1024 * 1024 + 1).fill(0xff))).status === 413, "over 25 MB");
+check((await send("?project=p", jpeg, env)).status === 503, "no bucket says so");
+check((await send("?project=p", jpeg, menv, token({ email: "x@y.z" }))).status === 401, "only the editor uploads");
+const n = store.size;
+check(n === 2, "only good files stored");
+
+// Serving
+async function get(path, headers = {}) {
+  const request = new Request("https://projects.spokanerising.com/media/" + path, { headers });
+  return media.onRequestGet({ params: { path: path.split("/") }, env: menv, request });
+}
+let res = await get(pdfKey);
+check(res.status === 200 && res.headers.get("content-type") === "application/pdf", "pdf served");
+check(/immutable/.test(res.headers.get("cache-control")) && res.headers.get("x-content-type-options") === "nosniff", "cached, nosniff");
+check(/inline; filename="Site plan.pdf"/.test(res.headers.get("content-disposition")), "pdf keeps its name");
+check(new TextDecoder().decode(await res.arrayBuffer()).startsWith("%PDF-"), "pdf bytes");
+res = await get(jpgKey);
+check(res.status === 200 && res.headers.get("content-type") === "image/jpeg" && !res.headers.get("content-disposition"), "photo served");
+res = await get(jpgKey, { "if-none-match": '"e-' + jpgKey.length + '"' });
+check(res.status === 304, "304 when unchanged");
+check((await get("city-b1/20261127T191705Z-deadbeef.jpg")).status === 404, "missing file 404");
+check((await get("../secret")).status === 404 && (await get("city-b1/notes.txt")).status === 404, "odd paths 404");
 console.log(`${ok} checks passed`);
 """
 
 d = tempfile.mkdtemp(prefix="funcs-")
-for name in ("_middleware", "edit", "me"):
+for name in ("_middleware", "edit", "me", "upload"):
     shutil.copy(os.path.join(FUNCS, f"{name}.js"), os.path.join(d, f"{name}.mjs"))
+shutil.copy(os.path.join(FUNCS, "..", "media", "[[path]].js"), os.path.join(d, "media.mjs"))
 open(os.path.join(d, "run.mjs"), "w").write(SCRIPT)
 result = subprocess.run(["node", "run.mjs"], cwd=d, capture_output=True, text=True)
 print(result.stdout.strip() or result.stderr.strip())

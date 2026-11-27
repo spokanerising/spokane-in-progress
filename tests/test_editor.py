@@ -33,10 +33,19 @@ json.dump([{"id": "gone-one", "name": "Gone One", "at": "2026-11-20T10:00:00Z"}]
 detailed = next(p for p in projects if any(f["label"] == "Floor area" for f in p["fields"]))
 
 posts = []
-api = {"me": (200, {"email": "spokanerising@gmail.com"}), "edit": (200, None)}
+uploads = []
+api = {"me": (200, {"email": "spokanerising@gmail.com"}), "edit": (200, None), "upload": (200, None)}
 
 def fake_api(route):
     url = route.request.url
+    if "/api/upload" in url:
+        body = route.request.post_data_buffer
+        uploads.append({"url": url, "type": route.request.headers.get("content-type"), "body": body})
+        status, reply = api["upload"]
+        if reply is None:
+            ext = "pdf" if body[:5] == b"%PDF-" else "jpg"
+            reply = {"ok": True, "url": f"https://site.test/media/x/20261127T190000Z-0000000{len(uploads)}.{ext}", "bytes": len(body)}
+        return route.fulfill(status=status, content_type="application/json", body=json.dumps(reply))
     name = "me" if url.endswith("/api/me") else "edit"
     status, body = api[name]
     if name == "edit":
@@ -149,6 +158,66 @@ with sync_playwright() as pw:
     pg.click("[data-save]")
     pg.wait_for_function(f"!document.querySelector('dialog.editor').open")
     check(posts[-1]["set"] == {"imageUrl": "https://example.com/r.jpg", "imagePermission": "public-record"}, f"picture saved {posts[-1]['set']}")
+
+    # Uploads: photos shrink to 2,400 px and turn the right way up; PDFs go as
+    # they are; the address lands in the field; Save sends it.
+    import io
+    from PIL import Image
+    def jpeg(w, h, orientation=None):
+        buf = io.BytesIO()
+        img = Image.new("RGB", (w, h), (180, 90, 40))
+        if orientation:
+            exif = Image.Exif(); exif[0x0112] = orientation
+            img.save(buf, "JPEG", exif=exif)
+        else:
+            img.save(buf, "JPEG")
+        return buf.getvalue()
+    def png_alpha():
+        buf = io.BytesIO(); Image.new("RGBA", (300, 200), (0, 0, 0, 0)).save(buf, "PNG"); return buf.getvalue()
+    def dims(b):
+        return Image.open(io.BytesIO(b)).size
+
+    pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(detailed['id'])}))")
+    check(pg.locator('[data-upload="imageUrl"]').count() == 1 and pg.locator('[data-upload="docUrl"]').count() == 1, "upload buttons")
+    status = lambda k: pg.locator(f'.edfield[data-key="{k}"] .edupload__status')
+    pg.set_input_files('[data-upload="imageUrl"]', files=[{"name": "big.jpg", "mimeType": "image/jpeg", "buffer": jpeg(4000, 3000)}])
+    pg.wait_for_function("document.querySelector('[data-key=imageUrl] .edupload__status').textContent.includes('Press Save')")
+    u = uploads[-1]
+    check(u["body"][:3] == b"\xff\xd8\xff" and dims(u["body"]) == (2400, 1800), f"big photo shrunk to {dims(u['body'])}")
+    check("project=" + detailed["id"] in u["url"] and "name=big.jpg" in u["url"], "upload names the project and file")
+    check(val("imageUrl").startswith("https://site.test/media/") and "2400×1800" in status("imageUrl").inner_text(), "address in the field")
+    check(pg.locator(".edupload__preview").count() == 1, "preview shown")
+    check("permission" in pg.locator(".editor__msg").inner_text() and pg.evaluate("document.activeElement.id") == "ed-imagePermission", "asks for permission next")
+    pg.set_input_files('[data-upload="imageUrl"]', files=[{"name": "phone.jpg", "mimeType": "image/jpeg", "buffer": jpeg(300, 200, orientation=6)}])
+    pg.wait_for_function("document.querySelector('[data-key=imageUrl] .edupload__status').textContent.includes('Press Save')")
+    check(dims(uploads[-1]["body"]) == (200, 300), f"phone photo turned upright {dims(uploads[-1]['body'])}")
+    check(pg.locator(".edupload__preview").count() == 1, "one preview at a time")
+    pg.set_input_files('[data-upload="imageUrl"]', files=[{"name": "clear.png", "mimeType": "image/png", "buffer": png_alpha()}])
+    pg.wait_for_function("document.querySelector('[data-key=imageUrl] .edupload__status').textContent.includes('Press Save')")
+    check(Image.open(io.BytesIO(uploads[-1]["body"])).convert("RGB").getpixel((5, 5)) == (255, 255, 255), "transparent PNG on white")
+    n = len(uploads)
+    pg.set_input_files('[data-upload="imageUrl"]', files=[{"name": "fake.jpg", "mimeType": "image/jpeg", "buffer": b"not a picture"}])
+    pg.wait_for_selector('[data-key=imageUrl] .edupload__status.is-bad')
+    check(len(uploads) == n and "Couldn't read" in status("imageUrl").inner_text(), "broken photo not uploaded")
+    pdf = b"%PDF-1.4\n" + b"x" * 5000
+    pg.set_input_files('[data-upload="docUrl"]', files=[{"name": "plans.pdf", "mimeType": "application/pdf", "buffer": pdf}])
+    pg.wait_for_function("document.querySelector('[data-key=docUrl] .edupload__status').textContent.includes('Press Save')")
+    check(uploads[-1]["body"] == pdf and uploads[-1]["type"] == "application/pdf", "PDF sent unchanged")
+    check(val("docUrl").endswith(".pdf"), "PDF address in the field")
+    pg.set_input_files('[data-upload="docUrl"]', files=[{"name": "notes.txt", "mimeType": "text/plain", "buffer": b"hi"}])
+    pg.wait_for_selector('[data-key=docUrl] .edupload__status.is-bad')
+    check("isn't a PDF" in status("docUrl").inner_text(), "non-PDF refused")
+    api["upload"] = (503, {"error": "File storage isn't set up yet: the MEDIA bucket isn't connected."})
+    pg.set_input_files('[data-upload="docUrl"]', files=[{"name": "plans.pdf", "mimeType": "application/pdf", "buffer": pdf}])
+    pg.wait_for_selector('[data-key=docUrl] .edupload__status.is-bad')
+    check("MEDIA bucket" in status("docUrl").inner_text() and val("docUrl").endswith(".pdf"), "server error shown, field kept")
+    api["upload"] = (200, None)
+    pg.screenshot(path=os.path.join(SHOTS, "editor-uploads.png"))
+    pg.select_option("#ed-imagePermission", "granted")
+    pg.click("[data-save]")
+    pg.wait_for_function("!document.querySelector('dialog.editor').open")
+    sent = posts[-1]["set"]
+    check(sent["imageUrl"].endswith(".jpg") and sent["docUrl"].endswith(".pdf") and sent["imagePermission"] == "granted", f"Save sends the uploads {sent}")
 
     # Hide takes two presses.
     n = len(posts)
