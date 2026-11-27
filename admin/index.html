@@ -31,6 +31,12 @@
     city's permit records can still move forward (never back, and never off Stalled). Each edit is saved as its own
     file in <code>data/edits/</code> on GitHub, so there's a full history.</p>
 
+  <h2>Housing permits not on the map</h2>
+  <p class="muted">From the city's weekly and monthly permit reports: two or more homes, and not part of any project on the
+    map. <strong>Add to the map</strong> opens the Add form filled in from the permit. <strong>Skip</strong> keeps one off this
+    list for good (for example, when the build already counts it as part of another project).</p>
+  <ul class="admin__cands" id="cands"><li>Loading…</li></ul>
+
   <h2>Notes from the last build</h2>
   <p class="muted" id="notes-intro">Things the daily build thought worth a look. A project's own notes also show at the top of its edit panel.</p>
   <ul class="admin__notes" id="notes"><li>Loading…</li></ul>
@@ -65,6 +71,39 @@
     setFlag(false);
     location.href = "/cdn-cgi/access/logout";
   });
+
+  // Housing permits not on the map (data/candidates.json).
+  const candsEl = document.getElementById("cands");
+  try {
+    const cands = await (await fetch("/data/candidates.json", { cache: "no-store" })).json();
+    candsEl.innerHTML = cands.length ? cands.map((c) => `<li><span><b>${esc(c.name || c.address || c.key)}</b>
+        <small>${esc([c.address, c.units ? `${c.units} homes` : "", c.status, (c.permits || []).join(", ")].filter(Boolean).join(" · "))}</small>
+        <small>${esc(c.source)}${c.date ? ` · ${esc(c.date)}` : ""}</small></span>
+      <span class="admin__btns"><button type="button" class="btn btn--ink" data-add="${esc(c.key)}"${email ? "" : " disabled"}>Add to the map</button>
+        <button type="button" class="btn" data-skip="${esc(c.key)}" data-name="${esc(c.name || c.key)}"${email ? "" : " disabled"}>Skip</button></span></li>`).join("")
+      : "<li>None. Every housing permit in the reports is on the map.</li>";
+  } catch { candsEl.innerHTML = "<li>None yet. The list appears after the next build.</li>"; }
+  candsEl.querySelectorAll("[data-add]").forEach((b) => b.addEventListener("click", () => {
+    try { sessionStorage.setItem("sip-add", b.dataset.add); } catch {}
+    location.href = "/";
+  }));
+  candsEl.querySelectorAll("[data-skip]").forEach((b) => b.addEventListener("click", async () => {
+    if (!b.classList.contains("is-armed")) { b.classList.add("is-armed"); b.textContent = "Press again to skip"; return; }
+    b.disabled = true; b.textContent = "Saving…";
+    try {
+      const res = await fetch("/api/edit", {
+        method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ project: `candidate-${b.dataset.skip}`, name: `Skip ${b.dataset.name}`, set: { hidden: true }, note: "Skipped from the permit list" }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+      b.textContent = "Skipped";
+      b.closest("li").style.opacity = 0.5;
+    } catch (e) {
+      b.disabled = false; b.classList.remove("is-armed"); b.textContent = "Skip";
+      Share.toast(`Couldn't save: ${e.message}`, 8000);
+    }
+  }));
 
   // The build's notes: everything not tied to one project, then a count per project.
   const notesEl = document.getElementById("notes");

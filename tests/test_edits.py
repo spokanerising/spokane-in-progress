@@ -144,7 +144,17 @@ with tempfile.TemporaryDirectory() as d:
     os.makedirs(os.path.join(d, "x"))
     json.dump({"project": "other", "at": "2026-11-27T10:00:00Z", "set": {"hidden": True}}, open(os.path.join(d, "x", "h.json"), "w"))
     edits.apply(copy.deepcopy(BASE), normalise, rank, edits_dir=d, hidden_out=hidden)
-check(hidden == [{"id": "other", "name": "Other", "at": "2026-11-27T10:00:00Z"}], f"hidden list {hidden}")
+check(hidden == [{"id": "other", "name": "Other", "at": "2026-11-27T10:00:00Z", "permits": ["B3BLDC"]}], f"hidden list {hidden}")
+
+# "candidate-<key>" edits skip a permit in the editor's list; no project warnings.
+skipped = set()
+with tempfile.TemporaryDirectory() as d:
+    os.makedirs(os.path.join(d, "x"))
+    json.dump({"project": "candidate-B9BLDC", "at": "2026-11-27T10:00:00Z", "set": {"hidden": True}}, open(os.path.join(d, "x", "1.json"), "w"))
+    json.dump({"project": "candidate-B8BLDC", "at": "2026-11-27T10:00:00Z", "set": {"hidden": True}}, open(os.path.join(d, "x", "2.json"), "w"))
+    json.dump({"project": "candidate-B8BLDC", "at": "2026-11-28T10:00:00Z", "unset": ["hidden"]}, open(os.path.join(d, "x", "3.json"), "w"))
+    out, w = edits.apply(copy.deepcopy(BASE), normalise, rank, edits_dir=d, skipped_out=skipped)
+check(skipped == {"B9BLDC"} and not w and len(out) == 3, f"skips {skipped} {w}")
 
 # History for the editor, oldest first, under the project's id even when found by permit.
 history = {}

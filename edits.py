@@ -281,7 +281,13 @@ def apply_to(project, values, dates, stage_rank):
     return warnings
 
 
-def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out=None, history_out=None):
+# Edits for "candidate-<key>" aren't for a project: "hidden": true there means
+# "skip this permit" in the editor's list of housing permits not on the map.
+CANDIDATE = "candidate-"
+
+
+def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out=None, history_out=None,
+          skipped_out=None):
     """Returns (projects with edits applied and hidden ones removed, warnings).
     Always removes the build's internal _cityStage note. Hidden projects are
     added to hidden_out (a list) as {id, name, at}, for the editor's
@@ -291,7 +297,15 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
     by_id = {p["id"]: p for p in projects}
     values, dates = {}, {}  # project id -> field -> value / time
 
+    skips = {}
     for edit in found:
+        if edit["project"].startswith(CANDIDATE):
+            key = edit["project"][len(CANDIDATE):]
+            if edit.get("set", {}).get("hidden") is True:
+                skips[key] = True
+            if "hidden" in edit.get("unset", []):
+                skips.pop(key, None)
+            continue
         project, problem = find(edit, by_id, projects)
         if problem:
             warnings.append(f'Edit {edit["_file"]} for "{edit["project"]}": {problem}. Not applied.')
@@ -328,11 +342,14 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
                 hidden += 1
                 if hidden_out is not None:
                     hidden_out.append({"id": p["id"], "name": p.get("name") or p["id"],
-                                       "at": dates[p["id"]].get("hidden", "")})
+                                       "at": dates[p["id"]].get("hidden", ""),
+                                       "permits": p.get("permitNumbers") or []})
                 continue
             warnings.extend(apply_to(p, mine, dates[p["id"]], stage_rank))
         p.pop("_cityStage", None)
         kept.append(p)
+    if skipped_out is not None:
+        skipped_out.update(skips)
     applied = sum(1 for pid, v in values.items() if v)
     if found:
         print(f"Applied {len(found)} edit file(s) to {applied} project(s); {hidden} hidden.")

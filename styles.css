@@ -2439,3 +2439,11 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
 .edpin { grid-column: 1 / -1; }
 .admin__notes { font-size: 14px; padding-left: 18px; }
 .admin__notes li { margin: 4px 0; }
+.edfrom { padding-bottom: 4px; }
+.edfrom .edfield { grid-column: 1 / -1; }
+.admin__cands { list-style: none; margin: 0; padding: 0; }
+.admin__cands li { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.admin__cands small { display: block; color: var(--muted); }
+.admin__cands .admin__btns { display: flex; gap: 8px; flex: none; }
+.admin .btn.is-armed { border-color: #9b2c12; color: #9b2c12; }
+@media (max-width: 560px) { .admin__cands li { flex-direction: column; } }
