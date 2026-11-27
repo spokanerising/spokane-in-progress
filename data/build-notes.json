@@ -1,1 +1,18 @@
-{"builtAt": "", "projects": {}, "other": []}
+{
+ "builtAt": "2026-11-27T19:59:32.516696+00:00",
+ "projects": {
+  "B2606311BLDC": [
+   "37 E Everett Triplex: stage moved from Applied to Under Construction by the city's permit records (1 trade permit(s) issued since the building permit). Nothing to do unless that's wrong."
+  ],
+  "city-b26m0015pdev": [
+   "1611 W 9th Sixplexes: you set 12 units; permit description says 6. Yours is shown."
+  ],
+  "city-b2615342bldc": [
+   "Ben Burr Townhomes: map point is outside every neighborhood council; check its location."
+  ]
+ },
+ "other": [
+  "Monthly: Canyon Bluff Apartments (168 units) has no street address. Not mapped.",
+  "Monthly: couldn't place Kodiak Lacey Townhomes at \"2715-2779 E Dalke\". Not mapped."
+ ]
+}
