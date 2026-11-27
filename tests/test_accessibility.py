@@ -37,10 +37,7 @@ def ensure_axe():
 
 # Problems already on the fix list (issue #31, phase 2). Each entry is
 # (page state, axe rule); take it out when the fix ships, so it stays fixed.
-KNOWN = {
-    ("stats", "nested-interactive"),   # charts wrapped as role="img" around links
-    ("stats", "target-size"),          # 9px dots on the homes-per-acre strip
-}
+KNOWN = set()
 
 AXE = ensure_axe()
 site, data = make_site(with_facts=True)
@@ -126,10 +123,57 @@ with sync_playwright() as pw:
             check(not new, f"{vpn}/{name}: " + "; ".join(f"{v['id']} ({v['help']}) at {v['where']}" for v in new))
             ctx.close()
     # A known problem that has been fixed should come off the list.
+    for name in sorted({k for k, _ in KNOWN}):
+        ctx = b.new_context(viewport=VIEWPORTS["desktop"]); pg = ctx.new_page(); wire(pg, site)
+        STATES[name](pg)
+        still = {(name, v["id"]) for v in run_axe(pg)}
+        gone = {k for k in KNOWN if k[0] == name} - still
+        check(not gone, f"fixed, take off KNOWN: {sorted(gone)}")
+        ctx.close()
+
+    # ---- the project view never hides focus behind it --------------------
+    # Phones: the page behind is inert. Tablets: Tab wraps inside the panel.
+    # Desktop: the panel has its own column. Either way, 60 Tabs stay visible.
+    for w, h in ((390, 844), (700, 900), (1024, 768), (1280, 900)):
+        ctx = b.new_context(viewport={"width": w, "height": h}); pg = ctx.new_page(); wire(pg, site)
+        pg.goto(f"{SITE}/?view=list"); pg.wait_for_selector(".card", state="attached"); pg.wait_for_timeout(600)
+        pg.locator(".card:visible").first.focus(); pg.keyboard.press("Enter"); pg.wait_for_selector("#detail:not([hidden])"); pg.wait_for_timeout(300)
+        hidden_behind = []
+        for _ in range(60):
+            pg.keyboard.press("Tab")
+            hit = pg.evaluate("""() => { const e = document.activeElement, d = document.getElementById('detail');
+              if (!e || d.contains(e)) return null; const r = e.getBoundingClientRect(), q = d.getBoundingClientRect();
+              const under = r.left >= q.left && r.right <= q.right && r.top >= q.top && r.bottom <= q.bottom;
+              return under ? (e.getAttribute('aria-label') || e.textContent || e.id).trim().slice(0, 30) : null; }""")
+            if hit: hidden_behind.append(hit)
+        check(not hidden_behind, f"{w}px: focus went behind the project: {hidden_behind[:5]}")
+        if w == 390:
+            check(pg.evaluate("document.querySelectorAll('[inert]').length") > 0, "phone: the page behind is inert")
+        pg.keyboard.press("Escape"); pg.wait_for_timeout(200)
+        check(pg.evaluate("document.querySelectorAll('[inert]').length") == 0, f"{w}px: nothing left inert after closing")
+        check(pg.evaluate("document.activeElement.classList.contains('card')"), f"{w}px: focus back on the card")
+        ctx.close()
+
+    # ---- the tab title names what's on screen -----------------------------
+    ctx = b.new_context(viewport=VIEWPORTS["desktop"]); pg = ctx.new_page(); wire(pg, site)
+    pg.goto(f"{SITE}/?p={detailed['id']}"); pg.wait_for_selector("#detail:not([hidden])"); pg.wait_for_timeout(300)
+    check(pg.title() == f"{detailed['name']} · Spokane in Progress", f"project title: {pg.title()}")
+    pg.goto(f"{SITE}/?hood=riverside"); pg.wait_for_selector(".card", state="attached"); pg.wait_for_timeout(300)
+    check(pg.title() == "Riverside · Spokane in Progress", f"neighborhood title: {pg.title()}")
+    pg.goto(f"{SITE}/?district=2"); pg.wait_for_selector(".card", state="attached"); pg.wait_for_timeout(300)
+    check(pg.title() == "District 2 · Spokane in Progress", f"district title: {pg.title()}")
+    pg.goto(f"{SITE}/"); pg.wait_for_selector(".card", state="attached"); pg.wait_for_timeout(300)
+    check(pg.title() == "Spokane in Progress", f"home title: {pg.title()}")
+    ctx.close()
+
+    # ---- Stats: every chart's numbers reach a screen reader ----------------
     ctx = b.new_context(viewport=VIEWPORTS["desktop"]); pg = ctx.new_page(); wire(pg, site)
     STATES["stats"](pg)
-    still = {("stats", v["id"]) for v in run_axe(pg)}
-    check(KNOWN <= still, f"fixed, take off KNOWN: {sorted(KNOWN - still)}")
+    check(pg.locator('[role="img"]').count() == 0, "no chart is hidden inside role=img")
+    check(pg.locator("#chart-density .strip__list a").count() == pg.locator("#chart-density .strip__dot").count() > 0, "every density dot has a link in the list")
+    check(pg.evaluate("[...document.querySelectorAll('.strip__dot')].every(a => a.tabIndex === -1 && a.closest('[aria-hidden=true]'))"), "the dots themselves are a picture")
+    check("approved" in pg.locator("#chart-district .bars__value .visually-hidden").first.text_content() or
+          "applied" in pg.locator("#chart-district .bars__value .visually-hidden").first.text_content(), "bars spell out the stage split")
     ctx.close()
 
     # ---- zero-count chips stay readable (4.5:1, not faded) -----------------

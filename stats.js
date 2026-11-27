@@ -44,6 +44,15 @@ function apDate(value) {
   return isNaN(d) ? String(value) : `${AP_MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
+// A chart's numbers as a table for screen readers; the drawing beside it is
+// marked aria-hidden. (WCAG 1.1.1: a picture's text alternative carries its data.)
+function srTable(caption, head, rows) {
+  // Wrapped: a table ignores the 1px width of .visually-hidden and would widen the page.
+  return `<div class="visually-hidden"><table><caption>${esc(caption)}</caption>
+    <thead><tr>${head.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map((r) => `<tr><th scope="row">${esc(r[0])}</th>${r.slice(1).map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+
 const sourceLine = () =>
   `Source: City of Spokane permit records, compiled by Spokane in Progress. Data as of ${apDate(builtAt)}.`;
 
@@ -70,17 +79,19 @@ function stackedBars({ id, slug, title, rows, note, counts = true }) {
           ? `<span class="bars__seg" style="width:${(100 * n) / max}%;background:${s.color}" title="${esc(r.label)}: ${fmt(n)} ${esc(s.name.toLowerCase())}"></span>`
           : "";
       }).join("");
+      const split = STAGES.map((st) => [st.name, sumUnits(r.items.filter((p) => p.status === st.name))]).filter(([, n]) => n)
+        .map(([name, n]) => `${fmt(n)} ${name.toLowerCase()}`).join(", ");
       const missing = r.items.filter((p) => !(p.units > 0)).length;
       const label = r.href ? `<a href="${esc(r.href)}">${esc(r.label)}</a>` : esc(r.label);
       return `<div class="bars__row${r.indent ? " bars__row--indent" : ""}${counts ? "" : " bars__row--nocount"}">
           <div class="bars__label">${label}${r.sub ? `<small>${esc(r.sub)}</small>` : ""}</div>
-          <div class="bars__track">${segs}<span class="bars__value"><b>${fmt(total)}</b>${missing ? `<small> +${missing} not reported</small>` : ""}</span></div>
+          <div class="bars__track">${segs}<span class="bars__value"><b>${fmt(total)}</b><span class="visually-hidden"> ${total === 1 ? "home" : "homes"}${split ? ` (${split})` : ""}</span>${missing ? `<small> +${missing} not reported</small>` : ""}</span></div>
           ${counts ? `<div class="bars__n">${plural(r.items.length, "project", "projects")}</div>` : ""}
         </div>`;
     })
     .join("");
   return `<figcaption class="chart__title">${esc(title)}</figcaption>
-    <div class="bars" role="img" aria-label="${esc(title)}">${body}</div>
+    <div class="bars">${body}</div>
     <p class="source">${note ? `Note: ${esc(note)} ` : ""}${esc(sourceLine())}</p>`;
 }
 
@@ -140,7 +151,9 @@ function quarterColumns() {
       <li><i style="background:var(--ink-2)"></i>Middle housing</li>
       <li><i style="background:#b9b2a5"></i>Other housing</li>
     </ul>
-    <div class="cols" role="img" aria-label="Projects first filed with the city, by quarter">${cols}</div>
+    <div class="cols" aria-hidden="true">${cols}</div>
+    ${srTable("Projects first filed with the city, by quarter", ["Quarter", "Projects", "Middle housing projects", "Homes"],
+      CHARTS.quarter.cols.map((c) => [`${c.q} ${c.year}${c.partial ? " (partial)" : ""}`, fmt(c.projects), fmt(c.middle), fmt(c.homes)]))}
     <p class="source">Note: Counts projects still on the map, by the date of their earliest city record (a pre-development meeting counts). The city’s public permit map keeps about three years of records; the first and last quarters shown are partial, and ${plural(projects.length - dated.length, "project has", "projects have")} no filing date. ${esc(sourceLine())}</p>`;
 }
 
@@ -233,10 +246,16 @@ function densityStrip() {
   const rows = Math.max(1, ...dots.map((d) => Math.abs(d.row)));
   const step = 9;
   const height = Math.max(60, (2 * rows + 1) * step + 12);
-  const pts = dots.map((d) => `<a class="strip__dot" href="p/${encodeURIComponent(d.p.id)}/" style="left:${(100 * d.pos).toFixed(2)}%;top:calc(50% + ${d.row * step}px);background:${colorOf(d.p.status)}" title="${esc(d.p.name)}: ${fmt(round(d.value))} homes per acre (${fmt(d.p.units)} homes on ${d.p.acres} acres)" aria-label="${esc(d.p.name)}, ${fmt(round(d.value))} homes per acre"></a>`).join("");
+  const pts = dots.map((d) => `<a class="strip__dot" href="p/${encodeURIComponent(d.p.id)}/" tabindex="-1" style="left:${(100 * d.pos).toFixed(2)}%;top:calc(50% + ${d.row * step}px);background:${colorOf(d.p.status)}" title="${esc(d.p.name)}: ${fmt(round(d.value))} homes per acre (${fmt(d.p.units)} homes on ${d.p.acres} acres)"></a>`).join("");
+  // The same projects as a list of links: the way in for keyboards and screen
+  // readers, and a full-size target for every dot (WCAG 2.5.8).
+  const listing = `<details class="explain strip__list"><summary>All ${plural(list.length, "project", "projects")}, by homes per acre</summary>
+    <ol>${list.map((p) => `<li><a href="p/${encodeURIComponent(p.id)}/">${esc(p.name)}</a> <span>${fmt(round(p.homesPerAcre))} homes per acre · ${plural(p.units, "home", "homes")} on ${fmt(p.acres)} acres</span></li>`).join("")}</ol>
+  </details>`;
   const ticks = sc.ticks.map((v) => `<span class="strip__tick" style="left:${(100 * sc.x(v)).toFixed(2)}%">${fmt(v)}</span>`).join("");
   return `<figcaption class="chart__title">${esc(title)}</figcaption>
-    <div class="strip" role="img" aria-label="${esc(title)}">
+    <p class="visually-hidden">Median: ${fmt(round(med))} homes per acre, across ${plural(list.length, "project", "projects")}, from ${fmt(round(values[0]))} to ${fmt(round(values[values.length - 1]))}. The projects are listed below.</p>
+    <div class="strip" aria-hidden="true">
       <div class="strip__plot" style="height:${height}px">
         <span class="strip__median" style="left:${(100 * sc.x(med)).toFixed(2)}%"><span>Median ${fmt(round(med))}</span></span>
         ${pts}
@@ -244,6 +263,7 @@ function densityStrip() {
       <div class="strip__axis">${ticks}</div>
       <p class="strip__unit">Homes per acre</p>
     </div>
+    ${listing}
     <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
 }
 
@@ -303,7 +323,7 @@ function middleShare() {
       <li><i style="background:var(--ink-2)"></i>Middle housing</li>
       <li><i style="background:#b9b2a5"></i>Other housing</li>
     </ul>
-    <div class="share" role="img" aria-label="${esc(title)}">${body}</div>
+    <div class="share">${body}</div>
     <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
 }
 
@@ -371,7 +391,9 @@ async function historyLine() {
   fig.hidden = false;
   fig.innerHTML = `<figcaption class="chart__title">${esc(title)}</figcaption>
     <ul class="legend legend--small">${HISTORY_SERIES.map((s) => `<li><i style="background:${seriesColor(s)}"></i>${esc(s.label)}</li>`).join("")}</ul>
-    <div class="linechart" role="img" aria-label="${esc(title)}">${lineSvgInner(rows, 640, 240, 13, true)}</div>
+    <div class="linechart" aria-hidden="true">${lineSvgInner(rows, 640, 240, 13, true)}</div>
+    ${srTable(`${title} (weekly)`, ["Date", ...HISTORY_SERIES.map((x) => x.label)],
+      rows.filter((r, i) => i % 7 === 0 || i === rows.length - 1).map((r) => [apDate(r.date), ...HISTORY_SERIES.map((x) => fmt(x.value(r)))]))}
     <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
   chartTools("history");
 }
@@ -673,6 +695,8 @@ function stackedSvg(spec) {
         parts.push(`<rect x="${x.toFixed(1)}" y="${rowY + 2}" width="${w.toFixed(1)}" height="22" fill="${s.color}"/>`);
         x += w + 2;
       });
+      const split = STAGES.map((st) => [st.name, sumUnits(r.items.filter((p) => p.status === st.name))]).filter(([, n]) => n)
+        .map(([name, n]) => `${fmt(n)} ${name.toLowerCase()}`).join(", ");
       const missing = r.items.filter((p) => !(p.units > 0)).length;
       parts.push(t(x + 8, rowY + 19, fmt(sumUnits(r.items)), { size: 17, weight: 700 }));
       if (missing) {

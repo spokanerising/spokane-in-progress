@@ -1663,6 +1663,8 @@ function select(id, flyTo, fromHistory = false) {
   el.detail.scrollTop = 0;
   document.body.dataset.detail = "open";
   startSiteView(project);   // once the panel is showing, so the view knows its size
+  syncDetailInert();
+  syncTitle();
   document.getElementById("detail-close").focus();
 
   if (flyTo) flyToProject(project);
@@ -1716,6 +1718,49 @@ function wirePanelToggle() {
 
 let detailOpener = null;
 
+// When the project covers the whole screen (phones), everything behind it is
+// made inert: Tab, screen readers and taps stay in the project instead of
+// wandering through controls hidden underneath (WCAG 2.4.11, 2.4.3). Where the
+// panel sits beside or over part of the map, the map stays usable.
+const inerted = [];
+const KEEP_LIVE = ".glosspop, .menu, .toast, .tip-label, dialog, script, style";
+function coversScreen() {
+  if (el.detail.hidden) return false;
+  const r = el.detail.getBoundingClientRect();
+  return r.left <= 1 && r.width >= window.innerWidth - 1;
+}
+function syncDetailInert() {
+  const want = coversScreen();
+  if (!want) {
+    inerted.splice(0).forEach((n) => n.removeAttribute("inert"));
+    return;
+  }
+  if (inerted.length) return;
+  for (let node = el.detail; node && node !== document.body; node = node.parentElement) {
+    for (const sib of node.parentElement.children) {
+      if (sib === node || sib.hasAttribute("inert") || sib.matches(KEEP_LIVE)) continue;
+      sib.setAttribute("inert", "");
+      inerted.push(sib);
+    }
+  }
+}
+window.addEventListener("resize", () => syncDetailInert());
+
+// Tablet widths: the panel floats over part of the map, so Tab wraps around
+// inside it rather than reaching controls hidden underneath. The visible map
+// still takes clicks; Escape or × closes the panel.
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Tab" || el.detail.hidden || document.querySelector(".menu, dialog[open]")) return;
+  if (getComputedStyle(el.detail).position !== "fixed") return;
+  const stops = [...el.detail.querySelectorAll('a[href], button:not([disabled]), input, select, textarea, summary, [tabindex]:not([tabindex="-1"])')]
+    .filter((n) => n.getClientRects().length && !n.closest("[hidden], [inert]"));
+  if (!stops.length) return;
+  const first = stops[0], last = stops[stops.length - 1], at = document.activeElement;
+  if (!el.detail.contains(at)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+  else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+});
+
 // Close from the × or Escape, and put focus back where it came from: the row
 // (redrawn rows are found again by id) or the map.
 function closeDetailAndReturn() {
@@ -1730,6 +1775,8 @@ function closeDetailAndReturn() {
 function closeDetail(fromHistory = false) {
   stopSiteView();
   el.detail.hidden = true;
+  syncDetailInert();
+  syncTitle();
   document.body.dataset.detail = "closed";
   state.selected = null;
   el.cards.querySelectorAll(".card").forEach((c) => c.classList.remove("is-active"));
@@ -1776,8 +1823,26 @@ function urlFromState() {
 
 let urlReady = false; // don't write the address until it has been read
 
+// The browser tab names what's on screen: an open project, or the one or two
+// neighborhoods or districts the map is narrowed to (WCAG 2.4.2).
+const SITE_TITLE = "Spokane in Progress";
+function syncTitle() {
+  let title = SITE_TITLE;
+  const open = state.selected && !el.detail.hidden && projectById(state.selected);
+  if (open) title = `${open.name} · ${SITE_TITLE}`;
+  else {
+    for (const key of ["hood", "district"]) {
+      if (!FILTERS[key] || !state.sel[key] || !filterOn(key) || !state.sel[key].size || state.sel[key].size > 2) continue;
+      const names = FILTERS[key].opts.filter((o) => state.sel[key].has(o.key)).map((o) => o.label);
+      if (names.length) { title = `${names.join(" and ")} · ${SITE_TITLE}`; break; }
+    }
+  }
+  if (document.title !== title) document.title = title;
+}
+
 function writeUrl(push = false) {
   if (!urlReady) return;
+  syncTitle();
   const next = urlFromState();
   if (next === `${location.pathname}${location.search}`) return;
   history[push ? "pushState" : "replaceState"]({}, "", next);
