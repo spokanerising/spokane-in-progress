@@ -198,6 +198,7 @@ with sync_playwright() as pw:
     box = page.locator("#map").bounding_box()
     page.mouse.click(box["x"] + box["width"] * 0.5, box["y"] + box["height"] * 0.6)
     page.wait_for_function("state.near && state.near.label === 'the spot you picked'")
+    page.wait_for_timeout(300)
     check(page.locator("#pickhint").is_hidden() and page.evaluate("state.selected") is None, "picked, no project opened")
     # remove via pill
     page.locator(".pill", has_text="Within").click()

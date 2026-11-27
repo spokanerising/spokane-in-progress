@@ -915,6 +915,7 @@ async function geocode(text) {
 }
 
 let picking = false;
+let pickedAt = 0;   // when a spot was last picked for "Near"
 
 function setPicking(on) {
   picking = on;
@@ -2109,7 +2110,10 @@ function startMap() {
     // Picking a spot for "Near".
     map.on("click", (e) => {
       if (!picking) return;
-      setTimeout(() => setPicking(false), 0); // after the dot click handler has seen it
+      // The same click also reaches the dot layer's handler; pickedAt tells
+      // it to ignore this one, so picking a spot never opens a project.
+      pickedAt = Date.now();
+      setPicking(false);
       setNear({ lat: e.lngLat.lat, lng: e.lngLat.lng, label: "the spot you picked" });
     });
 
@@ -2128,7 +2132,10 @@ function startMap() {
       const near = (f) => map.project(f.geometry.coordinates).dist(e.point);
       return [...e.features].sort((a, b) => near(a) - near(b))[0];
     };
-    map.on("click", "project-hit", (e) => { if (!picking) select(pick(e).properties.id, false); });
+    map.on("click", "project-hit", (e) => {
+      if (picking || Date.now() - pickedAt < 400) return;
+      select(pick(e).properties.id, false);
+    });
     // Hovering a dot rings it, highlights its row and shows its name.
     const tip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "tip" });
     map.on("mousemove", "project-hit", (e) => {
