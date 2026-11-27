@@ -99,7 +99,7 @@ with sync_playwright() as pw:
     pg.goto(SITE + "/stats.html")
     pg.wait_for_selector("#chart-size .chart__tools .iconbtn")
     found = audit(pg, 36, "about page")
-    check(sum(f["name"] == "Download this chart" for f in found) == 5, found)
+    check(sum(f["name"] == "Download this chart" for f in found) == 11, found)
     pg.locator("#chart-size .iconbtn").click()
     items = pg.eval_on_selector_all(".menu .menu__item", "els => els.map(e => e.dataset.item)")
     check(items == ["png", "svg", "csv"], items)

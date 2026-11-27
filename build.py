@@ -457,6 +457,29 @@ def load_monthly():
     return index
 
 
+def source_dates():
+    """When the slower-moving sources were last updated, for the About page:
+    the monthly report's project tables (their own "as of" date), and when
+    the zoning layer and the transit schedule were last fetched."""
+    out = {}
+    try:
+        with open(MONTHLY_PATH, encoding="utf-8", newline="") as handle:
+            dates = [row.get("as_of", "") for row in csv.DictReader(handle)]
+        dates = [d for d in dates if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d or "")]
+        if dates:
+            out["monthlyTables"] = max(dates)
+    except OSError:
+        pass
+    for key, path, field in (("zoning", "zoning-source.json", "found"), ("transit", "transit-meta.json", "fetched")):
+        try:
+            value = json.load(open(os.path.join("data", path), encoding="utf-8")).get(field)
+            if value:
+                out[key] = value
+        except (OSError, ValueError):
+            pass
+    return out
+
+
 def _numbers(text):
     return set(re.findall(r"\b\d{2,5}\b", text or ""))
 
@@ -1225,6 +1248,7 @@ def main():
         json.dump(
             {
                 "builtAt": datetime.now(timezone.utc).isoformat(),
+                "sourceDates": source_dates(),
                 "stages": STAGES,
                 "projects": projects,
             },

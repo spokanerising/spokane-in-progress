@@ -8,6 +8,8 @@ const PIPELINE = ["Applied", "Approved", "Under Construction"];
 const MIDDLE_TYPES = ["Duplex", "Triplex or fourplex", "Fiveplex or sixplex", "Townhomes", "Cottage housing"];
 const OTHER_TYPES = ["Apartments", "House + ADU", "Conversion or addition", "Senior & group living"];
 const UNKNOWN_TYPE = "Not yet known";
+// Same order as the map's zoning filter (app.js).
+const ZONE_GROUPS = ["Residential", "Centers & Corridors", "Commercial & mixed use", "Downtown", "Industrial", "Other"];
 
 const SIZES = [
   { label: "2–4 homes", test: (u) => u >= 2 && u <= 4 },
@@ -48,12 +50,12 @@ const sourceLine = () =>
 // --------------------------------------------------------------------------
 // Stacked horizontal bars: one row per group, segments by stage, homes.
 
-function stackedBars({ id, slug, title, rows, note }) {
+function stackedBars({ id, slug, title, rows, note, counts = true }) {
   if (id) {
     // Each row's group, for the data download ("Middle housing" for a duplex).
     let group = "";
     const tagged = rows.map((r) => { if (r.header) group = r.label; return { ...r, group: r.indent ? group : "" }; });
-    CHARTS[id] = { kind: "stacked", slug, title, rows: tagged, note, csv: stackedCsv(tagged) };
+    CHARTS[id] = { kind: "stacked", slug, title, rows: tagged, note, counts, csv: stackedCsv(tagged) };
   }
   const max = Math.max(1, ...rows.filter((r) => !r.header).map((r) => sumUnits(r.items)));
   const body = rows
@@ -69,10 +71,11 @@ function stackedBars({ id, slug, title, rows, note }) {
           : "";
       }).join("");
       const missing = r.items.filter((p) => !(p.units > 0)).length;
-      return `<div class="bars__row${r.indent ? " bars__row--indent" : ""}">
-          <div class="bars__label">${esc(r.label)}</div>
+      const label = r.href ? `<a href="${esc(r.href)}">${esc(r.label)}</a>` : esc(r.label);
+      return `<div class="bars__row${r.indent ? " bars__row--indent" : ""}${counts ? "" : " bars__row--nocount"}">
+          <div class="bars__label">${label}${r.sub ? `<small>${esc(r.sub)}</small>` : ""}</div>
           <div class="bars__track">${segs}<span class="bars__value"><b>${fmt(total)}</b>${missing ? `<small> +${missing} not reported</small>` : ""}</span></div>
-          <div class="bars__n">${plural(r.items.length, "project", "projects")}</div>
+          ${counts ? `<div class="bars__n">${plural(r.items.length, "project", "projects")}</div>` : ""}
         </div>`;
     })
     .join("");
@@ -169,6 +172,249 @@ function sizeTable() {
     <p class="source">Note: Size counts every home in a project, across all its buildings, at every stage. ${esc(sourceLine())}</p>`;
 }
 
+// "Residential zones hold 49% of the homes; commercial and mixed-use zones, 34%"
+function zoneTitle(groupHomes, total) {
+  const pct = (n) => Math.round((100 * n) / Math.max(1, total));
+  const name = (g) => g.replace(" & ", " and ").replace(/^[A-Z]/, (c) => c).replace(/(?<=.)\b([A-Z])/g, (c) => c.toLowerCase());
+  const [a, b] = groupHomes.filter(([, n]) => n > 0);
+  if (!a) return "Homes by zoning";
+  if (pct(a[1]) > 50 || !b) return `${pct(a[1])}% of the homes are in ${name(a[0]).toLowerCase()} zones`;
+  return `${name(a[0])} zones hold ${pct(a[1])}% of the homes; ${name(b[0]).toLowerCase()} zones, ${pct(b[1])}%`;
+}
+
+// --------------------------------------------------------------------------
+// Density: one dot per project on a log scale of homes per acre.
+
+const DENSITY_TICKS = [2, 5, 10, 20, 50, 100, 200, 500, 1000];
+
+function densityScale(values) {
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const min = [...DENSITY_TICKS].reverse().find((v) => v <= lo) || DENSITY_TICKS[0];
+  const max = DENSITY_TICKS.find((v) => v >= hi) || DENSITY_TICKS[DENSITY_TICKS.length - 1];
+  const a = Math.log(min), b = Math.log(max);
+  return { min, max, x: (v) => (Math.log(Math.min(Math.max(v, min), max)) - a) / (b - a),
+           ticks: DENSITY_TICKS.filter((v) => v >= min && v <= max) };
+}
+
+// Dots that would overlap stack up and down from the center line.
+function beeswarm(items, x, binW) {
+  const bins = new Map();
+  return items.map((it) => {
+    const pos = x(it.value);
+    const k = Math.round(pos / binW);
+    const n = bins.get(k) || 0;
+    bins.set(k, n + 1);
+    return { ...it, pos, row: n === 0 ? 0 : (n % 2 ? 1 : -1) * Math.ceil(n / 2) };
+  });
+}
+
+const median = (list) => {
+  const v = [...list].sort((a, b) => a - b), m = Math.floor(v.length / 2);
+  return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+};
+
+function densityStrip() {
+  const list = projects.filter((p) => Number.isFinite(p.homesPerAcre) && p.homesPerAcre > 0)
+    .sort((a, b) => a.homesPerAcre - b.homesPerAcre);
+  if (list.length < 5) return "";
+  const values = list.map((p) => p.homesPerAcre);
+  const sc = densityScale(values);
+  const med = median(values);
+  const round = (v) => (v >= 20 ? Math.round(v) : Math.round(v * 10) / 10);
+  const title = `Half of these projects build fewer than ${fmt(round(med))} homes per acre`;
+  const note = `One dot per project with both a unit count and a known site size (${plural(list.length, "project", "projects")} of ${fmt(projects.length)}). Site size is the combined area of the project’s county parcels. The scale is logarithmic: each step is a multiple, not an equal amount.`;
+  const dots = beeswarm(list.map((p) => ({ p, value: p.homesPerAcre })), sc.x, 0.012);
+  CHARTS.density = { kind: "strip", slug: "homes-per-acre", title, note, dots, scale: sc, median: med,
+    csv: { rows: list, columns: [
+      { label: "project", value: (p) => p.name }, { label: "id", value: (p) => p.id },
+      { label: "stage", value: (p) => p.status }, { label: "homes", value: (p) => p.units },
+      { label: "acres", value: (p) => p.acres }, { label: "homes_per_acre", value: (p) => p.homesPerAcre },
+      { label: "zone", value: (p) => p.zoneBase || "" }] } };
+  const rows = Math.max(1, ...dots.map((d) => Math.abs(d.row)));
+  const step = 9;
+  const height = Math.max(60, (2 * rows + 1) * step + 12);
+  const pts = dots.map((d) => `<a class="strip__dot" href="p/${encodeURIComponent(d.p.id)}/" style="left:${(100 * d.pos).toFixed(2)}%;top:calc(50% + ${d.row * step}px);background:${colorOf(d.p.status)}" title="${esc(d.p.name)}: ${fmt(round(d.value))} homes per acre (${fmt(d.p.units)} homes on ${d.p.acres} acres)" aria-label="${esc(d.p.name)}, ${fmt(round(d.value))} homes per acre"></a>`).join("");
+  const ticks = sc.ticks.map((v) => `<span class="strip__tick" style="left:${(100 * sc.x(v)).toFixed(2)}%">${fmt(v)}</span>`).join("");
+  return `<figcaption class="chart__title">${esc(title)}</figcaption>
+    <div class="strip" role="img" aria-label="${esc(title)}">
+      <div class="strip__plot" style="height:${height}px">
+        <span class="strip__median" style="left:${(100 * sc.x(med)).toFixed(2)}%"><span>Median ${fmt(round(med))}</span></span>
+        ${pts}
+      </div>
+      <div class="strip__axis">${ticks}</div>
+      <p class="strip__unit">Homes per acre</p>
+    </div>
+    <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
+}
+
+function stripSvg(spec) {
+  const w = SVG_W - 2 * PAD - 20, x0 = PAD + 10;
+  const rows = Math.max(1, ...spec.dots.map((d) => Math.abs(d.row)));
+  const step = 15, r = 6.5;
+  const plotH = Math.max(90, (2 * rows + 1) * step + 30);
+  return frame(spec, (parts, y) => {
+    const present = STAGES.filter((s) => spec.dots.some((d) => d.p.status === s.name));
+    y = legendRow(parts, y, present.map((s) => ({ label: s.name, color: s.color }))) + 16;
+    const mid = y + plotH / 2;
+    const mx = x0 + w * spec.scale.x(spec.median);
+    parts.push(`<rect x="${mx.toFixed(1)}" y="${y}" width="1.5" height="${plotH}" fill="${INK}"/>`);
+    parts.push(t(mx + 6, y + 14, `Median ${fmt(Math.round(spec.median))}`, { size: 15, weight: 600 }));
+    spec.dots.forEach((d) => {
+      parts.push(`<circle cx="${(x0 + w * d.pos).toFixed(1)}" cy="${(mid + d.row * step).toFixed(1)}" r="${r}" fill="${colorOf(d.p.status)}" stroke="${PAPER}" stroke-width="1"/>`);
+    });
+    const base = y + plotH;
+    parts.push(`<rect x="${PAD}" y="${base}" width="${SVG_W - 2 * PAD}" height="1.5" fill="${INK}"/>`);
+    spec.scale.ticks.forEach((v) => {
+      const tx = x0 + w * spec.scale.x(v);
+      parts.push(`<rect x="${tx.toFixed(1)}" y="${base}" width="1" height="7" fill="${INK}"/>`);
+      parts.push(t(tx, base + 26, fmt(v), { size: 15, fill: MUTED, anchor: "middle" }));
+    });
+    parts.push(t(x0 + w / 2, base + 50, "Homes per acre", { size: 15, fill: MUTED, anchor: "middle" }));
+    return base + 56;
+  });
+}
+
+// --------------------------------------------------------------------------
+// Middle housing: its share of projects against its share of homes.
+
+function middleShare() {
+  const counted = projects.filter((p) => p.units > 0);
+  if (!counted.length) return "";
+  const mid = counted.filter((p) => p.middleHousing);
+  const shareP = mid.length / counted.length, shareH = sumUnits(mid) / Math.max(1, sumUnits(counted));
+  const pct = (v) => Math.round(100 * v);
+  const title = `Middle housing is ${pct(shareP)}% of projects but ${pct(shareH)}% of homes`;
+  const note = `Counts the ${plural(counted.length, "project", "projects")} with a unit count, at every stage. Middle housing follows Washington’s definition: duplexes through sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing.`;
+  const rows = [
+    { label: "Share of projects", part: mid.length, whole: counted.length, share: shareP, unit: ["project", "projects"] },
+    { label: "Share of homes", part: sumUnits(mid), whole: sumUnits(counted), share: shareH, unit: ["home", "homes"] },
+  ];
+  CHARTS.middle = { kind: "share", slug: "middle-housing-share", title, note, rows,
+    csv: { rows, columns: [
+      { label: "measure", value: (r) => r.label }, { label: "middle_housing", value: (r) => r.part },
+      { label: "total", value: (r) => r.whole }, { label: "share", value: (r) => r.share.toFixed(4) }] } };
+  const body = rows.map((r) => `<div class="share__row">
+      <div class="share__label">${esc(r.label)}</div>
+      <div class="share__track"><span class="share__part" style="width:${(100 * r.share).toFixed(1)}%"></span></div>
+      <div class="share__value"><b>${pct(r.share)}%</b> <small>${fmt(r.part)} of ${plural(r.whole, ...r.unit)}</small></div>
+    </div>`).join("");
+  return `<figcaption class="chart__title">${esc(title)}</figcaption>
+    <ul class="legend legend--small">
+      <li><i style="background:var(--ink-2)"></i>Middle housing</li>
+      <li><i style="background:#b9b2a5"></i>Other housing</li>
+    </ul>
+    <div class="share" role="img" aria-label="${esc(title)}">${body}</div>
+    <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
+}
+
+function shareSvg(spec) {
+  const labelW = 260, valueW = 300, barW = SVG_W - 2 * PAD - labelW - valueW;
+  return frame(spec, (parts, y) => {
+    y = legendRow(parts, y, [{ label: "Middle housing", color: INK2, square: true }, { label: "Other housing", color: OTHER, square: true }]) + 12;
+    spec.rows.forEach((r) => {
+      parts.push(t(PAD, y + 24, r.label, { size: 18 }));
+      const x = PAD + labelW, w = barW * r.share;
+      parts.push(`<rect x="${x}" y="${y + 4}" width="${barW}" height="28" fill="${OTHER}"/>`);
+      parts.push(`<rect x="${x}" y="${y + 4}" width="${w.toFixed(1)}" height="28" fill="${INK2}"/>`);
+      parts.push(t(x + barW + 14, y + 25, `${Math.round(100 * r.share)}%`, { size: 20, weight: 700 }));
+      parts.push(t(x + barW + 70, y + 25, `${fmt(r.part)} of ${plural(r.whole, ...r.unit)}`, { size: 15, fill: MUTED }));
+      y += 46;
+    });
+    return y;
+  });
+}
+
+// --------------------------------------------------------------------------
+// The pipeline over time, from the daily log (data/pipeline-history.csv).
+// Hidden until the log covers HISTORY_MIN_DAYS, so it never shows a stub.
+
+const HISTORY_MIN_DAYS = 30;
+const HISTORY_SERIES = [
+  { key: "pipeline", label: "In the permit process", value: (r) => r.applied_homes + r.approved_homes + r.under_construction_homes, color: "ink" },
+  { key: "building", label: "Under construction", stage: "Under Construction", value: (r) => r.under_construction_homes },
+  { key: "proposed", label: "Proposed (pre-application)", stage: "Pre-Application", value: (r) => r.pre_application_homes },
+];
+
+function parseHistory(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const head = lines.shift().split(",");
+  return lines.map((line) => {
+    const cells = line.split(",");
+    const row = {};
+    head.forEach((h, i) => { row[h] = h === "date" ? cells[i] : Number(cells[i]) || 0; });
+    return row;
+  }).filter((r) => /^\d{4}-\d{2}-\d{2}$/.test(r.date)).sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
+const seriesColor = (s) => (s.stage ? colorOf(s.stage) : "var(--ink)");
+
+async function historyLine() {
+  const fig = document.getElementById("chart-history");
+  if (!fig) return;
+  let rows = [];
+  try {
+    const res = await fetch("data/pipeline-history.csv", { cache: "no-store" });
+    if (res.ok) rows = parseHistory(await res.text());
+  } catch (error) { /* no log, no chart */ }
+  const days = rows.length ? (new Date(rows[rows.length - 1].date) - new Date(rows[0].date)) / 864e5 + 1 : 0;
+  if (days < HISTORY_MIN_DAYS) { fig.hidden = true; return; }
+  const first = rows[0], last = rows[rows.length - 1];
+  const p0 = HISTORY_SERIES[0].value(first), p1 = HISTORY_SERIES[0].value(last);
+  const change = p1 - p0;
+  const title = change === 0
+    ? `Homes in the permit process have held at ${fmt(p1)} since ${apDate(first.date)}`
+    : `Homes in the permit process have ${change > 0 ? "risen" : "fallen"} by ${fmt(Math.abs(change))} since ${apDate(first.date)}`;
+  const note = "Counted each morning from the map. Homes without a reported unit count aren’t included. A jump can mean a large project changed stage or was added, or a change in how the map reads the city’s records.";
+  CHARTS.history = { kind: "line", slug: "pipeline-over-time", title, note, rows,
+    csv: { rows, columns: [{ label: "date", value: (r) => r.date },
+      ...HISTORY_SERIES.map((s) => ({ label: `homes_${s.key}`, value: (r) => s.value(r) }))] } };
+  fig.hidden = false;
+  fig.innerHTML = `<figcaption class="chart__title">${esc(title)}</figcaption>
+    <ul class="legend legend--small">${HISTORY_SERIES.map((s) => `<li><i style="background:${seriesColor(s)}"></i>${esc(s.label)}</li>`).join("")}</ul>
+    <div class="linechart" role="img" aria-label="${esc(title)}">${lineSvgInner(rows, 640, 240, 13, true)}</div>
+    <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
+  chartTools("history");
+}
+
+// The plot itself: shared by the page (viewBox scales it) and the download.
+function lineSvgInner(rows, w, h, size, standalone) {
+  const left = 52, right = 16, top = 10, bottom = 28;
+  const pw = w - left - right, ph = h - top - bottom;
+  const max = Math.max(10, ...rows.flatMap((r) => HISTORY_SERIES.map((s) => s.value(r))));
+  const stepY = [10, 20, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000].find((v) => max / v <= 5) || 10000;
+  const yMax = Math.ceil(max / stepY) * stepY;
+  const t0 = +new Date(rows[0].date), t1 = Math.max(t0 + 864e5, +new Date(rows[rows.length - 1].date));
+  const X = (d) => left + (pw * (+new Date(d) - t0)) / (t1 - t0);
+  const Y = (v) => top + ph - (ph * v) / yMax;
+  const parts = [];
+  for (let v = 0; v <= yMax; v += stepY) {
+    parts.push(`<line x1="${left}" x2="${w - right}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="${v ? RULE : INK}" stroke-width="${v ? 1 : 1.5}"/>`);
+    parts.push(`<text x="${left - 8}" y="${(Y(v) + size / 3).toFixed(1)}" font-family="${esc(SANS)}" font-size="${size}" fill="${MUTED}" text-anchor="end">${fmt(v)}</text>`);
+  }
+  // Month ticks.
+  const d = new Date(rows[0].date); d.setDate(1); d.setMonth(d.getMonth() + 1);
+  for (; +d <= t1; d.setMonth(d.getMonth() + 1)) {
+    const iso = d.toISOString().slice(0, 10), x = X(iso);
+    const lab = d.getMonth() === 0 ? `${AP_MONTHS[0]} ${d.getFullYear()}` : AP_MONTHS[d.getMonth()];
+    parts.push(`<text x="${x.toFixed(1)}" y="${h - 8}" font-family="${esc(SANS)}" font-size="${size}" fill="${MUTED}" text-anchor="middle">${esc(lab)}</text>`);
+  }
+  HISTORY_SERIES.forEach((s) => {
+    const color = s.stage ? colorOf(s.stage) : INK;
+    const path = rows.map((r, i) => `${i ? "L" : "M"}${X(r.date).toFixed(1)},${Y(s.value(r)).toFixed(1)}`).join("");
+    parts.push(`<path d="${path}" fill="none" stroke="${color}" stroke-width="${s.stage ? 2 : 2.5}" stroke-linejoin="round"/>`);
+  });
+  const body = parts.join("");
+  return standalone ? `<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${body}</svg>` : body;
+}
+
+function lineSvg(spec) {
+  return frame(spec, (parts, y) => {
+    y = legendRow(parts, y, HISTORY_SERIES.map((s) => ({ label: s.label, color: s.stage ? colorOf(s.stage) : INK, square: true }))) + 8;
+    parts.push(`<g transform="translate(${PAD - 10},${y})">${lineSvgInner(spec.rows, SVG_W - 2 * PAD + 10, 380, 16, false)}</g>`);
+    return y + 380;
+  });
+}
+
 // --------------------------------------------------------------------------
 
 function draw() {
@@ -236,7 +482,84 @@ function draw() {
 
   document.getElementById("chart-quarter").innerHTML = quarterColumns();
   document.getElementById("chart-size").innerHTML = sizeTable();
-  ["type", "district", "hood", "quarter", "size"].forEach(chartTools);
+
+  // Where things stand: every stage as its own bar.
+  const byStage = (name) => projects.filter((p) => p.status === name);
+  const permitted = sumUnits([...byStage("Approved"), ...byStage("Under Construction")]);
+  const stageRow = (name, label, sub) => ({ label, sub, indent: true, items: byStage(name) });
+  const stageRows = [
+    { header: true, label: "Only proposed", items: byStage("Pre-Application") },
+    stageRow("Pre-Application", "Pre-application", "A meeting with the city, no permit yet"),
+    { header: true, label: "In the permit process", items: inStages(PIPELINE) },
+    stageRow("Applied", "Applied", "Plans in city review"),
+    stageRow("Approved", "Approved", "Permit issued, no sign of work yet"),
+    stageRow("Under Construction", "Under construction", "Estimated from trade permits"),
+    { header: true, label: "Finished or stopped", items: [...byStage("Complete"), ...byStage("Stalled")] },
+    stageRow("Complete", "Complete"),
+    stageRow("Stalled", "Stalled"),
+  ].filter((r) => r.items.length);
+  document.getElementById("chart-stage").innerHTML = stackedBars({
+    id: "stage", slug: "by-stage",
+    title: `${fmt(permitted)} homes are approved or under construction; ${fmt(proposed)} more are only proposed`,
+    rows: stageRows,
+    note: "“Complete” undercounts finished housing: projects already done when the map first found them are left off.",
+  });
+
+  // The ten largest projects, each linked to its page.
+  const biggest = projects.filter((p) => p.units > 0).sort((a, b) => b.units - a.units || a.name.localeCompare(b.name)).slice(0, 10);
+  const topShare = sumUnits(projects) ? Math.round((100 * sumUnits(biggest)) / sumUnits(projects)) : 0;
+  document.getElementById("chart-top").innerHTML = stackedBars({
+    id: "top", slug: "largest-projects",
+    title: `The 10 largest projects hold ${topShare}% of the homes on the map`,
+    rows: biggest.map((p) => ({ label: p.name, href: `p/${encodeURIComponent(p.id)}/`, sub: p.neighborhood || p.neighborhoodCouncil || "", items: [p] })),
+    counts: false,
+    note: "Counts every home in a project, at every stage, including proposals.",
+  });
+
+  // Zoning, grouped by family, one row per zone.
+  const zoned = projects.filter((p) => p.zoneBase);
+  const zoneRows = [];
+  ZONE_GROUPS.forEach((g) => {
+    const inGroup = zoned.filter((p) => (p.zoneGroup || "Other") === g);
+    if (!inGroup.length) return;
+    zoneRows.push({ header: true, label: g, items: inGroup });
+    [...new Set(inGroup.map((p) => p.zoneBase))]
+      .map((z) => ({ z, items: inGroup.filter((p) => p.zoneBase === z) }))
+      .sort((a, b) => sumUnits(b.items) - sumUnits(a.items) || b.items.length - a.items.length)
+      .forEach(({ z, items }) => {
+        const name = items[0].zoneName || "";
+        zoneRows.push({ label: name && name !== g ? `${z} · ${name}` : z, indent: true, items });
+      });
+  });
+  const groupHomes = ZONE_GROUPS.map((g) => [g, sumUnits(zoned.filter((p) => (p.zoneGroup || "Other") === g))]).sort((a, b) => b[1] - a[1]);
+  const zonedHomes = sumUnits(zoned);
+  document.getElementById("chart-zone").innerHTML = stackedBars({
+    id: "zone", slug: "by-zoning",
+    title: zoneTitle(groupHomes, zonedHomes),
+    rows: zoneRows,
+    note: "Each project’s zone is the city zoning at its map point. Zone codes are the city’s own; see the Spokane Municipal Code for what each allows.",
+  });
+
+  // Distance to frequent transit.
+  const nearT = projects.filter((p) => Number.isFinite(p.transitMiles));
+  const bands = [
+    { label: "Within ¼ mile", test: (m) => m <= 0.25 },
+    { label: "¼ to ½ mile", test: (m) => m > 0.25 && m <= 0.5 },
+    { label: "½ to 1 mile", test: (m) => m > 0.5 && m <= 1 },
+    { label: "More than 1 mile", test: (m) => m > 1 },
+  ];
+  const halfMile = sumUnits(nearT.filter((p) => p.transitMiles <= 0.5));
+  document.getElementById("chart-transit").innerHTML = stackedBars({
+    id: "transit", slug: "distance-to-frequent-transit",
+    title: `${sumUnits(nearT) ? Math.round((100 * halfMile) / sumUnits(nearT)) : 0}% of the homes are within half a mile of a frequent bus stop`,
+    rows: bands.map((b) => ({ label: b.label, items: nearT.filter((p) => b.test(p.transitMiles)) })),
+    note: "Straight-line distance from each project’s map point to the nearest stop where at least one route runs every 15 minutes or better, 10 a.m. to 2 p.m. on weekdays, from Spokane Transit’s schedules.",
+  });
+
+  document.getElementById("chart-middle").innerHTML = middleShare();
+  document.getElementById("chart-density").innerHTML = densityStrip();
+  ["stage", "top", "size", "type", "middle", "density", "district", "hood", "zone", "transit", "quarter"].forEach(chartTools);
+  historyLine();
 }
 
 // --------------------------------------------------------------------------
@@ -303,6 +626,14 @@ function frame(spec, body) {
   return { h, body: parts.join("") };
 }
 
+// Shorten a label with an ellipsis so it fits maxW.
+function fitText(text, size, maxW, weight = 400) {
+  let out = String(text);
+  if (textWidth(out, size, weight) <= maxW) return out;
+  while (out.length > 1 && textWidth(`${out}…`, size, weight) > maxW) out = out.slice(0, -1);
+  return `${out.trimEnd()}…`;
+}
+
 function legendRow(parts, y, items) {
   let x = PAD;
   items.forEach(({ label, color, square }) => {
@@ -333,7 +664,7 @@ function stackedSvg(spec) {
         return;
       }
       const rowY = y;
-      parts.push(t(PAD + (r.indent ? 18 : 0), rowY + 19, r.label, { size: 18 }));
+      parts.push(t(PAD + (r.indent ? 18 : 0), rowY + 19, fitText(r.label, 18, labelW - 16 - (r.indent ? 18 : 0)), { size: 18 }));
       let x = PAD + labelW;
       STAGES.forEach((s) => {
         const n = sumUnits(r.items.filter((p) => p.status === s.name));
@@ -347,7 +678,7 @@ function stackedSvg(spec) {
       if (missing) {
         parts.push(t(x + 14 + textWidth(fmt(sumUnits(r.items)), 17, 700), rowY + 19, `+${missing} not reported`, { size: 14, fill: MUTED }));
       }
-      parts.push(t(SVG_W - PAD, rowY + 19, plural(r.items.length, "project", "projects"), { size: 15, fill: MUTED, anchor: "end" }));
+      if (spec.counts !== false) parts.push(t(SVG_W - PAD, rowY + 19, plural(r.items.length, "project", "projects"), { size: 15, fill: MUTED, anchor: "end" }));
       y += 34;
     });
     return y;
@@ -400,7 +731,7 @@ function sizeSvg(spec) {
   });
 }
 
-const SVG_FOR = { stacked: stackedSvg, quarter: quarterSvg, size: sizeSvg };
+const SVG_FOR = { stacked: stackedSvg, quarter: quarterSvg, size: sizeSvg, strip: stripSvg, share: shareSvg, line: lineSvg };
 
 // The site's typefaces, embedded so a drawn image uses them. Fetched once
 // from Google Fonts (latin subsets only); if that fails the image still

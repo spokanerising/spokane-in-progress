@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Stats — Spokane in Progress</title>
-<meta name="description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district, neighborhood and project size, updated every morning from the city's permit records.">
+<meta name="description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, density, zoning, transit, council district and neighborhood, updated every morning from the city's permit records.">
 <link rel="canonical" href="https://projects.spokanerising.com/stats.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spokane in Progress">
 <meta property="og:url" content="https://projects.spokanerising.com/stats.html">
 <meta property="og:title" content="Stats · Spokane in Progress">
-<meta property="og:description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district, neighborhood and project size, updated every morning from the city's permit records.">
+<meta property="og:description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, density, zoning, transit, council district and neighborhood, updated every morning from the city's permit records.">
 <meta property="og:image" content="https://projects.spokanerising.com/og-card.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -59,11 +59,25 @@
     <p class="aside">These counts have limits. Some projects are missing or have no unit count yet, and they won’t match the city’s own reports. <a href="about.html#h-limits">What this map can’t tell you</a> · <a href="about.html#h-differ">Why these numbers differ from the city’s</a></p>
     <ul class="legend" id="legend"></ul>
 
+    <h3 class="subhed" id="h-stand">Where things stand</h3>
+    <figure class="chart" id="chart-stage"></figure>
+    <figure class="chart" id="chart-top"></figure>
+    <figure class="chart" id="chart-size"></figure>
+
+    <h3 class="subhed" id="h-what">What’s being built</h3>
     <figure class="chart" id="chart-type"></figure>
+    <figure class="chart" id="chart-middle"></figure>
+    <figure class="chart" id="chart-density"></figure>
+
+    <h3 class="subhed" id="h-where">Where</h3>
     <figure class="chart" id="chart-district"></figure>
     <figure class="chart" id="chart-hood"></figure>
+    <figure class="chart" id="chart-zone"></figure>
+    <figure class="chart" id="chart-transit"></figure>
+
+    <h3 class="subhed" id="h-time">Over time</h3>
     <figure class="chart" id="chart-quarter"></figure>
-    <figure class="chart" id="chart-size"></figure>
+    <figure class="chart" id="chart-history" hidden></figure>
   </section>
 
   <section class="section" aria-labelledby="h-data">

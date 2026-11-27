@@ -1,5 +1,5 @@
 {
-  "note": "Plain-English definitions shown when a dotted-underlined term is clicked, and listed on the About page. Edit the text here; ids are used by app.js and glossary.js.",
+  "note": "Plain-English definitions shown when a dotted-underlined term is clicked and listed on the Glossary page; About's stage list is drawn from the Stages group. Edit the text here; ids are used by app.js, glossary.js and about.js.",
   "groups": [
     {
       "id": "stages",
@@ -14,6 +14,20 @@
       ]
     },
     {
+      "id": "reading",
+      "title": "Reading the numbers",
+      "terms": [
+        { "id": "homes", "term": "Homes", "definition": "What the city calls units or dwelling units. Each apartment, condo, townhouse or house counts as one home." },
+        { "id": "pipeline", "term": "In the permit process", "definition": "Homes in projects that have applied for a building permit, been approved or are under construction. This is the headline number on the Stats page; proposals at pre-application are counted separately." },
+        { "id": "proposed-homes", "term": "Proposed homes", "definition": "Homes in projects still at pre-application: a developer has met with the city, but no building permit has been filed. Many proposals change or never go ahead, so they're kept out of the main total." },
+        { "id": "at-least", "term": "At least", "definition": "Totals include only projects with a reported unit count, so the real numbers are higher. That's why headlines say \"at least.\"" },
+        { "id": "hollow-ring", "term": "Hollow ring", "definition": "On the map, a project whose number of homes isn't known yet. It adds nothing to the totals until a count turns up in the city's reports." },
+        { "id": "homes-per-acre", "term": "Homes per acre", "definition": "A project's homes divided by the combined area of its county parcels. A rough measure of density: a site can include land that won't be built on." },
+        { "id": "frequent-transit", "term": "Frequent transit", "definition": "A bus stop where at least one route runs every 15 minutes or better in one direction between 10 a.m. and 2 p.m. on weekdays, from Spokane Transit's schedules. Distances are straight-line from the project's map point." },
+        { "id": "zoning-family", "term": "Zoning family", "definition": "The city's zones grouped for the filters and charts: residential, centers and corridors, commercial and mixed use, downtown, and industrial. The zone codes themselves (R1, RMF, CC2 and so on) are the city's." }
+      ]
+    },
+    {
       "id": "types",
       "title": "Building types",
       "terms": [
@@ -22,7 +36,9 @@
         { "id": "cottage-housing", "term": "Cottage housing", "definition": "A cluster of small houses around a shared green or courtyard." },
         { "id": "adu", "term": "Accessory dwelling unit (ADU)", "definition": "A second, smaller home on the same lot as a house, attached or detached: a backyard cottage, a garage apartment or a basement unit." },
         { "id": "conversion", "term": "Conversion or addition", "definition": "New homes made inside an existing building, such as offices turned into apartments, or added onto one." },
-        { "id": "senior-group", "term": "Senior & group living", "definition": "Senior housing, assisted living and other group living, where residents may share meals, services or common rooms." }
+        { "id": "senior-group", "term": "Senior & group living", "definition": "Senior housing, assisted living and other group living, where residents may share meals, services or common rooms." },
+        { "id": "unit-lot-subdivision", "term": "Unit lot subdivision", "definition": "Divides a lot into small \"unit lots\", one per townhouse or cottage, so each home can be sold separately while the site is reviewed as one development." },
+        { "id": "condominium", "term": "Condominium", "definition": "A way of owning homes, not a kind of building: each home is owned separately and the shared parts are owned in common. Condo projects here are sorted by their building type." }
       ]
     },
     {

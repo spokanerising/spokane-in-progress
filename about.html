@@ -65,7 +65,8 @@
   <section class="section" aria-labelledby="h-how">
     <h2 id="h-how" class="section__hed">How this map works</h2>
     <p><strong>Spokane in Progress</strong> tracks housing projects of two or more homes inside the City of Spokane, from the first pre-development meeting with the city through completion. It is produced by Anthony Gill, writer of Spokane Rising, as an independent project, not affiliated with or endorsed by the City of Spokane.</p>
-    <p>Every morning a script reads the city’s public permit records and adds new housing projects, moves existing ones forward when their permits change, and refreshes the map and the stats. A hand-kept list adds projects and details the permit records miss, such as developer names and renderings. Because most projects are added automatically, expect the occasional mistake; the limits are spelled out below.</p>
+    <p>Every morning a script reads the city’s public permit records, adds new housing projects, moves existing ones forward when their permits change, and refreshes the map and the stats. Most projects get here that way, so expect the occasional mistake; the limits are spelled out below.</p>
+    <p>Anthony adds the projects the records miss and fills in what they leave out, such as developers, photos and renderings, and fixes what they get wrong. Those hand edits stick: the daily update can move a project to a later stage, but it never undoes a correction.</p>
   </section>
 
   <section class="section" aria-labelledby="h-limits">
@@ -74,7 +75,7 @@
       <li><strong>It’s not every project.</strong> Projects in plan review sometimes appear in the city’s monthly report before its public permit map, and projects named without housing words (“Gardens,” “Haven,” “Tower”) can be missed until a building permit is issued.</li>
       <li><strong>“Under construction” is an estimate.</strong> The city’s public records don’t include inspections, so the map infers construction from trade permits issued after the building permit. A project can sit at “Approved” after work has started, or the reverse.</li>
       <li id="limit-units"><strong>Some projects have no unit count yet.</strong> Unit counts come from the city’s weekly permit report when a permit is issued, from permit descriptions, or from the monthly report’s tables of large projects. Projects without a count are drawn as hollow rings and add nothing to the totals, which is why the headline says “at least.”</li>
-      <li><strong>Large-project unit counts can be out of date.</strong> The monthly report’s project tables are updated less often than the report itself; the copy used here was last updated May 31, 2026.</li>
+      <li><strong>Large-project unit counts can be out of date.</strong> The monthly report’s project tables are updated less often than the report itself; the copy used here was last updated <span id="asof-monthly">May 31, 2026</span>.</li>
       <li id="limit-dates"><strong>Dates only go back about three years.</strong> The city’s public permit map keeps roughly three years of records, so no project here shows a filing before December 2023. The date a project reached its current stage is when this site first saw it there; dates from before November 2026 are estimates.</li>
       <li><strong>Building types are inferred.</strong> They come from permit wording and unit counts, so a few will be wrong.</li>
       <li><strong>Finished housing is undercounted.</strong> Projects that were already complete when the map first found them are generally left off, so “Complete” is not a count of homes built.</li>
@@ -119,14 +120,16 @@
       <li>City of Spokane weekly permit reports, for exact unit counts when a building permit is issued.</li>
       <li>The city’s monthly permit report to the City Council, for unit counts on large projects in plan review and early proposals.</li>
       <li>City of Spokane boundary maps, for neighborhood councils and council districts.</li>
-      <li>Spokane County Assessor (<a href="https://cp.spokanecounty.org/scout/propertyinformation/" target="_blank" rel="noopener">SCOUT</a>), linked from each project for parcel records.</li>
+      <li>City of Spokane zoning map (Spokane GIS), for each project’s zone<span class="sources__when" id="asof-zoning"></span>.</li>
+      <li>Spokane Transit’s published schedules (<a href="https://www.spokanetransit.com/gtfs" target="_blank" rel="noopener">GTFS</a>), for the distance to frequent transit. A stop counts as frequent when at least one route runs every 15 minutes or better in one direction between 10 a.m. and 2 p.m. on a weekday<span class="sources__when" id="asof-transit"></span>.</li>
+      <li>Spokane County Assessor parcel records, for site size (homes per acre) and linked from each project (<a href="https://cp.spokanecounty.org/scout/propertyinformation/" target="_blank" rel="noopener">SCOUT</a>).</li>
       <li>Base map: OpenFreeMap and OpenStreetMap contributors. Satellite imagery: Esri, Maxar, Earthstar Geographics.</li>
     </ul>
   </section>
 
   <section class="section" aria-labelledby="h-corrections">
     <h2 id="h-corrections" class="section__hed">Corrections and the data</h2>
-    <p>Spot a project that’s missing, misplaced or out of date? Email <a href="mailto:spokanerising@gmail.com">spokanerising@gmail.com</a> with the address and what’s wrong. Corrections go into the hand-kept list that feeds the map.</p>
+    <p>Spot a project that’s missing, misplaced or out of date? Email <a href="mailto:spokanerising@gmail.com">spokanerising@gmail.com</a> with the address and what’s wrong, or use “Report a correction” on any project page. Corrections are made by hand and stay in place through the daily updates.</p>
     <p>Every project on the map can be downloaded as a spreadsheet from the <a href="stats.html#h-data">Stats page</a>.</p>
   </section>
 </main>

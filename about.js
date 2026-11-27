@@ -1,6 +1,7 @@
 // Spokane in Progress — About page (about.html).
 // The page reads fine without this script. It adds three live touches:
 //   - the "Data as of" date and the stage colors, from projects.json
+//   - when the monthly tables, zoning and transit were last updated
 //   - the count in "N projects have no unit count yet", from projects.json
 //   - the stage definitions, from glossary.json, so they always match the
 //     Glossary page and the map's popovers (the HTML holds a copy as a fallback)
@@ -28,6 +29,13 @@
       (payload.stages || []).forEach((st, i) => document.body.style.setProperty(`--s${i}`, st.color));
       const when = apDate(payload.builtAt);
       if (when) document.getElementById("asof").textContent = `Data as of ${when}. Updated every morning from the city’s permit records.`;
+      const dates = payload.sourceDates || {};
+      const monthly = apDate(`${dates.monthlyTables || ""}T12:00:00`);
+      if (monthly) document.getElementById("asof-monthly").textContent = monthly;
+      for (const key of ["zoning", "transit"]) {
+        const d = apDate(`${dates[key] || ""}T12:00:00`), el = document.getElementById(`asof-${key}`);
+        if (d && el) el.textContent = `; last read ${d}`;
+      }
       const missing = (payload.projects || []).filter((p) => !(p.units > 0)).length;
       const unitsLimit = document.getElementById("limit-units");
       if (unitsLimit && missing) {

@@ -1211,6 +1211,46 @@ body.page {
 .bars__group:first-child { margin-top: 0; }
 .bars__group span { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--muted); }
 
+.bars__row--nocount { grid-template-columns: minmax(110px, 190px) minmax(0, 1fr); }
+.bars__label a { color: var(--ink); text-decoration-color: var(--rule); text-underline-offset: 2px; }
+.bars__label a:hover { color: var(--link); text-decoration-color: currentColor; }
+.bars__label small { display: block; font-size: 11.5px; color: var(--muted); }
+
+/* Density: one dot per project on a log scale. */
+.strip { padding: 0 6px; }
+.strip__plot { position: relative; border-bottom: 1px solid var(--ink); }
+.strip__dot {
+  position: absolute;
+  width: 9px; height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--paper);
+}
+.strip__dot:hover, .strip__dot:focus-visible { box-shadow: 0 0 0 2px var(--ink); z-index: 1; }
+.strip__median { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--ink-2); }
+.strip__median span { position: absolute; top: 0; left: 5px; font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--ink-2); }
+.strip__axis { position: relative; height: 20px; }
+.strip__tick { position: absolute; top: 4px; transform: translateX(-50%); font-size: 11px; color: var(--muted); }
+.strip__tick::before { content: ""; position: absolute; top: -4px; left: 50%; height: 4px; border-left: 1px solid var(--ink); }
+.strip__unit { margin: 2px 0 0; text-align: center; font-size: 11.5px; color: var(--muted); }
+
+/* Share bars: one part of a whole. */
+.share { display: grid; gap: 10px; font-size: 13.5px; }
+.share__row { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr) minmax(120px, auto); gap: 12px; align-items: center; }
+.share__track { height: 20px; background: #b9b2a5; }
+.share__part { display: block; height: 100%; background: var(--ink-2); }
+.share__value { white-space: nowrap; }
+.share__value b { font-size: 15px; }
+.share__value small { font-size: 11.5px; color: var(--muted); }
+
+.linechart svg { display: block; overflow: visible; }
+
+@media (max-width: 600px) {
+  .bars__row--nocount { grid-template-columns: minmax(0, 1fr); }
+  .share__row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; }
+  .share__label { grid-column: 1 / -1; }
+}
+
 /* Quarterly columns. */
 .cols {
   display: flex;
