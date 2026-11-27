@@ -272,7 +272,9 @@ with sync_playwright() as pw:
     check(posts[-1]["set"] == {"stories": 4} and posts[-1]["unset"] == [], f"undoing a reset puts the value back {posts[-1]}")
     first_only = pg.evaluate("SIPEditor.undoFor([{set:{units:50},was:{units:44},unset:[]}], 0)")
     check(first_only["unset"] == ["units"] and first_only["set"] == {}, "undoing the only edit goes back to automatic")
-    pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(projects[5]['id'])}))")
+    # A project nobody has edited (real edits land in projects.json as "edited").
+    untouched = next(p for p in projects if p["id"] != detailed["id"] and not p.get("edited"))
+    pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(untouched['id'])}))")
     pg.click('[data-tab="history"]')
     check("No edits yet" in pg.locator(".editor__history").inner_text() and pg.locator(".ednotes").count() == 0, "no history, no notes")
     pg.keyboard.press("Escape")

@@ -73,7 +73,8 @@
 </div>
 
 <main class="layout">
-  <section class="panel" id="panel" aria-label="Projects">
+  <section class="panel" id="panel" aria-labelledby="h-projects">
+    <h2 class="visually-hidden" id="h-projects">Projects</h2>
     <div class="filters">
       <label class="search">
         <span class="visually-hidden">Search projects</span>
@@ -195,7 +196,7 @@
 
     <!-- Size key: circle area is proportional to housing units. Redrawn on
          zoom so the sample circles match what is on the map. -->
-    <div class="mapkey" id="mapkey" aria-label="Map key"></div>
+    <div class="mapkey" id="mapkey" role="group" aria-label="Map key"></div>
 
     <!-- Shown while choosing a spot for the "Near" filter. -->
     <div class="pickhint" id="pickhint" hidden>

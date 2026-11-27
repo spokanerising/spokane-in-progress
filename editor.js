@@ -13,6 +13,17 @@
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   let session = { state: "checking", email: "" };
 
+  // Open a form as a modal, and when it closes (Save, the ×, or Escape) put
+  // keyboard focus back on whatever opened it, e.g. the pencil.
+  function openDialog(dialog) {
+    const opener = document.activeElement;
+    dialog.onclose = () => {
+      if (dialog.dataset.picking) { delete dialog.dataset.picking; return; }  // closed only to pick a spot on the map
+      if (opener && opener.isConnected && opener !== document.body && !document.querySelector("dialog[open]")) opener.focus();
+    };
+    dialog.showModal();
+  }
+
   // ---- the fields --------------------------------------------------------
   const fieldValue = (p, label) => ((p.fields || []).find((f) => f.label === label) || {}).value;
   const digits = (v) => (v === undefined || v === null || v === "" ? "" : String(v).replace(/[^0-9.]/g, "").replace(/\.0+$/, ""));
@@ -453,7 +464,7 @@
       send(p, set, [...resets], was, form.note.value, false, say);
     });
 
-    dialog.showModal();
+    openDialog(dialog);
     const first = dialog.querySelector("input, textarea, select");
     if (first) first.focus();
   }
@@ -560,6 +571,7 @@
       if (startKey && side.candidates.some((c) => c.key === startKey)) { from.value = startKey; pickCandidate(startKey); }
     }
     dialog.querySelector("[data-pick]").addEventListener("click", () => {
+      dialog.dataset.picking = "1";
       dialog.close();
       App.pickPoint((point) => {
         if (point) {
@@ -612,7 +624,7 @@
         save.removeAttribute("aria-busy");
       }
     });
-    dialog.showModal();
+    openDialog(dialog);
     form.elements.name.focus();
   }
 

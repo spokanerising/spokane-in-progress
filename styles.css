@@ -999,8 +999,9 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
   .chips::-webkit-scrollbar { display: none; }
 
-  .spine__key { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
-  .spine__key::-webkit-scrollbar { display: none; }
+  /* The key wraps to a second line rather than scrolling sideways out of
+     sight (a hidden scroller can't be reached by keyboard, WCAG 2.1.1). */
+  .spine__key { max-width: 100%; gap: 2px 12px; }
 
   .figure .source { display: none; } /* it is repeated in the map key */
   .mapkey { max-width: 210px; padding: 7px 9px 6px; }
@@ -1493,7 +1494,6 @@ body.page {
 /* Stage chips carry a live count and an "only" shortcut. */
 .chipwrap { position: relative; display: inline-flex; flex: none; -webkit-tap-highlight-color: transparent; }
 .chip__n { margin-left: 2px; font-size: 12px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
-.chip.is-zero { opacity: 0.55; }
 
 .only {
   padding: 0 4px;
@@ -1537,7 +1537,6 @@ body.page {
 .picker__n { min-width: 2.6ch; text-align: right; font-variant-numeric: tabular-nums; }
 .picker__item[hidden] { display: none; }
 .picker__item.is-zero .picker__text, .picker__item.is-zero .picker__n { color: var(--muted); }
-.picker__item.is-zero .picker__text { opacity: 0.75; }
 .picker__item--head { padding-left: 0; font-weight: 600; font-size: 13px; }
 .picker__text { min-width: 0; }
 
@@ -1780,7 +1779,10 @@ body[data-picking="on"] .inview { display: none; }
 .chip { padding: 0 11px 0 9px; font: var(--ctl-font); }
 .detail__close, .morefilters__toggle { padding: 0 12px; }
 .detail__close:hover, .morefilters__toggle:hover, .chip:hover { border-color: var(--ink); color: var(--ink); }
-.chip.is-zero { opacity: 0.45; }
+/* A stage with nothing in this view: muted text (still 4.5:1, since the chip
+   still works), a dashed edge and a faded dot, rather than fading it all. */
+.chip.is-zero, .chip.is-zero[aria-pressed="true"] { color: var(--muted); border-style: dashed; }
+.chip.is-zero i { opacity: 0.45; }
 .chip.is-zero:hover { border-color: var(--rule); }
 .chip[aria-pressed="true"] { font-weight: 600; }
 
@@ -1921,7 +1923,6 @@ body[data-picking="on"] .inview { display: none; }
   border-color: var(--ink);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M2.5 5.5h6' stroke='%23faf8f3' stroke-width='1.7'/%3E%3C/svg%3E");
 }
-.picker__item.is-zero input[type="checkbox"] { opacity: 0.45; }
 
 /* Anything switched off. */
 button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: default; }
@@ -1995,7 +1996,8 @@ button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: defaul
   opacity: 0;
   transition: opacity 120ms ease;
 }
-.tip-label.is-on { opacity: 1; }
+/* A showing tooltip can be pointed at without vanishing (WCAG 1.4.13). */
+.tip-label.is-on { opacity: 1; pointer-events: auto; }
 @media (hover: none) { .tip-label { display: none; } }
 
 /* "N projects in view" stays centered, but never slides under the controls
@@ -2330,6 +2332,8 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 .howto__bar + .howto__sub { border-top: 0; padding-top: 0; margin-top: 6px; }
 .howto__stages { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; }
 .howto__stages li { display: flex; align-items: center; gap: 7px; color: var(--ink); }
+/* 24px tall, so each term is easy to hit (WCAG 2.5.8). */
+.howto__stages .gloss { display: inline-flex; align-items: center; min-height: 24px; }
 .howto__stages i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .howto__ring {
   display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: -1px;

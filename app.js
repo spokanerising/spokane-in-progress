@@ -1617,6 +1617,10 @@ function startSiteView(p) {
     ring.className = "sitemap__pin";
     ring.style.setProperty("--stage", colorOf(p.status));
     new maplibregl.Marker({ element: ring }).setLngLat([p.lng, p.lat]).addTo(siteView);
+    // MapLibre labels every marker "Map marker"; this one is decoration inside
+    // the labelled satellite picture, so screen readers skip it.
+    ring.removeAttribute("aria-label");
+    ring.setAttribute("aria-hidden", "true");
   } catch (error) {
     console.warn(error);
     box.closest("figure").remove();
@@ -2628,6 +2632,17 @@ async function start() {
     document.body.dataset.filters = document.body.dataset.filters === "open" ? "closed" : "open";
     drawMoreFilters();
   });
+  // Phones: Escape inside the open "More filters" closes it and returns to the
+  // button. (An open checklist inside takes the first Escape itself.)
+  document.addEventListener("keydown", (e) => {
+    const toggle = document.getElementById("more-filters");
+    const panel = document.getElementById("more-filters-panel");
+    if (e.key !== "Escape" || document.body.dataset.filters !== "open" || !toggle.offsetParent) return;
+    if (!panel.contains(document.activeElement) && document.activeElement !== toggle) return;
+    document.body.dataset.filters = "closed";
+    drawMoreFilters();
+    toggle.focus();
+  });
 
   document.querySelectorAll("#measure button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -2636,7 +2651,8 @@ async function start() {
     });
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !el.detail.hidden && !document.querySelector(".menu")) closeDetailAndReturn();
+    // An open form (the editor) takes its own Escape; the project stays open.
+    if (e.key === "Escape" && !el.detail.hidden && !document.querySelector(".menu, dialog[open]")) closeDetailAndReturn();
   });
 
   document.querySelectorAll(".viewswitch button").forEach((tab) => {
