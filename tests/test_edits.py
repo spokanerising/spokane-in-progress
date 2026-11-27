@@ -132,4 +132,18 @@ out, w = run(["{not json", {"project": "other", "set": {"units": "lots", "colour
               {"set": {}}])
 check(len(w) == 5 and out["other"].get("units") is None, f"bad input warnings {w}")
 
+# Links must be web addresses: no javascript: links reach the page.
+out, w = run([{"project": "other", "at": "2026-11-27T10:00:00Z",
+               "set": {"docUrl": "javascript:alert(1)", "sourceUrls": ["https://ok.example", "data:text/html,x"], "units": 3}}])
+check(not out["other"].get("docUrl") and "sourceUrls" not in out["other"].get("edited", []), "unsafe links refused")
+check(out["other"]["units"] == 3 and len(w) == 2, f"rest of the edit still applies {w}")
+
+# Hidden projects are listed for the editor.
+hidden = []
+with tempfile.TemporaryDirectory() as d:
+    os.makedirs(os.path.join(d, "x"))
+    json.dump({"project": "other", "at": "2026-11-27T10:00:00Z", "set": {"hidden": True}}, open(os.path.join(d, "x", "h.json"), "w"))
+    edits.apply(copy.deepcopy(BASE), normalise, rank, edits_dir=d, hidden_out=hidden)
+check(hidden == [{"id": "other", "name": "Other", "at": "2026-11-27T10:00:00Z"}], f"hidden list {hidden}")
+
 print(f"{checks} checks passed")

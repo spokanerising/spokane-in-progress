@@ -77,8 +77,19 @@ PERMISSIONS = PERMISSION_OK | {"not-sure", ""}
 BOUNDS = dict(min_lat=47.60, max_lat=47.76, min_lng=-117.58, max_lng=-117.28)
 
 
+# Links must be web addresses or paths on this site, never javascript: and the like.
+URL_KEYS = {"permitUrl", "imageUrl", "docUrl", "sourceUrls"}
+SAFE_URL = ("https://", "http://", "/")
+
+
 class Bad(ValueError):
     pass
+
+
+def check_url(value):
+    if value and not str(value).lower().startswith(SAFE_URL):
+        raise Bad(f'"{value}" isn\'t a web address (it should start with https://)')
+    return value
 
 
 def read_value(key, value, normalise_stage):
@@ -261,9 +272,11 @@ def apply_to(project, values, dates, stage_rank):
     return warnings
 
 
-def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR):
+def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out=None):
     """Returns (projects with edits applied and hidden ones removed, warnings).
-    Always removes the build's internal _cityStage note."""
+    Always removes the build's internal _cityStage note. Hidden projects are
+    added to hidden_out (a list) as {id, name, at}, for the editor's
+    "Hidden from the map" list."""
     found, warnings = load(edits_dir)
     by_id = {p["id"]: p for p in projects}
     values, dates = {}, {}  # project id -> field -> value / time
@@ -281,8 +294,12 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR):
                 continue
             try:
                 v[key] = read_value(key, raw, normalise_stage)
+                if key in URL_KEYS:
+                    for url in (v[key] if isinstance(v[key], list) else [v[key]]):
+                        check_url(url)
                 d[key] = str(edit.get("at") or "")
             except Bad as error:
+                v.pop(key, None)
                 warnings.append(f'Edit {edit["_file"]}: {key} {error}. Skipped.')
         for key in edit.get("unset", []):
             v.pop(key, None)
@@ -294,6 +311,9 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR):
         if mine:
             if mine.get("hidden") is True:
                 hidden += 1
+                if hidden_out is not None:
+                    hidden_out.append({"id": p["id"], "name": p.get("name") or p["id"],
+                                       "at": dates[p["id"]].get("hidden", "")})
                 continue
             warnings.extend(apply_to(p, mine, dates[p["id"]], stage_rank))
         p.pop("_cityStage", None)

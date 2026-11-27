@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editor · Spokane in Progress</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#faf8f3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+</head>
+<body class="page">
+<main class="admin">
+  <p class="label">Spokane in Progress</p>
+  <h1>Editor</h1>
+
+  <div class="admin__status" id="status" role="status">Checking your sign-in…</div>
+  <div class="admin__actions" id="actions" hidden>
+    <a class="btn btn--ink" href="/">Go to the map</a>
+    <button type="button" class="btn" id="signout">Sign out</button>
+  </div>
+
+  <h2>How editing works</h2>
+  <p>Open any project on the map and press the pencil in its top bar. Change what you like and press Save. The site
+    updates in a few minutes; until then the pencil shows a blue dot.</p>
+  <p>Your edits are permanent: the daily rebuild never overwrites them. The one exception is the stage, which the
+    city's permit records can still move forward (never back, and never off Stalled). Each edit is saved as its own
+    file in <code>data/edits/</code> on GitHub, so there's a full history.</p>
+
+  <h2>Hidden from the map</h2>
+  <p class="muted">Projects you hid with "Hide from map". Putting one back takes a few minutes, like any edit.</p>
+  <ul class="admin__hidden" id="hidden"><li>Loading…</li></ul>
+</main>
+
+<script src="/share.js"></script>
+<script>
+(async function () {
+  const status = document.getElementById("status");
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const setFlag = (on) => { try { on ? localStorage.setItem("sip-editor", "1") : localStorage.removeItem("sip-editor"); } catch {} };
+
+  let email = "";
+  try {
+    const res = await fetch("/api/me", { credentials: "same-origin", cache: "no-store" });
+    const body = await res.json().catch(() => ({}));
+    if (res.ok && body.email) email = body.email;
+    else status.textContent = body.error || `The sign-in check failed (HTTP ${res.status}).`;
+  } catch (e) {
+    status.textContent = "Couldn't reach the sign-in check. Reload this page to sign in again.";
+  }
+  if (email) {
+    setFlag(true);
+    status.innerHTML = `Signed in as <strong>${esc(email)}</strong>. The pencil now shows on every project in this browser.`;
+    document.getElementById("actions").hidden = false;
+  }
+  document.getElementById("signout").addEventListener("click", () => {
+    setFlag(false);
+    location.href = "/cdn-cgi/access/logout";
+  });
+
+  const list = document.getElementById("hidden");
+  let hidden = [];
+  try { hidden = await (await fetch("/data/hidden.json", { cache: "no-store" })).json(); } catch {}
+  if (!Array.isArray(hidden) || !hidden.length) {
+    list.innerHTML = "<li>None.</li>";
+    return;
+  }
+  const when = (iso) => (iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "");
+  list.innerHTML = hidden.map((h) => `<li><span>${esc(h.name)}<small>${esc(h.id)}${h.at ? ` · hidden ${esc(when(h.at))}` : ""}</small></span>
+    <button type="button" class="btn" data-unhide="${esc(h.id)}" data-name="${esc(h.name)}"${email ? "" : " disabled"}>Put back on the map</button></li>`).join("");
+  list.querySelectorAll("[data-unhide]").forEach((b) => b.addEventListener("click", async () => {
+    b.disabled = true;
+    b.textContent = "Saving…";
+    try {
+      const res = await fetch("/api/edit", {
+        method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ project: b.dataset.unhide, name: b.dataset.name, unset: ["hidden"], was: { hidden: true }, note: "Put back on the map" }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+      b.textContent = "Back in a few minutes";
+    } catch (e) {
+      b.disabled = false;
+      b.textContent = "Put back on the map";
+      Share.toast(`Couldn't save: ${e.message}`, 8000);
+    }
+  }));
+})();
+</script>
+</body>
+</html>

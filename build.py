@@ -1161,8 +1161,12 @@ def main():
     # Your edits from the site (data/edits/), applied after everything above so
     # the daily rebuild can't undo them, and before the steps below so zoning,
     # housing type, density and the pipeline counts all use the edited values.
-    projects, edit_warnings = edits.apply(projects, normalise_stage, stage_rank)
+    hidden = []
+    projects, edit_warnings = edits.apply(projects, normalise_stage, stage_rank, hidden_out=hidden)
     warnings.extend(edit_warnings)
+    # The editor's "Hidden from the map" list, so a hidden project can be put back.
+    with open(os.path.join("data", "hidden.json"), "w", encoding="utf-8") as handle:
+        json.dump(sorted(hidden, key=lambda h: h["name"].lower()), handle, indent=2)
     stage_history = history  # milestones.py reads it after the last pass
     if extra:
         print(f"Published {len(extra)} project(s) known only from the city's monthly report.")
