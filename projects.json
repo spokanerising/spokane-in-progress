@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T04:45:49.103538+00:00",
+  "builtAt": "2026-11-27T04:54:04.364690+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -3501,7 +3501,7 @@
       "stageSinceExact": false
     },
     {
-      "id": "cora-townhomes-a",
+      "id": "B2609576BLDC",
       "name": "Cora Townhomes A",
       "address": "1207 W Cora Ave",
       "neighborhood": "Emerson-Garfield",
@@ -3518,11 +3518,11 @@
       "stories": 3,
       "description": "One fourplex of a set of three fourplexes on adjacent lots.",
       "permitNumbers": [
-        "B2610856BLDC"
+        "B2609576BLDC"
       ],
       "permits": [
         {
-          "id": "B2610856BLDC",
+          "id": "B2609576BLDC",
           "type": "",
           "status": "",
           "opened": "",
