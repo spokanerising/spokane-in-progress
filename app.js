@@ -1381,6 +1381,8 @@ function drawDetailTools(p) {
     <button type="button" class="iconbtn" data-share-project aria-label="Share this project" aria-haspopup="menu" aria-expanded="false">${Share.icon("share")}</button>
     <button type="button" class="iconbtn" data-copy-project aria-label="Copy link to this project">${Share.icon("link")}</button>
     <a class="iconbtn" data-correction href="${escapeHtml(correctionMail(p))}" aria-label="Report a correction">${Share.icon("mail")}</a>`;
+  // The editor's pencil, only in a signed-in browser (editor.js).
+  if (window.SIPEditor) window.SIPEditor.tools(p, box);
   box.querySelector("[data-share-project]").addEventListener("click", (e) => Share.share(e.currentTarget, projectShare(p)));
   box.querySelector("[data-copy-project]").addEventListener("click", async () => {
     const url = Share.projectUrl(p.id);
@@ -2552,6 +2554,22 @@ async function loadData() {
   return response.json();
 }
 
+// The editor (issue #1): loaded only in a browser that signed in at /admin/,
+// so the public never downloads it. editor.js uses these few hooks.
+window.SIPApp = {
+  stages: () => STAGES,
+  projectById: (id) => projectById(id),
+  redrawTools: () => { const p = state.selected && projectById(state.selected); if (p) drawDetailTools(p); },
+};
+function loadEditor() {
+  let on = false;
+  try { on = localStorage.getItem("sip-editor") === "1"; } catch { /* storage blocked */ }
+  if (!on) return;
+  const s = document.createElement("script");
+  s.src = "editor.js";
+  document.head.append(s);
+}
+
 async function start() {
   el.search.addEventListener("input", (e) => {
     state.query = e.target.value;
@@ -2641,6 +2659,7 @@ async function start() {
 
   setUpFilters();
   wireHowTo();
+  loadEditor();
   drawChips();
   drawPickers();
   if (!FILTERS.density.opts.length) document.querySelector('#sort option[value="density"]')?.remove();
