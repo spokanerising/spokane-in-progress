@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-27T21:14:06.593777+00:00",
+ "builtAt": "2026-11-27T21:17:57.114170+00:00",
  "projects": {
   "B2606311BLDC": [
    "37 E Everett Triplex: stage moved from Applied to Under Construction by the city's permit records (1 trade permit(s) issued since the building permit). Nothing to do unless that's wrong."
@@ -12,12 +12,7 @@
   ]
  },
  "other": [
-  "The city's permit map didn't answer (HTTP Error 403: Forbidden). Used the copy from 2026-11-27T20:40:10+00:00; stages may be a day behind.",
   "Monthly: Canyon Bluff Apartments (168 units) has no street address. Not mapped.",
-  "Monthly: couldn't place Stirling Heights Townhomes at \"3551 W 25th\". Not mapped.",
-  "Monthly: couldn't place Perry District Apartments at \"1225 E Newark\". Not mapped.",
-  "Monthly: couldn't place Senior Housing at \"315 W 9th\". Not mapped.",
-  "Monthly: couldn't place The Crest at Riverview Apartments at \"1777 E Upriver Dr\". Not mapped.",
   "Monthly: couldn't place Kodiak Lacey Townhomes at \"2715-2779 E Dalke\". Not mapped."
  ]
 }

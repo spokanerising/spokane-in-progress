@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T21:14:06.553590+00:00",
+  "builtAt": "2026-11-27T21:17:57.056388+00:00",
   "sourceDates": {
     "monthlyTables": "2026-05-31",
     "zoning": "2026-11-27",
@@ -605,7 +605,7 @@
     },
     {
       "id": "city-b26m0039pdev",
-      "name": "2314 W 2nd Ave Apartments",
+      "name": "2nd Ave Apartments",
       "address": "2314 W 2nd Ave",
       "neighborhood": "Browne's Addition",
       "parcelId": "25242.0306",
@@ -616,10 +616,10 @@
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-27",
       "projectType": "Apartments",
-      "units": null,
-      "unitsSource": "",
-      "stories": null,
-      "description": "",
+      "units": 18,
+      "unitsSource": "edited by hand on 2026-11-27",
+      "stories": 3,
+      "description": "New 18-unit apartment building with carport parking.",
       "permitNumbers": [
         "B2618248BLDC",
         "B26M0039PDEV"
@@ -659,6 +659,36 @@
           "value": "Apartments"
         },
         {
+          "label": "Housing units",
+          "value": "18",
+          "kind": "text"
+        },
+        {
+          "label": "Floor area",
+          "value": "7,072 sq ft",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$1,600,000",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Steve Widmyer",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Fusion Architecture",
+          "kind": "text"
+        },
+        {
           "label": "Permit application",
           "value": "https://aca.spokanepermits.org/CitizenAccess/Cap/CapDetail.aspx?Module=Building&TabName=Building&capID1=26BCN&capID2=00000&capID3=00505&agencyCode=SPOKANE&IsToShowInspection=",
           "kind": "link"
@@ -669,6 +699,17 @@
           "kind": "text"
         }
       ],
+      "edited": [
+        "architect",
+        "description",
+        "developer",
+        "estCost",
+        "name",
+        "sqft",
+        "stories",
+        "units"
+      ],
+      "editedAt": "2026-11-27T21:17:30Z",
       "buildingType": "Apartments",
       "buildingTypeInferred": true,
       "middleHousing": false,
@@ -678,6 +719,7 @@
         "25242.0306"
       ],
       "acres": 0.26,
+      "homesPerAcre": 69.2,
       "zone": "RHD-35",
       "zoneBase": "RHD",
       "zoneGroup": "Residential",
@@ -4388,6 +4430,330 @@
           "estimated": true
         }
       ],
+      "stageSinceExact": false
+    },
+    {
+      "id": "monthly-b26m0031pdev",
+      "name": "Stirling Heights Townhomes",
+      "address": "3551 W 25th Ave",
+      "neighborhood": "Grandview/Thorpe",
+      "parcelId": "",
+      "lat": 47.631821513423,
+      "lng": -117.464078433307,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Townhomes",
+      "units": 111,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B26M0031PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B26M0031PDEV",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Townhomes (middle housing)"
+        },
+        {
+          "label": "Housing units",
+          "value": "111",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$49,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Townhomes",
+      "buildingTypeInferred": true,
+      "middleHousing": true,
+      "neighborhoodCouncil": "Grandview/Thorpe",
+      "councilDistrict": 2,
+      "parcels": [],
+      "zone": "R1",
+      "zoneBase": "R1",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential",
+      "transitMiles": 1.6,
+      "transitStop": "Riverside @ A St",
+      "transitRoutes": [
+        "20"
+      ],
+      "milestones": [],
+      "stageSinceExact": false
+    },
+    {
+      "id": "monthly-b2601077",
+      "name": "Perry District Apartments",
+      "address": "1225 E Newark Ave",
+      "neighborhood": "East Central",
+      "parcelId": "",
+      "lat": 47.649256498144,
+      "lng": -117.39220778469,
+      "status": "Approved",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Largest Projects 2026, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Apartments",
+      "units": 40,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2601077"
+      ],
+      "permits": [
+        {
+          "id": "B2601077",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Approved",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
+          "label": "Housing units",
+          "value": "40",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$5,000,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Apartments",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "East Central",
+      "councilDistrict": 2,
+      "parcels": [],
+      "zone": "RMF",
+      "zoneBase": "RMF",
+      "zoneGroup": "Residential",
+      "zoneName": "Residential Multifamily",
+      "transitMiles": 0.55,
+      "transitStop": "Sprague @ Ivory",
+      "transitRoutes": [
+        "9"
+      ],
+      "milestones": [],
+      "stageSinceExact": false
+    },
+    {
+      "id": "monthly-b23m0147pdev",
+      "name": "Senior Housing",
+      "address": "315 W 9th Ave",
+      "neighborhood": "Cliff-Cannon",
+      "parcelId": "",
+      "lat": 47.647149739062,
+      "lng": -117.416720393328,
+      "status": "Pre-Application",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Apartments",
+      "units": 36,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B23M0147PDEV"
+      ],
+      "permits": [
+        {
+          "id": "B23M0147PDEV",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Pre-Application",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
+          "label": "Housing units",
+          "value": "36",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$11,500,000",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Apartments",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "Cliff-Cannon",
+      "councilDistrict": 2,
+      "parcels": [],
+      "zone": "OR-150",
+      "zoneBase": "OR",
+      "zoneGroup": "Commercial & mixed use",
+      "zoneName": "Office Retail",
+      "transitMiles": 0.07,
+      "transitStop": "9th @ McClellan",
+      "transitRoutes": [
+        "4"
+      ],
+      "milestones": [],
+      "stageSinceExact": false
+    },
+    {
+      "id": "monthly-b2600350",
+      "name": "The Crest at Riverview Apartments",
+      "address": "1777 E Upriver Dr",
+      "neighborhood": "Logan",
+      "parcelId": "",
+      "lat": 47.676954446968,
+      "lng": -117.383521981744,
+      "status": "Applied",
+      "statusUpdated": "2026-05-31",
+      "stageSource": "city monthly permit report (Largest Projects in Plan Review, as of 2026-05-31)",
+      "lastVerified": "2026-05-31",
+      "projectType": "Apartments",
+      "units": 31,
+      "unitsSource": "city monthly permit report (as of 2026-05-31)",
+      "stories": null,
+      "description": "",
+      "permitNumbers": [
+        "B2600350"
+      ],
+      "permits": [
+        {
+          "id": "B2600350",
+          "type": "",
+          "status": "",
+          "opened": "",
+          "url": ""
+        }
+      ],
+      "drbFile": "",
+      "imageUrl": "",
+      "imageCredit": "",
+      "docUrl": "",
+      "docLabel": "",
+      "sourceUrls": [],
+      "autoAdded": true,
+      "fields": [
+        {
+          "label": "Stage",
+          "value": "Applied",
+          "kind": "text"
+        },
+        {
+          "kind": "text",
+          "label": "Building type",
+          "value": "Apartments"
+        },
+        {
+          "label": "Housing units",
+          "value": "31",
+          "kind": "text"
+        },
+        {
+          "label": "Estimated cost",
+          "value": "$10,455,258",
+          "kind": "text"
+        },
+        {
+          "label": "Source",
+          "value": "City of Spokane monthly permit report, as of May 31, 2026",
+          "kind": "text"
+        }
+      ],
+      "buildingType": "Apartments",
+      "buildingTypeInferred": true,
+      "middleHousing": false,
+      "neighborhoodCouncil": "Logan",
+      "councilDistrict": 1,
+      "parcels": [],
+      "zone": "LI",
+      "zoneBase": "LI",
+      "zoneGroup": "Industrial",
+      "zoneName": "Light Industrial",
+      "transitMiles": 0.36,
+      "transitStop": "Mission @ Napa",
+      "transitRoutes": [
+        "1"
+      ],
+      "milestones": [],
       "stageSinceExact": false
     },
     {

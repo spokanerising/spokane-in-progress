@@ -68,5 +68,33 @@
    "unset": [],
    "note": ""
   }
+ ],
+ "city-b26m0039pdev": [
+  {
+   "at": "2026-11-27T21:17:30Z",
+   "file": "2026/11/20261127T211730Z-city-b26m0039pdev-52455e.json",
+   "set": {
+    "name": "2nd Ave Apartments",
+    "description": "New 18-unit apartment building with carport parking.",
+    "units": 18,
+    "stories": 3,
+    "sqft": 7072,
+    "estCost": 1600000,
+    "developer": "Steve Widmyer",
+    "architect": "Fusion Architecture"
+   },
+   "was": {
+    "name": "2314 W 2nd Ave Apartments",
+    "description": null,
+    "units": null,
+    "stories": null,
+    "sqft": null,
+    "estCost": null,
+    "developer": null,
+    "architect": null
+   },
+   "unset": [],
+   "note": ""
+  }
  ]
 }
