@@ -51,7 +51,8 @@ PREDEV_MONTHS = 18
 HOUSING_WORDS = re.compile(
     r"apart|multi[- ]?family|\bmf\b|town ?h|row ?house|\bplex|duplex|triplex|fourplex|four[- ]plex"
     r"|\d[- ]?plex|sixplex|eightplex|quadplex|\bunits?\b|\blofts?\b|\bflats\b|cottage|housing"
-    r"|senior living|residences|dwelling|condo|haven|gardens",
+    r"|senior living|residences|dwelling|condo|haven|gardens|unit[- ]lot"
+    r"|\b(?:two|three|four|five|six|seven|eight|[2-9]|\d{2,})[- ](?:new[- ])?homes?\b|assisted living|retirement communit",
     re.I,
 )
 NOT_HOUSING = re.compile(

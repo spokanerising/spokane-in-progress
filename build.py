@@ -429,7 +429,9 @@ PROCESS_TYPES = re.compile(
     re.I,
 )
 MULTI_SIGNAL = re.compile(
-    r"apart|multi|plex|town ?h|\bunits\b|flats|lofts|cottage|housing|residences|haven|gardens|duplexes",
+    r"apart|multi|plex|town ?h|\bunits\b|flats|lofts|cottage|housing|residences|haven|gardens|duplexes"
+    r"|condo|unit[- ]lot|\b(?:two|three|four|five|six|seven|eight|[2-9]|\d{2,})[- ](?:new[- ])?homes?\b"
+    r"|assisted living|retirement communit|senior (?:living|housing|apartments)",
     re.I,
 )
 
