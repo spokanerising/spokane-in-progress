@@ -1603,13 +1603,26 @@ function filtersInWords() {
   return bits.join(", ");
 }
 
+// When the only thing narrowing the map is one neighborhood council or one
+// council district, share that area's own page, which previews with its name
+// and numbers. Anything else shares the full address of the view.
+function areaPageUrl() {
+  const others = Object.keys(FILTERS).filter((k) => k !== "hood" && k !== "district" && filterOn(k));
+  if (others.length || state.query.trim() || state.near || state.inViewOnly) return null;
+  const one = (key) => (filterOn(key) && state.sel[key].size === 1 ? [...state.sel[key]][0] : null);
+  const hood = one("hood"), district = one("district");
+  if (hood && hood !== "outside" && !filterOn("district")) return Share.hoodUrl(hood);
+  if (district && district !== "outside" && !filterOn("hood")) return Share.districtUrl(district);
+  return null;
+}
+
 function viewShare() {
   const list = state.list || [];
   const homes = unitsOf(list);
   const tally = `${plural(list.length, "project", "projects")}${homes ? `, ${plural(homes, "home", "homes")}` : ""}`;
   const filters = filtersInWords();
   return {
-    url: new URL(urlFromState(), location.href).href,
+    url: areaPageUrl() || new URL(urlFromState(), location.href).href,
     title: Share.SITE_NAME,
     text: filters
       ? `Spokane housing projects, ${filters}: ${tally}. Via ${Share.SITE_NAME}`

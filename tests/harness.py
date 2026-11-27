@@ -33,7 +33,7 @@ def h(s, n):
     return int(hashlib.md5(s.encode()).hexdigest(), 16) % n
 
 
-SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js"]
+SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js", "og-card.png", "robots.txt"]
 
 
 def make_site(with_facts=True):
@@ -66,6 +66,11 @@ def make_site(with_facts=True):
                 p["acres"] = round(0.1 + (k % 17) / 10, 3)
                 p["homesPerAcre"] = round(p["units"] / p["acres"], 1)
     json.dump(data, open(os.path.join(d, "projects.json"), "w"))
+    # The sharing pages (pages.py), written for this copy of the site.
+    import sys
+    sys.path.insert(0, REPO)
+    import pages
+    pages.write_all(data["projects"], d, SITE)
     # Fake outlines: a box around each neighborhood's projects, and each district's.
     feats = []
     for kind, keyf in (("hood", lambda p: p.get("neighborhoodCouncil")), ("district", lambda p: p.get("councilDistrict"))):
@@ -84,8 +89,14 @@ def make_site(with_facts=True):
 
 def wire(page, site_dir, geocode_fail=False):
     def site(route):
-        path = route.request.url.split("site.test/", 1)[1].split("?")[0] or "index.html"
+        path = route.request.url.split("site.test/", 1)[1].split("?")[0].split("#")[0]
         full = os.path.join(site_dir, path)
+        # Like Cloudflare Pages: a folder serves its index.html, and a
+        # folder address without the final slash redirects to it.
+        if os.path.isdir(full):
+            if path and not path.endswith("/"):
+                return route.fulfill(status=308, headers={"Location": f"{SITE}/{path}/"})
+            full = os.path.join(full, "index.html")
         if not os.path.isfile(full):
             return route.fulfill(status=404, body="nope")
         route.fulfill(status=200, body=open(full, "rb").read(), content_type=mimetypes.guess_type(full)[0] or "application/octet-stream")

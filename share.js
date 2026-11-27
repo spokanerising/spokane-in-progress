@@ -174,10 +174,14 @@
   // One column list for every download (the map's filtered list and the
   // About page's full list), so the files always match.
 
-  // A project's own link. Phase 2 of the sharing plan moves this to /p/<id>/.
+  // A project's own page (pages.py writes one per project), which shows its
+  // name and details when the link is shared and forwards to the map.
   function projectUrl(id, origin = location.origin) {
-    return `${origin}/?p=${encodeURIComponent(id)}`;
+    return `${origin}/p/${encodeURIComponent(id)}/`;
   }
+  // The same for a neighborhood council or a council district.
+  const hoodUrl = (hoodSlug, origin = location.origin) => `${origin}/n/${encodeURIComponent(hoodSlug)}/`;
+  const districtUrl = (n, origin = location.origin) => `${origin}/d/${encodeURIComponent(n)}/`;
 
   const firstFiled = (p) => ((p.permits || []).map((x) => x.opened).filter(Boolean).sort()[0] || "");
   const blank = (v) => (v === null || v === undefined ? "" : v);
@@ -378,7 +382,7 @@
     downloadBlob, downloadText, downloadCanvas, filename, toCsv,
     toast,
     creditLine, fontsReady,
-    projectUrl, PROJECT_COLUMNS, projectsCsv, projectsGeoJson,
+    projectUrl, hoodUrl, districtUrl, PROJECT_COLUMNS, projectsCsv, projectsGeoJson,
     menu, closeMenu, share,
   };
 })();

@@ -43,7 +43,7 @@ with sync_playwright() as pw:
     rows = list(csv.DictReader(io.StringIO(open(dl.value.path(), encoding="utf-8-sig").read())))
     check(len(rows) == len(big), f"{len(rows)} rows for {len(big)} projects")
     check({r["id"] for r in rows} == {p["id"] for p in big}, "the right projects")
-    check(all(r["link"].endswith(f"/?p={urllib.parse.quote(r['id'])}") for r in rows), "link column")
+    check(all(r["link"].endswith(f"/p/{urllib.parse.quote(r['id'])}/") for r in rows), "link column is the project's page")
     check(pg.locator(".menu").count() == 0, "menu closes after choosing")
     check(pg.evaluate("document.activeElement.id") == "download-list", "focus returns to the button")
 
@@ -117,7 +117,7 @@ with sync_playwright() as pw:
     pg.wait_for_selector("[data-share-project]")
     pg.locator("[data-share-project]").click()
     xt = q(pg.locator('.menu [data-item="x"]').get_attribute("href"))
-    check(xt["url"].endswith(f"/?p={urllib.parse.quote(peyton['id'])}"), xt["url"])
+    check(xt["url"].endswith(f"/p/{urllib.parse.quote(peyton['id'])}/"), xt["url"])
     check(xt["text"].startswith(f"{peyton['name']}:") and f"{peyton['units']:,} homes" in xt["text"] and peyton["neighborhood"] in xt["text"] and xt["text"].endswith("Via Spokane in Progress"), xt["text"])
     rt = q(pg.locator('.menu [data-item="reddit"]').get_attribute("href"))
     check(rt["title"].startswith(peyton["name"]), rt["title"])
@@ -141,7 +141,7 @@ with sync_playwright() as pw:
         check(sh["url"] == mp.url and "100 or more homes" in sh["text"] and mp.locator(".menu").count() == 0, sh)
         mp.locator(".card").first.tap(); mp.wait_for_selector("[data-share-project]")
         mp.locator("[data-share-project]").tap(); mp.wait_for_function("window.__shared.length === 2")
-        check("/?p=" in mp.evaluate("window.__shared[1].url"), "project share sheet")
+        check("/p/" in mp.evaluate("window.__shared[1].url"), "project share sheet")
         # The person cancels the sheet: nothing else happens.
         mp.evaluate("() => { navigator.share = async () => { throw new DOMException('cancelled', 'AbortError'); }; }")
         mp.locator("[data-share-project]").tap(); mp.wait_for_timeout(300)

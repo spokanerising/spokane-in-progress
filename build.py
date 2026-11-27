@@ -22,6 +22,7 @@ import display_tidy
 import housing_types
 import boundaries
 import site_facts
+import pages
 import milestones
 
 # ---------------------------------------------------------------------------
@@ -1186,6 +1187,8 @@ def main():
         )
 
     print(f"\nWrote projects.json with {len(projects)} projects.")
+    # A page per project, neighborhood and district, for link previews.
+    warnings.extend(pages.write_all(projects))
     if warnings:
         print(f"\n{len(warnings)} thing(s) to look at:")
         for warning in warnings:
