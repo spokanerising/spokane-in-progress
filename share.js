@@ -411,11 +411,10 @@
   // Tooltips for icon buttons: the button's aria-label (or data-tip), shown
   // after a short pause on hover and at once on keyboard focus. One floating
   // label, kept on screen, under the button (above it if there's no room).
-  let tipEl = null, tipFor = null, tipTimer = 0, tipHideTimer = 0;
+  let tipEl = null, tipFor = null, tipTimer = 0;
   function tipText(b) { return b.dataset.tip || b.getAttribute("aria-label") || ""; }
   function showTip(b) {
     clearTimeout(tipTimer);
-    clearTimeout(tipHideTimer);
     if (openMenuState && openMenuState.anchor === b) return;
     const text = tipText(b);
     if (!text) return;
@@ -436,30 +435,27 @@
   }
   function hideTip() {
     clearTimeout(tipTimer);
-    clearTimeout(tipHideTimer);
     tipFor = null;
     if (tipEl) tipEl.classList.remove("is-on");
   }
   function wireTips() {
     const target = (e) => e.target && e.target.closest && e.target.closest(".iconbtn");
-    // The pointer can cross the 6px gap onto a showing tooltip and stay there
-    // (WCAG 1.4.13, hoverable): leaving the button or the tooltip waits a beat.
+    // A showing tooltip can be pointed at (WCAG 1.4.13, hoverable): its hit
+    // area reaches across the 6px gap (CSS), so the pointer goes straight from
+    // the button onto it, and it hides as soon as the pointer is on neither.
     const onTip = (n) => !!(tipEl && n && tipEl.contains(n));
-    const hideSoon = () => { clearTimeout(tipHideTimer); tipHideTimer = setTimeout(hideTip, 250); };
     document.addEventListener("pointerover", (e) => {
-      if (e.pointerType === "touch") return;
-      if (onTip(e.target)) { clearTimeout(tipHideTimer); return; }
+      if (e.pointerType === "touch" || onTip(e.target)) return;
       const b = target(e);
-      if (b && b === tipFor) { clearTimeout(tipHideTimer); return; }
-      if (!b) return;
+      if (!b || b === tipFor) return;
       hideTip();
       tipTimer = setTimeout(() => showTip(b), 400);
     });
     document.addEventListener("pointerout", (e) => {
+      const to = e.relatedTarget;
+      if (onTip(e.target)) { if (!onTip(to) && !(tipFor && tipFor.contains(to))) hideTip(); return; }
       const b = target(e);
-      if (b && !b.contains(e.relatedTarget)) {
-        if (b === tipFor && tipEl && tipEl.classList.contains("is-on")) hideSoon(); else hideTip();
-      } else if (onTip(e.target) && !onTip(e.relatedTarget) && !(tipFor && tipFor.contains(e.relatedTarget))) hideSoon();
+      if (b && !b.contains(to) && !onTip(to)) hideTip();
     });
     document.addEventListener("focusin", (e) => {
       const b = target(e);

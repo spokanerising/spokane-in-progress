@@ -1996,8 +1996,10 @@ button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: defaul
   opacity: 0;
   transition: opacity 120ms ease;
 }
-/* A showing tooltip can be pointed at without vanishing (WCAG 1.4.13). */
+/* A showing tooltip can be pointed at without vanishing (WCAG 1.4.13); its
+   hit area bridges the 6px gap to the button. */
 .tip-label.is-on { opacity: 1; pointer-events: auto; }
+.tip-label::before { content: ""; position: absolute; inset: -7px 0; }
 @media (hover: none) { .tip-label { display: none; } }
 
 /* "N projects in view" stays centered, but never slides under the controls

@@ -59,7 +59,7 @@
   }
 
   // ---- the popover ---------------------------------------------------------
-  let pop = null, openFor = null, pinned = false, hoverTimer = 0, leaveTimer = 0;
+  let pop = null, openFor = null, pinned = false, hoverTimer = 0, leaveTimer = 0, openAt = null;
   const canHover = () => window.matchMedia("(hover: hover)").matches;
   const onGlossaryPage = () => !!document.getElementById("glossary");
 
@@ -103,6 +103,7 @@
     pop.hidden = false;
     place(button);
     openFor = button;
+    openAt = button.getBoundingClientRect();
     pinned = !!pin;
     button.setAttribute("aria-expanded", "true");
     button.setAttribute("aria-controls", "glosspop");
@@ -151,8 +152,15 @@
       clearTimeout(hoverTimer);
       if (openFor === b && !pinned) leaveTimer = setTimeout(close, 200);
     });
-    // Scrolling the page or a panel moves the term away from its popover.
-    document.addEventListener("scroll", (e) => { if (openFor && !(pop && pop.contains(e.target))) close(); }, true);
+    // Scrolling the page or a panel moves the term away from its popover. A
+    // scroll that leaves the term where it was (the browser keeping it in place
+    // while a picture above it loads) changes nothing.
+    document.addEventListener("scroll", (e) => {
+      if (!openFor || (pop && pop.contains(e.target))) return;
+      const r = openFor.getBoundingClientRect();
+      if (openAt && Math.abs(r.top - openAt.top) < 2 && Math.abs(r.left - openAt.left) < 2) return;
+      close();
+    }, true);
     window.addEventListener("resize", () => close());
   }
 
