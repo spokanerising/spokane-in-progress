@@ -105,6 +105,7 @@ def classify_all(projects):
     for p in projects:
         kind = classify(p)
         p["buildingType"] = kind
+        p["buildingTypeInferred"] = _sheet_type(p) is None
         p["middleHousing"] = kind in MIDDLE_HOUSING
         p["projectType"] = kind  # kept for older code that reads projectType
 

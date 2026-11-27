@@ -21,6 +21,7 @@ import city_records as cr
 import display_tidy
 import housing_types
 import boundaries
+import milestones
 
 # ---------------------------------------------------------------------------
 # SETTING: paste your published Google Sheet CSV link between the quotes.
@@ -545,7 +546,9 @@ def since_for(history, pid, stage, fallback):
     if entry and entry.get("stage") == stage:
         return entry.get("since", fallback)
     since = cr.today_iso() if entry else fallback
-    history[pid] = {"stage": stage, "since": since}
+    # exact: a build saw the change happen today. Otherwise the date is the
+    # best the permit records give, which milestones.py checks against them.
+    history[pid] = {"stage": stage, "since": since, "exact": bool(entry)}
     return since
 
 
@@ -1115,6 +1118,7 @@ def main():
     extra, extra_warnings = monthly_only_projects(monthly, monthly_used, records, projects, history)
     warnings.extend(extra_warnings)
     projects.extend(extra)
+    stage_history = history  # milestones.py reads it after the last pass
     if extra:
         print(f"Published {len(extra)} project(s) known only from the city's monthly report.")
     cr.save_json(cr.HISTORY_PATH, history)
@@ -1132,6 +1136,8 @@ def main():
     housing_types.classify_all(projects)
     # Official neighborhood council and council district (see boundaries.py).
     warnings.extend(boundaries.assign(projects))
+    # Dated milestones for each project's timeline (see milestones.py).
+    milestones.add_milestones(projects, records, by_parcel, city, stage_history)
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
 

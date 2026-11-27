@@ -611,6 +611,7 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
 .sharebtn:hover { text-decoration: underline; text-underline-offset: 3px; }
 .detail__share { margin: -8px 0 18px; }
+@media (max-width: 860px) { .detail__share { margin: -16px 0 12px; } }
 
 /* A row whose dot is hovered on the map. */
 .card.is-hover { background: var(--paper-2); }
@@ -1242,4 +1243,150 @@ body.page {
   .deflist { grid-template-columns: 1fr; gap: 2px; }
   .deflist dd { margin-bottom: 10px; }
   .stat b { font-size: 28px; }
+}
+
+
+/* ==========================================================================
+   Provenance (item 19): "est." marks numbers and dates the map infers.
+   ========================================================================== */
+
+.est {
+  display: inline-block;
+  margin-left: 2px;
+  padding: 0 4px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font: 600 9.5px/1.45 var(--sans);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  text-decoration: none;
+  color: var(--muted);
+  vertical-align: 1px;
+  cursor: help;
+}
+
+.prov {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   Timeline on the project page (item 20).
+   ========================================================================== */
+
+.timeline { margin: 4px 0 20px; padding-top: 12px; border-top: 1px solid var(--rule); }
+
+.timeline__hed {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.timeline ol { margin: 0; padding: 0; list-style: none; position: relative; }
+
+.timeline ol::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 10px;
+  width: 1px;
+  background: var(--rule);
+}
+
+.timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(108px, max-content) 1fr;
+  gap: 2px 12px;
+  padding: 0 0 10px 20px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1.5px solid var(--ink-2);
+  box-sizing: border-box;
+}
+
+.timeline li.is-est::before { border-style: dashed; }
+.timeline li.is-now::before { background: var(--stage); border-color: var(--stage); }
+.timeline li.is-now span { font-weight: 600; }
+.timeline li em { font-style: normal; font-weight: 400; color: var(--muted); }
+.timeline time { color: var(--muted); white-space: nowrap; }
+.timeline__note { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+
+@media (max-width: 420px) {
+  .timeline li { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Phones (item 21).
+   ========================================================================== */
+
+/* "More filters" only exists on narrow screens. */
+.morefilters__toggle { display: none; }
+
+/* The Close bar stays put while the project scrolls. */
+.detail__bar {
+  position: sticky;
+  top: -14px;
+  z-index: 3;
+  margin: -14px calc(var(--gutter) * -1) 0;
+  padding: 14px var(--gutter) 8px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 860px) {
+  .morefilters__toggle {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    margin-top: 10px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    font: 600 12.5px var(--sans);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  body:not([data-filters="open"]) .morefilters { display: none; }
+
+  /* Comfortable tap targets. */
+  .measure button { min-height: 34px; padding: 0 12px; }
+  .sharebtn { min-height: 40px; padding: 0 2px; }
+  .sort select { min-height: 40px; }
+  .explain summary { padding: 8px 0; }
+  .placelinks { gap: 0 18px; }
+  .placelinks a { display: inline-flex; align-items: center; min-height: 40px; }
+  .detail__close { min-height: 40px; }
+  .clear { min-height: 40px; }
+
+  /* Room for the iPhone home bar and notch. */
+  .panel { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+  .detail { padding-bottom: calc(44px + env(safe-area-inset-bottom)); }
+  .mapkey { bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .masthead { padding-left: max(var(--gutter), env(safe-area-inset-left)); padding-right: max(var(--gutter), env(safe-area-inset-right)); }
+}
+
+@media (max-width: 860px) and (max-width: 1179px) {
+  .detail { padding-top: max(14px, env(safe-area-inset-top)); }
 }

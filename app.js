@@ -205,13 +205,15 @@ function radiusAt(zoom, units) {
   return at(lo) + t * (at(hi) - at(lo));
 }
 
-function radiusExpression() {
+// extra: pixels added at every zoom (the invisible tap ring uses +8). Zoom has
+// to stay the outermost interpolate in a MapLibre expression, so the extra is
+// added inside each stop rather than around the whole thing.
+function radiusExpression(extra = 0) {
   const units = ["get", "units"];
   const at = (s) => [
-    "case",
-    [">", units, 0],
-    ["max", s[2], ["*", s[1], ["sqrt", units]]],
-    s[2] + UNKNOWN_BOOST,
+    "+",
+    extra,
+    ["case", [">", units, 0], ["max", s[2], ["*", s[1], ["sqrt", units]]], s[2] + UNKNOWN_BOOST],
   ];
   return ["interpolate", ["linear"], ["zoom"], ...SIZE_STOPS.flatMap((s) => [s[0], at(s)])];
 }
@@ -480,6 +482,16 @@ function wireTypePicker() {
   });
 }
 
+// Phones: label the "More filters" button with how many hidden filters are on.
+function drawMoreFilters() {
+  const button = document.getElementById("more-filters");
+  if (!button) return;
+  const on = [!allTypesOn(), state.size !== "all", state.time !== "all", state.place !== "all"].filter(Boolean).length;
+  const open = document.body.dataset.filters === "open";
+  button.textContent = `${open ? "Fewer" : "More"} filters${on ? ` · ${on} on` : ""}`;
+  button.setAttribute("aria-expanded", String(open));
+}
+
 const filtersActive = () =>
   state.hidden.size > 0 || !allTypesOn() || state.size !== "all" || state.time !== "all" ||
   state.place !== "all" || state.query.trim() !== "";
@@ -509,7 +521,7 @@ function drawCards(list) {
 
       return `<li>
         <button class="card" data-id="${escapeHtml(p.id)}">
-          <div class="card__stage"><i style="background:${colorOf(p.status)}"></i>${escapeHtml(p.status)}</div>
+          <div class="card__stage"><i style="background:${colorOf(p.status)}"></i>${escapeHtml(p.status)}${stageInferred(p) ? ` ${est()}` : ""}</div>
           <h3 class="card__name">${escapeHtml(p.name)}</h3>
           <div class="card__where">${escapeHtml(where(p))}</div>
           ${facts.length || tag ? `<div class="card__facts">${facts.map((f) => `<span>${f}</span>`).join("")}${tag}</div>` : ""}
@@ -538,6 +550,7 @@ function drawCards(list) {
       : `${numberWithCommas(list.length)} of ${plural(state.projects.length, "project", "projects")}`) +
     (homes ? ` · ${plural(homes, "home", "homes")}` : "");
   document.getElementById("clear-filters").hidden = !filtersActive();
+  drawMoreFilters();
 }
 
 function render() {
@@ -622,12 +635,68 @@ function toGeoJson(list) {
 }
 
 // build.py leaves out fields with no value, so every field here has one.
-function renderField(field) {
+// ---- provenance: which numbers are estimates ------------------------------
+
+const EST_TITLE = "Estimated from permit records. See Stats & About for how.";
+const est = (title = EST_TITLE) => `<abbr class="est" title="${escapeHtml(title)}">est.</abbr>`;
+
+// Under Construction from the city's records is inferred from trade permits;
+// a stage typed into the sheet is not.
+const stageInferred = (p) => p.status === "Under Construction" && /trade permit/i.test(p.stageSource || "");
+
+function unitsNote(p) {
+  const src = (p.unitsSource || "").toLowerCase();
+  if (src.includes("weekly")) return { text: "From the city’s weekly permit report", estimated: false };
+  if (src.includes("monthly")) {
+    const asOf = /as of (\d{4}-\d{2}-\d{2})/.exec(p.unitsSource || "");
+    return {
+      text: `From the city’s monthly report${asOf ? `, last updated ${apDate(asOf[1])}` : ""}; may have changed`,
+      estimated: true,
+    };
+  }
+  if (src.includes("description")) return { text: "From the permit description", estimated: false };
+  return null;
+}
+
+function renderField(field, project) {
   const body =
     field.kind === "link"
       ? `<a href="${escapeHtml(field.value)}" target="_blank" rel="noopener">View application</a>`
       : escapeHtml(field.value);
-  return `<dt>${escapeHtml(field.label)}</dt><dd>${body}</dd>`;
+  let note = "";
+  if (project && field.label === "Housing units") {
+    const n = unitsNote(project);
+    if (n) note = `<small class="prov">${n.estimated ? est(n.text) + " " : ""}${escapeHtml(n.text)}</small>`;
+  }
+  if (project && field.label === "Building type" && project.buildingTypeInferred) {
+    note = `<small class="prov">Worked out from permit descriptions and unit counts</small>`;
+  }
+  if (project && field.label === "Stage" && stageInferred(project)) {
+    note = `<small class="prov">${est()} From trade permits; the city’s public records don’t include inspections</small>`;
+  }
+  return `<dt>${escapeHtml(field.label)}</dt><dd>${body}${note}</dd>`;
+}
+
+// The project's dated events, oldest first, ending with where it stands now.
+function timeline(p) {
+  const items = (p.milestones || []).map(
+    (m) => `<li${m.estimated ? ' class="is-est"' : ""}>
+        <time datetime="${escapeHtml(m.date)}">${escapeHtml(apDate(m.date))}</time>
+        <span>${escapeHtml(m.label)}${m.estimated ? ` ${est()}` : ""}</span>
+      </li>`
+  );
+  if (p.statusUpdated) {
+    items.push(`<li class="is-now" style="--stage:${colorOf(p.status)}">
+        <time datetime="${escapeHtml(p.statusUpdated)}">${escapeHtml(apDate(p.statusUpdated))}</time>
+        <span>${escapeHtml(p.status)}${stageInferred(p) || !p.stageSinceExact ? ` ${est(stageInferred(p) ? EST_TITLE : "This date comes from permit records, not from a build that saw the change happen.")}` : ""} <em>(current stage)</em></span>
+      </li>`);
+  }
+  if (!items.length) return "";
+  return `<section class="timeline" aria-label="Timeline">
+      <h3 class="timeline__hed">Timeline</h3>
+      <ol>${items.join("")}</ol>
+      <p class="timeline__note">Dates come from the city’s permit records. <span class="est">est.</span> marks an estimate. <a href="about.html#h-limits">What the records can’t tell us</a></p>
+    </section>`;
 }
 
 // Google Maps, Street View and the county's parcel record. Maps searches the
@@ -681,7 +750,11 @@ function select(id, flyTo, fromHistory = false) {
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
     </div>
-    <p class="track__label"><b>${escapeHtml(project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}</p>
+    <p class="track__label"><b>${escapeHtml(project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}${
+      stageInferred(project) || (project.statusUpdated && !project.stageSinceExact)
+        ? ` ${est(stageInferred(project) ? EST_TITLE : "This date comes from permit records, not from a build that saw the change happen.")}`
+        : ""
+    }</p>
 
     ${
       project.imageUrl
@@ -704,8 +777,10 @@ function select(id, flyTo, fromHistory = false) {
     ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ""}
 
     <dl class="specs">
-      ${project.fields.map(renderField).join("")}
+      ${project.fields.map((f) => renderField(f, project)).join("")}
     </dl>
+
+    ${timeline(project)}
 
     ${
       project.drbFile || project.permitNumbers.length || project.parcelId || project.lastVerified || councilOf(project)
@@ -1042,6 +1117,13 @@ function startMap() {
         ],
       },
     });
+    // An invisible ring 8px wider than each dot, so small dots are easy to tap.
+    map.addLayer({
+      id: "project-hit",
+      type: "circle",
+      source: "projects",
+      paint: { "circle-radius": radiusExpression(8), "circle-opacity": 0 },
+    });
     markSelected();
     drawInView();
     map.on("moveend", drawInView);
@@ -1054,16 +1136,23 @@ function startMap() {
     });
     setBasemap(savedBasemap());
 
-    map.on("click", "project-dot", (e) => select(e.features[0].properties.id, false));
+    // A dot under the pointer wins; otherwise the nearest ring around one.
+    const pick = (e) => {
+      const dots = map.queryRenderedFeatures(e.point, { layers: ["project-dot"] });
+      if (dots.length) return dots[0];
+      const near = (f) => map.project(f.geometry.coordinates).dist(e.point);
+      return [...e.features].sort((a, b) => near(a) - near(b))[0];
+    };
+    map.on("click", "project-hit", (e) => select(pick(e).properties.id, false));
     // Hovering a dot rings it, highlights its row and shows its name.
     const tip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "tip" });
-    map.on("mousemove", "project-dot", (e) => {
-      const f = e.features[0];
+    map.on("mousemove", "project-hit", (e) => {
+      const f = pick(e);
       map.getCanvas().style.cursor = "pointer";
       setHover(f.properties.id, "map");
       tip.setLngLat(f.geometry.coordinates).setText(f.properties.name).addTo(map);
     });
-    map.on("mouseleave", "project-dot", () => {
+    map.on("mouseleave", "project-hit", () => {
       map.getCanvas().style.cursor = "";
       setHover(null, "map");
       tip.remove();
@@ -1131,6 +1220,10 @@ async function start() {
   });
   document.getElementById("clear-filters").addEventListener("click", clearFilters);
   wirePanelToggle();
+  document.getElementById("more-filters").addEventListener("click", () => {
+    document.body.dataset.filters = document.body.dataset.filters === "open" ? "closed" : "open";
+    drawMoreFilters();
+  });
 
   document.querySelectorAll("#measure button").forEach((button) => {
     button.addEventListener("click", () => {

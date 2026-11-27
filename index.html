@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Spokane in Progress</title>
 <meta name="description" content="Learn more about housing projects in development across Spokane.">
 <link rel="canonical" href="https://projects.spokanerising.com/">
@@ -71,43 +71,47 @@
       </label>
       <div class="chips" id="status-chips" role="group" aria-label="Filter by stage"></div>
 
+      <!-- On phones these sit behind "More filters" so the list starts sooner. -->
+      <button type="button" class="morefilters__toggle" id="more-filters" aria-expanded="false" aria-controls="more-filters-panel">More filters</button>
+      <div class="morefilters" id="more-filters-panel">
       <div class="selects">
-        <div class="select">
-          <span class="select__label" id="type-label">Building type</span>
-          <!-- A checklist rather than a plain dropdown, so types can be combined:
-               all middle housing, or just duplexes and fourplexes, and so on. -->
-          <details class="picker" id="type-picker">
-            <summary class="picker__button" aria-describedby="type-label"><span id="type-summary">All building types</span></summary>
-            <div class="picker__panel" id="type-panel" role="group" aria-labelledby="type-label"></div>
-          </details>
+          <div class="select">
+            <span class="select__label" id="type-label">Building type</span>
+            <!-- A checklist rather than a plain dropdown, so types can be combined:
+                 all middle housing, or just duplexes and fourplexes, and so on. -->
+            <details class="picker" id="type-picker">
+              <summary class="picker__button" aria-describedby="type-label"><span id="type-summary">All building types</span></summary>
+              <div class="picker__panel" id="type-panel" role="group" aria-labelledby="type-label"></div>
+            </details>
+          </div>
+          <label class="select">
+            <span class="select__label">Project size</span>
+            <select id="size-filter"></select>
+          </label>
+          <label class="select">
+            <span class="select__label">Timeline</span>
+            <select id="time-filter"></select>
+          </label>
+          <label class="select">
+            <span class="select__label">Where</span>
+            <select id="place-filter"></select>
+          </label>
         </div>
-        <label class="select">
-          <span class="select__label">Project size</span>
-          <select id="size-filter"></select>
-        </label>
-        <label class="select">
-          <span class="select__label">Timeline</span>
-          <select id="time-filter"></select>
-        </label>
-        <label class="select">
-          <span class="select__label">Where</span>
-          <select id="place-filter"></select>
-        </label>
+  
+        <details class="explain">
+          <summary>What counts as middle housing?</summary>
+          <p>Washington law defines middle housing as buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes: duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units are not on that list, so a house with an ADU is counted separately.</p>
+          <p>Tick "Middle housing" to see all five of its types at once, or pick individual types in any combination.</p>
+          <p>Building types here are worked out from permit descriptions, project names and units per building, so a few may be wrong. Project size counts every home in the project, across all its buildings.</p>
+        </details>
+  
+        <details class="explain">
+          <summary>How the timeline and places work</summary>
+          <p><b>First filed</b> is the date of the earliest city record for the project, including a pre-development meeting. The city's public permit map keeps about three years of records, so nothing here shows a filing before December 2023. A few projects known only from the city's monthly report have no filing date.</p>
+          <p><b>Reached its current stage</b> is when this site first saw the project at that stage. Dates from before November 2026 are estimates.</p>
+          <p><b>Neighborhoods</b> are the city's 29 neighborhood councils and three City Council districts, worked out from each project's map point. Where the list shows a more familiar name, like Kendall Yards, the filter still uses the official council.</p>
+        </details>
       </div>
-
-      <details class="explain">
-        <summary>What counts as middle housing?</summary>
-        <p>Washington law defines middle housing as buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes: duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units are not on that list, so a house with an ADU is counted separately.</p>
-        <p>Tick "Middle housing" to see all five of its types at once, or pick individual types in any combination.</p>
-        <p>Building types here are worked out from permit descriptions, project names and units per building, so a few may be wrong. Project size counts every home in the project, across all its buildings.</p>
-      </details>
-
-      <details class="explain">
-        <summary>How the timeline and places work</summary>
-        <p><b>First filed</b> is the date of the earliest city record for the project, including a pre-development meeting. The city's public permit map keeps about three years of records, so nothing here shows a filing before December 2023. A few projects known only from the city's monthly report have no filing date.</p>
-        <p><b>Reached its current stage</b> is when this site first saw the project at that stage. Dates from before November 2026 are estimates.</p>
-        <p><b>Neighborhoods</b> are the city's 29 neighborhood councils and three City Council districts, worked out from each project's map point. Where the list shows a more familiar name, like Kendall Yards, the filter still uses the official council.</p>
-      </details>
     </div>
 
     <div class="tallyrow">
@@ -164,7 +168,9 @@
   </section>
 
 <aside class="detail" id="detail" hidden aria-label="Project detail">
-  <button class="detail__close" id="detail-close" aria-label="Close project detail">Close</button>
+  <div class="detail__bar">
+    <button class="detail__close" id="detail-close" aria-label="Close project detail">Close</button>
+  </div>
   <div id="detail-body"></div>
 </aside>
 </main>
