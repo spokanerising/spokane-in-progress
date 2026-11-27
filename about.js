@@ -226,22 +226,19 @@ function downloadCsv() {
     ["first_filed", (p) => firstFiled(p)],
     ["permits", (p) => (p.permitNumbers || []).join("; ")],
     ["parcel", (p) => p.parcelId],
+    ["zoning", (p) => p.zone || ""],
+    ["lot_acres", (p) => p.acres ?? ""],
+    ["homes_per_acre", (p) => p.homesPerAcre ?? ""],
+    ["miles_to_frequent_transit", (p) => p.transitMiles ?? ""],
     ["lat", (p) => p.lat],
     ["lng", (p) => p.lng],
   ];
-  const cell = (v) => {
-    const s = String(v ?? "");
-    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-  };
-  const lines = [cols.map((c) => c[0]).join(",")].concat(projects.map((p) => cols.map((c) => cell(c[1](p))).join(",")));
-  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `spokane-in-progress-${(builtAt || new Date()).toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  Share.downloadText(
+    Share.toCsv(projects, cols.map(([label, value]) => ({ label, value }))),
+    Share.filename([], "csv", builtAt || new Date()),
+    "text/csv"
+  );
+  Share.toast(`Downloaded ${projects.length} projects`);
 }
 
 // --------------------------------------------------------------------------

@@ -1566,15 +1566,12 @@ function readUrl() {
   return params.get("p");
 }
 
+// Copies a link and says so. If the browser won't copy, the link is shown in
+// the notice so it can be copied by hand.
 async function copyLink(button, url = location.href) {
-  const label = button.textContent;
-  try {
-    await navigator.clipboard.writeText(url);
-    button.textContent = "Link copied";
-  } catch (error) {
-    window.prompt("Copy this link:", url);
-  }
-  setTimeout(() => (button.textContent = label), 1800);
+  const full = new URL(url, location.href).href;
+  if (await Share.copyText(full)) Share.toast("Link copied");
+  else Share.toast(`Copy this link: ${full}`, 8000);
 }
 
 function setView(view) {

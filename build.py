@@ -988,11 +988,23 @@ def main():
         if matched_m:
             monthly_used.add(matched_m["key"])
 
-        project_id = row.get("id") or "".join(
-            c if c.isalnum() else "-" for c in row["name"].lower()
-        ).strip("-")
+        name_id = "".join(c if c.isalnum() else "-" for c in row["name"].lower()).strip("-")
+        name_id = re.sub(r"-{2,}", "-", name_id)
+        project_id = row.get("id") or name_id
         if project_id in seen_ids:
-            warnings.append(f'{label}: duplicate id "{project_id}".')
+            # Two rows with one id would share a link (and, once each project
+            # has its own page, one page would overwrite the other). The later
+            # row uses its name as its id until the sheet is fixed.
+            fallback = name_id or "project"
+            n = 2
+            while fallback in seen_ids:
+                fallback = f"{name_id}-{n}"
+                n += 1
+            warnings.append(
+                f'{label}: duplicate id "{project_id}" (an earlier row already uses it). '
+                f'This row is published as "{fallback}" until the sheet is fixed.'
+            )
+            project_id = fallback
         seen_ids.add(project_id)
 
         # Images need permission on file. Documents are linked, not rehosted.
@@ -1146,6 +1158,19 @@ def main():
     milestones.add_milestones(projects, records, by_parcel, city, stage_history)
 
     projects.sort(key=lambda p: p.get("statusUpdated") or "", reverse=True)
+
+    # Every project's id must be unique: it's the project's link (?p=, and
+    # its own page). Auto-added and sheet ids can't normally collide, but if
+    # they ever do, later ones get a suffix rather than overwriting.
+    taken_ids = set()
+    for p in projects:
+        if p["id"] in taken_ids:
+            n = 2
+            while f'{p["id"]}-{n}' in taken_ids:
+                n += 1
+            warnings.append(f'{p["name"]}: id "{p["id"]}" was already used; published as "{p["id"]}-{n}".')
+            p["id"] = f'{p["id"]}-{n}'
+        taken_ids.add(p["id"])
 
     # Written to the project root, not into data/, so that every deployment
     # method serves it. Some upload flows drop subfolders.
