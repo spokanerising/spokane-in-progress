@@ -25,6 +25,8 @@ with sync_playwright() as pw:
     ctx = b.new_context(viewport={"width": 1280, "height": 900}, accept_downloads=True)
     pg = ctx.new_page(); errors = []
     pg.on("pageerror", lambda e: errors.append(str(e)))
+    logs = []
+    pg.on("console", lambda m: logs.append(f"{m.type}: {m.text[:300]}"))
     wire(pg, site); pg.goto(f"{SITE}/about.html")
     pg.wait_for_selector("#chart-size .chart__tools")
     check(pg.locator(".chart__tools").count() == 5, "a download row under each of the 5 charts")
@@ -36,8 +38,12 @@ with sync_playwright() as pw:
         tools = pg.locator(f"#chart-{cid} .chart__tools")
         title = pg.locator(f"#chart-{cid} .chart__title").inner_text()
         # PNG
-        with pg.expect_download() as dl:
-            tools.locator('[data-format="png"]').click()
+        try:
+            with pg.expect_download(timeout=45000) as dl:
+                tools.locator('[data-format="png"]').click()
+        except Exception:
+            print("page messages:", [l for l in logs if "GL Driver" not in l], "toast:", pg.evaluate("document.getElementById('toast') && document.getElementById('toast').textContent"))
+            raise
         name = dl.value.suggested_filename
         check(name.startswith("spokane-in-progress-") and "-chart-" in name and name.endswith(".png"), name)
         img = Image.open(dl.value.path())

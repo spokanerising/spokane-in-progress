@@ -411,7 +411,11 @@ const SVG_FOR = { stacked: stackedSvg, quarter: quarterSvg, size: sizeSvg };
 // from Google Fonts (latin subsets only); if that fails the image still
 // draws, in Georgia and Arial.
 let fontCss = null;
-async function embeddedFonts() {
+function embeddedFonts() {
+  // Never let a slow font server hold up a download: 4 seconds, then without.
+  return Promise.race([loadEmbeddedFonts(), new Promise((r) => setTimeout(() => r(""), 4000))]);
+}
+async function loadEmbeddedFonts() {
   if (fontCss !== null) return fontCss;
   fontCss = "";
   try {
@@ -448,7 +452,12 @@ async function chartPng(id) {
   const img = new Image();
   const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
   try {
-    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = () => reject(new Error("chart image")); img.src = url; });
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = () => reject(new Error("the chart image didn't draw"));
+      setTimeout(() => reject(new Error("the chart image took too long")), 10000);
+      img.src = url;
+    });
     const scale = 2; // sharp on high-resolution screens and in print
     const canvas = document.createElement("canvas");
     canvas.width = img.width * scale;
