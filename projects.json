@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-27T09:31:02.873696+00:00",
+  "builtAt": "2026-11-27T19:17:31.666316+00:00",
   "stages": [
     {
       "name": "Pre-Application",
@@ -136,10 +136,10 @@
       "stageSource": "city permit records: in plan review",
       "lastVerified": "2026-11-27",
       "projectType": "Fiveplex or sixplex",
-      "units": 6,
-      "unitsSource": "permit description",
-      "stories": null,
-      "description": "",
+      "units": 12,
+      "unitsSource": "edited by hand on 2026-11-27",
+      "stories": 3,
+      "description": "Two sixplexes developed by Matt Hutchins of CAST Architecture. Will be similar to the \"Spokane Six\" he completed in 2025 on Grand Boulevard.",
       "permitNumbers": [
         "B2618601BLDC",
         "B26M0015PDEV",
@@ -188,7 +188,22 @@
         },
         {
           "label": "Housing units",
-          "value": "6",
+          "value": "12",
+          "kind": "text"
+        },
+        {
+          "label": "Stories",
+          "value": "3",
+          "kind": "text"
+        },
+        {
+          "label": "Developer",
+          "value": "Matt Hutchins",
+          "kind": "text"
+        },
+        {
+          "label": "Architect",
+          "value": "Matt Hutchins",
           "kind": "text"
         },
         {
@@ -202,6 +217,14 @@
           "kind": "text"
         }
       ],
+      "edited": [
+        "architect",
+        "description",
+        "developer",
+        "stories",
+        "units"
+      ],
+      "editedAt": "2026-11-27T19:17:05Z",
       "buildingType": "Fiveplex or sixplex",
       "buildingTypeInferred": true,
       "middleHousing": true,
@@ -211,7 +234,7 @@
         "25244.4303"
       ],
       "acres": 0.33,
-      "homesPerAcre": 18.2,
+      "homesPerAcre": 36.4,
       "zone": "RMF",
       "zoneBase": "RMF",
       "zoneGroup": "Residential",
@@ -6153,6 +6176,7 @@
       "parcels": [
         "35162.1501"
       ],
+      "acres": 0.33,
       "zone": "R1",
       "zoneBase": "R1",
       "zoneGroup": "Residential",
@@ -7736,6 +7760,7 @@
       "parcels": [
         "25133.3603"
       ],
+      "acres": 0.06,
       "zone": "RMF",
       "zoneBase": "RMF",
       "zoneGroup": "Residential",
@@ -8121,6 +8146,7 @@
       "parcels": [
         "25132.2115"
       ],
+      "acres": 0.11,
       "zone": "R1",
       "zoneBase": "R1",
       "zoneGroup": "Residential",
