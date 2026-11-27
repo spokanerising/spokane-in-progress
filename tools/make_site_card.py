@@ -60,15 +60,17 @@ def map_svg(projects, outlines, stages, box_w, box_h):
     lng0, lng1 = min(p[0] for p in pts), max(p[0] for p in pts)
     lat0, lat1 = min(p[1] for p in pts), max(p[1] for p in pts)
     kx = math.cos(math.radians((lat0 + lat1) / 2))
-    scale = min(box_w / ((lng1 - lng0) * kx), box_h / (lat1 - lat0))
+    pad = 6   # room for the outline's stroke at the box edges
+    scale = min((box_w - 2 * pad) / ((lng1 - lng0) * kx), (box_h - 2 * pad) / (lat1 - lat0))
     ox = (box_w - (lng1 - lng0) * kx * scale) / 2
     oy = (box_h - (lat1 - lat0) * scale) / 2
     xy = lambda lng, lat: (ox + (lng - lng0) * kx * scale, oy + (lat1 - lat) * scale)
     color = {s["name"]: s["color"] for s in stages}
-    parts = []
-    for ring in rings:
-        d = "M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (xy(*pt[:2]) for pt in ring)) + "Z"
-        parts.append(f'<path d="{d}" fill="#f2eee5" stroke="#b9b2a5" stroke-width="1.2" stroke-linejoin="round"/>')
+    # Just the city's outer edge (no district lines): the districts drawn
+    # with a wide edge, then filled on top, which hides the inside borders.
+    outline = "".join("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (xy(*pt[:2]) for pt in ring)) + "Z" for ring in rings)
+    parts = [f'<path d="{outline}" fill="#f2eee5" stroke="#b9b2a5" stroke-width="4" stroke-linejoin="round"/>',
+             f'<path d="{outline}" fill="#f2eee5" stroke="#f2eee5" stroke-width="2" stroke-linejoin="round"/>']
     for p in sorted(projects, key=lambda p: -(p.get("units") or 0)):
         if not (isinstance(p.get("lat"), (int, float)) and isinstance(p.get("lng"), (int, float))):
             continue

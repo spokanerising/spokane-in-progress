@@ -109,10 +109,13 @@ def area_description(name, items):
 # The page
 # ---------------------------------------------------------------------------
 
-def page(*, origin, path, title, description, target, heading, kicker, gone=False):
+def page(*, origin, path, title, description, target, heading, kicker, gone=False, card=None):
+    """card: {"path", "width", "height", "alt", "type"} for this page's own
+    image (a project card from cards.py); the site card otherwise."""
     e = lambda s: html.escape(str(s), quote=True)
     url = f"{origin}{path}"
-    image = f"{origin}{CARD['path']}"
+    card = card or {**CARD, "type": "image/png"}
+    image = f"{origin}{card['path']}"
     full_title = f"{title} · {SITE_NAME}"
     return f"""<!doctype html>
 <html lang="en">
@@ -129,15 +132,15 @@ def page(*, origin, path, title, description, target, heading, kicker, gone=Fals
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(description)}">
 <meta property="og:image" content="{e(image)}">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="{CARD['width']}">
-<meta property="og:image:height" content="{CARD['height']}">
-<meta property="og:image:alt" content="{e(CARD['alt'])}">
+<meta property="og:image:type" content="{card['type']}">
+<meta property="og:image:width" content="{card['width']}">
+<meta property="og:image:height" content="{card['height']}">
+<meta property="og:image:alt" content="{e(card['alt'])}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{e(title)}">
 <meta name="twitter:description" content="{e(description)}">
 <meta name="twitter:image" content="{e(image)}">
-<meta name="twitter:image:alt" content="{e(CARD['alt'])}">
+<meta name="twitter:image:alt" content="{e(card['alt'])}">
 <script>location.replace({json.dumps(target)} + location.hash);</script>
 <style>
 body {{ margin: 0; background: #faf8f3; color: #121212; font: 17px/1.5 Georgia, "Times New Roman", serif; }}
@@ -157,6 +160,18 @@ a {{ color: #275b84; font-family: system-ui, sans-serif; font-weight: 600; }}
 </body>
 </html>
 """
+
+
+def project_card(p, root):
+    """The project's own share card, if cards.py has drawn the current one."""
+    try:
+        import cards   # needs nothing beyond the standard library to import
+    except Exception:
+        return None
+    if not os.path.exists(cards.card_path(p, root)):
+        return None
+    return {"path": f"/p/{p['id']}/{cards.card_name(p)}", "width": 1200, "height": 630,
+            "alt": cards.card_alt(p), "type": "image/jpeg"}
 
 
 def write_if_changed(path, text):
@@ -190,6 +205,7 @@ def write_all(projects, root=".", origin=ORIGIN):
             continue
         current["p"].add(pid)
         written += write_if_changed(os.path.join(root, "p", pid, "index.html"), page(
+            card=project_card(p, root),
             origin=origin, path=f"/p/{pid}/", title=p.get("name") or "Housing project",
             description=project_description(p), target=f"/?p={pid}",
             heading=p.get("name") or "Housing project", kicker=f"{SITE_NAME} · {p.get('status') or ''}".rstrip(" ·"),

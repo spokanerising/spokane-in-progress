@@ -25,6 +25,14 @@ for p in P:
         check(expect and abs(p["homesPerAcre"] - expect) <= 0.01 * expect + 0.1,
               f"{p['name']}: homes per acre {p['homesPerAcre']} doesn't match units/acres {expect}")
 
+# Every project has its page, and the image each page names exists.
+import re as _re
+for p in P:
+    page = os.path.join(REPO, "p", p["id"], "index.html")
+    check(os.path.isfile(page), f"page for {p['id']}")
+    img = _re.search(r'<meta property="og:image" content="https?://[^/]+(/[^"]+)"', open(page, encoding="utf-8").read()).group(1)
+    check(os.path.isfile(os.path.join(REPO, img.lstrip("/"))), f"{p['id']}: image {img} exists")
+
 site, _ = make_site(with_facts=False)
 for f in ["projects.json", "boundaries.geojson"]:
     if os.path.exists(os.path.join(REPO, f)):

@@ -38,12 +38,26 @@ jobs:
 
       - run: python3 build.py
 
+      # Share images: a card per project (only new or changed ones are drawn)
+      # and the site-wide card. Drawn in a headless browser with the site's
+      # typefaces. If this step has a problem, the data still publishes and
+      # the pages fall back to the site-wide card.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Draw the share cards
+        continue-on-error: true
+        run: |
+          pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+          python3 cards.py
+
       - name: Save the new data
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add projects.json data/
-          for f in boundaries.geojson sitemap.xml p n d; do [ -e "$f" ] && git add "$f"; done
+          for f in boundaries.geojson sitemap.xml og-card.png p n d; do [ -e "$f" ] && git add -A "$f"; done
           git diff --staged --quiet && exit 0
           git commit -m "Refresh project data"
           git pull --rebase origin "$GITHUB_REF_NAME"
