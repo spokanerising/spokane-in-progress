@@ -1248,7 +1248,7 @@ function glossed(kind, value, text = value) {
 // build.py leaves out fields with no value, so every field here has one.
 // ---- provenance: which numbers are estimates ------------------------------
 
-const EST_TITLE = "Estimated from permit records. See Stats & About for how.";
+const EST_TITLE = "Estimated from permit records. See About for how.";
 const est = (title = EST_TITLE) => `<abbr class="est" title="${escapeHtml(title)}">est.</abbr>`;
 
 // Under Construction from the city's records is inferred from trade permits;

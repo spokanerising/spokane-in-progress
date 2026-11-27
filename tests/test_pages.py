@@ -91,7 +91,7 @@ check(w and "can't be a page address" in w[0] and not os.path.exists(os.path.joi
 w = pages.write_all(P + [dict(P[1])], root, ORIGIN)
 check(w and "duplicate" in w[0], "refuses duplicate ids")
 sm = open(os.path.join(root, "sitemap.xml")).read()
-check(sm.count("<url>") == 2 + len(P) + len(hoods) + len(os.listdir(os.path.join(root, "d"))), "sitemap lists everything current")
+check(sm.count("<url>") == 4 + len(P) + len(hoods) + len(os.listdir(os.path.join(root, "d"))), "sitemap lists everything current")
 shutil.rmtree(root)
 
 # The repo's own copy of the pages matches today's data
@@ -100,7 +100,7 @@ from struct import unpack
 with open(os.path.join(REPO, "og-card.png"), "rb") as f:
     head = f.read(24)
 check(head[:8] == b"\x89PNG\r\n\x1a\n" and unpack(">II", head[16:24]) == (1200, 630), "card is a 1200x630 PNG")
-for f in ["index.html", "about.html"]:
+for f in ["index.html", "stats.html", "about.html", "glossary.html"]:
     t = tags(os.path.join(REPO, f))
     check(t.meta.get("og:image", "").endswith("/og-card.png") and t.meta.get("og:image:width") == "1200", f"{f} uses the card")
 

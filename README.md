@@ -24,6 +24,7 @@ the daily rebuild never undoes them (rules in `edits.py` and `data/edits/README.
 | `build.py` | Reads the projects and city records, applies the edits, checks everything, writes `projects.json`. Python 3, nothing to install. |
 | `edits.py` | The rules for applying edits. |
 | `index.html`, `styles.css`, `app.js` | The site itself. |
+| `stats.html` + `stats.js`, `about.html` + `about.js`, `glossary.html` + `glossary.js` | The Stats, About and Glossary pages. Glossary text lives in `glossary.json`. Old links to the combined Stats & About page are forwarded by a script at the top of `about.html`. |
 | `.github/workflows/build.yml` | Rebuilds the data every morning, and on demand. |
 | `site_facts.py` | Adds zoning, lot size (homes per acre) and distance to frequent transit to each project, for the filters. Caches in `data/parcel-acres.json`, `data/zoning-*.json`, `data/transit-*`. |
 | `boundaries.py` | Neighborhood council and council district for each project, and `boundaries.geojson`, the outlines the map draws when you filter to one. |

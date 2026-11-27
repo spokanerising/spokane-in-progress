@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Stats &amp; About — Spokane in Progress</title>
-<meta name="description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district and neighborhood, with sources, definitions and the limits of the data.">
+<title>About — Spokane in Progress</title>
+<meta name="description" content="How Spokane in Progress tracks housing projects of two or more homes across Spokane: where the data comes from, how projects are sorted, and what the data can't tell you.">
 <link rel="canonical" href="https://projects.spokanerising.com/about.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spokane in Progress">
 <meta property="og:url" content="https://projects.spokanerising.com/about.html">
-<meta property="og:title" content="Stats &amp; About · Spokane in Progress">
-<meta property="og:description" content="Spokane's housing pipeline by the numbers: homes by stage, building type, council district and neighborhood, with sources, definitions and the limits of the data.">
+<meta property="og:title" content="About · Spokane in Progress">
+<meta property="og:description" content="How Spokane in Progress tracks housing projects of two or more homes across Spokane: where the data comes from, how projects are sorted, and what the data can't tell you.">
 <meta property="og:image" content="https://projects.spokanerising.com/og-card.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -18,6 +18,17 @@
 <meta property="og:image:alt" content="Spokane in Progress: a map of Spokane with every tracked housing project as a dot, colored by stage.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://projects.spokanerising.com/og-card.png">
+<script>
+// This page used to hold the stats and the glossary too. Old links to those
+// parts (about.html#g-finaled, about.html#h-charts) go to the page that has
+// them now. Runs before the page draws, so there's no flash of About.
+(function () {
+  var h = location.hash;
+  if (/^#g-/.test(h)) location.replace("glossary.html" + h);
+  else if (h === "#h-glossary") location.replace("glossary.html");
+  else if (/^#(stats|dek|h-charts|h-data|legend|chart-[a-z]+)$/.test(h)) location.replace("stats.html" + h);
+})();
+</script>
 
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -38,68 +49,23 @@
     </a>
     <nav class="pagenav" aria-label="Site">
       <a href="./">Map</a>
-      <a href="about.html" aria-current="page">Stats &amp; About</a>
+      <a href="stats.html">Stats</a>
+      <a href="about.html" aria-current="page">About</a>
+      <a href="glossary.html">Glossary</a>
     </nav>
   </div>
 </header>
 
 <main class="article">
-  <p class="kicker">Stats &amp; About</p>
-  <h1 class="article__hed">What’s being built in Spokane, and how this map knows</h1>
-  <p class="article__dek" id="dek">Loading the latest numbers…</p>
+  <p class="kicker">About</p>
+  <h1 class="article__hed">How this map knows what’s being built in Spokane</h1>
+  <p class="article__dek">Where the projects come from, how they’re sorted, and what the data can’t tell you. For the numbers themselves, see <a href="stats.html">Stats</a>.</p>
   <p class="byline"><span class="byline__by">By Anthony Gill, writer of Spokane Rising.</span> <span id="asof"></span></p>
-
-  <div class="stats" id="stats" aria-live="polite"></div>
-
-  <section class="section" aria-labelledby="h-charts">
-    <h2 id="h-charts" class="section__hed">The pipeline, by the numbers</h2>
-    <p>Every bar below counts homes in projects this map tracks, colored by how far along each project is. Darker means further along.</p>
-    <ul class="legend" id="legend"></ul>
-
-    <figure class="chart" id="chart-type"></figure>
-    <figure class="chart" id="chart-district"></figure>
-    <figure class="chart" id="chart-hood"></figure>
-    <figure class="chart" id="chart-quarter"></figure>
-    <figure class="chart" id="chart-size"></figure>
-  </section>
 
   <section class="section" aria-labelledby="h-how">
     <h2 id="h-how" class="section__hed">How this map works</h2>
     <p><strong>Spokane in Progress</strong> tracks housing projects of two or more homes inside the City of Spokane, from the first pre-development meeting with the city through completion. It is produced by Anthony Gill, writer of Spokane Rising, as an independent project, not affiliated with or endorsed by the City of Spokane.</p>
-    <p>Every morning a script reads the city’s public permit records and adds new housing projects, moves existing ones forward when their permits change, and refreshes this page. A hand-kept list adds projects and details the permit records miss, such as developer names and renderings. Because most projects are added automatically, expect the occasional mistake; the limits are spelled out below.</p>
-
-    <h3 class="subhed">Stages</h3>
-    <dl class="deflist">
-      <dt><i style="--c:var(--s0)"></i>Pre-application</dt>
-      <dd>The developer has held a pre-development conference with the city, but no building permit has been filed. A proposal, not a commitment: many change or never go ahead.</dd>
-      <dt><i style="--c:var(--s1)"></i>Applied</dt>
-      <dd>A building permit application is on file and in plan review.</dd>
-      <dt><i style="--c:var(--s2)"></i>Approved</dt>
-      <dd>The city has approved or issued the building permit.</dd>
-      <dt><i style="--c:var(--s3)"></i>Under construction</dt>
-      <dd>The building permit is issued and trade permits (electrical, plumbing, mechanical) have been issued or finaled since. This is an inference: the city’s public records don’t include inspections.</dd>
-      <dt><i style="--c:var(--s4)"></i>Complete</dt>
-      <dd>Every building permit in the project has been finaled.</dd>
-      <dt><i style="--c:var(--s5)"></i>Stalled</dt>
-      <dd>Marked by hand when a project has clearly stopped.</dd>
-    </dl>
-
-    <h3 class="subhed">Building types and middle housing</h3>
-    <p>Each project gets a building type from its permit descriptions, its name and the number of homes per building: a duplex, triplex or fourplex, fiveplex or sixplex, townhomes, cottage housing, apartments, a house with an accessory dwelling unit (ADU), a conversion or addition to an existing building, or senior and group living.</p>
-    <p><strong>Middle housing</strong> follows Washington’s legal definition: buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes, including duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units aren’t on that list, so a house with an ADU is not counted as middle housing here. Townhouses count at any project size.</p>
-
-    <h3 class="subhed">Neighborhoods and districts</h3>
-    <p>Each project is placed in one of the city’s 29 neighborhood councils and three City Council districts by looking up its map point in the city’s boundary maps. Some projects show a more familiar name in the list, like Kendall Yards or South Perry; the filters always use the official council.</p>
-
-    <h3 class="subhed">Sources</h3>
-    <ul class="sources">
-      <li>City of Spokane permit records, from the city’s public permit map (<a href="https://notifymespokane.org" target="_blank" rel="noopener">permit activity map</a>), read daily: building permits, pre-development conferences and every other permit on the same parcels.</li>
-      <li>City of Spokane weekly permit reports, for exact unit counts when a building permit is issued.</li>
-      <li>The city’s monthly permit report to the City Council, for unit counts on large projects in plan review and early proposals.</li>
-      <li>City of Spokane boundary maps, for neighborhood councils and council districts.</li>
-      <li>Spokane County Assessor (<a href="https://cp.spokanecounty.org/scout/propertyinformation/" target="_blank" rel="noopener">SCOUT</a>), linked from each project for parcel records.</li>
-      <li>Base map: OpenFreeMap and OpenStreetMap contributors. Satellite imagery: Esri, Maxar, Earthstar Geographics.</li>
-    </ul>
+    <p>Every morning a script reads the city’s public permit records and adds new housing projects, moves existing ones forward when their permits change, and refreshes the map and the stats. A hand-kept list adds projects and details the permit records miss, such as developer names and renderings. Because most projects are added automatically, expect the occasional mistake; the limits are spelled out below.</p>
   </section>
 
   <section class="section" aria-labelledby="h-limits">
@@ -115,23 +81,53 @@
       <li><strong>Pre-application isn’t a promise.</strong> A pre-development conference is a meeting about an idea. Homes at that stage are reported separately as “proposed.”</li>
     </ul>
 
-    <h3 class="subhed">Why these numbers differ from the city’s</h3>
+    <h3 class="subhed" id="h-differ">Why these numbers differ from the city’s</h3>
     <p>The city counts permits; this map counts projects. A single apartment complex can have several building permits, one per building, and the city’s reports count each. This map groups permits on the same parcel, under the same project name, or on the same street by the same builder into one project, and counts every home in it once. The city’s reports also count by the month a permit was issued, while this map shows where every active project stands today.</p>
   </section>
 
-  <section class="section" aria-labelledby="h-glossary">
-    <h2 id="h-glossary" class="section__hed">Glossary</h2>
-    <p>The terms used on this site, in plain English. On the map and project pages, any term with a dotted underline opens its definition.</p>
-    <div id="glossary"></div>
+  <section class="section" aria-labelledby="h-sorted">
+    <h2 id="h-sorted" class="section__hed">How projects are sorted</h2>
+    <h3 class="subhed">Stages</h3>
+    <dl class="deflist" id="stage-list">
+      <dt id="stage-pre-application"><i style="--c:var(--s0)"></i>Pre-application</dt>
+      <dd>The developer has met the city at a pre-development conference to talk through a proposal, but hasn’t filed a building permit. A proposal, not a commitment: many change or never go ahead.</dd>
+      <dt id="stage-applied"><i style="--c:var(--s1)"></i>Applied</dt>
+      <dd>A building permit application is on file and the city is reviewing the plans.</dd>
+      <dt id="stage-approved"><i style="--c:var(--s2)"></i>Approved</dt>
+      <dd>The city has approved or issued the building permit. Construction may not have started yet.</dd>
+      <dt id="stage-under-construction"><i style="--c:var(--s3)"></i>Under construction</dt>
+      <dd>Work is probably under way: the building permit is issued and trade permits (electrical, plumbing, mechanical) have been issued since. The city’s public records don’t include inspections, so this is an estimate.</dd>
+      <dt id="stage-complete"><i style="--c:var(--s4)"></i>Complete</dt>
+      <dd>Every building permit in the project has been finaled.</dd>
+      <dt id="stage-stalled"><i style="--c:var(--s5)"></i>Stalled</dt>
+      <dd>Marked by hand when a project has clearly stopped.</dd>
+    </dl>
+
+    <h3 class="subhed">Building types and middle housing</h3>
+    <p>Each project gets a building type from its permit descriptions, its name and the number of homes per building: a duplex, triplex or fourplex, fiveplex or sixplex, townhomes, cottage housing, apartments, a house with an accessory dwelling unit (ADU), a conversion or addition to an existing building, or senior and group living.</p>
+    <p><strong>Middle housing</strong> follows Washington’s legal definition: buildings compatible in scale with single-family houses that hold two or more attached, stacked or clustered homes, including duplexes, triplexes, fourplexes, fiveplexes, sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (<a href="https://app.leg.wa.gov/RCW/default.aspx?cite=36.70A.030" target="_blank" rel="noopener">RCW 36.70A.030</a>). Accessory dwelling units aren’t on that list, so a house with an ADU is not counted as middle housing here. Townhouses count at any project size.</p>
+
+    <h3 class="subhed">Neighborhoods and districts</h3>
+    <p>Each project is placed in one of the city’s 29 neighborhood councils and three City Council districts by looking up its map point in the city’s boundary maps. Some projects show a more familiar name in the list, like Kendall Yards or South Perry; the filters always use the official council.</p>
+    <p class="more"><a href="glossary.html">Every term on the map, from SEPA review to CO final, in the Glossary <span aria-hidden="true">→</span></a></p>
   </section>
 
-  <section class="section" aria-labelledby="h-data">
-    <h2 id="h-data" class="section__hed">Use the data</h2>
-    <p>Download every project on the map as a spreadsheet, with stage, building type, units, neighborhood council, council district, first filing date and permit numbers.</p>
-    <p><button type="button" class="button" id="download">Download projects (CSV)</button></p>
+  <section class="section" aria-labelledby="h-sources">
+    <h2 id="h-sources" class="section__hed">Sources</h2>
+    <ul class="sources">
+      <li>City of Spokane permit records, from the city’s public permit map (<a href="https://notifymespokane.org" target="_blank" rel="noopener">permit activity map</a>), read daily: building permits, pre-development conferences and every other permit on the same parcels.</li>
+      <li>City of Spokane weekly permit reports, for exact unit counts when a building permit is issued.</li>
+      <li>The city’s monthly permit report to the City Council, for unit counts on large projects in plan review and early proposals.</li>
+      <li>City of Spokane boundary maps, for neighborhood councils and council districts.</li>
+      <li>Spokane County Assessor (<a href="https://cp.spokanecounty.org/scout/propertyinformation/" target="_blank" rel="noopener">SCOUT</a>), linked from each project for parcel records.</li>
+      <li>Base map: OpenFreeMap and OpenStreetMap contributors. Satellite imagery: Esri, Maxar, Earthstar Geographics.</li>
+    </ul>
+  </section>
 
-    <h3 class="subhed">Corrections</h3>
+  <section class="section" aria-labelledby="h-corrections">
+    <h2 id="h-corrections" class="section__hed">Corrections and the data</h2>
     <p>Spot a project that’s missing, misplaced or out of date? Email <a href="mailto:spokanerising@gmail.com">spokanerising@gmail.com</a> with the address and what’s wrong. Corrections go into the hand-kept list that feeds the map.</p>
+    <p>Every project on the map can be downloaded as a spreadsheet from the <a href="stats.html#h-data">Stats page</a>.</p>
   </section>
 </main>
 
@@ -139,9 +135,7 @@
   <p><strong>Spokane in Progress</strong> is produced by Anthony Gill, writer of Spokane Rising. It is an independent project, not affiliated with, endorsed by, or speaking for the City of Spokane. Corrections: <a href="mailto:spokanerising@gmail.com">spokanerising@gmail.com</a>.</p>
 </footer>
 
-<script src="share.js"></script>
 <script src="glossary.js"></script>
 <script src="about.js"></script>
-<script>Gloss.list(document.getElementById("glossary"));</script>
 </body>
 </html>

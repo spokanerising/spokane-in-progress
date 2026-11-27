@@ -78,7 +78,7 @@ with sync_playwright() as pw:
 
     # About page CSV goes through the toolkit and has the new columns
     ab = ctx.new_page(); ab.on("pageerror", lambda e: errors.append(str(e)))
-    wire(ab, site); ab.goto(f"{SITE}/about.html")
+    wire(ab, site); ab.goto(f"{SITE}/stats.html")
     ab.wait_for_selector("#download")
     with ab.expect_download() as dl:
         ab.locator("#download").click()

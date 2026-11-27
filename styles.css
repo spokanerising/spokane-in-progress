@@ -123,10 +123,10 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .masthead { position: relative; }
-.masthead__nav { margin-top: 8px; }
+.masthead__nav { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 8px; }
 
-/* Stacked layouts: the link sits beside the title so the map keeps its height. */
-@media (max-width: 1099px) {
+/* Stacked layouts: the links sit beside the title so the map keeps its height. */
+@media (min-width: 640px) and (max-width: 1099px) {
   .masthead__nav {
     position: absolute;
     top: clamp(12px, 1.6vw, 20px);
@@ -135,12 +135,12 @@ a:hover { text-decoration-thickness: 2px; }
     line-height: 1;
     padding-top: 6px;
   }
-  .masthead__id { padding-right: 120px; }
+  .masthead__id { padding-right: 240px; }
 }
 
-@media (max-width: 480px) {
-  .masthead__nav-long { display: none; }
-  .masthead__id { padding-right: 64px; }
+/* Phones: no room beside the title, so the links get a short row under it. */
+@media (max-width: 639px) {
+  .masthead__nav { margin-top: 6px; gap: 4px 16px; line-height: 1.2; }
 }
 
 .masthead__nav a {
@@ -1027,8 +1027,9 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
 
 /* ==========================================================================
-   Stats & About page (about.html). Same type and color; a normal scrolling
-   page instead of the map's fixed app shell.
+   The Stats, About and Glossary pages (stats.html, about.html,
+   glossary.html). Same type and color; a normal scrolling page instead of
+   the map's fixed app shell.
    ========================================================================== */
 
 body.page {
@@ -1260,12 +1261,17 @@ body.page {
 .table th:first-child { text-align: left; font-weight: 500; }
 .table thead th { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--ink); }
 .table td.share, .table thead th:last-child { width: 34%; text-align: left; white-space: nowrap; }
-.table td.share span { display: inline-block; height: 10px; margin-right: 8px; background: var(--ink-2); vertical-align: middle; }
+.table td.share span { display: inline-block; max-width: calc(100% - 3.4em); height: 10px; margin-right: 8px; background: var(--ink-2); vertical-align: middle; }
+/* Narrow phones: let the headers wrap so the table fits the screen. */
+@media (max-width: 400px) {
+  .table th, .table td { padding-right: 6px; }
+  .table thead th { white-space: normal; }
+}
 
 /* Definitions, limits, sources. */
 .deflist { margin: 0; display: grid; grid-template-columns: minmax(140px, max-content) 1fr; gap: 10px 18px; font-size: 15.5px; }
 .deflist dt { font-weight: 600; display: flex; align-items: baseline; gap: 8px; }
-.deflist dt i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; transform: translateY(1px); }
+.deflist dt i { width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--muted)); flex: none; transform: translateY(1px); }
 .deflist dd { margin: 0; color: var(--ink-2); }
 
 .limits li, .sources li { margin-bottom: 10px; }
@@ -2227,6 +2233,27 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 .deflist--gloss { margin-bottom: 18px; }
 .deflist--gloss dt.is-target { background: var(--paper-2); box-shadow: 0 0 0 4px var(--paper-2); }
 .deflist--gloss dt { scroll-margin-top: 24px; }
+
+/* Glossary page: jump links to each group, under the dek. */
+.jumps { margin: 22px 0 0; padding: 12px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.jumps ul { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; padding: 0 !important; list-style: none; }
+.jumps li { font-size: 14px; font-weight: 600; }
+.jumps a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.jumps a:hover { border-bottom-color: var(--ink); }
+.jumps span { margin-left: 3px; font-weight: 400; color: var(--muted); font-size: 12.5px; }
+#glossary .section__hed { scroll-margin-top: 16px; }
+/* One definition column for every group, so the page reads as one list. */
+@media (min-width: 601px) {
+  #glossary .deflist--gloss { grid-template-columns: 15em 1fr; }
+}
+
+/* A short pointer under a section's intro: "These counts have limits…" */
+.article .aside { font-size: 15px; color: var(--ink-2); padding-left: 12px; border-left: 2px solid var(--rule); }
+
+/* About page: a link onward under a list. */
+.more { margin-top: 12px !important; font-size: 15px; font-weight: 600; }
+.more a { text-decoration: none; }
+.more a:hover { text-decoration: underline; }
 
 /* "How to read this map": a panel under the map tools, top left. */
 .howto {

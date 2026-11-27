@@ -27,7 +27,7 @@ with sync_playwright() as pw:
     pg.on("pageerror", lambda e: errors.append(str(e)))
     logs = []
     pg.on("console", lambda m: logs.append(f"{m.type}: {m.text[:300]}"))
-    wire(pg, site); pg.goto(f"{SITE}/about.html")
+    wire(pg, site); pg.goto(f"{SITE}/stats.html")
     pg.wait_for_selector("#chart-size .chart__tools")
     check(pg.locator(".chart__tools").count() == 5, "a download button under each of the 5 charts")
     check(pg.locator(".chart__tools .iconbtn[aria-label='Download this chart']").count() == 5, "each is a labelled icon")
@@ -93,7 +93,7 @@ with sync_playwright() as pw:
 
     # Phone: buttons big enough to tap
     m = b.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
-    mp = m.new_page(); wire(mp, site); mp.goto(f"{SITE}/about.html"); mp.wait_for_selector("#chart-size .chart__tools")
+    mp = m.new_page(); wire(mp, site); mp.goto(f"{SITE}/stats.html"); mp.wait_for_selector("#chart-size .chart__tools")
     hts = mp.eval_on_selector_all(".chart__tools button", "els => els.map(e => e.getBoundingClientRect().height)")
     check(min(hts) >= 36, hts)
     check(not mp.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth"), "no sideways scroll")

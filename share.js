@@ -1,5 +1,5 @@
 // Spokane in Progress — shared tools for sharing and downloading.
-// Loaded before app.js (the map) and about.js (Stats & About), so both pages
+// Loaded before app.js (the map) and stats.js (the Stats page), so both pages
 // share, copy, save files and show notices the same way. Everything lives on
 // one object, `Share`, so nothing here collides with the page scripts.
 

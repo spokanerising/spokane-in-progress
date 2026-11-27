@@ -96,7 +96,7 @@ with sync_playwright() as pw:
     check(pg.locator("#detail").is_hidden(), "close icon closes the project")
 
     # About page: one download icon per chart.
-    pg.goto(SITE + "/about.html")
+    pg.goto(SITE + "/stats.html")
     pg.wait_for_selector("#chart-size .chart__tools .iconbtn")
     found = audit(pg, 36, "about page")
     check(sum(f["name"] == "Download this chart" for f in found) == 5, found)
