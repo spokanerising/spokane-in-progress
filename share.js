@@ -393,6 +393,7 @@
     camera: '<path d="M3 7h3.2l1.4-2h4.8l1.4 2H17v9H3z"/><circle cx="10" cy="11.3" r="2.7"/>',
     close: '<path d="M5 5l10 10M15 5 5 15"/>',
     city: '<path d="M3 7.5V3h4.5M12.5 3H17v4.5M17 12.5V17h-4.5M7.5 17H3v-4.5"/>',
+    help: '<circle cx="10" cy="10" r="7"/><path d="M7.9 8.1a2.2 2.2 0 1 1 3.1 2c-.6.3-1 .8-1 1.4v.4"/><path d="M10 14.4v.1"/>',
   };
 
   function addSprite() {

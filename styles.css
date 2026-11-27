@@ -686,6 +686,23 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 }
 .tip .maplibregl-popup-tip { display: none; }
 
+/* The hover card: stage, name, homes and type, address. */
+.tip .maplibregl-popup-content:has(.tipcard) { padding: 8px 11px 9px; font-weight: 400; }
+.tipcard { max-width: 260px; }
+.tipcard__stage {
+  display: flex; align-items: center; gap: 6px;
+  font: 600 10.5px/1.3 var(--sans); letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+.tipcard__stage i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.tipcard__name {
+  margin: 3px 0 2px;
+  font: 600 16px/1.2 var(--serif); letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
+}
+.tipcard__facts { font: 600 12.5px/1.35 var(--sans); font-variant-numeric: tabular-nums; }
+.tipcard__where { font: 400 12px/1.35 var(--sans); color: var(--muted); }
+
 .clear {
   flex: none;
   padding: 0;
@@ -2158,4 +2175,110 @@ body[data-mapkeys="on"] .keyhint { display: block; }
   .sitemap__map { break-inside: avoid; }
   .ptable tr[hidden] { display: table-row; }
   .ptable__more { display: none !important; }
+}
+
+/* ==========================================================================
+   Glossary (issue #4): dotted-underlined terms and their popover
+   (glossary.js), the About page list, and "How to read this map".
+   ========================================================================== */
+
+.gloss {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: help;
+}
+.gloss:hover, .gloss[aria-expanded="true"] { text-decoration-style: solid; }
+.gloss:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.gloss--demo { cursor: default; }
+
+.glosspop {
+  position: absolute;
+  z-index: 60;
+  width: min(300px, calc(100vw - 16px));
+  padding: 10px 12px 11px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-top-width: 3px;
+  border-radius: 2px;
+  color: var(--ink);
+  font: 400 13.5px/1.45 var(--sans);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.glosspop[hidden] { display: none; }
+.glosspop p { margin: 0; }
+.glosspop__term { font: 600 15px/1.25 var(--serif); margin-bottom: 4px !important; }
+.glosspop__def { color: var(--ink-2); }
+.glosspop__more { display: inline-block; margin-top: 7px; font: 600 12px var(--sans); color: var(--link); text-decoration: none; }
+.glosspop__more:hover { text-decoration: underline; }
+
+.deflist--gloss { margin-bottom: 18px; }
+.deflist--gloss dt.is-target { background: var(--paper-2); box-shadow: 0 0 0 4px var(--paper-2); }
+.deflist--gloss dt { scroll-margin-top: 24px; }
+
+/* "How to read this map": a panel under the map tools, top left. */
+.howto {
+  position: absolute;
+  top: 54px;
+  left: 10px;
+  z-index: 4;
+  width: min(340px, calc(100% - 20px));
+  max-height: calc(100% - 110px);
+  overflow: auto;
+  padding: 4px 14px 12px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-top-width: 3px;
+  border-radius: 2px;
+  font: 400 13.5px/1.45 var(--sans);
+  color: var(--ink-2);
+}
+.howto[hidden] { display: none; }
+.howto:focus { outline: none; }
+.howto:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.howto p { margin: 0 0 4px; }
+.howto__bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 -8px 2px 0; }
+.howto__hed { margin: 6px 0 0; font: 600 18px/1.2 var(--serif); color: var(--ink); }
+.howto__sub {
+  margin: 11px 0 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  font: 600 11px/1.3 var(--sans);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.howto__bar + .howto__sub { border-top: 0; padding-top: 0; margin-top: 6px; }
+.howto__stages { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; }
+.howto__stages li { display: flex; align-items: center; gap: 7px; color: var(--ink); }
+.howto__stages i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.howto__ring {
+  display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: -1px;
+  border: 1.8px solid #b6451f; border-radius: 50%; background: var(--paper);
+}
+.howto__more { margin-top: 10px !important; }
+.howto__more a { font-weight: 600; text-decoration: none; }
+.howto__more a:hover { text-decoration: underline; }
+.howto__touch { display: none; }
+@media (hover: none) {
+  .howto__hover { display: none; }
+  .howto__touch { display: block; }
+}
+@media (max-width: 860px) {
+  .howto { top: 58px; }
+}
+@media (max-width: 520px) {
+  .howto { right: 10px; width: auto; z-index: 5; }
 }

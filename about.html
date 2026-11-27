@@ -119,6 +119,12 @@
     <p>The city counts permits; this map counts projects. A single apartment complex can have several building permits, one per building, and the city’s reports count each. This map groups permits on the same parcel, under the same project name, or on the same street by the same builder into one project, and counts every home in it once. The city’s reports also count by the month a permit was issued, while this map shows where every active project stands today.</p>
   </section>
 
+  <section class="section" aria-labelledby="h-glossary">
+    <h2 id="h-glossary" class="section__hed">Glossary</h2>
+    <p>The terms used on this site, in plain English. On the map and project pages, any term with a dotted underline opens its definition.</p>
+    <div id="glossary"></div>
+  </section>
+
   <section class="section" aria-labelledby="h-data">
     <h2 id="h-data" class="section__hed">Use the data</h2>
     <p>Download every project on the map as a spreadsheet, with stage, building type, units, neighborhood council, council district, first filing date and permit numbers.</p>
@@ -134,6 +140,8 @@
 </footer>
 
 <script src="share.js"></script>
+<script src="glossary.js"></script>
 <script src="about.js"></script>
+<script>Gloss.list(document.getElementById("glossary"));</script>
 </body>
 </html>

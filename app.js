@@ -1197,6 +1197,54 @@ function toGeoJson(list) {
   };
 }
 
+// "How to read this map": a panel over the map, opened by the ? button.
+function wireHowTo() {
+  const button = document.getElementById("how-to-read");
+  const panel = document.getElementById("howto");
+  if (!button || !panel) return;
+  const show = (on, returnFocus) => {
+    panel.hidden = !on;
+    button.setAttribute("aria-expanded", String(on));
+    if (on) {
+      document.getElementById("howto-stages").innerHTML = STAGES.map((s) =>
+        `<li><i style="background:${s.color}"></i>${glossed("stage", s.name, STAGE_LABEL[s.name] || s.name)}</li>`).join("");
+      panel.focus();
+    } else if (returnFocus) button.focus();
+  };
+  button.addEventListener("click", () => show(panel.hidden));
+  document.getElementById("howto-close").addEventListener("click", () => show(false, true));
+  panel.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.stopPropagation(); show(false, true); }
+  });
+}
+const STAGE_LABEL = { "Pre-Application": "Pre-application", "Under Construction": "Under construction" };
+
+// The card that shows when a dot is hovered or stepped to with [ and ]:
+// stage, name, homes and building type, address. Empty lines don't render.
+function tipHtml(p) {
+  const facts = [
+    p.units > 0 ? plural(p.units, "home", "homes") : "",
+    typeOf(p) !== UNKNOWN_TYPE ? typeOf(p) : "",
+  ].filter(Boolean).join(" · ");
+  return `<div class="tipcard">
+    <div class="tipcard__stage"><i style="background:${colorOf(p.status)}"></i>${escapeHtml(p.status)}</div>
+    <div class="tipcard__name">${escapeHtml(p.name)}</div>
+    ${facts ? `<div class="tipcard__facts">${escapeHtml(facts)}</div>` : ""}
+    ${where(p) ? `<div class="tipcard__where">${escapeHtml(where(p))}</div>` : ""}
+  </div>`;
+}
+
+const projectById = (id) => state.projects.find((x) => x.id === id);
+
+// A term with a glossary entry becomes a dotted-underlined button (glossary.js).
+// kind: "stage", "type", "permitKind" or "permitStatus"; value is the raw data
+// value, shown as text unless text is given.
+function glossed(kind, value, text = value) {
+  const html = escapeHtml(text);
+  if (!window.Gloss || !value) return html;
+  return Gloss.term(Gloss[kind](value), html);
+}
+
 // build.py leaves out fields with no value, so every field here has one.
 // ---- provenance: which numbers are estimates ------------------------------
 
@@ -1385,11 +1433,11 @@ function permitsTable(p) {
   if (!rows.length) return "";
   const tr = (x, i) => {
     const num = x.url ? `<a href="${escapeHtml(x.url)}" target="_blank" rel="noopener">${escapeHtml(x.id)}</a>` : escapeHtml(x.id);
-    const kind = escapeHtml(permitKind(x.type)) || "—";
+    const kind = x.type ? glossed("permitKind", x.type, permitKind(x.type)) : "—";
     return `<tr${i >= PERMITS_SHOWN ? " hidden" : ""}>
         <th scope="row">${num}<small class="ptable__kind">${kind}</small></th>
         <td class="ptable__date">${x.opened ? `<time datetime="${escapeHtml(x.opened)}">${escapeHtml(apDate(x.opened))}</time>` : "—"}</td>
-        <td>${escapeHtml(x.status || "—")}</td>
+        <td>${x.status ? glossed("permitStatus", x.status) : "—"}</td>
       </tr>`;
   };
   const more = rows.length > PERMITS_SHOWN
@@ -1461,8 +1509,8 @@ function projectPage(project, stage, color) {
   const others = project.fields.filter((f) => !used.has(f.label) && !["Building type", "Housing units", "Stories", "Floor area",
     "Parking stalls", "Developer", "Architect", "Estimated cost", "Stage"].includes(f.label)).map((f) => row(f.label));
 
-  const kicker = [project.buildingType && project.buildingType !== UNKNOWN_TYPE ? project.buildingType : "Housing project",
-    project.middleHousing ? "Middle housing" : ""].filter(Boolean).join(" · ");
+  const kicker = [project.buildingType && project.buildingType !== UNKNOWN_TYPE ? glossed("type", project.buildingType) : "Housing project",
+    project.middleHousing ? glossed("type", "Middle housing") : ""].filter(Boolean).join(" · ");
 
   const picture = project.imageUrl
     ? `<figure class="pfig">
@@ -1490,7 +1538,7 @@ function projectPage(project, stage, color) {
     : "From Spokane in Progress’s hand-kept list, with permit details from the City of Spokane’s records.";
 
   return `
-    <p class="kicker pkicker">${escapeHtml(kicker)}</p>
+    <p class="kicker pkicker">${kicker}</p>
     <h2>${escapeHtml(project.name)}</h2>
     ${standfirst(project) ? `<p class="standfirst">${escapeHtml(standfirst(project))}</p>` : ""}
     <p class="detail__where">${escapeHtml(where(project))}</p>
@@ -1499,7 +1547,7 @@ function projectPage(project, stage, color) {
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
     </div>
-    <p class="track__label"><b>${escapeHtml(project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}${
+    <p class="track__label"><b>${glossed("stage", project.status)}</b>${project.statusUpdated ? ` since ${escapeHtml(apDate(project.statusUpdated))}` : ""}${
       stageInferred(project) || (project.statusUpdated && !project.stageSinceExact)
         ? ` ${est(stageInferred(project) ? EST_TITLE : "This date comes from permit records, not from a build that saw the change happen.")}`
         : ""
@@ -2271,7 +2319,7 @@ class WholeCityControl {
 // one stepped to, 0 shows the whole city. A hint shows while the map has
 // keyboard focus, and a hidden live line reads out each project.
 let stepList = [], stepAt = -1;
-const stepTip = () => (stepTip.popup ||= new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "tip" }));
+const stepTip = () => (stepTip.popup ||= new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12, maxWidth: "280px", className: "tip" }));
 
 function projectsInView() {
   const b = map.getBounds(), c = map.project(map.getCenter());
@@ -2288,9 +2336,10 @@ function step(by) {
   stepAt = (stepAt + by + stepList.length) % stepList.length;
   const p = stepList[stepAt];
   setHover(p.id, "map");
-  stepTip().setLngLat([p.lng, p.lat]).setText(p.name).addTo(map);
+  stepTip().setLngLat([p.lng, p.lat]).setHTML(tipHtml(p)).addTo(map);
   const homes = p.units > 0 ? `, ${plural(p.units, "home", "homes")}` : "";
-  announce(`${p.name}${homes}, ${p.status}. ${stepAt + 1} of ${stepList.length} in view. Press Enter to open.`);
+  const addr = p.address ? `, ${p.address}` : "";
+  announce(`${p.name}${homes}${addr}, ${p.status}. ${stepAt + 1} of ${stepList.length} in view. Press Enter to open.`);
 }
 
 function stopStepping() {
@@ -2449,18 +2498,26 @@ function startMap() {
       if (picking || Date.now() - pickedAt < 400) return;
       select(pick(e).properties.id, false);
     });
-    // Hovering a dot rings it, highlights its row and shows its name.
-    const tip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "tip" });
+    // Hovering a dot rings it, highlights its row and shows its card.
+    // Only on devices that can hover: a tap opens the project instead.
+    const tip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12, maxWidth: "280px", className: "tip" });
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    let tipFor = null;
     map.on("mousemove", "project-hit", (e) => {
       const f = pick(e);
       map.getCanvas().style.cursor = "pointer";
       setHover(f.properties.id, "map");
-      tip.setLngLat(f.geometry.coordinates).setText(f.properties.name).addTo(map);
+      if (!canHover) return;
+      const p = projectById(f.properties.id);
+      if (!p) return;
+      if (tipFor !== p.id) { tip.setHTML(tipHtml(p)); tipFor = p.id; }
+      tip.setLngLat(f.geometry.coordinates).addTo(map);
     });
     map.on("mouseleave", "project-hit", () => {
       map.getCanvas().style.cursor = "";
       setHover(null, "map");
       tip.remove();
+      tipFor = null;
     });
 
     // A shared link that opened a project: center on it now the map exists.
@@ -2583,6 +2640,7 @@ async function start() {
   }
 
   setUpFilters();
+  wireHowTo();
   drawChips();
   drawPickers();
   if (!FILTERS.density.opts.length) document.querySelector('#sort option[value="density"]')?.remove();

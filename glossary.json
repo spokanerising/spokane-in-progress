@@ -1,0 +1,59 @@
+{
+  "note": "Plain-English definitions shown when a dotted-underlined term is clicked, and listed on the About page. Edit the text here; ids are used by app.js and glossary.js.",
+  "groups": [
+    {
+      "id": "stages",
+      "title": "Stages",
+      "terms": [
+        { "id": "pre-application", "term": "Pre-application", "definition": "The developer has met the city at a pre-development conference to talk through a proposal, but hasn't filed a building permit. A proposal, not a commitment: many change or never go ahead." },
+        { "id": "applied", "term": "Applied", "definition": "A building permit application is on file and the city is reviewing the plans." },
+        { "id": "approved", "term": "Approved", "definition": "The city has approved or issued the building permit. Construction may not have started yet." },
+        { "id": "under-construction", "term": "Under construction", "definition": "Work is probably under way: the building permit is issued and trade permits (electrical, plumbing, mechanical) have been issued since. The city's public records don't include inspections, so this is an estimate." },
+        { "id": "complete", "term": "Complete", "definition": "Every building permit in the project has been finaled." },
+        { "id": "stalled", "term": "Stalled", "definition": "Marked by hand when a project has clearly stopped." }
+      ]
+    },
+    {
+      "id": "types",
+      "title": "Building types",
+      "terms": [
+        { "id": "middle-housing", "term": "Middle housing", "definition": "Washington's term for buildings about the scale of a house that hold two or more attached, stacked or clustered homes: duplexes through sixplexes, townhouses, stacked flats, courtyard apartments and cottage housing (RCW 36.70A.030). A house with an ADU doesn't count." },
+        { "id": "townhomes", "term": "Townhomes", "definition": "Attached homes side by side, each with its own entrance at ground level. Often each sits on its own small lot so it can be sold separately (a unit lot subdivision)." },
+        { "id": "cottage-housing", "term": "Cottage housing", "definition": "A cluster of small houses around a shared green or courtyard." },
+        { "id": "adu", "term": "Accessory dwelling unit (ADU)", "definition": "A second, smaller home on the same lot as a house, attached or detached: a backyard cottage, a garage apartment or a basement unit." },
+        { "id": "conversion", "term": "Conversion or addition", "definition": "New homes made inside an existing building, such as offices turned into apartments, or added onto one." },
+        { "id": "senior-group", "term": "Senior & group living", "definition": "Senior housing, assisted living and other group living, where residents may share meals, services or common rooms." }
+      ]
+    },
+    {
+      "id": "process",
+      "title": "Permits and reviews",
+      "terms": [
+        { "id": "pre-development-conference", "term": "Pre-development conference", "definition": "An early meeting where a developer walks city staff through a proposal before applying for permits. It's a conversation about an idea, not an application." },
+        { "id": "sepa", "term": "Environmental review (SEPA)", "definition": "Review under Washington's State Environmental Policy Act. Larger projects file an environmental checklist and get a city decision on their impacts before permits are issued, often with a public comment period." },
+        { "id": "design-review", "term": "Design review", "definition": "Spokane's Design Review Board looks at how larger projects in some areas, such as downtown, fit their surroundings and makes recommendations before permits are issued." },
+        { "id": "change-of-use", "term": "Change of use", "definition": "A permit to use an existing building for something new, such as turning offices into homes." },
+        { "id": "private-development", "term": "Private development", "definition": "The city's review of public works a private project builds, usually streets, sidewalks, and water and sewer connections." },
+        { "id": "short-plat", "term": "Short plat", "definition": "Divides a lot into a small number of new lots. \"Final\" is the last step, after which the new lots are recorded with the county." },
+        { "id": "lot-line-adjustment", "term": "Lot line adjustment", "definition": "Moves the line between neighboring lots without creating new ones. The city calls it a boundary line adjustment." },
+        { "id": "grading", "term": "Grading", "definition": "A permit to move earth and prepare a site before building." },
+        { "id": "trade-permits", "term": "Trade permits", "definition": "Separate permits for electrical, plumbing and mechanical work. This map reads them as a sign that construction has started." }
+      ]
+    },
+    {
+      "id": "status",
+      "title": "Permit status",
+      "terms": [
+        { "id": "pending", "term": "Pending", "definition": "The application is in, but review hasn't started or is waiting on something." },
+        { "id": "plan-review", "term": "Plan review", "definition": "City staff are checking the plans against the codes. \"Extended\" means the city has allowed more time." },
+        { "id": "revisions-required", "term": "Revisions required", "definition": "The city has asked for changes to the plans before review can go on." },
+        { "id": "plan-review-approved", "term": "Plan review approved", "definition": "The plans have passed review. The permit is usually issued once fees and any remaining conditions are met." },
+        { "id": "issued", "term": "Issued", "definition": "The city has issued the permit, so the work it covers can go ahead. \"Extended\" means the city has allowed more time." },
+        { "id": "finaled", "term": "Final (finaled)", "definition": "The work under the permit has passed its final inspection. The city's public records don't give the date." },
+        { "id": "co-final", "term": "CO final", "definition": "Final, with a certificate of occupancy: the building can legally be lived in." },
+        { "id": "recording", "term": "Recording & filing", "definition": "An approved plat or lot change is being recorded with Spokane County." },
+        { "id": "closed", "term": "Closed", "definition": "The city has closed the record. That can mean the work is done, or that the application expired or was withdrawn." }
+      ]
+    }
+  ]
+}

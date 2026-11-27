@@ -168,7 +168,28 @@
       </div>
       <!-- Saves the map as a picture (app.js, "Saving the map as an image"). -->
       <button type="button" class="mapbtn iconbtn" id="save-map" aria-label="Save the map as an image" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-camera"></use></svg></button>
+      <button type="button" class="mapbtn iconbtn" id="how-to-read" aria-label="How to read this map" aria-expanded="false" aria-controls="howto"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-help"></use></svg></button>
     </div>
+
+    <!-- "How to read this map" (app.js, wireHowTo). The stage list is drawn from STAGES. -->
+    <section class="howto" id="howto" hidden aria-labelledby="h-howto" tabindex="-1">
+      <div class="howto__bar">
+        <h2 class="howto__hed" id="h-howto">How to read this map</h2>
+        <button type="button" class="iconbtn" id="howto-close" aria-label="Close" data-tip="Close"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-close"></use></svg></button>
+      </div>
+      <h3 class="howto__sub">Color is the stage</h3>
+      <ul class="howto__stages" id="howto-stages"></ul>
+      <h3 class="howto__sub">Size is the number of homes</h3>
+      <p>A circle’s area grows with the homes in the project. <span class="howto__ring" aria-hidden="true"></span>Hollow rings are projects whose home count isn’t known yet; they add nothing to the totals.</p>
+      <h3 class="howto__sub">What’s on it</h3>
+      <p>Active housing projects of two or more homes in the City of Spokane, from the first meeting with the city to completion. They come from the city’s permit records, checked every morning, plus a hand-kept list. Some are missing.</p>
+      <h3 class="howto__sub">Estimates and terms</h3>
+      <p><abbr class="est">est.</abbr> marks figures worked out from permit records, such as whether building has started. <span class="gloss gloss--demo">Dotted underlines</span> open a short definition.</p>
+      <h3 class="howto__sub">Getting around</h3>
+      <p class="howto__hover">Hover over a circle for its name, size and address; click it to open the project.</p>
+      <p class="howto__touch">Tap a circle to open the project.</p>
+      <p class="howto__more"><a href="about.html">How it works and what it leaves out <span aria-hidden="true">→</span></a></p>
+    </section>
 
     <!-- Size key: circle area is proportional to housing units. Redrawn on
          zoom so the sample circles match what is on the map. -->
@@ -198,6 +219,7 @@
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="share.js"></script>
+<script src="glossary.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

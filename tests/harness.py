@@ -34,7 +34,7 @@ def h(s, n):
 
 
 SITE_FILES = ["index.html", "about.html", "app.js", "about.js", "styles.css", "share.js", "og-card.png", "robots.txt", "styleguide.html",
-              "404.html", "favicon.ico", "favicon.svg", "apple-touch-icon.png", "site.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"]
+              "404.html", "glossary.js", "glossary.json", "favicon.ico", "favicon.svg", "apple-touch-icon.png", "site.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"]
 
 
 def make_site(with_facts=True):
