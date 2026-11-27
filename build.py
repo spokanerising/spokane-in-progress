@@ -1251,7 +1251,6 @@ def main():
 
 
 CANDIDATES_PATH = os.path.join("data", "candidates.json")
-MONTHLY_STAGE = {"Largest Projects in Plan Review": "Applied", "Significant PDEV & MFTEs": "Pre-Application"}
 
 
 def write_candidates(projects, weekly, monthly, curated_permits, hidden, skipped):
@@ -1292,7 +1291,9 @@ def write_candidates(projects, weekly, monthly, curated_permits, hidden, skipped
                 "permits": permits, "name": row.get("title", ""), "address": row.get("address", ""),
                 "units": to_int(row.get("units")), "estCost": to_int(row.get("valuation")),
                 "date": row.get("as_of", ""),
-                "status": MONTHLY_STAGE.get(row.get("table", ""), "Approved" if approved or "Largest" in row.get("table", "") else "Applied"),
+                # The same table -> stage rule the monthly-only projects use.
+                "status": next((st for rx, st in MONTHLY_STAGE if rx.search(row.get("table", ""))),
+                               "Approved" if approved else "Applied"),
                 "description": "", "parcelId": "", "reportUrl": "",
             })
     out.sort(key=lambda c: c.get("date") or "", reverse=True)
