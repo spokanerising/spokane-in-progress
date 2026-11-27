@@ -302,8 +302,12 @@ def _layer_score(service_name, layer_name):
         score += 10
     if re.search(r"zoning", service_name, re.I):
         score += 30
-    if re.search(r"plan|public", service_name, re.I):
-        score += 5
+    if re.search(r"^public", service_name, re.I):
+        score += 10           # the city's published copies, kept current
+    if re.search(r"^public\w*/planning", service_name, re.I):
+        score += 5            # the planning department's own published layer
+    if re.search(r"pedestrian|plan/|draft|archive", service_name, re.I):
+        score -= 20           # a plan's own snapshot of zoning can be dated
     if re.search(r"pedestrian|retail|plan\b|proposed|draft|old|former|county", name):
         score -= 40
     return score
