@@ -36,5 +36,37 @@
    "unset": [],
    "note": "Adding photo."
   }
+ ],
+ "city-b25m0085pdev": [
+  {
+   "at": "2026-11-27T21:13:47Z",
+   "file": "2026/11/20261127T211347Z-city-b25m0085pdev-f774dd.json",
+   "set": {
+    "units": 4,
+    "stories": 2,
+    "sqft": 7156,
+    "parking": 4,
+    "estCost": 1500000,
+    "developer": "Jesse Wolff",
+    "architect": "Hoist Architecture",
+    "imageUrl": "https://projects.spokanerising.com/media/city-b25m0085pdev/20261127T211302Z-fbcfc720.jpg",
+    "imageCredit": "City of Spokane",
+    "imagePermission": "public-record"
+   },
+   "was": {
+    "units": null,
+    "stories": null,
+    "sqft": null,
+    "parking": null,
+    "estCost": null,
+    "developer": null,
+    "architect": null,
+    "imageUrl": null,
+    "imageCredit": null,
+    "imagePermission": null
+   },
+   "unset": [],
+   "note": ""
+  }
  ]
 }

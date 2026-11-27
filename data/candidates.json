@@ -48,6 +48,22 @@
   "reportUrl": ""
  },
  {
+  "key": "B26M0031PDEV",
+  "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
+  "permits": [
+   "B26M0031PDEV"
+  ],
+  "name": "Stirling Heights Townhomes",
+  "address": "3551 W 25th",
+  "units": 111,
+  "estCost": 49000000,
+  "date": "2026-05-31",
+  "status": "Pre-Application",
+  "description": "",
+  "parcelId": "",
+  "reportUrl": ""
+ },
+ {
   "key": "B2513640",
   "source": "monthly permit report (Largest Projects 2026, as of 2026-05-31)",
   "permits": [
@@ -60,6 +76,54 @@
   "estCost": 8889517,
   "date": "2026-05-31",
   "status": "Approved",
+  "description": "",
+  "parcelId": "",
+  "reportUrl": ""
+ },
+ {
+  "key": "B2601077",
+  "source": "monthly permit report (Largest Projects 2026, as of 2026-05-31)",
+  "permits": [
+   "B2601077"
+  ],
+  "name": "Perry District Apartments",
+  "address": "1225 E Newark",
+  "units": 40,
+  "estCost": 5000000,
+  "date": "2026-05-31",
+  "status": "Approved",
+  "description": "",
+  "parcelId": "",
+  "reportUrl": ""
+ },
+ {
+  "key": "B23M0147PDEV",
+  "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
+  "permits": [
+   "B23M0147PDEV"
+  ],
+  "name": "Senior Housing",
+  "address": "315 W 9th",
+  "units": 36,
+  "estCost": 11500000,
+  "date": "2026-05-31",
+  "status": "Pre-Application",
+  "description": "",
+  "parcelId": "",
+  "reportUrl": ""
+ },
+ {
+  "key": "B2600350",
+  "source": "monthly permit report (Largest Projects in Plan Review, as of 2026-05-31)",
+  "permits": [
+   "B2600350"
+  ],
+  "name": "The Crest at Riverview Apartments",
+  "address": "1777 E Upriver Dr",
+  "units": 31,
+  "estCost": 10455258,
+  "date": "2026-05-31",
+  "status": "Applied",
   "description": "",
   "parcelId": "",
   "reportUrl": ""
