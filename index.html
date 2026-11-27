@@ -114,6 +114,20 @@
       <p class="tally" id="tally" aria-live="polite"></p>
       <button type="button" class="clear" id="clear-filters" hidden>Clear filters</button>
     </div>
+
+    <div class="listtools">
+      <label class="sort">
+        <span>Sort</span>
+        <select id="sort">
+          <option value="recent">Recently changed</option>
+          <option value="homes">Most homes</option>
+          <option value="stage">Furthest along</option>
+          <option value="filed">Newest filing</option>
+          <option value="name">Name, A to Z</option>
+        </select>
+      </label>
+      <button type="button" class="sharebtn" id="share-view">Share this view</button>
+    </div>
     <ol class="cards" id="cards"></ol>
     <p class="empty" id="empty" hidden>Nothing matches those filters. Clear the search or turn a stage back on.</p>
 
@@ -144,6 +158,9 @@
     <!-- Size key: circle area is proportional to housing units. Redrawn on
          zoom so the sample circles match what is on the map. -->
     <div class="mapkey" id="mapkey" aria-label="Map key"></div>
+
+    <!-- How many of the filtered projects are inside the current map view. -->
+    <p class="inview" id="inview" aria-live="polite"></p>
   </section>
 
 <aside class="detail" id="detail" hidden aria-label="Project detail">

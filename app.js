@@ -126,6 +126,7 @@ const state = {
   selected: null,
   builtAt: null,
   measure: "homes", // what the stage bar is sized by: "homes" or "projects"
+  sort: "recent",   // list order; see SORTS
 };
 
 // Stages that count toward "in the pipeline": filed, not finished, not stalled.
@@ -224,6 +225,22 @@ const searchText = (p) =>
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
+
+// ---- list order -------------------------------------------------------------
+
+const SORTS = {
+  recent: (a, b) => (b.statusUpdated || "").localeCompare(a.statusUpdated || ""),
+  homes: (a, b) => (b.units > 0 ? b.units : -1) - (a.units > 0 ? a.units : -1),
+  stage: (a, b) => {
+    // Furthest along first; Stalled sorts last rather than past Complete.
+    const rank = (p) => (p.status === "Stalled" ? -1 : indexOf(p.status));
+    return rank(b) - rank(a) || (b.units || 0) - (a.units || 0);
+  },
+  filed: (a, b) => (firstFiled(b) || "").localeCompare(firstFiled(a) || ""),
+  name: (a, b) => a.name.localeCompare(b.name, "en", { numeric: true }),
+};
+
+const sorted = (list) => [...list].sort((a, b) => SORTS[state.sort](a, b) || a.name.localeCompare(b.name));
 
 function visible() {
   const q = state.query.trim().toLowerCase();
@@ -503,7 +520,15 @@ function drawCards(list) {
 
   el.cards.querySelectorAll(".card").forEach((card) => {
     card.addEventListener("click", () => select(card.dataset.id, true));
+    card.addEventListener("mouseenter", () => setHover(card.dataset.id, "list"));
+    card.addEventListener("mouseleave", () => setHover(null, "list"));
+    card.addEventListener("focus", () => setHover(card.dataset.id, "list"));
+    card.addEventListener("blur", () => setHover(null, "list"));
   });
+  if (state.selected) {
+    const active = el.cards.querySelector(`.card[data-id="${CSS.escape(state.selected)}"]`);
+    if (active) active.classList.add("is-active");
+  }
 
   el.empty.hidden = list.length > 0;
   const homes = unitsOf(list);
@@ -516,13 +541,64 @@ function drawCards(list) {
 }
 
 function render() {
-  const list = visible();
+  const list = sorted(visible());
+  state.list = list;
   drawCards(list);
   drawSpine();
 
   if (map && map.getSource("projects")) {
     map.getSource("projects").setData(toGeoJson(list));
+    markSelected();
   }
+  drawInView();
+  writeUrl();
+}
+
+// ---- map <-> list highlighting --------------------------------------------
+
+let hovered = null;
+
+function setHover(id, from) {
+  if (hovered === id) return;
+  if (map && map.getSource("projects")) {
+    if (hovered) map.setFeatureState({ source: "projects", id: hovered }, { hover: false });
+    if (id) map.setFeatureState({ source: "projects", id }, { hover: true });
+  }
+  if (from === "map") {
+    el.cards.querySelectorAll(".card.is-hover").forEach((c) => c.classList.remove("is-hover"));
+    if (id) {
+      const card = el.cards.querySelector(`.card[data-id="${CSS.escape(id)}"]`);
+      if (card) card.classList.add("is-hover");
+    }
+  }
+  hovered = id;
+}
+
+// The open project keeps a dark ring on the map. setData() clears feature
+// state, so this runs after every redraw.
+function markSelected() {
+  if (!map || !map.getSource("projects")) return;
+  map.removeFeatureState({ source: "projects" });
+  if (state.selected) map.setFeatureState({ source: "projects", id: state.selected }, { selected: true });
+  hovered = null;
+}
+
+// ---- "N projects in view" ---------------------------------------------------
+
+function drawInView() {
+  const box = document.getElementById("inview");
+  if (!box) return;
+  if (!map || !map.getSource("projects") || !state.list) {
+    box.textContent = "";
+    return;
+  }
+  const bounds = map.getBounds();
+  const inView = state.list.filter((p) => Number.isFinite(p.lng) && bounds.contains([p.lng, p.lat]));
+  const homes = unitsOf(inView);
+  box.textContent =
+    inView.length === state.list.length
+      ? `All ${plural(inView.length, "project", "projects")} in view`
+      : `${plural(inView.length, "project", "projects")}${homes ? ` · ${plural(homes, "home", "homes")}` : ""} in view`;
 }
 
 // --------------------------------------------------------------------------
@@ -533,6 +609,7 @@ function toGeoJson(list) {
     features: list.map((p) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [p.lng, p.lat] },
+      id: p.id,
       properties: {
         id: p.id,
         name: p.name,
@@ -579,11 +656,14 @@ function placeLinks(p) {
     .join("")}</p>`;
 }
 
-function select(id, flyTo) {
+function select(id, flyTo, fromHistory = false) {
   const project = state.projects.find((p) => p.id === id);
   if (!project) return;
 
+  const wasOpen = !!state.selected;
   state.selected = id;
+  markSelected();
+  if (!fromHistory) writeUrl(!wasOpen); // a new history step when a project opens, so Back closes it
 
   el.cards.querySelectorAll(".card").forEach((card) => {
     card.classList.toggle("is-active", card.dataset.id === id);
@@ -596,6 +676,7 @@ function select(id, flyTo) {
     <h2>${escapeHtml(project.name)}</h2>
     <p class="detail__where">${escapeHtml(where(project))}</p>
     ${placeLinks(project)}
+    <p class="detail__share"><button type="button" class="sharebtn" data-copy-project>Copy link to this project</button></p>
 
     <div class="track" style="--stage:${color}" role="img" aria-label="Stage: ${escapeHtml(project.status)}">
       ${STAGES.slice(0, 5).map((_, i) => `<span class="${i <= stage && stage < 5 ? "on" : ""}"></span>`).join("")}
@@ -670,14 +751,28 @@ function select(id, flyTo) {
     }
   `;
 
+  el.detailBody.querySelector("[data-copy-project]").addEventListener("click", (e) =>
+    copyLink(e.currentTarget, `${location.origin}${location.pathname}?p=${encodeURIComponent(project.id)}`)
+  );
+
   el.detail.hidden = false;
   el.detail.scrollTop = 0;
   document.body.dataset.detail = "open";
   document.getElementById("detail-close").focus();
 
-  if (flyTo && map) {
+  if (flyTo) flyToProject(project);
+}
+
+// Fly after the layout settles: on wide screens the detail column opens and the
+// map narrows, and flying first would leave the project off-center.
+function flyToProject(project) {
+  if (!map || !Number.isFinite(project.lng)) return;
+  const go = () =>
     map.flyTo({ center: [project.lng, project.lat], zoom: Math.max(map.getZoom(), 15), speed: 0.9 });
-  }
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    map.resize();
+    go();
+  }));
 }
 
 // ---- collapsible project list (wide screens) -------------------------------
@@ -711,11 +806,107 @@ function wirePanelToggle() {
   );
 }
 
-function closeDetail() {
+function closeDetail(fromHistory = false) {
   el.detail.hidden = true;
   document.body.dataset.detail = "closed";
   state.selected = null;
   el.cards.querySelectorAll(".card").forEach((c) => c.classList.remove("is-active"));
+  markSelected();
+  if (!fromHistory) writeUrl();
+}
+
+// ---- shareable links ---------------------------------------------------------
+//
+// The address bar always describes the current view, so copying it shares it:
+//   ?p=<project id>  &q=<search>  &stage=applied,approved  &type=middle | duplex,townhomes
+//   &size=20-99  &time=filed:90  &place=district:2 | hood:East Central  &sort=homes  &view=list
+// Anything at its default is left out. Opening a project adds a history step
+// (so Back closes it); filter changes just replace the current address.
+
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+function urlFromState() {
+  const params = new URLSearchParams();
+  if (state.selected) params.set("p", state.selected);
+  if (state.query.trim()) params.set("q", state.query.trim());
+  if (state.hidden.size) {
+    params.set("stage", STAGES.filter((s) => !state.hidden.has(s.name)).map((s) => slug(s.name)).join(",") || "none");
+  }
+  if (!allTypesOn()) {
+    const on = ALL_TYPES.filter((t) => state.types.has(t));
+    const isMiddle = on.length === MIDDLE_TYPES.length && MIDDLE_TYPES.every((t) => on.includes(t));
+    params.set("type", isMiddle ? "middle" : on.map(slug).join(",") || "none");
+  }
+  if (state.size !== "all") params.set("size", state.size);
+  if (state.time !== "all") params.set("time", state.time);
+  if (state.place !== "all") params.set("place", state.place);
+  if (state.sort !== "recent") params.set("sort", state.sort);
+  if (document.body.dataset.view === "list") params.set("view", "list");
+  const query = params.toString().replace(/%3A/g, ":").replace(/%2C/g, ",");
+  return `${location.pathname}${query ? `?${query}` : ""}`;
+}
+
+let urlReady = false; // don't write the address until it has been read
+
+function writeUrl(push = false) {
+  if (!urlReady) return;
+  const next = urlFromState();
+  if (next === `${location.pathname}${location.search}`) return;
+  history[push ? "pushState" : "replaceState"]({}, "", next);
+}
+
+function readUrl() {
+  const params = new URLSearchParams(location.search);
+  const list = (key) => (params.get(key) || "").split(",").map((v) => v.trim()).filter(Boolean);
+
+  state.query = params.get("q") || "";
+  el.search.value = state.query;
+
+  state.hidden = new Set();
+  if (params.has("stage")) {
+    const on = list("stage");
+    STAGES.forEach((s) => { if (!on.includes(slug(s.name))) state.hidden.add(s.name); });
+  }
+
+  state.types = new Set(ALL_TYPES);
+  if (params.has("type")) {
+    const on = list("type");
+    state.types = new Set(on.includes("middle") ? MIDDLE_TYPES : ALL_TYPES.filter((t) => on.includes(slug(t))));
+  }
+
+  const pick = (key, allowed) => (allowed.includes(params.get(key)) ? params.get(key) : "all");
+  state.size = pick("size", SIZES.map((x) => x.key));
+  state.time = pick("time", TIMES.map((x) => x.key));
+  const place = params.get("place") || "all";
+  state.place = /^(district:\d+|hood:.*)$/.test(place) ? place : "all";
+  state.sort = SORTS[params.get("sort")] ? params.get("sort") : "recent";
+  document.getElementById("sort").value = state.sort;
+
+  if (params.get("view") === "list") setView("list");
+
+  el.chips.querySelectorAll(".chip").forEach((c) =>
+    c.setAttribute("aria-pressed", String(!state.hidden.has(c.dataset.status)))
+  );
+  drawSelects();
+  return params.get("p");
+}
+
+async function copyLink(button, url = location.href) {
+  const label = button.textContent;
+  try {
+    await navigator.clipboard.writeText(url);
+    button.textContent = "Link copied";
+  } catch (error) {
+    window.prompt("Copy this link:", url);
+  }
+  setTimeout(() => (button.textContent = label), 1800);
+}
+
+function setView(view) {
+  document.querySelectorAll(".viewswitch button").forEach((t) =>
+    t.setAttribute("aria-selected", String(t.dataset.view === view))
+  );
+  document.body.dataset.view = view;
 }
 
 // --------------------------------------------------------------------------
@@ -820,7 +1011,7 @@ function startMap() {
       firstSymbol && firstSymbol.id
     );
 
-    map.addSource("projects", { type: "geojson", data: toGeoJson(visible()) });
+    map.addSource("projects", { type: "geojson", data: toGeoJson(state.list || visible()), promoteId: "id" });
 
     // One layer. Filled circles sized by units; projects with no unit count
     // are hollow rings at the smallest size rather than a guessed size.
@@ -835,10 +1026,25 @@ function startMap() {
         "circle-radius": radiusExpression(),
         "circle-color": ["case", known, ["get", "color"], "#faf8f3"],
         "circle-opacity": ["case", known, 0.9, 1],
-        "circle-stroke-color": ["case", known, "#ffffff", ["get", "color"]],
-        "circle-stroke-width": ["case", known, 1, 1.8],
+        "circle-stroke-color": [
+          "case",
+          ["any", ["boolean", ["feature-state", "selected"], false], ["boolean", ["feature-state", "hover"], false]],
+          "#121212",
+          known, "#ffffff",
+          ["get", "color"],
+        ],
+        "circle-stroke-width": [
+          "case",
+          ["boolean", ["feature-state", "selected"], false], 3,
+          ["boolean", ["feature-state", "hover"], false], 2.5,
+          known, 1,
+          1.8,
+        ],
       },
     });
+    markSelected();
+    drawInView();
+    map.on("moveend", drawInView);
 
     map.on("zoomend", drawMapKey);
     drawMapKey();
@@ -849,8 +1055,25 @@ function startMap() {
     setBasemap(savedBasemap());
 
     map.on("click", "project-dot", (e) => select(e.features[0].properties.id, false));
-    map.on("mouseenter", "project-dot", () => (map.getCanvas().style.cursor = "pointer"));
-    map.on("mouseleave", "project-dot", () => (map.getCanvas().style.cursor = ""));
+    // Hovering a dot rings it, highlights its row and shows its name.
+    const tip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "tip" });
+    map.on("mousemove", "project-dot", (e) => {
+      const f = e.features[0];
+      map.getCanvas().style.cursor = "pointer";
+      setHover(f.properties.id, "map");
+      tip.setLngLat(f.geometry.coordinates).setText(f.properties.name).addTo(map);
+    });
+    map.on("mouseleave", "project-dot", () => {
+      map.getCanvas().style.cursor = "";
+      setHover(null, "map");
+      tip.remove();
+    });
+
+    // A shared link that opened a project: center on it now the map exists.
+    if (state.selected) {
+      const p = state.projects.find((x) => x.id === state.selected);
+      if (p) map.jumpTo({ center: [p.lng, p.lat], zoom: 15 });
+    }
   });
 }
 
@@ -880,7 +1103,18 @@ async function start() {
     render();
   });
 
-  document.getElementById("detail-close").addEventListener("click", closeDetail);
+  document.getElementById("detail-close").addEventListener("click", () => closeDetail());
+  document.getElementById("sort").addEventListener("change", (e) => {
+    state.sort = e.target.value;
+    render();
+  });
+  document.getElementById("share-view").addEventListener("click", (e) => copyLink(e.currentTarget));
+  window.addEventListener("popstate", () => {
+    const id = readUrl();
+    if (id) select(id, true, true);
+    else if (!el.detail.hidden) closeDetail(true);
+    render();
+  });
 
   wireTypePicker();
   document.getElementById("size-filter").addEventListener("change", (e) => {
@@ -910,10 +1144,8 @@ async function start() {
 
   document.querySelectorAll(".viewswitch button").forEach((tab) => {
     tab.addEventListener("click", () => {
-      document.querySelectorAll(".viewswitch button").forEach((t) =>
-        t.setAttribute("aria-selected", String(t === tab))
-      );
-      document.body.dataset.view = tab.dataset.view;
+      setView(tab.dataset.view);
+      writeUrl();
     });
   });
   document.body.dataset.view = "map";
@@ -969,7 +1201,11 @@ async function start() {
     drawLede();
     drawNote();
     drawMapKey();
+    const openId = readUrl();
+    urlReady = true;
     render();
+    if (openId && state.projects.some((p) => p.id === openId)) select(openId, false, true);
+    else if (openId) writeUrl(); // drop a link to a project that no longer exists
   }
 }
 

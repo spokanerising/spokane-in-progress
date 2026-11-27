@@ -571,6 +571,86 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
 .tally { margin: 0; color: var(--ink); }
 
+/* Sort + share, under the tally. */
+.listtools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+}
+
+.sort { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.sort span { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; }
+
+.sort select {
+  padding: 4px 24px 4px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23121212' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 8px center;
+  font: 500 13px var(--sans);
+  color: var(--ink);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+@media (max-width: 860px) { .sort select { font-size: 16px; } }
+
+.sharebtn {
+  padding: 0;
+  background: none;
+  border: none;
+  font: 600 12.5px var(--sans);
+  color: var(--link);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sharebtn:hover { text-decoration: underline; text-underline-offset: 3px; }
+.detail__share { margin: -8px 0 18px; }
+
+/* A row whose dot is hovered on the map. */
+.card.is-hover { background: var(--paper-2); }
+
+/* "N projects in view", top-center of the map. */
+.inview {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  padding: 5px 10px;
+  background: rgba(250, 248, 243, 0.94);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.inview:empty { display: none; }
+
+@media (max-width: 520px) {
+  .inview { top: 54px; left: 10px; transform: none; font-size: 11.5px; }
+}
+
+/* Hover name label on the map. */
+.tip .maplibregl-popup-content {
+  padding: 5px 9px;
+  font: 600 13px var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: none;
+}
+.tip .maplibregl-popup-tip { display: none; }
+
 .clear {
   flex: none;
   padding: 0;
