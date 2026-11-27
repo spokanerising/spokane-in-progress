@@ -1,0 +1,56 @@
+name: Tests
+
+# Runs the site's tests in a headless browser:
+#   - on every push of code (any branch), and
+#   - after every data refresh, so a bad day's data is caught too.
+# A failure can't stop Cloudflare from deploying main (it deploys on its
+# own), but it marks the commit with a red X and GitHub emails about it.
+# Screenshots from a failed run are attached to the run as "screenshots".
+
+on:
+  push:
+    paths-ignore:
+      - "data/**"
+      - "permit-reports/**"
+      - "projects.json"
+      - "boundaries.geojson"
+      - "**.md"
+  workflow_run:
+    workflows: ["Refresh project data"]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install the test browser
+        run: |
+          pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Run the tests
+        run: python3 tests/run.py
+
+      - name: Keep the screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: tests/.shots/
+          if-no-files-found: ignore
