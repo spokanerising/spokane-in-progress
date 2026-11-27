@@ -1346,6 +1346,11 @@ function select(id, flyTo, fromHistory = false) {
   if (!project) return;
 
   const wasOpen = !!state.selected;
+  // Where focus goes back to when the project closes (a list row, the map).
+  const from = document.activeElement;
+  if (!wasOpen || !el.detail.contains(from)) {
+    detailOpener = from && from !== document.body && !el.detail.contains(from) ? from : null;
+  }
   state.selected = id;
   markSelected();
   if (!fromHistory) writeUrl(!wasOpen); // a new history step when a project opens, so Back closes it
@@ -1494,6 +1499,19 @@ function wirePanelToggle() {
   document.getElementById("panel-toggle").addEventListener("click", () =>
     setPanel(document.body.dataset.panel === "closed")
   );
+}
+
+let detailOpener = null;
+
+// Close from the × or Escape, and put focus back where it came from: the row
+// (redrawn rows are found again by id) or the map.
+function closeDetailAndReturn() {
+  const id = state.selected;
+  closeDetail();
+  let target = detailOpener && document.contains(detailOpener) ? detailOpener : null;
+  if (!target && id) target = el.cards.querySelector(`.card[data-id="${CSS.escape(id)}"]`);
+  detailOpener = null;
+  if (target) target.focus({ preventScroll: false });
 }
 
 function closeDetail(fromHistory = false) {
@@ -2061,6 +2079,106 @@ function wireSaveMap() {
   });
 }
 
+// ---- whole city, and getting around the map by keyboard ----------------------
+
+// The city's outer edge, from the council districts in boundaries.geojson;
+// the fixed box until (or unless) that file loads.
+function cityBounds() {
+  const districts = outlines ? outlines.features.filter((f) => f.properties.kind === "district") : [];
+  if (!districts.length) return CITY_BOUNDS;
+  const b = new maplibregl.LngLatBounds();
+  districts.forEach((f) => {
+    const polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates;
+    polys.forEach((poly) => poly[0].forEach((pt) => b.extend(pt)));
+  });
+  return b.toArray();
+}
+
+function showWholeCity() {
+  if (!map) return;
+  loadOutlines().then(() => map.fitBounds(cityBounds(), { padding: 24, duration: 700 }));
+}
+
+// A map button under + and −: zoom out to the whole city.
+class WholeCityControl {
+  onAdd() {
+    this.box = document.createElement("div");
+    this.box.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    this.box.innerHTML = `<button type="button" class="iconbtn citybtn" id="whole-city" aria-label="Show the whole city">${Share.icon("city")}</button>`;
+    this.box.querySelector("button").addEventListener("click", showWholeCity);
+    return this.box;
+  }
+  onRemove() { this.box.remove(); }
+}
+
+// On the focused map: arrows pan and + / − zoom (MapLibre's own), [ and ]
+// step through the projects in view from the middle outward, Enter opens the
+// one stepped to, 0 shows the whole city. A hint shows while the map has
+// keyboard focus, and a hidden live line reads out each project.
+let stepList = [], stepAt = -1;
+const stepTip = () => (stepTip.popup ||= new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "tip" }));
+
+function projectsInView() {
+  const b = map.getBounds(), c = map.project(map.getCenter());
+  return (state.onMap || [])
+    .filter((p) => Number.isFinite(p.lng) && b.contains([p.lng, p.lat]))
+    .map((p) => ({ p, d: map.project([p.lng, p.lat]).dist(c) }))
+    .sort((a, z) => a.d - z.d)
+    .map((x) => x.p);
+}
+
+function step(by) {
+  if (stepAt < 0 || !stepList.length) { stepList = projectsInView(); stepAt = by > 0 ? -1 : 0; }
+  if (!stepList.length) return announce("No projects in this part of the map. Zoom out with the minus key, or press 0 for the whole city.");
+  stepAt = (stepAt + by + stepList.length) % stepList.length;
+  const p = stepList[stepAt];
+  setHover(p.id, "map");
+  stepTip().setLngLat([p.lng, p.lat]).setText(p.name).addTo(map);
+  const homes = p.units > 0 ? `, ${plural(p.units, "home", "homes")}` : "";
+  announce(`${p.name}${homes}, ${p.status}. ${stepAt + 1} of ${stepList.length} in view. Press Enter to open.`);
+}
+
+function stopStepping() {
+  stepList = []; stepAt = -1;
+  if (stepTip.popup) stepTip.popup.remove();
+}
+
+function announce(text) {
+  const box = document.getElementById("map-live");
+  if (box) box.textContent = text;
+}
+
+function wireMapKeys() {
+  const canvas = map.getCanvas();
+  canvas.setAttribute("aria-label", "Map of projects. Arrow keys move, plus and minus zoom, square brackets step through projects, Enter opens one, 0 shows the whole city.");
+  canvas.setAttribute("aria-describedby", "map-live");
+  canvas.addEventListener("keydown", (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === "]" || e.key === "[") { e.preventDefault(); step(e.key === "]" ? 1 : -1); }
+    else if (e.key === "Enter" && stepAt >= 0 && stepList[stepAt]) { e.preventDefault(); const p = stepList[stepAt]; stopStepping(); select(p.id, true); }
+    else if (e.key === "0") { e.preventDefault(); showWholeCity(); }
+    else if (e.key === "Escape" && stepAt >= 0) { e.stopPropagation(); stopStepping(); setHover(null, "map"); announce(""); }
+  });
+  canvas.addEventListener("focus", () => { if (canvas.matches(":focus-visible")) document.body.dataset.mapkeys = "on"; });
+  canvas.addEventListener("blur", () => { delete document.body.dataset.mapkeys; stopStepping(); setHover(null, "map"); });
+  map.on("movestart", () => { if (stepAt >= 0) { stopStepping(); setHover(null, "map"); } });
+}
+
+// Skip links: past the filters to the list, or straight to the map.
+function wireSkipLinks() {
+  document.getElementById("skip-list").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (window.matchMedia("(max-width: 860px)").matches) setView("list");
+    const first = el.cards.querySelector(".card");
+    (first || el.cards).focus();
+  });
+  document.getElementById("skip-map").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (window.matchMedia("(max-width: 860px)").matches) setView("map");
+    if (map) map.getCanvas().focus();
+  });
+}
+
 function startMap() {
   map = new maplibregl.Map({
     container: "map",
@@ -2071,6 +2189,9 @@ function startMap() {
   });
 
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+  map.addControl(new WholeCityControl(), "top-right");
+  map.addControl(new maplibregl.ScaleControl({ maxWidth: 110, unit: "imperial" }), "bottom-right");
+  wireMapKeys();
 
   map.on("load", () => {
     const styleLayers = map.getStyle().layers || [];
@@ -2225,7 +2346,8 @@ async function start() {
     render();
   });
 
-  document.getElementById("detail-close").addEventListener("click", () => closeDetail());
+  document.getElementById("detail-close").addEventListener("click", () => closeDetailAndReturn());
+  wireSkipLinks();
   document.getElementById("sort").addEventListener("change", (e) => {
     state.sort = e.target.value;
     render();
@@ -2262,7 +2384,7 @@ async function start() {
     });
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !el.detail.hidden) closeDetail();
+    if (e.key === "Escape" && !el.detail.hidden && !document.querySelector(".menu")) closeDetailAndReturn();
   });
 
   document.querySelectorAll(".viewswitch button").forEach((tab) => {

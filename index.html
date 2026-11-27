@@ -34,6 +34,8 @@
 <link href="styles.css" rel="stylesheet">
 </head>
 <body>
+<a class="skip" id="skip-list" href="#cards">Skip to the project list</a>
+<a class="skip" id="skip-map" href="#map">Skip to the map</a>
 <noscript><p class="noscript">This map needs JavaScript. You can still read <a href="about.html">how Spokane in Progress works</a>, or see each project in the <a href="https://notifymespokane.org">city’s permit activity map</a>.</p></noscript>
 
 <header class="masthead">
@@ -129,7 +131,7 @@
       </span>
     </div>
     <!-- Grey placeholder rows until projects.json arrives; drawCards() replaces them. -->
-    <ol class="cards" id="cards" aria-busy="true">
+    <ol class="cards" id="cards" aria-busy="true" tabindex="-1">
       <li class="skel" aria-hidden="true"><span></span><span style="width:72%"></span><span></span><span></span></li>
       <li class="skel" aria-hidden="true"><span></span><span style="width:58%"></span><span></span><span></span></li>
       <li class="skel" aria-hidden="true"><span></span><span style="width:80%"></span><span></span><span></span></li>
@@ -180,6 +182,9 @@
 
     <!-- How many of the filtered projects are inside the current map view. -->
     <p class="inview" id="inview" aria-live="polite"></p>
+    <!-- Shown while the map has keyboard focus. -->
+    <p class="keyhint" id="keyhint"><kbd>←</kbd><kbd>→</kbd> move · <kbd>+</kbd><kbd>−</kbd> zoom · <kbd>[</kbd><kbd>]</kbd> step through projects · <kbd>Enter</kbd> open · <kbd>0</kbd> whole city</p>
+    <p class="visually-hidden" id="map-live" aria-live="polite"></p>
   </section>
 
 <aside class="detail" id="detail" hidden aria-label="Project detail">

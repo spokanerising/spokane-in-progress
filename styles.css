@@ -1998,3 +1998,78 @@ button:disabled, select:disabled, input:disabled { opacity: 0.45; cursor: defaul
   a { color: inherit; }
   * { animation: none !important; transition: none !important; }
 }
+
+/* ==========================================================================
+   Map tools (polish round, phase D): scale bar, whole city, keyboard.
+   ========================================================================== */
+
+/* "Whole city" sits in its own group under + and −. */
+.maplibregl-ctrl-group .citybtn.iconbtn {
+  width: var(--ctl); height: var(--ctl);
+  border: none; border-radius: 0; background: var(--paper); color: var(--ink);
+}
+.maplibregl-ctrl-group .citybtn.iconbtn:hover { background: var(--paper-2); }
+
+/* Scale bar: an ink bracket with the distance ("1 mi", "2000 ft"). */
+.maplibregl-ctrl-scale {
+  margin: 0 10px 6px 0 !important;
+  padding: 0 4px 1px;
+  background: rgba(250, 248, 243, 0.85);
+  border: 1.5px solid var(--ink);
+  border-top: none;
+  font: 600 11px/1.6 var(--sans);
+  color: var(--ink);
+}
+
+/* The map itself takes the focus ring, drawn inside its edge. */
+.maplibregl-canvas:focus-visible { outline: 2px solid var(--link); outline-offset: -3px; }
+.maplibregl-canvas:focus:not(:focus-visible) { outline: none; }
+
+/* Keyboard hint, while the map has keyboard focus. */
+.keyhint {
+  position: absolute;
+  left: 50%;
+  top: 54px;
+  transform: translateX(-50%);
+  z-index: 3;
+  margin: 0;
+  width: max-content;
+  max-width: calc(100% - 120px);
+  padding: 6px 10px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--ctl-radius);
+  font: 500 12px/1.5 var(--sans);
+  text-align: center;
+  pointer-events: none;
+  display: none;
+}
+body[data-mapkeys="on"] .keyhint { display: block; }
+.keyhint kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  margin: 0 1px;
+  padding: 0 4px;
+  border: 1px solid rgba(250, 248, 243, 0.55);
+  border-radius: 2px;
+  font: 600 11px/1.4 var(--sans);
+  text-align: center;
+}
+
+/* Skip links: hidden until tabbed to, then a paper tab at the top left. */
+.skip {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 12px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: var(--ctl-radius);
+  font: 600 13px var(--sans);
+  color: var(--ink);
+  transform: translateY(-200%);
+}
+.skip:focus { transform: none; }
+#cards:focus { outline: none; }
+@media (max-width: 520px) { .keyhint { top: 90px; } }

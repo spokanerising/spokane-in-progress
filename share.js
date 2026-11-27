@@ -327,7 +327,7 @@
       else if (e.key === "ArrowUp") { e.preventDefault(); list[(i - 1 + list.length) % list.length].focus(); }
       else if (e.key === "Home") { e.preventDefault(); list[0].focus(); }
       else if (e.key === "End") { e.preventDefault(); list[list.length - 1].focus(); }
-      else if (e.key === "Escape") { e.preventDefault(); closeMenu(); }
+      else if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeMenu(); }  // the menu, not the project behind it
       else if (e.key === "Tab") closeMenu(false);
     };
     const onDown = (e) => {
@@ -392,6 +392,7 @@
     mail: '<rect x="3" y="5" width="14" height="10"/><path d="M3.5 5.5 10 11l6.5-5.5"/>',
     camera: '<path d="M3 7h3.2l1.4-2h4.8l1.4 2H17v9H3z"/><circle cx="10" cy="11.3" r="2.7"/>',
     close: '<path d="M5 5l10 10M15 5 5 15"/>',
+    city: '<path d="M3 7.5V3h4.5M12.5 3H17v4.5M17 12.5V17h-4.5M7.5 17H3v-4.5"/>',
   };
 
   function addSprite() {
