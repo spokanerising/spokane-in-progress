@@ -1,0 +1,22 @@
+{
+  "project": "city-b26m0015pdev",
+  "permits": [
+    "B2618601BLDC",
+    "B26M0015PDEV",
+    "Z26-583BLA"
+  ],
+  "at": "2026-11-27T19:38:19Z",
+  "by": "spokanerising@gmail.com",
+  "set": {
+    "imageUrl": "https://projects.spokanerising.com/media/city-b26m0015pdev/20261127T193751Z-2fe8e789.jpg",
+    "imageCredit": "Matt Hutchins / CAST Architecture",
+    "imagePermission": "public-record"
+  },
+  "was": {
+    "imageUrl": null,
+    "imageCredit": null,
+    "imagePermission": null
+  },
+  "unset": [],
+  "note": "Adding photo."
+}
