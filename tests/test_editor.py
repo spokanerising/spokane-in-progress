@@ -38,6 +38,15 @@ HIST = [
     {"at": "2026-11-22T10:00:00Z", "file": "c.json", "set": {}, "was": {"stories": 4}, "unset": ["stories"], "note": "Back to the city's"},
 ]
 json.dump({detailed["id"]: HIST}, open(os.path.join(site, "data", "edit-history.json"), "w"))
+CANDS = [
+    {"key": "B2610907BLDC", "source": "weekly permit report", "permits": ["B2610907BLDC"], "name": "Khinda 4-unit Apartments",
+     "address": "3133 N Stuart", "units": 3, "estCost": 250000, "date": "2026-07-27", "status": "Approved",
+     "description": "Change of use from a house to 4 apartments.", "parcelId": "35084.1234", "reportUrl": "https://example.gov/r.pdf"},
+    {"key": "B25M0067PDEV", "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)", "permits": ["B25M0067PDEV"],
+     "name": "Canyon Bluff Apartments", "address": "", "units": 168, "estCost": None, "date": "2026-05-31", "status": "Pre-Application",
+     "description": "", "parcelId": "", "reportUrl": ""},
+]
+json.dump(CANDS, open(os.path.join(site, "data", "candidates.json"), "w"))
 json.dump({"builtAt": "2026-11-27T19:00:00Z", "projects": {detailed["id"]: [f"{detailed['name']}: you set 60 units; city permit report says 44. Yours is shown."]},
            "other": ["Monthly: Canyon Bluff Apartments (168 units) has no street address. Not mapped."]},
           open(os.path.join(site, "data", "build-notes.json"), "w"))
@@ -314,6 +323,19 @@ with sync_playwright() as pw:
     check("already a project file" in pg.locator(".editor__msg").inner_text() and dlg.is_visible(), "duplicate refused, form kept")
     pg.keyboard.press("Escape")
     del api["project"]
+
+    # Start from a permit: the picker fills the form from the city's report.
+    add.click()
+    opts = pg.eval_on_selector_all("#ed-fromPermit option", "os => os.map(o => o.textContent)")
+    check(len(opts) == 3 and opts[0] == "Start from scratch" and "Khinda 4-unit Apartments · 3133 N Stuart · 3 homes · B2610907BLDC" == opts[1], f"permit picker {opts}")
+    pg.select_option("#ed-fromPermit", "B2610907BLDC")
+    check(val("name") == "Khinda 4-unit Apartments" and val("address") == "3133 N Stuart" and val("permits") == "B2610907BLDC", "filled basics")
+    check(val("units") == "3" and val("estCost") == "250000" and val("status") == "Approved" and val("statusUpdated") == "2026-07-27", "filled numbers, stage, date")
+    check(val("parcelId") == "35084.1234" and val("sourceUrls") == "https://example.gov/r.pdf" and "weekly permit report" in pg.inner_text("[data-from-note]"), "filled parcel, source, note")
+    pg.click("[data-save]")
+    pg.wait_for_function("!document.querySelector('dialog.editor').open")
+    sent_add = posts[-1]["add"]
+    check(sent_add["permits"] == "B2610907BLDC" and sent_add["parcelId"] == "35084.1234" and "lat" not in sent_add and "fromPermit" not in sent_add, f"sent from a permit {sent_add}")
     # Escape during picking also closes an open project, as it always has; reopen it.
     pg.goto(f"{SITE}/?p={detailed['id']}")
     pg.wait_for_selector("[data-edit-project]")
@@ -370,6 +392,23 @@ with sync_playwright() as pw:
     pg.wait_for_function("document.querySelector('[data-unhide]').textContent.includes('few minutes')")
     check(posts[-1]["unset"] == ["hidden"] and posts[-1]["project"] == "gone-one", "put back sent")
     check("Canyon Bluff" in pg.inner_text("#notes") and "1 note(s) about 1 project(s)" in pg.inner_text("#notes"), "admin shows build notes")
+    # Permits not on the map: Skip (two presses), and Add to the map hands over to the map's Add form.
+    check(pg.locator("#cands li").count() == 2 and "Khinda" in pg.inner_text("#cands"), "permit list on /admin/")
+    skip = pg.locator('[data-skip="B25M0067PDEV"]')
+    n = len(posts)
+    skip.click()
+    check(len(posts) == n and skip.inner_text() == "Press again to skip", "skip arms first")
+    skip.click()
+    pg.wait_for_function("document.querySelector('[data-skip=B25M0067PDEV]').textContent === 'Skipped'")
+    check(posts[-1]["project"] == "candidate-B25M0067PDEV" and posts[-1]["set"] == {"hidden": True}, f"skip sent {posts[-1]}")
+    pg.evaluate("localStorage.setItem('sip-editor', '1')")
+    pg.click('[data-add="B2610907BLDC"]')
+    pg.wait_for_url(f"{SITE}/")
+    pg.wait_for_function("document.querySelector('dialog.editor') && document.querySelector('dialog.editor').open")
+    check(pg.input_value("#ed-fromPermit") == "B2610907BLDC" and pg.input_value("#ed-name") == "Khinda 4-unit Apartments", "lands on the map with the form filled")
+    check(pg.evaluate("sessionStorage.getItem('sip-add')") is None, "handoff used once")
+    pg.keyboard.press("Escape")
+    pg.goto(f"{SITE}/admin/")
     pg.screenshot(path=os.path.join(SHOTS, "editor-admin.png"))
     api["me"] = (401, {"error": "Not signed in."})
     pg.evaluate("localStorage.removeItem('sip-editor')")

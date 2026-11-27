@@ -1161,9 +1161,9 @@ def main():
     # Your edits from the site (data/edits/), applied after everything above so
     # the daily rebuild can't undo them, and before the steps below so zoning,
     # housing type, density and the pipeline counts all use the edited values.
-    hidden, edit_history = [], {}
+    hidden, edit_history, skipped = [], {}, set()
     projects, edit_warnings = edits.apply(projects, normalise_stage, stage_rank,
-                                          hidden_out=hidden, history_out=edit_history)
+                                          hidden_out=hidden, history_out=edit_history, skipped_out=skipped)
     warnings.extend(edit_warnings)
     # The editor's History tab: every edit applied to each project.
     with open(os.path.join("data", "edit-history.json"), "w", encoding="utf-8") as handle:
@@ -1181,6 +1181,10 @@ def main():
             counts[p["status"]] = counts.get(p["status"], 0) + 1
         print(f"Published {len(auto)} project(s) from the city's permit records: "
               + ", ".join(f"{n} {s}" for s, n in counts.items()))
+
+    # Housing permits in the city's reports that aren't on the map at all, for
+    # the editor's "Start from a permit" list.
+    write_candidates(projects, city, monthly, set(permit_owners), hidden, skipped)
 
     # Last pass: tidy raw city text (abbreviations, shouting, stray notes in
     # addresses). Sheet-typed names and descriptions are left alone.
@@ -1244,6 +1248,57 @@ def main():
             print(f"  - {warning}")
     else:
         print("No problems found.")
+
+
+CANDIDATES_PATH = os.path.join("data", "candidates.json")
+MONTHLY_STAGE = {"Largest Projects in Plan Review": "Applied", "Significant PDEV & MFTEs": "Pre-Application"}
+
+
+def write_candidates(projects, weekly, monthly, curated_permits, hidden, skipped):
+    """Housing permits the city's weekly and monthly reports list that aren't on
+    the map at all: not in any project, hidden or hand-curated (a hand-curated
+    file with published = FALSE claims its permits on purpose), and not
+    skipped in the editor. Written to data/candidates.json."""
+    taken = {n.upper() for p in projects for n in p.get("permitNumbers") or []}
+    taken |= {n.upper() for h in hidden for n in h.get("permits") or []}
+    taken |= {n.upper() for n in curated_permits}
+    covered = lambda permit: permit.upper() in taken or any(t.startswith(permit.upper()) for t in taken)
+    out = []
+    for permit, row in weekly.items():
+        units = to_int(row.get("units")) or 0
+        if units < 2 or covered(permit) or permit.upper() in skipped:
+            continue
+        out.append({
+            "key": permit.upper(), "source": "weekly permit report", "permits": [permit.upper()],
+            "name": tidy_name(row.get("brief_description")) or nice_case(row.get("address", "")),
+            "address": nice_case(row.get("address", "")), "units": units,
+            "estCost": to_int(row.get("valuation")), "date": us_to_iso(row.get("issue_date", "")),
+            "status": "Approved", "description": tidy_description(row.get("detailed_description", "")),
+            "parcelId": row.get("parcel", ""), "reportUrl": city_report_url(row.get("report_url")),
+        })
+    seen = set()
+    for rows in monthly.values():
+        for row in rows:
+            key = row["key"].upper()
+            if key in seen:
+                continue
+            seen.add(key)
+            permits = [p.upper() for p in row["permits"].split(";") if p]
+            if any(covered(p) for p in permits) or key in skipped:
+                continue
+            approved = str(row.get("approved", "")).lower() == "true"
+            out.append({
+                "key": key, "source": f"monthly permit report ({row.get('table', '')}, as of {row.get('as_of', '')})",
+                "permits": permits, "name": row.get("title", ""), "address": row.get("address", ""),
+                "units": to_int(row.get("units")), "estCost": to_int(row.get("valuation")),
+                "date": row.get("as_of", ""),
+                "status": MONTHLY_STAGE.get(row.get("table", ""), "Approved" if approved or "Largest" in row.get("table", "") else "Applied"),
+                "description": "", "parcelId": "", "reportUrl": "",
+            })
+    out.sort(key=lambda c: c.get("date") or "", reverse=True)
+    with open(CANDIDATES_PATH, "w", encoding="utf-8") as handle:
+        json.dump(out, handle, indent=1, ensure_ascii=False)
+    return out
 
 
 def write_build_notes(projects, warnings):

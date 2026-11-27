@@ -102,12 +102,13 @@
   // ---- history and build notes (phase 3) ---------------------------------------
   // data/edit-history.json: project id -> every edit applied, oldest first.
   // data/build-notes.json: the last build's "things to look at", by project.
-  let side = { history: {}, notes: {}, other: [], builtAt: "" };
+  let side = { history: {}, notes: {}, other: [], builtAt: "", candidates: [] };
   async function loadSide() {
     const get = async (url) => { try { const r = await fetch(url, { cache: "no-store" }); return r.ok ? r.json() : null; } catch { return null; } };
-    const [history, notes] = await Promise.all([get("data/edit-history.json"), get("data/build-notes.json")]);
+    const [history, notes, candidates] = await Promise.all(
+      [get("data/edit-history.json"), get("data/build-notes.json"), get("data/candidates.json")]);
     side = { history: history || {}, notes: (notes && notes.projects) || {}, other: (notes && notes.other) || [],
-             builtAt: (notes && notes.builtAt) || "" };
+             builtAt: (notes && notes.builtAt) || "", candidates: Array.isArray(candidates) ? candidates : [] };
   }
 
   const LABELS = Object.fromEntries(FIELDS.map(([k, l]) => [k, l]));
@@ -491,7 +492,7 @@
             <p class="editor__id">It appears on the map after the next build, in a minute or two.</p></div>
           <button type="button" class="iconbtn" data-close aria-label="Close without saving">${Share.icon("close")}</button>
         </header>
-        <div class="editor__body">${html}</fieldset></div>
+        <div class="editor__body">${fromPermitHtml()}${html}</fieldset></div>
         <footer class="editor__foot">
           <p class="editor__msg" role="status" aria-live="polite"></p>
           <div class="editor__actions"><span class="editor__spacer"></span>
@@ -501,7 +502,31 @@
       </form>`;
   }
 
-  function openAdd() {
+  // "Start from a permit": housing permits in the city's reports that aren't on
+  // the map (data/candidates.json). Picking one fills the form; the permit
+  // numbers let the build place it, and claim it from then on.
+  const candidateLabel = (c) => [c.name || c.address || c.key, c.address && c.address !== c.name ? c.address : "",
+    c.units ? `${c.units} homes` : "", c.key].filter(Boolean).join(" · ");
+
+  function fromPermitHtml() {
+    if (!side.candidates.length) return "";
+    return `<fieldset class="edfrom"><legend class="label">Start from a permit</legend>
+      <div class="edfield" data-key="fromPermit"><label for="ed-fromPermit">Housing permits in the city's reports that aren't on the map (${side.candidates.length})</label>
+        <select id="ed-fromPermit" name="fromPermit"><option value="">Start from scratch</option>
+          ${side.candidates.map((c) => `<option value="${esc(c.key)}">${esc(candidateLabel(c))}</option>`).join("")}</select>
+        <p class="edfield__note" data-from-note></p></div></fieldset>`;
+  }
+
+  function fillFrom(form, c) {
+    const set = (k, v) => { if (form.elements[k]) form.elements[k].value = v ?? ""; };
+    set("name", c.name); set("address", c.address); set("description", c.description);
+    set("parcelId", c.parcelId); set("permits", (c.permits || []).join("; "));
+    set("status", c.status || "Pre-Application"); set("statusUpdated", c.date);
+    set("units", c.units); set("estCost", c.estCost);
+    set("sourceUrls", c.reportUrl || "");
+  }
+
+  function openAdd(startKey = "") {
     if (!dialog) {
       dialog = document.createElement("dialog");
       dialog.className = "editor";
@@ -514,6 +539,18 @@
     const say = (text, bad = false) => { msg.innerHTML = text; msg.classList.toggle("is-bad", bad); };
     dialog.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => dialog.close()));
     const pinStatus = dialog.querySelector("[data-pin-status]");
+    const from = form.elements.fromPermit;
+    const fromNote = dialog.querySelector("[data-from-note]");
+    const pickCandidate = (key) => {
+      const c = side.candidates.find((x) => x.key === key);
+      if (!c) return;
+      fillFrom(form, c);
+      fromNote.textContent = `From the ${c.source}. Check the name and details, then Add project. The build finds it on the map from its permit${c.parcelId ? " and parcel" : ""} number.`;
+    };
+    if (from) {
+      from.addEventListener("change", () => (from.value ? pickCandidate(from.value) : (fromNote.textContent = "")));
+      if (startKey && side.candidates.some((c) => c.key === startKey)) { from.value = startKey; pickCandidate(startKey); }
+    }
     dialog.querySelector("[data-pick]").addEventListener("click", () => {
       dialog.close();
       App.pickPoint((point) => {
@@ -532,6 +569,7 @@
       e.preventDefault();
       const body = {};
       for (const [key, , type] of ADD_FIELDS) {
+        if (!form.elements[key]) continue;
         const v = norm(type, form.elements[key].value);
         if (v !== "") body[key] = type === "urls" ? v.split("\n") : v;
       }
@@ -579,7 +617,7 @@
     btn.dataset.addProject = "";
     btn.setAttribute("aria-label", "Add a project");
     btn.innerHTML = Share.icon("plus");
-    btn.addEventListener("click", openAdd);
+    btn.addEventListener("click", () => openAdd());
     box.prepend(btn);
   }
 
@@ -637,8 +675,13 @@
   window.SIPEditor = { tools, open, openAdd, session: () => session, undoFor, loaded: () => loadSide() };
   document.body.dataset.editor = "checking";
   checkSession();
-  loadSide();
   addButton();
+  // "Add to the map" on /admin/ hands over a permit to start from.
+  loadSide().then(() => {
+    let key = "";
+    try { key = sessionStorage.getItem("sip-add") || ""; sessionStorage.removeItem("sip-add"); } catch { /* storage blocked */ }
+    if (key) openAdd(key);
+  });
   App.redrawTools();
   poll();
 })();
