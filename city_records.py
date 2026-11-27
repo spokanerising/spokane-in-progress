@@ -116,17 +116,79 @@ def is_housing(record, weekly_units=None):
     return bool(HOUSING_WORDS.search(notes))
 
 
+NUMBER_WORDS = {"a pair of": 2, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+                "eight": 8, "nine": 9, "ten": 10, "twelve": 12}
+PLEX_SIZES = (("eightplex", 8), ("sixplex", 6), ("fiveplex", 5), ("fourplex", 4), ("four-plex", 4),
+              ("four plex", 4), ("quadplex", 4), ("triplex", 3), ("duplex", 2))
+PLEX = r"(?:\d{1,2}[- ]?plex|" + "|".join(w.replace(" ", "[- ]") for w, _ in PLEX_SIZES) + r")(?:es)?"
+COUNT = r"(?:\(\d{1,2}\)|\b\d{1,2}\b|\b(?:" + "|".join(NUMBER_WORDS) + r")\b)"
+# "two sixplexes", "(2) 6-plex buildings", "3 new duplexes"
+COUNTED_PLEX = re.compile(r"(?P<count>" + COUNT + r")\s+(?:new\s+|attached\s+)*(?P<plex>" + PLEX + r")", re.I)
+# "on each of 3 lots", "on two lots", "one per lot on 4 lots"
+LOT_COUNT = re.compile(r"\b(?:on|across)\s+(?:each\s+of\s+)?(?:the\s+)?(?P<count>" + COUNT + r")\s+(?:separate\s+)?(?:lots|parcels)\b", re.I)
+EACH_LOT = re.compile(r"\b(?:each|per|every)\s+(?:lot|parcel)\b|\bon\s+each\b", re.I)
+NOT_A_COUNT = re.compile(r"(?:lot|bldg\.?|building|phase|unit|no\.?|#|tract|parcel)\s*$", re.I)
+
+
+def _number(text):
+    text = text.strip("() ").lower()
+    return int(text) if text.isdigit() else NUMBER_WORDS.get(text)
+
+
+def _plex_size(text):
+    low = text.lower()
+    match = re.match(r"(\d{1,2})[- ]?plex", low)
+    if match:
+        return int(match.group(1))
+    for word, n in PLEX_SIZES:
+        if low.startswith(word):
+            return n
+    return None
+
+
 def units_from_notes(record):
+    """Homes a permit's short description adds, or None when it doesn't say.
+
+    Counts multiply: "two sixplexes" is 12, "a fourplex on each of 3 lots" is
+    12. When the wording says there are several buildings but not how many
+    ("one sixplex on each lot", or a pre-development meeting for "Sixplexes"),
+    the count is unknown rather than guessed low. A building permit named for
+    a plural project ("10th Ave. Fourplexes") is one building, as each of
+    those buildings gets its own permit.
+    """
     notes = record["notes"]
     if NOT_HOUSING.search(notes):
         return None
-    match = re.search(r"(\d+)[- ]?(?:unit|plex)", notes, re.I)
+    match = re.search(r"(\d+)[- ]?unit", notes, re.I)
     if match and int(match.group(1)) < 1000:
         return int(match.group(1))
-    for word, n in (("eightplex", 8), ("sixplex", 6), ("fourplex", 4), ("four-plex", 4),
-                    ("quadplex", 4), ("triplex", 3), ("duplex", 2)):
-        if word in notes.lower():
-            return n
+
+    for found in COUNTED_PLEX.finditer(notes):
+        if NOT_A_COUNT.search(notes[:found.start()]):
+            continue                 # "Lot 3 duplex", "Bldg 2 fourplex", "#2 duplex"
+        count, size = _number(found.group("count")), _plex_size(found.group("plex"))
+        if count and size:
+            return count * size
+
+    size = None
+    match = re.search(r"\b(\d{1,2})[- ]?plex", notes, re.I)
+    if match:
+        size = int(match.group(1))
+    else:
+        for word, n in PLEX_SIZES:
+            if word in notes.lower():
+                size = n
+                break
+    if size:
+        lots = LOT_COUNT.search(notes)
+        if lots and _number(lots.group("count")):
+            return size * _number(lots.group("count"))
+        if EACH_LOT.search(notes):
+            return None              # several buildings, number not given
+        plural = re.search(r"plexes\b", notes, re.I)
+        if plural and record.get("type") == "Pre-Development Conference":
+            return None              # a meeting about several buildings
+        return size
     if re.search(r"attached adu", notes, re.I):
         return 2
     if re.search(r"house attached|zero lot|new townhouse", notes, re.I):
