@@ -1,0 +1,26 @@
+{
+  "project": "city-b26m0015pdev",
+  "permits": [
+    "B2618601BLDC",
+    "B26M0015PDEV",
+    "Z26-583BLA"
+  ],
+  "at": "2026-11-27T19:17:05Z",
+  "by": "spokanerising@gmail.com",
+  "set": {
+    "description": "Two sixplexes developed by Matt Hutchins of CAST Architecture. Will be similar to the \"Spokane Six\" he completed in 2025 on Grand Boulevard.",
+    "units": 12,
+    "stories": 3,
+    "developer": "Matt Hutchins",
+    "architect": "Matt Hutchins"
+  },
+  "was": {
+    "description": null,
+    "units": 6,
+    "stories": null,
+    "developer": null,
+    "architect": null
+  },
+  "unset": [],
+  "note": "Testing edits."
+}
