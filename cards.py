@@ -106,7 +106,7 @@ def locator(d, outlines, stages, box_w, box_h):
     oy = (box_h - (lat1 - lat0) * scale) / 2
     xy = lambda lng, lat: (ox + (lng - lng0) * kx * scale, oy + (lat1 - lat) * scale)
     path = lambda ring: "M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (xy(*pt[:2]) for pt in ring)) + "Z"
-    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#8f8c86")
+    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#6e8086")
     # Just the city's outer edge: the districts drawn twice, first with a
     # wide edge, then filled (with a thin same-color edge) on top, which
     # hides every inside border and any hairline gaps between districts.
@@ -126,7 +126,7 @@ def locator(d, outlines, stages, box_w, box_h):
 def track(d, stages):
     """The detail panel's five-step stage track."""
     names = [s["name"] for s in stages][:5]
-    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#8f8c86")
+    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#6e8086")
     at = names.index(d["status"]) if d["status"] in names else -1
     segs = "".join(f'<i style="background:{color if i <= at else "#e6e1d6"}"></i>' for i in range(len(names)))
     return f'<div class="track">{segs}</div>'
@@ -142,7 +142,7 @@ def name_size(name):
 def card_html(p, stages, outlines, fonts_css):
     d = drawn(p)
     e = lambda s: html.escape(str(s))
-    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#8f8c86")
+    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#6e8086")
     stage = STAGE_WORDS.get(d["status"], d["status"])
     if d["est"]:
         stage += " (estimated)"

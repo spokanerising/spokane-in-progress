@@ -39,6 +39,19 @@ def ensure_axe():
 # (page state, axe rule); take it out when the fix ships, so it stays fixed.
 KNOWN = set()
 
+# ---- stage colors stand out from the map (WCAG 1.4.11, 3:1) ------------------
+# Positron's land, residential and park fills: what most pins sit on.
+def _lum(h):
+    c = [int(h.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    c = [v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4 for v in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+def _contrast(a, b):
+    x, y = sorted((_lum(a), _lum(b)), reverse=True)
+    return (x + 0.05) / (y + 0.05)
+for stage in json.load(open(os.path.join(REPO, "projects.json")))["stages"]:
+    for name, bg in (("land", "#f2f3f0"), ("residential", "#eaeae6"), ("parks", "#e6e9e5")):
+        check(_contrast(stage["color"], bg) >= 3, f"{stage['name']} {stage['color']} on {name}: {_contrast(stage['color'], bg):.2f}:1")
+
 AXE = ensure_axe()
 site, data = make_site(with_facts=True)
 shutil.copy(os.path.join(REPO, "boundaries.geojson"), site)

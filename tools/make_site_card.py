@@ -78,7 +78,7 @@ def map_svg(projects, outlines, stages, box_w, box_h):
         if not (-10 < x < box_w + 10 and -10 < y < box_h + 10):
             continue
         u = p.get("units") or 0
-        c = color.get(p.get("status"), "#8f8c86")
+        c = color.get(p.get("status"), "#6e8086")
         if u > 0:
             r = max(3.2, 0.95 * math.sqrt(u))
             parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{c}" fill-opacity="0.9" stroke="#fff" stroke-width="1"/>')

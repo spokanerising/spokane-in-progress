@@ -39,12 +39,12 @@ PROJECTS_DIR = os.path.join("data", "projects")
 # The single source of truth for stages. The website reads this list out of
 # projects.json, so changing a name or colour here changes it everywhere.
 STAGES = [
-    {"name": "Pre-Application",    "color": "#ea957a"},  # pre-application conference held
-    {"name": "Applied",            "color": "#d66a48"},  # permit application filed
-    {"name": "Approved",           "color": "#b6451f"},
-    {"name": "Under Construction", "color": "#8a2f10"},
-    {"name": "Complete",           "color": "#592211"},
-    {"name": "Stalled",            "color": "#8f8c86"},
+    {"name": "Pre-Application",    "color": "#ce5c11"},  # pre-application conference held
+    {"name": "Applied",            "color": "#ba4521"},  # permit application filed
+    {"name": "Approved",           "color": "#a2301f"},
+    {"name": "Under Construction", "color": "#881713"},
+    {"name": "Complete",           "color": "#511a14"},
+    {"name": "Stalled",            "color": "#6e8086"},
 ]
 
 STAGE_NAMES = [stage["name"] for stage in STAGES]

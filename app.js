@@ -6,12 +6,12 @@
 // The five live stages are one hue stepping from light to dark, so the order
 // reads in the color itself. Stalled sits off the ramp in neutral gray.
 let STAGES = [
-  { name: "Pre-Application",     color: "#ea957a" },
-  { name: "Applied",             color: "#d66a48" },
-  { name: "Approved",            color: "#b6451f" },
-  { name: "Under Construction",  color: "#8a2f10" },
-  { name: "Complete",            color: "#592211" },
-  { name: "Stalled",             color: "#8f8c86" },
+  { name: "Pre-Application",     color: "#ce5c11" },
+  { name: "Applied",             color: "#ba4521" },
+  { name: "Approved",            color: "#a2301f" },
+  { name: "Under Construction",  color: "#881713" },
+  { name: "Complete",            color: "#511a14" },
+  { name: "Stalled",             color: "#6e8086" },
 ];
 
 // Roughly the City of Spokane limits. The map opens here.

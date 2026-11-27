@@ -2344,7 +2344,7 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 .howto__stages i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .howto__ring {
   display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: -1px;
-  border: 1.8px solid #b6451f; border-radius: 50%; background: var(--paper);
+  border: 1.8px solid #a2301f; border-radius: 50%; background: var(--paper);
 }
 .howto__more { margin-top: 10px !important; }
 .howto__more a { font-weight: 600; text-decoration: none; }
