@@ -110,6 +110,99 @@
     box.append(btn);
   }
 
+  // ---- uploads (phase 2) -----------------------------------------------------
+  // Photos are shrunk here to 2,400 px on the long side (and turned the right
+  // way up) before they go anywhere; PDFs go as they are. /api/upload stores
+  // the file and answers with its address, which goes into the field. Nothing
+  // changes on the project until Save.
+  const MAX_BYTES = 25 * 1024 * 1024;
+  const LONG_SIDE = 2400;
+  const UPLOADS = {
+    imageUrl: { label: "Upload a photo", accept: "image/jpeg,image/png,image/webp,image/heic,image/*" },
+    docUrl: { label: "Upload a PDF", accept: "application/pdf,.pdf" },
+  };
+  const kb = (n) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
+
+  function uploadHtml(key) {
+    const u = UPLOADS[key];
+    return `<div class="edupload">
+        <label class="btn btn--small"><input type="file" class="visually-hidden" data-upload="${key}" accept="${u.accept}">${esc(u.label)}…</label>
+        <span class="edupload__status" aria-live="polite"></span>
+      </div>`;
+  }
+
+  async function shrink(file) {
+    let bitmap;
+    try {
+      bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+    } catch {
+      throw new Error("Couldn't read that photo. Try a JPEG or PNG.");
+    }
+    const scale = Math.min(1, LONG_SIDE / Math.max(bitmap.width, bitmap.height));
+    const w = Math.round(bitmap.width * scale), h = Math.round(bitmap.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#fff";           // transparent PNGs get a white background
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close && bitmap.close();
+    const blob = await new Promise((done) => canvas.toBlob(done, "image/jpeg", 0.85));
+    if (!blob) throw new Error("Couldn't shrink that photo.");
+    // A small JPEG that needed no shrinking goes as it is.
+    if (scale === 1 && file.type === "image/jpeg" && file.size <= blob.size) return { blob: file, w, h };
+    return { blob, w, h };
+  }
+
+  async function upload(p, key, file, status, form, say) {
+    const photo = key === "imageUrl";
+    status.classList.remove("is-bad");
+    try {
+      if (!photo && !/\.pdf$/i.test(file.name) && file.type !== "application/pdf") throw new Error("That isn't a PDF.");
+      let body = file, size = "";
+      if (photo) {
+        status.textContent = "Shrinking…";
+        const s = await shrink(file);
+        body = s.blob;
+        size = `${s.w}×${s.h}, `;
+      }
+      if (body.size > MAX_BYTES) throw new Error(`That file is ${kb(body.size)}; the limit is 25 MB.`);
+      status.textContent = `Uploading ${kb(body.size)}…`;
+      const res = await fetch(`/api/upload?project=${encodeURIComponent(p.id)}&name=${encodeURIComponent(file.name)}`, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "content-type": body.type || "application/octet-stream" },
+        body,
+      });
+      let reply = {};
+      try { reply = await res.json(); } catch { /* sign-in page, not JSON */ }
+      if (res.status === 401 || (!res.ok && !reply.error)) {
+        session.state = "out";
+        throw new Error("Your sign-in has run out. Open /admin/ in a new tab, sign in, and upload again.");
+      }
+      if (!res.ok) throw new Error(reply.error || `The upload failed (HTTP ${res.status}).`);
+      form.elements[key].value = reply.url;
+      status.textContent = `Uploaded (${size}${kb(reply.bytes || body.size)}). Press Save to add it to the project.`;
+      if (photo) {
+        const old = status.parentElement.querySelector(".edupload__preview");
+        if (old) old.remove();
+        const img = new Image();
+        img.className = "edupload__preview";
+        img.alt = "The uploaded photo";
+        img.src = URL.createObjectURL(body);
+        status.parentElement.append(img);
+        if (!form.elements.imagePermission.value) {
+          say("Now pick a picture permission, then Save.");
+          form.elements.imagePermission.focus();
+        }
+      }
+    } catch (error) {
+      status.textContent = error.message;
+      status.classList.add("is-bad");
+    }
+  }
+
   // ---- the form -------------------------------------------------------------
   let dialog = null;
 
@@ -145,9 +238,11 @@
       html += `<div class="edfield" data-key="${key}">
         <label for="ed-${key}">${esc(label)}</label>
         ${inputHtml(key, type, read(p) ?? "", p)}
+        ${UPLOADS[key] ? uploadHtml(key) : ""}
         ${note && !edited.has(key) ? `<p class="edfield__note">From: ${esc(note)}</p>` : ""}
         ${edited.has(key) ? `<p class="edfield__note">You edited this. <button type="button" class="linkbtn" data-reset="${key}">Reset to automatic</button></p>` : ""}
       </div>`;
+      if (key === "imagePermission") html += `<p class="edfield__hint">This also decides whether the PDF's first page is shown as a preview.</p>`;
       if (key === "status") html += `<p class="edfield__hint">The city's permit records can still move the stage forward from what you pick, but never back and never off Stalled.</p>`;
     }
     return html + "</fieldset>";
@@ -214,6 +309,13 @@
       row.querySelector("input, select, textarea").disabled = on;
       b.textContent = on ? "Keep my edit" : "Reset to automatic";
       say(on ? `${row.querySelector("label").textContent} goes back to the automatic value when you save.` : "");
+    }));
+
+    dialog.querySelectorAll("[data-upload]").forEach((input) => input.addEventListener("change", () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const status = input.closest(".edupload").querySelector(".edupload__status");
+      upload(p, input.dataset.upload, file, status, form, say).finally(() => (input.value = ""));
     }));
 
     let hideArmed = false;
