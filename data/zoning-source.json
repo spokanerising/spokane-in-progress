@@ -1,0 +1,7 @@
+{
+  "descField": "ZoneLabel",
+  "field": "ZoneCode",
+  "found": "2026-11-27",
+  "layer": "PublicData/Planning_WM_Dynamic / City Zoning",
+  "url": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Planning_WM_Dynamic/MapServer/33/query"
+}
