@@ -21,8 +21,8 @@ python3 tests/run.py filters      # files whose name contains "filters"
 | `test_map_tools.py` | Scale bar, the Whole city button, skip links, and the map by keyboard: [ ] to step through projects, Enter to open, 0 for the whole city, Escape back to the row or map. |
 | `test_project_page.py` | The project page: kicker, standfirst, spec sections, the permits table, the satellite view, PDF thumbnails (`pdf_thumbs.py`, offline), the foot, links to a section, print, phones. |
 | `test_edits.py` | `edits.py`: edits applied on top of the build: later wins, reset, stage moves forward only, hide, permit-number fallback, unsafe links refused. |
-| `test_functions.py` | The editor's Cloudflare functions in Node: sign-in token checks (forged, expired, wrong account), what Save commits, refused edits. Needs Node. |
-| `test_editor.py` | The editor in a browser: pencil only when signed in, form values for every project, what Save sends, errors, Hide, Reset, phones, `/admin/`. |
+| `test_functions.py` | The editor's Cloudflare functions in Node: sign-in token checks (forged, expired, wrong account), what Save commits, refused edits, uploads and serving them (fake R2), adding a project. Needs Node. |
+| `test_editor.py` | The editor in a browser: pencil only when signed in, form values for every project, what Save sends, errors, Hide, Reset, uploads (shrinking, turning upright, PDFs), build notes, History and Undo, adding a project with a map pin, phones, `/admin/`. |
 | `test_share_toolkit.py` | `share.js`: share links, copying, downloads, CSV, notices; Copy link and the Stats CSV. |
 
 GitHub runs them on every code push and after every data refresh

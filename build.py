@@ -975,7 +975,7 @@ def main():
                 parcel_number = house_number(matched)
                 if sheet_number and parcel_number and sheet_number != parcel_number:
                     warnings.append(
-                        f'{label}: the sheet says "{row.get("address")}" but parcel {pin} '
+                        f'{label}: the project file says "{row.get("address")}" but parcel {pin} '
                         f'is "{matched}". One of them is wrong.'
                     )
 
@@ -993,7 +993,7 @@ def main():
                 f'({", ".join(STAGE_NAMES)}). Shown as Stalled until you fix it.'
             )
         elif stage != raw_stage:
-            warnings.append(f'{label}: stage "{raw_stage}" read as "{stage}". Tidy the sheet when you get a chance.')
+            warnings.append(f'{label}: stage "{raw_stage}" read as "{stage}". Pick the stage again in the editor to tidy it.')
 
         listed = [p.upper() for p in semicolon_list(row.get("permit_numbers"))]
         own, siblings = records_for(listed, [row.get("parcel_id")] if row.get("parcel_id") else [],
@@ -1003,7 +1003,7 @@ def main():
         if city_stage and stage != "Stalled" and stage_rank(city_stage) > stage_rank(stage):
             warnings.append(
                 f"{label}: stage moved from {stage} to {city_stage} by the city's permit records "
-                f"({'; '.join(evidence)}). Update the sheet to match when you can."
+                f"({'; '.join(evidence)}). Nothing to do unless that's wrong."
             )
             stage = city_stage
             stage_source = "city permit records: " + "; ".join(evidence)
@@ -1026,7 +1026,7 @@ def main():
                 n += 1
             warnings.append(
                 f'{label}: duplicate id "{project_id}" (an earlier row already uses it). '
-                f'This row is published as "{fallback}" until the sheet is fixed.'
+                f'This project is published as "{fallback}" until its file in data/projects/ is fixed.'
             )
             project_id = fallback
         seen_ids.add(project_id)
@@ -1071,9 +1071,9 @@ def main():
                 )
             elif units is not None and city_units and units != city_units:
                 warnings.append(
-                    f"{label}: the sheet says {units:,} units; the city's permit reports add up "
+                    f"{label}: your project file says {units:,} units; the city's permit reports add up "
                     f"to {city_units:,} for {', '.join(r['permit'] for r in found)}.{partial} "
-                    f"Kept the sheet's number."
+                    f"Kept yours."
                 )
             if cost is None and city_cost:
                 cost = city_cost
@@ -1161,9 +1161,13 @@ def main():
     # Your edits from the site (data/edits/), applied after everything above so
     # the daily rebuild can't undo them, and before the steps below so zoning,
     # housing type, density and the pipeline counts all use the edited values.
-    hidden = []
-    projects, edit_warnings = edits.apply(projects, normalise_stage, stage_rank, hidden_out=hidden)
+    hidden, edit_history = [], {}
+    projects, edit_warnings = edits.apply(projects, normalise_stage, stage_rank,
+                                          hidden_out=hidden, history_out=edit_history)
     warnings.extend(edit_warnings)
+    # The editor's History tab: every edit applied to each project.
+    with open(os.path.join("data", "edit-history.json"), "w", encoding="utf-8") as handle:
+        json.dump(edit_history, handle, indent=1, ensure_ascii=False)
     # The editor's "Hidden from the map" list, so a hidden project can be put back.
     with open(os.path.join("data", "hidden.json"), "w", encoding="utf-8") as handle:
         json.dump(sorted(hidden, key=lambda h: h["name"].lower()), handle, indent=2)
@@ -1233,12 +1237,31 @@ def main():
         warnings.append(f"Could not update data/pipeline-history.csv: {error}")
     # A page per project, neighborhood and district, for link previews.
     warnings.extend(pages.write_all(projects))
+    write_build_notes(projects, warnings)
     if warnings:
         print(f"\n{len(warnings)} thing(s) to look at:")
         for warning in warnings:
             print(f"  - {warning}")
     else:
         print("No problems found.")
+
+
+def write_build_notes(projects, warnings):
+    """The build's "things to look at", sorted by project, for the editor: the
+    panel shows a project's own notes and /admin/ shows the rest."""
+    by_name = sorted(((p.get("name") or "", p["id"]) for p in projects), key=lambda x: -len(x[0]))
+    notes, other = {}, []
+    for w in warnings:
+        pid = next((i for name, i in by_name if name and w.startswith(f"{name}:")), None)
+        if pid is None:
+            pid = next((p["id"] for p in projects if f'"{p["id"]}"' in w), None)
+        if pid:
+            notes.setdefault(pid, []).append(w)
+        else:
+            other.append(w)
+    with open(os.path.join("data", "build-notes.json"), "w", encoding="utf-8") as handle:
+        json.dump({"builtAt": datetime.now(timezone.utc).isoformat(), "projects": notes, "other": other},
+                  handle, indent=1, ensure_ascii=False)
 
 
 if __name__ == "__main__":

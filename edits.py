@@ -201,7 +201,7 @@ def set_detail(project, key, value):
 def apply_to(project, values, dates, stage_rank):
     """Applies one project's folded edits. Returns warnings."""
     warnings = []
-    label = project.get("name") or project["id"]
+    label = values.get("name") or project.get("name") or project["id"]
     city_stage = project.get("_cityStage", project.get("status"))
     edited = []
     stamp = max(dates.values()) if dates else ""
@@ -229,6 +229,15 @@ def apply_to(project, values, dates, stage_rank):
             project["stageSource"] = note
             set_detail(project, "status", value)
         elif key == "units":
+            auto = project.get("units")
+            # Only against the city's numbers: on a hand-curated project the
+            # "automatic" value is just the project file, which is yours too.
+            from_city = project.get("unitsSource") not in (None, "", "sheet")
+            if from_city and value is not None and isinstance(auto, int) and auto > 0 and auto != value:
+                warnings.append(
+                    f"{label}: you set {value:,} units; {project.get('unitsSource') or 'the automatic value'} "
+                    f"says {auto:,}. Yours is shown."
+                )
             project["units"] = value
             project["unitsSource"] = note if value is not None else ""
             set_detail(project, key, value)
@@ -272,11 +281,12 @@ def apply_to(project, values, dates, stage_rank):
     return warnings
 
 
-def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out=None):
+def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out=None, history_out=None):
     """Returns (projects with edits applied and hidden ones removed, warnings).
     Always removes the build's internal _cityStage note. Hidden projects are
     added to hidden_out (a list) as {id, name, at}, for the editor's
-    "Hidden from the map" list."""
+    "Hidden from the map" list. Every applied edit is added to history_out (a
+    dict: project id -> list, oldest first) for the editor's History tab."""
     found, warnings = load(edits_dir)
     by_id = {p["id"]: p for p in projects}
     values, dates = {}, {}  # project id -> field -> value / time
@@ -288,6 +298,11 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
             continue
         pid = project["id"]
         v, d = values.setdefault(pid, {}), dates.setdefault(pid, {})
+        if history_out is not None:
+            history_out.setdefault(pid, []).append({
+                "at": edit.get("at", ""), "file": edit["_file"], "set": edit.get("set", {}),
+                "was": edit.get("was", {}), "unset": edit.get("unset", []), "note": edit.get("note", ""),
+            })
         for key, raw in edit.get("set", {}).items():
             if key not in KINDS:
                 warnings.append(f'Edit {edit["_file"]}: "{key}" isn\'t a field that can be edited. Skipped.')

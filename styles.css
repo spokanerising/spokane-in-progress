@@ -2333,7 +2333,9 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
   box-shadow: 0 12px 40px rgba(18, 18, 18, 0.18);
 }
 .editor::backdrop { background: rgba(18, 18, 18, 0.35); }
-.editor__form { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; max-height: inherit; margin: 0; }
+.editor__form { display: flex; flex-direction: column; max-height: inherit; margin: 0; }
+.editor__form > .editor__head, .editor__form > .edtabs, .editor__form > .editor__foot { flex: none; }
+.editor__form > .editor__body { flex: 1 1 auto; min-height: 0; }
 .editor__head {
   display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
   padding: 16px var(--gutter) 12px; border-bottom: 1px solid var(--ink);
@@ -2411,3 +2413,29 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
 .edupload__status { font-size: 12.5px; color: var(--ink-2); }
 .edupload__status.is-bad { color: #9b2c12; font-weight: 600; }
 .edupload__preview { display: block; flex-basis: 100%; max-width: 220px; max-height: 160px; object-fit: cover; border: 1px solid var(--rule); }
+
+/* Editor phase 3: tabs, history, build notes, adding a project. */
+.editor__actions[hidden], .editor__body[hidden] { display: none; }
+.edtabs { display: flex; gap: 4px; padding: 0 var(--gutter); border-bottom: 1px solid var(--rule); }
+.edtabs button {
+  min-height: var(--ctl); padding: 0 12px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent;
+  background: none; color: var(--muted); font: 600 13px/1.2 var(--sans); cursor: pointer;
+}
+.edtabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.edtabs button:hover { color: var(--ink); }
+.edhist { list-style: none; margin: 8px 0 0; padding: 0; }
+.edhist__item { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.edhist__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.edhist__date { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.edhist__later { font-size: 12px; color: var(--muted); }
+.edhist ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; overflow-wrap: anywhere; }
+.edhist__note { margin: 6px 0 0; font-size: 13px; font-style: italic; color: var(--ink-2); }
+.edhist__none { margin: 16px 0; color: var(--muted); font-size: 14px; }
+.edhist .linkbtn.is-armed { color: #9b2c12; font-weight: 600; }
+.ednotes { margin: 14px 0 0; padding: 10px 12px; border-left: 3px solid var(--ink-2); background: var(--paper-2); }
+.ednotes .label { margin: 0 0 4px; color: var(--ink-2); }
+.ednotes ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+.edfield__label { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.edpin { grid-column: 1 / -1; }
+.admin__notes { font-size: 14px; padding-left: 18px; }
+.admin__notes li { margin: 4px 0; }

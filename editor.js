@@ -83,18 +83,83 @@
         const byId = new Map((data.projects || []).map((p) => [p.id, p]));
         const builtAt = data.builtAt || "";
         const still = [];
+        const before = pending().length;
         for (const e of pending()) {
           const p = byId.get(e.id);
-          const live = e.hide ? !p : p && (p.editedAt || "") >= e.at;
+          const live = e.hide ? !p : e.add ? !!p : p && (p.editedAt || "") >= e.at;
           if (live || (builtAt > e.at && Date.now() - Date.parse(e.at) > 30 * 60e3)) {
             Share.toast(`Your edit to ${e.name} is live. Reload the page to see it.`, 10000);
           } else still.push(e);
         }
         setPending(still);
+        if (still.length !== before) loadSide();
         App.redrawTools();
       } catch { /* try again next time */ }
       poll();
     }, 45000);
+  }
+
+  // ---- history and build notes (phase 3) ---------------------------------------
+  // data/edit-history.json: project id -> every edit applied, oldest first.
+  // data/build-notes.json: the last build's "things to look at", by project.
+  let side = { history: {}, notes: {}, other: [], builtAt: "" };
+  async function loadSide() {
+    const get = async (url) => { try { const r = await fetch(url, { cache: "no-store" }); return r.ok ? r.json() : null; } catch { return null; } };
+    const [history, notes] = await Promise.all([get("data/edit-history.json"), get("data/build-notes.json")]);
+    side = { history: history || {}, notes: (notes && notes.projects) || {}, other: (notes && notes.other) || [],
+             builtAt: (notes && notes.builtAt) || "" };
+  }
+
+  const LABELS = Object.fromEntries(FIELDS.map(([k, l]) => [k, l]));
+  LABELS.hidden = "Hidden from map";
+  const day = (iso) => (iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "");
+  const shown = (v) => (v === null || v === undefined || v === "" || (Array.isArray(v) && !v.length) ? "blank"
+    : Array.isArray(v) ? v.join(", ") : v === true ? "yes" : v === false ? "no" : String(v));
+  const touches = (e, key) => key in (e.set || {}) || (e.unset || []).includes(key);
+
+  // What Undo would send for list[i]: each field it changed that nothing
+  // later changed goes back to what it was before. "Before" is the last
+  // earlier edit's value, or the automatic value if there wasn't one.
+  function undoFor(list, i) {
+    const e = list[i], set = {}, unset = [], was = {};
+    const latest = (key) => !list.slice(i + 1).some((later) => touches(later, key));
+    for (const key of Object.keys(e.set || {})) {
+      if (!latest(key)) continue;
+      was[key] = e.set[key];
+      const prev = list.slice(0, i).reverse().find((x) => touches(x, key));
+      if (prev && key in (prev.set || {})) set[key] = prev.set[key];
+      else unset.push(key);
+    }
+    for (const key of e.unset || []) {
+      if (!latest(key) || !(key in (e.was || {}))) continue;
+      set[key] = e.was[key];
+      was[key] = null;
+    }
+    return { set, unset, was, any: Object.keys(set).length + unset.length > 0 };
+  }
+
+  function historyHtml(p) {
+    const list = side.history[p.id] || [];
+    if (!list.length) return `<p class="edhist__none">No edits yet. Edits you save show up here after the next build.</p>`;
+    return `<ol class="edhist">${list.map((e, i) => {
+      const rows = [
+        ...Object.entries(e.set || {}).map(([k, v]) => `<li><b>${esc(LABELS[k] || k)}</b>: ${esc(shown((e.was || {})[k]))} → ${esc(shown(v))}</li>`),
+        ...(e.unset || []).map((k) => `<li><b>${esc(LABELS[k] || k)}</b>: reset to automatic</li>`),
+      ].join("");
+      const undo = undoFor(list, i);
+      return `<li class="edhist__item">
+        <div class="edhist__head"><span class="edhist__date">${esc(day(e.at))}</span>
+          ${undo.any ? `<button type="button" class="linkbtn" data-undo="${i}">Undo</button>` : `<span class="edhist__later">Changed again since</span>`}</div>
+        <ul>${rows}</ul>${e.note ? `<p class="edhist__note">${esc(e.note)}</p>` : ""}
+      </li>`;
+    }).reverse().join("")}</ol>`;
+  }
+
+  function notesHtml(p) {
+    const notes = side.notes[p.id] || [];
+    if (!notes.length) return "";
+    return `<div class="ednotes"><p class="label">Notes from the last build${side.builtAt ? `, ${esc(day(side.builtAt))}` : ""}</p>
+      <ul>${notes.map((n) => `<li>${esc(n.replace(/^[^:]*:\s*/, ""))}</li>`).join("")}</ul></div>`;
   }
 
   // ---- the pencil ---------------------------------------------------------
@@ -266,7 +331,13 @@
           </div>
           <button type="button" class="iconbtn" data-close aria-label="Close without saving">${Share.icon("close")}</button>
         </header>
-        <div class="editor__body">
+        <div class="edtabs" role="tablist">
+          <button type="button" role="tab" aria-selected="true" data-tab="edit">Edit</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="history">History (${(side.history[p.id] || []).length})</button>
+        </div>
+        <div class="editor__body editor__history" data-panel="history" hidden>${historyHtml(p)}</div>
+        <div class="editor__body" data-panel="edit">
+          ${notesHtml(p)}
           ${session.state === "out" ? `<p class="editor__alert" role="alert">You're signed out. <a href="/admin/" target="_blank" rel="noopener">Sign in again</a> in a new tab, then press Save.</p>` : ""}
           ${fieldsHtml(p)}
           <fieldset><legend class="label">Note</legend>
@@ -309,6 +380,25 @@
       row.querySelector("input, select, textarea").disabled = on;
       b.textContent = on ? "Keep my edit" : "Reset to automatic";
       say(on ? `${row.querySelector("label").textContent} goes back to the automatic value when you save.` : "");
+    }));
+
+    dialog.querySelectorAll("[data-tab]").forEach((tab) => tab.addEventListener("click", () => {
+      dialog.querySelectorAll("[data-tab]").forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+      dialog.querySelectorAll("[data-panel]").forEach((panel) => (panel.hidden = panel.dataset.panel !== tab.dataset.tab));
+      dialog.querySelector(".editor__actions").hidden = tab.dataset.tab !== "edit";
+      say("");
+    }));
+    dialog.querySelectorAll("[data-undo]").forEach((b) => b.addEventListener("click", () => {
+      const list = side.history[p.id] || [];
+      const i = Number(b.dataset.undo);
+      const u = undoFor(list, i);
+      if (!b.classList.contains("is-armed")) {
+        dialog.querySelectorAll("[data-undo].is-armed").forEach((x) => { x.classList.remove("is-armed"); x.textContent = "Undo"; });
+        b.classList.add("is-armed");
+        b.textContent = "Press again to undo";
+        return;
+      }
+      send(p, u.set, u.unset, u.was, `Undo of the edit on ${day(list[i].at)}`, false, say);
     }));
 
     dialog.querySelectorAll("[data-upload]").forEach((input) => input.addEventListener("change", () => {
@@ -357,6 +447,140 @@
     dialog.showModal();
     const first = dialog.querySelector("input, textarea, select");
     if (first) first.focus();
+  }
+
+  // ---- adding a project (phase 3) ----------------------------------------------
+  // A new hand-curated project: /api/project writes data/projects/hand-<name>.json.
+  // It needs a name and somewhere to put it: a pin, a parcel number or a permit
+  // number (the build looks the last two up). Listing permits claims them, so
+  // the city's own version of the project steps aside.
+  const ADD_FIELDS = [
+    ["name", "Name", "text", "Basics"], ["address", "Address", "text", "Basics"],
+    ["description", "Description", "textarea", "Basics"],
+    ["parcelId", "Parcel number (e.g. 35192.0101)", "text", "Where"],
+    ["permits", "Permit numbers (separate with ;)", "text", "Where"],
+    ["status", "Stage", "stage", "Stage"], ["statusUpdated", "Reached this stage on", "date", "Stage"],
+    ["units", "Housing units", "int", "The building"], ["stories", "Stories", "int", "The building"],
+    ["sqft", "Floor area (sq ft)", "int", "The building"], ["parking", "Parking stalls", "int", "The building"],
+    ["estCost", "Estimated cost ($)", "int", "The building"], ["projectType", "Type (as you'd describe it)", "text", "The building"],
+    ["developer", "Developer", "text", "Who's behind it"], ["architect", "Architect", "text", "Who's behind it"],
+    ["permitUrl", "Permit application link", "url", "Links"], ["sourceUrls", "Sources (one link per line)", "urls", "Links"],
+  ];
+
+  function addHtml() {
+    let section = "", html = "";
+    for (const [key, label, type, sec] of ADD_FIELDS) {
+      if (sec !== section) {
+        html += `${section ? "</fieldset>" : ""}<fieldset><legend class="label">${esc(sec)}</legend>`;
+        if (sec === "Where") {
+          html += `<div class="edfield edpin" data-key="pin">
+            <span class="edfield__label">Location</span>
+            <div class="edupload"><button type="button" class="btn btn--small" data-pick>Pick on map</button>
+            <span class="edupload__status" data-pin-status>No pin yet. Or give a parcel or permit number below and the build will find it.</span></div>
+            <input type="hidden" name="lat"><input type="hidden" name="lng"></div>`;
+        }
+        section = sec;
+      }
+      html += `<div class="edfield" data-key="${key}"><label for="ed-${key}">${esc(label)}${key === "name" ? " (required)" : ""}</label>
+        ${inputHtml(key, type, key === "status" ? "Pre-Application" : "", {})}</div>`;
+    }
+    return `
+      <form method="dialog" class="editor__form" novalidate>
+        <header class="editor__head">
+          <div><p class="label">Add a project</p><h2>New project</h2>
+            <p class="editor__id">It appears on the map after the next build, in a minute or two.</p></div>
+          <button type="button" class="iconbtn" data-close aria-label="Close without saving">${Share.icon("close")}</button>
+        </header>
+        <div class="editor__body">${html}</fieldset></div>
+        <footer class="editor__foot">
+          <p class="editor__msg" role="status" aria-live="polite"></p>
+          <div class="editor__actions"><span class="editor__spacer"></span>
+            <button type="button" class="btn" data-close>Cancel</button>
+            <button type="submit" class="btn btn--ink" data-save>Add project</button></div>
+        </footer>
+      </form>`;
+  }
+
+  function openAdd() {
+    if (!dialog) {
+      dialog = document.createElement("dialog");
+      dialog.className = "editor";
+      document.body.append(dialog);
+    }
+    dialog.setAttribute("aria-label", "Add a project");
+    dialog.innerHTML = addHtml();
+    const form = dialog.querySelector("form");
+    const msg = dialog.querySelector(".editor__msg");
+    const say = (text, bad = false) => { msg.innerHTML = text; msg.classList.toggle("is-bad", bad); };
+    dialog.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => dialog.close()));
+    const pinStatus = dialog.querySelector("[data-pin-status]");
+    dialog.querySelector("[data-pick]").addEventListener("click", () => {
+      dialog.close();
+      App.pickPoint((point) => {
+        if (point) {
+          form.elements.lat.value = point.lat.toFixed(6);
+          form.elements.lng.value = point.lng.toFixed(6);
+          pinStatus.textContent = `Pin at ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}. Pick again to move it.`;
+          say("");
+        }
+        // After this event is done: an Escape that cancelled picking would
+        // otherwise go on to close the form it just reopened.
+        setTimeout(() => dialog.showModal(), 0);
+      }, "Click the map where the new project is");
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const body = {};
+      for (const [key, , type] of ADD_FIELDS) {
+        const v = norm(type, form.elements[key].value);
+        if (v !== "") body[key] = type === "urls" ? v.split("\n") : v;
+      }
+      if (form.elements.lat.value) { body.lat = Number(form.elements.lat.value); body.lng = Number(form.elements.lng.value); }
+      if (!body.name) { form.elements.name.focus(); return say("Give it a name first.", true); }
+      if (!body.lat && !body.parcelId && !body.permits) return say("Pick it on the map, or give a parcel or permit number, so the map knows where it goes.", true);
+      const save = dialog.querySelector("[data-save]");
+      save.disabled = true;
+      save.setAttribute("aria-busy", "true");
+      say("Adding…");
+      try {
+        const res = await fetch("/api/project", {
+          method: "POST", credentials: "same-origin",
+          headers: { "content-type": "application/json" }, body: JSON.stringify(body),
+        });
+        let reply = {};
+        try { reply = await res.json(); } catch { /* sign-in page */ }
+        if (res.status === 401 || (!res.ok && !reply.error)) {
+          session.state = "out";
+          throw new Error('Your sign-in has run out. Open <a href="/admin/" target="_blank" rel="noopener">the editor page</a> in a new tab, then press Add project again.');
+        }
+        if (!res.ok) throw new Error(esc(reply.error || `That didn't save (HTTP ${res.status}).`));
+        session.state = "in";
+        setPending([...pending(), { id: reply.id, name: body.name, at: reply.at, add: true }]);
+        dialog.close();
+        Share.toast(`${body.name} added. It appears on the map in a minute or two.`, 7000);
+        poll();
+      } catch (error) {
+        say(error.message, true);
+      } finally {
+        save.disabled = false;
+        save.removeAttribute("aria-busy");
+      }
+    });
+    dialog.showModal();
+    form.elements.name.focus();
+  }
+
+  function addButton() {
+    const box = document.querySelector(".listtools__actions");
+    if (!box || box.querySelector("[data-add-project]")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "iconbtn";
+    btn.dataset.addProject = "";
+    btn.setAttribute("aria-label", "Add a project");
+    btn.innerHTML = Share.icon("plus");
+    btn.addEventListener("click", openAdd);
+    box.prepend(btn);
   }
 
   async function send(p, set, unset, was, note, hide, say) {
@@ -410,9 +634,11 @@
     document.body.dataset.editor = session.state;
   }
 
-  window.SIPEditor = { tools, open, session: () => session };
+  window.SIPEditor = { tools, open, openAdd, session: () => session, undoFor, loaded: () => loadSide() };
   document.body.dataset.editor = "checking";
   checkSession();
+  loadSide();
+  addButton();
   App.redrawTools();
   poll();
 })();
