@@ -168,7 +168,17 @@ with tempfile.TemporaryDirectory() as d:
 h = history.get("city-b1bldc", [])
 check([e["at"] for e in h] == ["2026-11-26T10:00:00Z", "2026-11-27T10:00:00Z"] and h[1]["was"] == {"units": 44} and h[1]["note"] == "a",
       f"history {history}")
-# A unit count that disagrees with the city's is noted (yours still shown).
-check(any("you set 50 units; city permit report says 44" in x for x in w), f"units disagreement noted {w}")
+# A unit count that disagrees with the city's isn't noted when the city's number
+# is the one you saw when you edited ("was")...
+check(not any("you set 50 units" in x for x in w), f"units disagreement you've seen isn't repeated {w}")
+# Editing your own number again keeps what the city said before your first edit.
+out, w = run([{"project": "city-b1bldc", "at": "2026-11-27T10:00:00Z", "set": {"units": 50}, "was": {"units": 44}},
+              {"project": "city-b1bldc", "at": "2026-11-28T10:00:00Z", "set": {"units": 52}, "was": {"units": 50}}])
+check(out["city-b1bldc"]["units"] == 52 and not any("you set 52 units" in x for x in w), f"re-edit isn't news {w}")
+# ...but is when the city's number has changed since, or the edit doesn't say.
+for was, expect in (({"units": 40}, "you set 50 units; city permit report now says 44 (it said 40 when you edited)"),
+                    ({}, "you set 50 units; city permit report now says 44. Yours is shown.")):
+    out, w = run([{"project": "city-b1bldc", "at": "2026-11-27T10:00:00Z", "set": {"units": 50}, "was": was}])
+    check(out["city-b1bldc"]["units"] == 50 and any(expect in x for x in w), f"units change since the edit noted {w}")
 
 print(f"{checks} checks passed")
