@@ -14,7 +14,10 @@ def check(url):
             title = re.sub(r"\s+", " ", title.group(1)).strip()[:80] if title else ""
             flags = [w for w in ("not found", "no records", "error", "invalid", "does not exist", "no matching")
                      if w in body.lower()]
-            return r.status, url, r.geturl() if r.geturl() != url else "", title, ",".join(flags)
+            text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", body)))
+            i = text.lower().find("no record")
+            snip = text[max(0, i - 150): i + 150] if i >= 0 else text[:300]
+            return r.status, url, r.geturl() if r.geturl() != url else "", title, ",".join(flags), snip
     except urllib.error.HTTPError as e:
         return e.code, url, "", "", ""
     except Exception as e:
