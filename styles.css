@@ -192,7 +192,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .lede:empty { display: none; }
-.lede b { color: var(--ink); font-weight: 600; }
+.lede b { color: var(--ink); font-weight: 700; }
 
 .figure__head {
   display: flex;
@@ -250,7 +250,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .spine__key li { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .spine__key i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
-.spine__key b { color: var(--ink); font-weight: 700; }
+.spine__key b { color: var(--ink); font-weight: 800; }
 
 /* Source and note lines, as under a newspaper chart. */
 .source {
@@ -1146,7 +1146,7 @@ body.page {
 }
 
 .stat { display: grid; gap: 4px; border-top: 2px solid var(--ink); padding-top: 8px; }
-.stat b { font-family: var(--sans); font-weight: 700; font-size: var(--fs-num); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+.stat b { font-family: var(--sans); font-weight: 800; font-size: var(--fs-num); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
 .stat span { font-size: var(--fs-ui); line-height: 1.35; color: var(--ink-2); }
 
 .section { margin-top: 44px; }
@@ -1514,7 +1514,7 @@ body.page {
 
 /* Stage chips carry a live count and an "only" shortcut. */
 .chipwrap { position: relative; display: inline-flex; flex: none; -webkit-tap-highlight-color: transparent; }
-.chip__n { margin-left: 2px; font-size: var(--fs-sm); font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip__n { margin-left: 2px; font-size: var(--fs-sm); font-weight: 500; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 
 .only {
   padding: 0 4px;
@@ -2521,3 +2521,9 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
 .admin__cands .admin__btns { display: flex; gap: 8px; flex: none; }
 .admin .btn.is-armed { border-color: var(--alert); color: var(--alert); }
 @media (max-width: 560px) { .admin__cands li { flex-direction: column; } }
+
+/* Bold numbers (issue #42): numbers.js wraps every quantity in <b class="num">,
+   in serif lines and sans data alike. Dates, addresses and codes stay plain. */
+b.num { font-weight: 700; font-variant-numeric: lining-nums tabular-nums; }
+.lede b.num, .standfirst b.num, .article__dek b.num { color: var(--ink); }
+.spine__key b.num, .figure__title b.num, .stat b.num { font-weight: 800; }

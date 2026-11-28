@@ -102,7 +102,7 @@ with sync_playwright() as pw:
                 check(int(r["homes"]) == sum(units(p) for p in P if p.get("councilDistrict") == d), f"district {d} homes")
                 check(int(r["projects"]) == sum(1 for p in P if p.get("councilDistrict") == d), f"district {d} projects")
                 check(sum(int(v) for k, v in r.items() if k.startswith("homes_")) == int(r["homes"]), "stage columns add up")
-            page_vals = pg.eval_on_selector_all("#chart-district .bars__value b", "els => els.map(e => +e.textContent.replace(/,/g, ''))")
+            page_vals = pg.eval_on_selector_all("#chart-district .bars__value > b", "els => els.map(e => +e.textContent.replace(/,/g, ''))")
             check(page_vals == [int(r["homes"]) for r in rows], f"CSV matches the page {page_vals}")
         if cid == "quarter":
             check(sum(int(r["projects"]) for r in rows) == sum(1 for p in P if any(x.get("opened") for x in p.get("permits") or [])), "every dated project in one quarter")

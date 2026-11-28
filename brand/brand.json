@@ -51,13 +51,14 @@
       "caps":  { "value": "0.07em",   "use": "Small uppercase labels." },
       "tight": { "value": "-0.012em", "use": "Serif headlines." }
     },
-    "webfonts": "https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400..700&family=Libre+Franklin:wght@400;500;600;700&display=swap",
+    "webfonts": "https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400..700&family=Libre+Franklin:wght@400;500;600;700;800&display=swap",
     "imageFonts": [
       { "family": "Merriweather", "weight": "300 900", "style": "normal", "package": "@fontsource-variable/merriweather", "file": "merriweather-latin-opsz-normal.woff2" },
       { "family": "Libre Franklin", "weight": 400, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-400-normal.woff2" },
       { "family": "Libre Franklin", "weight": 500, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-500-normal.woff2" },
       { "family": "Libre Franklin", "weight": 600, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-600-normal.woff2" },
-      { "family": "Libre Franklin", "weight": 700, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-700-normal.woff2" }
+      { "family": "Libre Franklin", "weight": 700, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-700-normal.woff2" },
+      { "family": "Libre Franklin", "weight": 800, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-800-normal.woff2" }
     ]
   },
 
