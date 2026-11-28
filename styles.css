@@ -77,6 +77,7 @@ a:hover { text-decoration-thickness: 2px; }
   background: var(--paper);
   color: var(--ink);
   padding: clamp(12px, 1.6vw, 20px) var(--gutter) clamp(10px, 1.3vw, 14px);
+  border-top: 4px solid var(--accent);   /* the Spokane Rising teal caps every page */
   border-bottom: 1px solid var(--ink);
 }
 
@@ -200,9 +201,9 @@ a:hover { text-decoration-thickness: 2px; }
 .measure button:last-child { border-radius: 0 2px 2px 0; }
 
 .measure button[aria-pressed="true"] {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface);
 }
 
 /* Every tracked project, stacked by stage. A 2px paper gap separates fills. */
@@ -361,8 +362,8 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 .basemap button + button { border-left: 1px solid var(--ink); }
 
 .basemap button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--accent);
+  color: var(--surface);
 }
 
 /* The map is hidden entirely in list view, so the switcher goes with it. */
@@ -731,7 +732,7 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 }
 
 .card:hover { background: var(--paper-2); }
-.card.is-active { background: var(--paper-2); box-shadow: inset 3px 0 0 var(--ink); }
+.card.is-active { background: var(--paper-2); box-shadow: inset 3px 0 0 var(--accent); }
 
 .card__stage {
   display: flex;
@@ -1090,7 +1091,7 @@ body.page {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--accent);
 }
 
 .article__hed {
@@ -1237,7 +1238,7 @@ body.page {
 .share { display: grid; gap: 10px; font-size: 13.5px; }
 .share__row { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr) minmax(120px, auto); gap: 12px; align-items: center; }
 .share__track { height: 20px; background: var(--other); }
-.share__part { display: block; height: 100%; background: var(--ink-2); }
+.share__part { display: block; height: 100%; background: var(--chart); }
 .share__value { white-space: nowrap; }
 .share__value b { font-size: 15px; }
 .share__value small { font-size: 11.5px; color: var(--muted); }
@@ -1280,7 +1281,7 @@ body.page {
   justify-content: flex-end;
 }
 
-.cols__mid { display: block; width: 100%; background: var(--ink-2); }
+.cols__mid { display: block; width: 100%; background: var(--chart); }
 .cols__col--partial .cols__bar { opacity: 0.45; }
 .cols__n { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
 
@@ -1300,7 +1301,7 @@ body.page {
 .table th:first-child { text-align: left; font-weight: 500; }
 .table thead th { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--ink); }
 .table td.share, .table thead th:last-child { width: 34%; text-align: left; white-space: nowrap; }
-.table td.share span { display: inline-block; max-width: calc(100% - 3.4em); height: 10px; margin-right: 8px; background: var(--ink-2); vertical-align: middle; }
+.table td.share span { display: inline-block; max-width: calc(100% - 3.4em); height: 10px; margin-right: 8px; background: var(--chart); vertical-align: middle; }
 /* Narrow phones: let the headers wrap so the table fits the screen. */
 @media (max-width: 400px) {
   .table th, .table td { padding-right: 6px; }
@@ -1529,7 +1530,7 @@ body.page {
 }
 
 /* A dropdown that's narrowing the list reads as "on". */
-.picker.is-on .picker__button { border-color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); font-weight: 600; }
+.picker.is-on .picker__button { border-color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); font-weight: 600; }
 
 .picker__item { grid-template-columns: auto 1fr auto auto; -webkit-tap-highlight-color: transparent; }
 .picker__n { min-width: 2.6ch; text-align: right; font-variant-numeric: tabular-nums; }
@@ -1618,7 +1619,7 @@ body.page {
   white-space: nowrap;
 }
 .seg label:first-child span { margin-left: 0; }
-.seg input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); position: relative; }
+.seg input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--surface); position: relative; }
 
 /* Active-filter pills, under the tally. */
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; padding: 0; list-style: none; }
@@ -1746,7 +1747,7 @@ body[data-picking="on"] .inview { display: none; }
 }
 .menu__item small { font-size: 12px; font-weight: 400; color: var(--muted); }
 .menu__item:hover, .menu__item:focus { background: var(--paper-2); outline: none; }
-.menu__item:focus-visible { box-shadow: inset 3px 0 0 var(--ink); }
+.menu__item:focus-visible { box-shadow: inset 3px 0 0 var(--accent); }
 .menu__rule { height: 1px; margin: 5px 0; background: var(--rule); }
 
 @media (max-width: 860px) {
@@ -1848,8 +1849,8 @@ body[data-picking="on"] .inview { display: none; }
 .measure button + button, .basemap button + button, .seg label + label span { border-left: 1px solid var(--ink); }
 .measure button:hover, .basemap button:hover, .seg span:hover { background: var(--paper-2); color: var(--ink); }
 .measure button[aria-pressed="true"], .basemap button[aria-pressed="true"], .seg input:checked + span {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--accent);
+  color: var(--surface);
   font-weight: 600;
 }
 .seg input:focus-visible + span { outline: 2px solid var(--link); outline-offset: -4px; outline-color: var(--link); }

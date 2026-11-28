@@ -3,8 +3,10 @@ checkboxes and the focus ring, on a wide screen and a phone, plus the
 unlinked style guide page (styleguide.html)."""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from harness import make_site, wire, SITE
+from harness import make_site, wire, SITE, REPO
 from playwright.sync_api import sync_playwright
+sys.path.insert(0, REPO)
+import branding  # noqa: E402
 
 ok = 0
 def check(cond, msg):
@@ -13,8 +15,12 @@ def check(cond, msg):
         raise AssertionError(msg)
     ok += 1
 
-LINK = "rgb(39, 91, 132)"
-INK = "rgb(18, 18, 18)"
+def css_rgb(name):
+    return "rgb({}, {}, {})".format(*branding.rgb(name))
+
+LINK = css_rgb("link")
+INK = css_rgb("ink")
+ACCENT = css_rgb("accent")
 
 # selector -> which size it should be
 SIZES = {
@@ -49,12 +55,12 @@ with sync_playwright() as pw:
     pg.wait_for_selector(".maplibregl-ctrl-zoom-in")
     sizes(pg, {"ctl": 36, "sm": 28})
 
-    # Segmented toggles: one ink outline, the chosen part filled with ink.
+    # Segmented toggles: one ink outline, the chosen part filled with the accent.
     for grp, on in [("#measure", "#measure [aria-pressed=true]"), ("#basemap", "#basemap [aria-pressed=true]")]:
         s = pg.eval_on_selector(grp, "e => { const s = getComputedStyle(e); return [s.borderTopColor, s.borderTopWidth, s.borderTopLeftRadius]; }")
         check(s == [INK, "1px", "2px"], f"{grp} outline {s}")
         bg = pg.eval_on_selector(on, "e => getComputedStyle(e).backgroundColor")
-        check(bg == INK, f"{on} filled {bg}")
+        check(bg == ACCENT, f"{on} filled {bg}")
 
     # The focus ring: blue, 2px, from the keyboard.
     pg.keyboard.press("Tab")

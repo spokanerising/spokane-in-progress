@@ -8,27 +8,27 @@
   "stages": [
     {
       "name": "Pre-Application",
-      "color": "#ce5c11"
+      "color": "#b5771a"
     },
     {
       "name": "Applied",
-      "color": "#ba4521"
+      "color": "#a94418"
     },
     {
       "name": "Approved",
-      "color": "#a2301f"
+      "color": "#7e3b4f"
     },
     {
       "name": "Under Construction",
-      "color": "#881713"
+      "color": "#4f2f75"
     },
     {
       "name": "Complete",
-      "color": "#511a14"
+      "color": "#071b38"
     },
     {
       "name": "Stalled",
-      "color": "#6e8086"
+      "color": "#857f76"
     }
   ],
   "projects": [

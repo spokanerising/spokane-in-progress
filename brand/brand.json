@@ -1,5 +1,5 @@
 {
-  "_about": "The one place for the site's look and names. Edit this, then run: python3 tools/make_brand.py. Then run the tests (python3 tests/run.py brand); they check that text and map dots stay readable. Colors are 6-digit hex.",
+  "_about": "The one place for the site's look and names. Colors are 6-digit hex, or the name of another color here ('brand') to reuse it. Edit this, then run: python3 tools/make_brand.py. Then run the tests (python3 tests/run.py brand); they check that text and map dots stay readable.",
 
   "name": "Spokane in Progress",
   "tagline": "Tracking Spokane's housing progress.",
@@ -29,27 +29,29 @@
     "ink":         { "value": "#121212", "use": "Body text, headlines, rules, chart axes." },
     "ink-2":       { "value": "#3a3936", "use": "Secondary text, single-series chart marks." },
     "muted":       { "value": "#6b6964", "use": "Notes, captions, labels." },
-    "paper":       { "value": "#faf8f3", "use": "Page background." },
-    "paper-2":     { "value": "#f2eee5", "use": "Hover and selected rows; locator land on cards." },
-    "paper-3":     { "value": "#ebe6db", "use": "Loading shimmer highlight." },
-    "rule":        { "value": "#dcd6ca", "use": "Hairlines and chart gridlines." },
-    "link":        { "value": "#275b84", "use": "Links, focus ring, Near circle on the map." },
+    "paper":       { "value": "#f9f8f5", "use": "Page background: between cream and white." },
+    "paper-2":     { "value": "#f1efea", "use": "Hover and selected rows; locator land on cards." },
+    "paper-3":     { "value": "#e9e6df", "use": "Loading shimmer highlight." },
+    "rule":        { "value": "#d9d5cd", "use": "Hairlines and chart gridlines." },
+    "link":        { "value": "brand", "use": "Links, focus ring, Near circle on the map." },
+    "accent":      { "value": "brand", "use": "Top rule, selected rows and controls, active filters, kickers." },
+    "chart":       { "value": "brand", "use": "Single-series chart marks (middle housing, shares). Never a stage color." },
     "surface":     { "value": "#ffffff", "use": "Menus, fields, buttons, white edges on map dots." },
-    "other":       { "value": "#b9b2a5", "use": "'Other' category in charts; outline of the city on cards." },
-    "map-bg":      { "value": "#e9e5dc", "use": "Map background before tiles load." },
-    "locator-hood":{ "value": "#d6cfc1", "use": "The project's neighborhood on share cards." },
-    "track-off":   { "value": "#e6e1d6", "use": "Stages not yet reached on the share-card track." },
+    "other":       { "value": "#b6b1a7", "use": "'Other' category in charts; outline of the city on cards." },
+    "map-bg":      { "value": "#e8e5de", "use": "Map background before tiles load." },
+    "locator-hood":{ "value": "#d4cfc5", "use": "The project's neighborhood on share cards." },
+    "track-off":   { "value": "#e5e2da", "use": "Stages not yet reached on the share-card track." },
     "alert":       { "value": "#9b2c12", "use": "Editor warnings and armed buttons." },
     "print-ink":   { "value": "#000000", "use": "Rules when printing." },
     "print-muted": { "value": "#444444", "use": "Secondary text when printing." }
   },
 
   "stages": [
-    { "name": "Pre-Application",    "color": "#ce5c11", "note": "pre-application conference held" },
-    { "name": "Applied",            "color": "#ba4521", "note": "permit application filed" },
-    { "name": "Approved",           "color": "#a2301f" },
-    { "name": "Under Construction", "color": "#881713" },
-    { "name": "Complete",           "color": "#511a14" },
-    { "name": "Stalled",            "color": "#6e8086" }
+    { "name": "Pre-Application",    "color": "#b5771a", "note": "pre-application conference held" },
+    { "name": "Applied",            "color": "#a94418", "note": "permit application filed" },
+    { "name": "Approved",           "color": "#7e3b4f" },
+    { "name": "Under Construction", "color": "#4f2f75" },
+    { "name": "Complete",           "color": "#071b38" },
+    { "name": "Stalled",            "color": "#857f76" }
   ]
 }

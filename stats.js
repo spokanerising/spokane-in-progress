@@ -150,7 +150,7 @@ function quarterColumns() {
     .join("");
   return `<figcaption class="chart__title">Projects first filed with the city, by quarter</figcaption>
     <ul class="legend legend--small">
-      <li><i style="background:var(--ink-2)"></i>Middle housing</li>
+      <li><i style="background:var(--chart)"></i>Middle housing</li>
       <li><i style="background:var(--other)"></i>Other housing</li>
     </ul>
     <div class="cols" aria-hidden="true">${cols}</div>
@@ -322,7 +322,7 @@ function middleShare() {
     </div>`).join("");
   return `<figcaption class="chart__title">${esc(title)}</figcaption>
     <ul class="legend legend--small">
-      <li><i style="background:var(--ink-2)"></i>Middle housing</li>
+      <li><i style="background:var(--chart)"></i>Middle housing</li>
       <li><i style="background:var(--other)"></i>Other housing</li>
     </ul>
     <div class="share">${body}</div>
@@ -332,12 +332,12 @@ function middleShare() {
 function shareSvg(spec) {
   const labelW = 260, valueW = 300, barW = SVG_W - 2 * PAD - labelW - valueW;
   return frame(spec, (parts, y) => {
-    y = legendRow(parts, y, [{ label: "Middle housing", color: INK2, square: true }, { label: "Other housing", color: OTHER, square: true }]) + 12;
+    y = legendRow(parts, y, [{ label: "Middle housing", color: CHART, square: true }, { label: "Other housing", color: OTHER, square: true }]) + 12;
     spec.rows.forEach((r) => {
       parts.push(t(PAD, y + 24, r.label, { size: 18 }));
       const x = PAD + labelW, w = barW * r.share;
       parts.push(`<rect x="${x}" y="${y + 4}" width="${barW}" height="28" fill="${OTHER}"/>`);
-      parts.push(`<rect x="${x}" y="${y + 4}" width="${w.toFixed(1)}" height="28" fill="${INK2}"/>`);
+      parts.push(`<rect x="${x}" y="${y + 4}" width="${w.toFixed(1)}" height="28" fill="${CHART}"/>`);
       parts.push(t(x + barW + 14, y + 25, `${Math.round(100 * r.share)}%`, { size: 20, weight: 700 }));
       parts.push(t(x + barW + 70, y + 25, `${fmt(r.part)} of ${plural(r.whole, ...r.unit)}`, { size: 15, fill: MUTED }));
       y += 46;
@@ -601,7 +601,7 @@ const SVG_W = 1200;
 const PAD = 48;
 // Colors come from brand.css (written by tools/make_brand.py from brand/brand.json).
 const brandColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
-const INK = brandColor("ink"), INK2 = brandColor("ink-2"), MUTED = brandColor("muted"), RULE = brandColor("rule"), OTHER = brandColor("other"), PAPER = brandColor("paper");
+const INK = brandColor("ink"), INK2 = brandColor("ink-2"), MUTED = brandColor("muted"), RULE = brandColor("rule"), OTHER = brandColor("other"), PAPER = brandColor("paper"), CHART = brandColor("chart");
 const SANS = "'Libre Franklin', Arial, sans-serif";
 const SERIF = "Newsreader, Georgia, serif";
 
@@ -718,7 +718,7 @@ function quarterSvg(spec) {
   const gap = 6, colW = (SVG_W - 2 * PAD - gap * (n - 1)) / n;
   const max = Math.max(1, ...spec.cols.map((c) => c.projects));
   return frame(spec, (parts, y) => {
-    y = legendRow(parts, y, [{ label: "Middle housing", color: INK2, square: true }, { label: "Other housing", color: OTHER, square: true }]) + 22;
+    y = legendRow(parts, y, [{ label: "Middle housing", color: CHART, square: true }, { label: "Other housing", color: OTHER, square: true }]) + 22;
     const base = y + chartH;
     spec.cols.forEach((c, i) => {
       const x = PAD + i * (colW + gap);
@@ -727,7 +727,7 @@ function quarterSvg(spec) {
       const op = c.partial ? ' opacity="0.45"' : "";
       if (h) {
         parts.push(`<rect x="${bx.toFixed(1)}" y="${(base - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${(h - hm).toFixed(1)}" fill="${OTHER}"${op}/>`);
-        parts.push(`<rect x="${bx.toFixed(1)}" y="${(base - hm).toFixed(1)}" width="${bw.toFixed(1)}" height="${hm.toFixed(1)}" fill="${INK2}"${op}/>`);
+        parts.push(`<rect x="${bx.toFixed(1)}" y="${(base - hm).toFixed(1)}" width="${bw.toFixed(1)}" height="${hm.toFixed(1)}" fill="${CHART}"${op}/>`);
         parts.push(t(x + colW / 2, base - h - 8, String(c.projects), { size: 16, weight: 600, anchor: "middle" }));
       }
       parts.push(t(x + colW / 2, base + 24, c.q, { size: 15, fill: MUTED, anchor: "middle" }));
@@ -751,7 +751,7 @@ function sizeSvg(spec) {
       parts.push(t(cols[1] + 110, y, fmt(r.projects), { size: 18, anchor: "end" }));
       parts.push(t(cols[2] + 110, y, r.homes ? fmt(r.homes) : "–", { size: 18, anchor: "end" }));
       const w = (SVG_W - PAD - cols[3] - 70) * r.share;
-      if (w > 0) parts.push(`<rect x="${cols[3]}" y="${y - 16}" width="${w.toFixed(1)}" height="18" fill="${INK2}"/>`);
+      if (w > 0) parts.push(`<rect x="${cols[3]}" y="${y - 16}" width="${w.toFixed(1)}" height="18" fill="${CHART}"/>`);
       if (r.homes) parts.push(t(cols[3] + w + 10, y, `${Math.round(100 * r.share)}%`, { size: 16, fill: INK2 }));
       parts.push(`<rect x="${PAD}" y="${y + 14}" width="${SVG_W - 2 * PAD}" height="1" fill="${RULE}"/>`);
     });

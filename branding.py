@@ -19,9 +19,14 @@ HEX = re.compile(r"^#[0-9a-f]{6}$")
 def load(path=PATH):
     with open(path, encoding="utf-8") as f:
         b = json.load(f)
+    # A color may name another color ("link": "brand") to reuse it.
     for name, c in b["colors"].items():
+        seen = [name]
+        while not HEX.match(c["value"]) and c["value"] in b["colors"] and c["value"] not in seen:
+            seen.append(c["value"])
+            c["value"] = b["colors"][c["value"]]["value"]
         if not HEX.match(c["value"]):
-            raise ValueError(f"brand.json: color {name!r} must be a 6-digit lowercase hex like #1a2b3c, not {c['value']!r}")
+            raise ValueError(f"brand.json: color {name!r} must be a 6-digit lowercase hex like #1a2b3c, or another color's name, not {c['value']!r}")
     for s in b["stages"]:
         if not HEX.match(s["color"]):
             raise ValueError(f"brand.json: stage {s['name']!r} must be a 6-digit lowercase hex, not {s['color']!r}")

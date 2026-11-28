@@ -114,7 +114,7 @@ def seen(h, kind):
     if kind:
         c = [sum(CVD[kind][i][j] * c[j] for j in range(3)) for i in range(3)]
     return oklab(c)
-MIN_GAP = 6.0   # the narrowest pair, worst case across normal and color-blind vision
+MIN_GAP = 9.5   # the narrowest pair, worst case across normal and color-blind vision (Nov. 2026 palette: 10.0; the old reds were 6.2)
 for kind in (None, *CVD):
     for a, b in itertools.combinations(branding.STAGES, 2):
         gap = 100 * math.dist(seen(a["color"], kind), seen(b["color"], kind))

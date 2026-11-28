@@ -4,8 +4,8 @@
   "description": "Tracking Spokane's housing progress.",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#faf8f3",
-  "theme_color": "#faf8f3",
+  "background_color": "#f9f8f5",
+  "theme_color": "#f9f8f5",
   "icons": [
     {
       "src": "/icon-192.png",
