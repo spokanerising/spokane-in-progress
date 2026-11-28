@@ -5,6 +5,8 @@ import json, os, sys
 from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import make_site, wire, SITE, REPO
+sys.path.insert(0, REPO)
+import branding  # noqa: E402
 from playwright.sync_api import sync_playwright
 
 ok = 0
@@ -22,9 +24,14 @@ check(ico.info.get("sizes") == {(16, 16), (32, 32), (48, 48)}, f"favicon.ico siz
 for name, px in [("apple-touch-icon.png", 180), ("icon-192.png", 192), ("icon-512.png", 512), ("icon-maskable-512.png", 512)]:
     im = Image.open(os.path.join(REPO, name))
     check(im.size == (px, px), f"{name} is {im.size}")
-    check(im.convert("RGB").getpixel((px // 2, 4)) == (18, 18, 18), f"{name}: ink to the edge (home screens round it)")
+    # The full logo's teal frame runs to the edge of the Android icons; the
+    # iPhone icon and the maskable one keep the logo inset on white.
+    edge = branding.rgb("brand") if name in ("icon-192.png", "icon-512.png") else branding.rgb("surface")
+    got = im.convert("RGB").getpixel((px // 2, 2))
+    check(all(abs(a - b) < 4 for a, b in zip(got, edge)), f"{name}: edge {got}, wanted {edge}")
+    check(im.convert("RGBA").getpixel((0, 0))[3] == 255, f"{name}: no transparent corners")
 svg = open(os.path.join(REPO, "favicon.svg")).read()
-check(svg.startswith("<svg") and "<path" in svg and "<text" not in svg, "favicon.svg draws the S as a path, needs no font")
+check(svg.startswith("<svg") and "<path" in svg and "<text" not in svg, "favicon.svg draws the SR mark as paths, needs no font")
 man = json.load(open(os.path.join(REPO, "site.webmanifest")))
 check(man["name"] == "Spokane in Progress" and {i["src"] for i in man["icons"]} == {"/icon-192.png", "/icon-512.png", "/icon-maskable-512.png"}, man)
 check(any(i.get("purpose") == "maskable" for i in man["icons"]), "a maskable icon")

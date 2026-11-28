@@ -7,6 +7,8 @@ instead of typing colors themselves. Standard library only.
     branding.STAGES             -> [{"name": "Pre-Application", "color": "#ce5c11"}, ...]
     branding.rgba("paper", 0.9) -> "rgba(250, 248, 243, 0.9)"
 """
+import base64
+import hashlib
 import json
 import os
 import re
@@ -54,3 +56,19 @@ def rgba(name_or_hex, alpha):
 
 def stage_color(name):
     return STAGE_COLOR.get(name, FALLBACK_STAGE_COLOR)
+
+
+def logo_svg(key="main"):
+    with open(os.path.join(HERE, BRAND["logo"][key]), encoding="utf-8") as f:
+        return f.read()
+
+
+def logo_data_uri(key="main"):
+    """A logo as a data: URL, for images drawn outside the site (share cards)."""
+    return "data:image/svg+xml;base64," + base64.b64encode(logo_svg(key).encode()).decode()
+
+
+# Changes whenever anything a drawn image shows from the brand changes (colors,
+# stages, fonts, the logo), so share cards redraw themselves after a reskin.
+FINGERPRINT = hashlib.sha1(json.dumps(
+    [COLORS, STAGES, FONTS, logo_svg("main")], sort_keys=True).encode()).hexdigest()[:10]

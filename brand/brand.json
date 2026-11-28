@@ -10,11 +10,14 @@
 
   "logo": {
     "main": "brand/logo.svg",
-    "primary": "brand/logo-primary.svg"
+    "primary": "brand/logo-primary.svg",
+    "mark": "brand/logo-mark.svg",
+    "mark16": "brand/logo-mark-16.svg",
+    "_about": "Rebuild these from brand/source with tools/trace_logo.py; then tools/make_icons.py draws the favicon and app icons from them."
   },
 
   "browser": {
-    "themeColor": "paper",
+    "themeColor": "brand",
     "backgroundColor": "paper",
     "_about": "Color names from 'colors' below. themeColor tints the phone browser's address bar; backgroundColor shows while the site opens as an app."
   },

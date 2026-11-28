@@ -51,6 +51,7 @@ def css():
     for i, s in enumerate(b["stages"]):
         out.append(f"  --stage-{i}: {s['color']};   /* {s['name']} */")
     out.append("")
+    out.append(f"  --logo-src: \"/{b['logo']['main']}\";   /* for images drawn in the browser (map export, chart downloads) */")
     out.append(f"  --serif: {b['fonts']['serif']};")
     out.append(f"  --sans: {b['fonts']['sans']};")
     out.append("")
@@ -68,10 +69,17 @@ def manifest(text):
 
 
 THEME = re.compile(r'(<meta name="theme-color" content=")#[0-9a-fA-F]{3,6}(">)')
+LOGO_LINK = re.compile(r'(<a class="lockup__logo" href=")[^"]*(")')
+LOGO_IMG = re.compile(r'(<img class="lockup__img" src=")(/?)[^"]*(" alt=")[^"]*(")')
 
 
 def page(text):
-    return THEME.sub(lambda m: m.group(1) + branding.COLORS[branding.BRAND["browser"]["themeColor"]] + m.group(2), text)
+    b = branding.BRAND
+    text = THEME.sub(lambda m: m.group(1) + branding.COLORS[b["browser"]["themeColor"]] + m.group(2), text)
+    # The header logo: its link, file and name come from brand.json.
+    text = LOGO_LINK.sub(lambda m: m.group(1) + b["parent"]["url"] + m.group(2), text)
+    text = LOGO_IMG.sub(lambda m: m.group(1) + m.group(2) + b["logo"]["main"] + m.group(3) + b["parent"]["name"] + m.group(4), text)
+    return text
 
 
 def outputs():

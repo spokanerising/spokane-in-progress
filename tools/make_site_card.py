@@ -19,7 +19,7 @@ import branding  # noqa: E402  (brand/brand.json: every color on the card)
 
 C = branding.COLORS
 INK, INK2, MUTED, PAPER, PAPER2 = C["ink"], C["ink-2"], C["muted"], C["paper"], C["paper-2"]
-OTHER, SURFACE = C["other"], C["surface"]
+OTHER, SURFACE, ACCENT = C["other"], C["surface"], C["accent"]
 FALLBACK = branding.FALLBACK_STAGE_COLOR
 FONTS = os.path.join(HERE, ".fonts")
 OUT = os.path.join(ROOT, "og-card.png")
@@ -116,7 +116,9 @@ p.tag {{ margin-top: 26px; font: 500 36px/1.2 'Newsreader'; color: {INK2}; width
 .bar {{ display: flex; gap: 3px; width: 470px; height: 16px; margin-top: 92px; }}
 .bar i {{ display: block; }}
 .key {{ margin-top: 12px; font: 500 15px 'Libre Franklin'; color: {MUTED}; letter-spacing: 0.02em; }}
-.url {{ position: absolute; left: 72px; bottom: 36px; font: 600 17px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; }}
+.card::before {{ content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: {ACCENT}; }}
+.url {{ position: absolute; left: 72px; bottom: 26px; display: flex; align-items: center; gap: 14px; font: 600 17px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; }}
+.url img {{ width: 40px; height: 40px; display: block; }}
 .map {{ position: absolute; right: 56px; top: 44px; }}
 </style></head><body><div class="card">
 <h1>Spokane <em>in Progress</em></h1>
@@ -125,7 +127,7 @@ p.tag {{ margin-top: 26px; font: 500 36px/1.2 'Newsreader'; color: {INK2}; width
 <p class="key">Homes by stage, proposed to complete</p>
 <div class="map">{map_svg(projects, outlines, stages, 520, 470)}</div>
 <div class="rule"></div>
-<p class="url">projects.spokanerising.com</p>
+<p class="url"><img src="{branding.logo_data_uri()}" alt="">projects.spokanerising.com</p>
 </div></body></html>"""
 
 

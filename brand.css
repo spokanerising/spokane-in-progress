@@ -30,6 +30,7 @@
   --stage-4: #071b38;   /* Complete */
   --stage-5: #857f76;   /* Stalled */
 
+  --logo-src: "/brand/logo.svg";   /* for images drawn in the browser (map export, chart downloads) */
   --serif: Newsreader, "Iowan Old Style", Georgia, serif;
   --sans: "Libre Franklin", "Helvetica Neue", Arial, system-ui, sans-serif;
 

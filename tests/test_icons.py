@@ -53,7 +53,9 @@ with sync_playwright() as pw:
     pg.wait_for_selector(".tip-label.is-on", timeout=2000)
     check(pg.locator(".tip-label").inner_text() == "Share this view", "hover tooltip text")
     tip = pg.locator(".tip-label").bounding_box(); btn = pg.locator("#share-view").bounding_box()
-    check(tip["y"] >= btn["y"] + btn["height"] and tip["x"] >= 0 and tip["x"] + tip["width"] <= 1280, f"tooltip under the button, on screen {tip}")
+    # Under the button, or above it when the button is too near the bottom of the window.
+    check((tip["y"] >= btn["y"] + btn["height"] or tip["y"] + tip["height"] <= btn["y"]) and tip["x"] >= 0 and tip["x"] + tip["width"] <= 1280
+          and 0 <= tip["y"] and tip["y"] + tip["height"] <= 900, f"tooltip beside the button, on screen {tip}")
     pg.mouse.move(700, 600)
     pg.wait_for_function("!document.querySelector('.tip-label.is-on')")
     # Clicking hides it and opens the menu.

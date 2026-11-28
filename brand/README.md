@@ -7,6 +7,7 @@ Everything about how the site looks lives here: colors, stage colors, fonts, nam
 | `brand.json` | Colors (each with a note on where it's used), the six stage colors in order, fonts, the site's name and links, and the address-bar color. |
 | `logo.svg` | The Spokane Rising secondary logo, as plain shapes. |
 | `logo-primary.svg` | The primary logo (teal square), as plain shapes. |
+| `logo-mark.svg`, `logo-mark-16.svg` | The "SR" favicon mark, drawn from the logo's own S and R; the 16 px version has bigger letters and a heavier frame. |
 | `source/` | The original PNG and Affinity SVG files, for reference. |
 
 ## Changing the look
@@ -30,5 +31,7 @@ Everything about how the site looks lives here: colors, stage colors, fonts, nam
 ## The logos
 
 The Affinity exports keep the words as live text in Helvetica Neue Condensed Black. Most visitors don't have that font, so `logo.svg` and `logo-primary.svg` were rebuilt as shapes by `tools/trace_logo.py`. Rendered back at 1000px, they match the PNGs on all but about 0.1% of pixels.
+
+After any logo change, run `python3 tools/make_icons.py` to redraw the favicon and app icons.
 
 If a designer exports SVGs with text converted to curves (Affinity: Layer › Convert to Curves), drop those in here instead.

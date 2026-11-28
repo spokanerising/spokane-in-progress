@@ -65,8 +65,17 @@ for page in ["index.html", "about.html", "stats.html", "glossary.html", "404.htm
     b, st = s.find('brand.css" rel="stylesheet"'), s.find('styles.css" rel="stylesheet"')
     check(0 <= b < st, f"{page}: brand.css must be linked before styles.css")
 
+# ---- the header logo on every public page --------------------------------------
+for page in ["index.html", "about.html", "stats.html", "glossary.html", "404.html"]:
+    s = open(os.path.join(REPO, page), encoding="utf-8").read()
+    check(f'<a class="lockup__logo" href="{branding.BRAND["parent"]["url"]}">' in s, f"{page}: logo should link to {branding.BRAND['parent']['url']}")
+    check(re.search(r'<img class="lockup__img" src="/?' + re.escape(branding.BRAND["logo"]["main"]) + r'" alt="' + re.escape(branding.BRAND["parent"]["name"]) + '"', s), f"{page}: logo image and its name")
+    check(re.search(r'<a class="masthead__home" href="(/|\./)">', s), f"{page}: the title links home")
+
 # ---- logos are shapes, not text ----------------------------------------------
 for key, rel in branding.BRAND["logo"].items():
+    if key.startswith("_"):
+        continue
     s = open(os.path.join(REPO, rel), encoding="utf-8").read()
     check(s.lstrip().startswith("<svg") and "<text" not in s and "font-family" not in s, f"{rel} must be outlines only (no <text>), so it never depends on a font")
     check(C["brand"] in s, f"{rel} should use the brand color {C['brand']}")

@@ -31,11 +31,11 @@ import branding  # noqa: E402  (brand/brand.json: every color on the card)
 
 C = branding.COLORS
 INK, INK2, MUTED, PAPER, PAPER2 = C["ink"], C["ink-2"], C["muted"], C["paper"], C["paper-2"]
-OTHER, HOOD, TRACK_OFF, SURFACE = C["other"], C["locator-hood"], C["track-off"], C["surface"]
+OTHER, HOOD, TRACK_OFF, SURFACE, ACCENT = C["other"], C["locator-hood"], C["track-off"], C["surface"], C["accent"]
 FALLBACK = branding.FALLBACK_STAGE_COLOR
 
 W, H = 1200, 630
-VERSION = "2"   # bump when the design changes, so every card is redrawn
+VERSION = "3"   # bump when the layout changes, so every card is redrawn (brand changes redraw on their own)
 SAMPLES = os.path.join(ROOT, "cards-samples")
 
 STAGE_WORDS = {
@@ -55,7 +55,7 @@ def stage_inferred(p):
 def drawn(p):
     """Everything that appears on the card. Its fingerprint names the file."""
     return {
-        "v": VERSION, "name": p.get("name") or "", "address": p.get("address") or "",
+        "v": VERSION, "brand": branding.FINGERPRINT, "name": p.get("name") or "", "address": p.get("address") or "",
         "hood": p.get("neighborhood") or p.get("neighborhoodCouncil") or "",
         "council": p.get("neighborhoodCouncil") or "",
         "units": p.get("units") if isinstance(p.get("units"), int) and p["units"] > 0 else None,
@@ -182,7 +182,10 @@ h1 {{ margin-top: 18px; font: 600 {name_size(d["name"])}px/1.02 'Newsreader'; le
 .track i {{ flex: 1; display: block; }}
 .map {{ position: absolute; right: 60px; top: 60px; }}
 .rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: {INK}; }}
-.foot {{ position: absolute; left: 72px; right: 72px; bottom: 36px; display: flex; justify-content: space-between; align-items: baseline; }}
+.card::before {{ content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: {ACCENT}; }}
+.foot {{ position: absolute; left: 72px; right: 72px; bottom: 26px; display: flex; justify-content: space-between; align-items: center; }}
+.lockup {{ display: flex; align-items: center; gap: 14px; }}
+.lockup img {{ width: 40px; height: 40px; display: block; }}
 .brand {{ font: 600 24px 'Newsreader'; }}
 .brand em {{ font-weight: 500; font-style: italic; }}
 .url {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: {INK2}; }}
@@ -199,7 +202,7 @@ h1 {{ margin-top: 18px; font: 600 {name_size(d["name"])}px/1.02 'Newsreader'; le
 </div>
 <div class="map">{locator(d, outlines, stages, 400, 430)}</div>
 <div class="rule"></div>
-<div class="foot"><span class="brand">Spokane <em>in Progress</em></span><span class="url">projects.spokanerising.com</span></div>
+<div class="foot"><span class="lockup"><img src="{branding.logo_data_uri()}" alt=""><span class="brand">Spokane <em>in Progress</em></span></span><span class="url">projects.spokanerising.com</span></div>
 </div></body></html>"""
 
 
@@ -223,7 +226,7 @@ def site_card_inputs(projects, stages):
     dots = sorted([p.get("id"), p.get("status"), p.get("units") or 0,
                    round(p["lat"], 4) if isinstance(p.get("lat"), (int, float)) else None,
                    round(p["lng"], 4) if isinstance(p.get("lng"), (int, float)) else None] for p in projects)
-    return hashlib.sha1(json.dumps([VERSION, stages, dots]).encode()).hexdigest()[:12]
+    return hashlib.sha1(json.dumps([VERSION, branding.FINGERPRINT, stages, dots]).encode()).hexdigest()[:12]
 
 
 def run(root=ROOT, redraw_all=False, site_card=True, origin=None):

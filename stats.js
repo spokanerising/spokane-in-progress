@@ -601,7 +601,16 @@ const SVG_W = 1200;
 const PAD = 48;
 // Colors come from brand.css (written by tools/make_brand.py from brand/brand.json).
 const brandColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
-const INK = brandColor("ink"), INK2 = brandColor("ink-2"), MUTED = brandColor("muted"), RULE = brandColor("rule"), OTHER = brandColor("other"), PAPER = brandColor("paper"), CHART = brandColor("chart");
+const INK = brandColor("ink"), INK2 = brandColor("ink-2"), MUTED = brandColor("muted"), RULE = brandColor("rule"), OTHER = brandColor("other"), PAPER = brandColor("paper"), CHART = brandColor("chart"), ACCENT = brandColor("accent");
+
+// The Spokane Rising logo, fetched once and drawn into downloaded charts.
+let LOGO_INNER = "";
+const LOGO_SRC = brandColor("logo-src").replace(/^["']|["']$/g, "");
+if (LOGO_SRC) {
+  fetch(LOGO_SRC).then((r) => (r.ok ? r.text() : "")).then((svg) => {
+    LOGO_INNER = svg.trim().replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+  }).catch(() => {});
+}
 const SANS = "'Libre Franklin', Arial, sans-serif";
 const SERIF = "Newsreader, Georgia, serif";
 
@@ -644,9 +653,15 @@ function frame(spec, body) {
   });
   y += 18;
   parts.push(`<rect x="${PAD}" y="${y}" width="${SVG_W - 2 * PAD}" height="1.5" fill="${INK}"/>`);
-  y += 36;
-  parts.push(t(PAD, y, "Spokane ", { size: 22, weight: 600, family: SERIF }));
-  parts.push(t(PAD + textWidth("Spokane ", 22, 600, SERIF), y, "in Progress", { size: 22, weight: 500, family: SERIF, style: "italic" }));
+  y += 40;
+  // The logo, then the site's name, as on the site's header.
+  let x = PAD;
+  if (LOGO_INNER) {
+    parts.push(`<svg x="${PAD}" y="${y - 29}" width="38" height="38" viewBox="0 0 1000 1000">${LOGO_INNER}</svg>`);
+    x += 50;
+  }
+  parts.push(t(x, y, "Spokane ", { size: 22, weight: 600, family: SERIF }));
+  parts.push(t(x + textWidth("Spokane ", 22, 600, SERIF), y, "in Progress", { size: 22, weight: 500, family: SERIF, style: "italic" }));
   parts.push(t(SVG_W - PAD, y, "PROJECTS.SPOKANERISING.COM", { size: 15, weight: 600, fill: INK2, anchor: "end" }));
   const h = Math.ceil(y + PAD - 8);
   return { h, body: parts.join("") };
@@ -797,7 +812,7 @@ function chartSvg(id, fonts = "") {
   const { h, body } = SVG_FOR[spec.kind](spec);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${SVG_W}" height="${h}" viewBox="0 0 ${SVG_W} ${h}">` +
     (fonts ? `<style>${fonts}</style>` : "") +
-    `<rect width="100%" height="100%" fill="${PAPER}"/>${body}</svg>`;
+    `<rect width="100%" height="100%" fill="${PAPER}"/><rect width="100%" height="8" fill="${ACCENT}"/>${body}</svg>`;
 }
 
 async function chartPng(id) {

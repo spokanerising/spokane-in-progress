@@ -10,8 +10,14 @@ const BRAND = (() => {
   const out = {};
   names.forEach((n) => { out[n] = get(n); });
   out.stages = [0, 1, 2, 3, 4, 5].map((i) => get(`stage-${i}`));
+  out.accent = get("accent");
+  out.logoSrc = get("logo-src").replace(/^["']|["']$/g, "");
   return out;
 })();
+
+// The Spokane Rising logo, loaded once for the saved map image.
+const LOGO = new Image();
+if (BRAND.logoSrc) LOGO.src = BRAND.logoSrc;
 
 // A brand color at some opacity, for canvas and map paints.
 function withAlpha(hex, alpha) {
@@ -2265,14 +2271,24 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
   ctx.fillStyle = BRAND.ink;
   ctx.fillRect(0, top - Math.max(1, u), outW, Math.max(1, u));
   ctx.fillRect(0, outH - bottom, outW, Math.max(1, u));
+  // The Spokane Rising teal across the top, as on the site.
+  ctx.fillStyle = BRAND.accent;
+  ctx.fillRect(0, 0, outW, Math.max(2, 5 * u));
 
-  // Title: "Spokane in Progress", then what's shown.
+  // The logo, then the title: "Spokane in Progress", then what's shown.
+  let tx = side;
+  if (LOGO.complete && LOGO.naturalWidth) {
+    const ls = 70 * u;
+    ctx.drawImage(LOGO, side, 22 * u, ls, ls);
+    tx = side + ls + 18 * u;
+  }
+  ctx.fillStyle = BRAND.ink;
   ctx.textBaseline = "alphabetic";
   ctx.font = `600 ${34 * u}px Newsreader, Georgia, serif`;
-  ctx.fillText("Spokane ", side, 48 * u);
+  ctx.fillText("Spokane ", tx, 52 * u);
   const w1 = ctx.measureText("Spokane ").width;
   ctx.font = `italic 500 ${34 * u}px Newsreader, Georgia, serif`;
-  ctx.fillText("in Progress", side + w1, 48 * u);
+  ctx.fillText("in Progress", tx + w1, 52 * u);
 
   const homes = unitsOf(inView);
   const tally = `${plural(inView.length, "housing project", "housing projects")}${homes ? `, at least ${plural(homes, "home", "homes")}` : ""}`;
@@ -2280,7 +2296,7 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
   const line = filters ? `${filters[0].toUpperCase()}${filters.slice(1)}: ${tally}` : `${tally[0].toUpperCase()}${tally.slice(1)} on this map`;
   ctx.font = `500 ${21 * u}px "Libre Franklin", Arial, sans-serif`;
   ctx.fillStyle = BRAND["ink-2"];
-  ctx.fillText(fitText(ctx, line, outW - 2 * side), side, 84 * u);
+  ctx.fillText(fitText(ctx, line, outW - side - tx), tx, 86 * u);
 
   // Key: the stages on this map.
   const present = STAGES.filter((s) => inView.some((p) => p.status === s.name));

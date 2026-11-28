@@ -3,7 +3,9 @@
 shows, with the chart's title, note, source and the site's name."""
 import csv, io, os, sys, xml.etree.ElementTree as ET
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from harness import make_site, wire, SITE, SHOTS
+from harness import make_site, wire, SITE, SHOTS, REPO
+sys.path.insert(0, REPO)
+import branding  # noqa: E402
 from playwright.sync_api import sync_playwright
 from PIL import Image
 
@@ -75,8 +77,9 @@ with sync_playwright() as pw:
         img = Image.open(dl.value.path())
         check(img.format == "PNG" and img.width == 2400 and 600 < img.height < 4000, f"{cid}: {img.size}")
         img.save(f"{SHOTS}/p5-{cid}.png")
-        corner = img.convert("RGB").getpixel((5, 5))
-        check(all(abs(a - b) < 6 for a, b in zip(corner, (250, 248, 243))), f"{cid}: paper background {corner}")
+        rgb = img.convert("RGB")
+        check(all(abs(a - b) < 6 for a, b in zip(rgb.getpixel((5, 5)), branding.rgb("accent"))), f"{cid}: teal band on top {rgb.getpixel((5, 5))}")
+        check(all(abs(a - b) < 6 for a, b in zip(rgb.getpixel((5, 40)), branding.rgb("paper"))), f"{cid}: paper background {rgb.getpixel((5, 40))}")
         pg.wait_for_function("!document.querySelector('.chart__tools [aria-busy]')")
         # SVG
         with pg.expect_download() as dl:
