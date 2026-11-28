@@ -7,23 +7,14 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 SHOTS = os.environ.get("SHOTS", os.path.join(HERE, ".shots"))
-VENDOR = os.environ.get("MAPLIBRE_DIST", os.path.join(HERE, ".vendor", "maplibre-gl", "dist"))
-MAPLIBRE_VERSION = "4.7.1"  # keep in step with index.html
+MAPLIBRE_VERSION = "4.7.1"  # keep in step with index.html and vendor/
+VENDOR = os.path.join(REPO, "vendor", f"maplibre-gl-{MAPLIBRE_VERSION}")
 
 
 def ensure_maplibre():
-    """The sandbox and CI can't reach unpkg, so tests serve maplibre from an
-    npm copy, fetched once into tests/.vendor (git-ignored)."""
-    if os.path.isfile(os.path.join(VENDOR, "maplibre-gl.js")):
-        return
-    import subprocess, tarfile
-    target = os.path.join(HERE, ".vendor")
-    os.makedirs(target, exist_ok=True)
-    name = subprocess.check_output(["npm", "pack", f"maplibre-gl@{MAPLIBRE_VERSION}", "--silent"], cwd=target, text=True).strip().splitlines()[-1]
-    with tarfile.open(os.path.join(target, name)) as tar:
-        tar.extractall(target, filter="data")
-    os.replace(os.path.join(target, "package"), os.path.join(target, "maplibre-gl"))
-    os.remove(os.path.join(target, name))
+    """The map library is part of the site now (vendor/), so there's nothing
+    to fetch. Kept so older callers still work."""
+    assert os.path.isfile(os.path.join(VENDOR, "maplibre-gl.js")), f"{VENDOR} is missing"
 SITE = "https://site.test"
 
 STYLE = {"version": 8, "sources": {}, "layers": [{"id": "bg", "type": "background", "paint": {"background-color": "#ece9e2"}}]}
@@ -46,6 +37,7 @@ def make_site(with_facts=True):
         if not os.path.exists(os.path.join(REPO, f)):
             continue
         shutil.copy(os.path.join(REPO, f), d)
+    shutil.copytree(os.path.join(REPO, "vendor"), os.path.join(d, "vendor"))
     # The logos (brand/logo.svg) and the rest of the brand folder.
     shutil.copytree(os.path.join(REPO, "brand"), os.path.join(d, "brand"), ignore=shutil.ignore_patterns("source"))
     data = json.load(open(os.path.join(REPO, "projects.json")))
@@ -103,8 +95,12 @@ def wire(page, site_dir, geocode_fail=False):
     def site(route):
         path = route.request.url.split("site.test/", 1)[1].split("?")[0].split("#")[0]
         full = os.path.join(site_dir, path)
-        # Like Cloudflare Pages: a folder serves its index.html, and a
-        # folder address without the final slash redirects to it.
+        # Like Cloudflare Pages, "/stats" serves stats.html. (Cloudflare also
+        # redirects "/stats.html" to "/stats"; here both are served, because
+        # Chromium skips page.route for a redirect's follow-up request.
+        # test_links.py checks that no page links to an .html address.)
+        if path and "." not in os.path.basename(path) and not path.endswith("/") and os.path.isfile(full + ".html"):
+            full = full + ".html"
         if os.path.isdir(full):
             if path and not path.endswith("/"):
                 return route.fulfill(status=308, headers={"Location": f"{SITE}/{path}/"})
@@ -117,8 +113,8 @@ def wire(page, site_dir, geocode_fail=False):
             return route.fulfill(status=404, body="nope")
         route.fulfill(status=200, body=open(full, "rb").read(), content_type=mimetypes.guess_type(full)[0] or "application/octet-stream")
     page.route(f"{SITE}/**", site)
-    page.route("https://unpkg.com/**", lambda r: r.fulfill(status=200, body=open(os.path.join(VENDOR, "maplibre-gl.js" if r.request.url.endswith(".js") else "maplibre-gl.css"), "rb").read(),
-                                                         content_type="application/javascript" if r.request.url.endswith(".js") else "text/css"))
+    # The site no longer loads anything from unpkg; a request there is a bug.
+    page.route("https://unpkg.com/**", lambda r: r.fulfill(status=404, body="unpkg is not used"))
     page.route("https://tiles.openfreemap.org/**", lambda r: r.fulfill(status=200, body=json.dumps(STYLE), content_type="application/json"))
     # Satellite tiles: a plain grey square (the project page's satellite view
     # asks for them every time a project opens).

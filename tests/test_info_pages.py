@@ -40,7 +40,7 @@ with sync_playwright() as pw:
         check([links.nth(i).text_content().strip() for i in range(links.count())] == NAV, f"{f}: nav is {NAV}")
         check(pg.locator('.pagenav a[aria-current="page"]').text_content().strip() == name, f"{f}: {name} is marked current")
         check(pg.locator("title").inner_text().startswith(name), f"{f}: title starts with {name}")
-        check(pg.locator('link[rel="canonical"]').get_attribute("href").endswith("/" + f), f"{f}: canonical")
+        check(pg.locator('link[rel="canonical"]').get_attribute("href").endswith("/" + f[:-5]), f"{f}: canonical (no .html: Cloudflare redirects it)")
     nf = open(os.path.join(REPO, "404.html")).read()
     for href in ('href="/stats"', 'href="/about"', 'href="/glossary"'):
         check(href in nf, f"404 nav has {href}")
@@ -54,7 +54,7 @@ with sync_playwright() as pw:
         check(pg.locator(f"#chart-{c} .chart__tools button").count() == 1, f"chart {c} has its download")
     check("Data as of" in pg.locator("#asof").inner_text(), "Stats says when the data is from")
     check(pg.locator("#download").is_visible(), "the CSV download is on Stats")
-    check(pg.locator('a[href="about.html#h-limits"]').count() == 1 and pg.locator('a[href="about.html#h-differ"]').count() == 1,
+    check(pg.locator('a[href="/about#h-limits"]').count() == 1 and pg.locator('a[href="/about#h-differ"]').count() == 1,
           "Stats points to the limits and to why the numbers differ")
     check("leave out" not in pg.locator("#dek").inner_text(), "the dek no longer promises the limits")
     pg.screenshot(path=os.path.join(SHOTS, "stats.png"), full_page=True)
@@ -75,7 +75,7 @@ with sync_playwright() as pw:
           pg.locator("#stage-list dd").first.inner_text() == stages[0]["definition"], "stage text comes from glossary.json")
     dot = pg.evaluate("getComputedStyle(document.querySelector('#stage-list dt i')).backgroundColor")
     check(dot not in ("rgba(0, 0, 0, 0)", "transparent"), f"stage dots are colored ({dot})")
-    check(pg.locator('a[href="glossary.html"]').count() >= 2, "About points to the Glossary")
+    check(pg.locator('a[href="/glossary"]').count() >= 2, "About points to the Glossary")
     check(pg.locator("#chart-type, #glossary, #download").count() == 0, "no charts, glossary or download left on About")
     pg.screenshot(path=os.path.join(SHOTS, "about.png"), full_page=True)
 
@@ -95,9 +95,12 @@ with sync_playwright() as pw:
     pg.screenshot(path=os.path.join(SHOTS, "glossary.png"), full_page=True)
 
     # ---- old links into the combined page ---------------------------------------
-    for old, new in [("about.html#g-finaled", "glossary.html#g-finaled"), ("about.html#h-glossary", "glossary.html"),
-                     ("about.html#h-charts", "stats.html#h-charts"), ("about.html#h-data", "stats.html#h-data"),
-                     ("about.html#stats", "stats.html#stats")]:
+    # On Cloudflare an old about.html link first redirects to /about (the # comes
+    # along), so both forms are checked.
+    for old, new in [("about.html#g-finaled", "glossary#g-finaled"), ("about#g-finaled", "glossary#g-finaled"),
+                     ("about.html#h-glossary", "glossary"),
+                     ("about.html#h-charts", "stats#h-charts"), ("about#h-data", "stats#h-data"),
+                     ("about.html#stats", "stats#stats")]:
         pg.goto(f"{SITE}/{old}")
         pg.wait_for_url(f"{SITE}/{new}")
         check(pg.url == f"{SITE}/{new}", f"{old} → {new}")
@@ -110,7 +113,7 @@ with sync_playwright() as pw:
     # ---- the map links to all three ---------------------------------------------
     pg.goto(f"{SITE}/index.html")
     hrefs = pg.evaluate("[...document.querySelectorAll('.masthead__nav a')].map(a => a.getAttribute('href'))")
-    check(hrefs == ["stats.html", "about.html", "glossary.html"], f"map nav {hrefs}")
+    check(hrefs == ["/stats", "/about", "/glossary"], f"map nav {hrefs}")
 
     # ---- phones and tablets: nothing runs off the side ------------------------
     for w in (320, 390, 700, 1024):

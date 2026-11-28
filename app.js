@@ -1327,7 +1327,7 @@ function timeline(p) {
   return `<section class="timeline" aria-label="Timeline">
       <h3 class="timeline__hed">Timeline</h3>
       <ol>${items.join("")}</ol>
-      <p class="timeline__note">Dates come from the city’s permit records. <span class="est">est.</span> marks an estimate. <a href="about.html#h-limits">What the records can’t tell us</a></p>
+      <p class="timeline__note">Dates come from the city’s permit records. <span class="est">est.</span> marks an estimate. <a href="/about#h-limits">What the records can’t tell us</a></p>
     </section>`;
 }
 

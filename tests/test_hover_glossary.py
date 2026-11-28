@@ -109,7 +109,7 @@ with sync_playwright() as pw:
     check(pop.locator(".glosspop__term").inner_text() == "Final (finaled)", "popover shows the term")
     check("final inspection" in pop.locator(".glosspop__def").inner_text(), "and its definition")
     check(final.get_attribute("aria-expanded") == "true", "term says it's open")
-    check(pop.locator("a").get_attribute("href") == "glossary.html#g-finaled", "links to the Glossary page")
+    check(pop.locator("a").get_attribute("href") == "/glossary#g-finaled", "links to the Glossary page")
     pb, fb = pop.bounding_box(), final.bounding_box()
     check(pb["x"] >= 0 and pb["x"] + pb["width"] <= 1280 and abs(pb["y"] - (fb["y"] + fb["height"])) < 12, f"popover under the term {pb} {fb}")
     pg.screenshot(path=os.path.join(SHOTS, "glossary-popover.png"))
@@ -152,7 +152,7 @@ with sync_playwright() as pw:
 
     # ---- Glossary page list (an old About link forwards to it) ----------------
     pg.goto(SITE + "/about.html#g-finaled")
-    pg.wait_for_url("**/glossary.html#g-finaled")
+    pg.wait_for_url("**/glossary#g-finaled")
     pg.wait_for_selector("#glossary dt")
     check(pg.locator("#glossary dt").count() == len(IDS), "the Glossary lists every term")
     check(pg.locator("#g-finaled.is-target").count() == 1, "the linked term is marked")

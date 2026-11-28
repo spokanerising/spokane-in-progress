@@ -263,7 +263,9 @@ def write_all(projects, root=".", origin=ORIGIN):
             ))
             gone += 1
 
-    urls = [f"{origin}/", f"{origin}/stats.html", f"{origin}/about.html", f"{origin}/glossary.html"]
+    # Cloudflare serves stats.html at /stats (and redirects the .html address
+    # there), so the sitemap lists the address a page actually lives at.
+    urls = [f"{origin}/", f"{origin}/stats", f"{origin}/about", f"{origin}/glossary"]
     urls += [f"{origin}/{kind}/{name}/" for kind in ("p", "n", "d") for name in sorted(current[kind])]
     write_if_changed(os.path.join(root, "sitemap.xml"),
                      '<?xml version="1.0" encoding="UTF-8"?>\n'

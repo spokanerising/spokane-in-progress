@@ -33,7 +33,7 @@ check(r.returncode == 0, r.stdout + r.stderr)
 
 # ---- no colors typed outside the brand files ---------------------------------
 COLOR = re.compile(r"#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b|%23[0-9a-fA-F]{3,6}\b|rgba?\(\s*\d")
-SKIP_DIRS = {"p", "n", "d", "data", "permit-reports", "tests", "brand", ".git", ".github", "node_modules", "__pycache__", "cards-samples"}
+SKIP_DIRS = {"p", "n", "d", "data", "permit-reports", "tests", "brand", ".git", ".github", "node_modules", "__pycache__", "cards-samples", "vendor"}
 SKIP_FILES = {
     "brand.css",                         # generated from brand.json
     "branding.py",                       # the loader (its docstring shows examples)

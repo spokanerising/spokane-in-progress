@@ -1,0 +1,31 @@
+# How long browsers may keep each kind of file (Cloudflare Pages, issue #41).
+#
+# Anything not listed keeps Cloudflare's default, "public, max-age=0,
+# must-revalidate": the browser keeps a copy but checks for a newer one on
+# every visit. That's right for the pages, projects.json, app.js, styles.css
+# and the rest, which change without changing their names.
+#
+# Keep the paths below from overlapping: a file matching two rules gets both
+# Cache-Control values, and they'd conflict.
+
+# Outside libraries. The version is in the folder name, so a file here never
+# changes; an upgrade goes in a new folder (see vendor/README.md).
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Share cards. A changed card gets a new name (card-<hash>.jpg).
+/p/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+# Site icons and the logo. Their names stay the same when they change, so
+# a day at most, so a new logo reaches everyone by the next day.
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+/icon-*
+  Cache-Control: public, max-age=86400
+/brand/*
+  Cache-Control: public, max-age=86400

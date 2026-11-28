@@ -1,5 +1,5 @@
 // Glossary: dotted-underlined terms that open a short definition, and the
-// full list on the Glossary page (glossary.html). Definitions live in glossary.json.
+// full list on the Glossary page (/glossary, glossary.html). Definitions live in glossary.json.
 //
 //   Gloss.term(id, html)   wrap already-escaped html in a term button
 //   Gloss.stage(status) / Gloss.type(buildingType) / Gloss.permitKind(type) /
@@ -95,7 +95,7 @@
     if (!t) return;
     close();
     ensurePop();
-    const more = onGlossaryPage() ? `#g-${t.id}` : `glossary.html#g-${t.id}`;
+    const more = onGlossaryPage() ? `#g-${t.id}` : `/glossary#g-${t.id}`;
     pop.setAttribute("aria-label", t.term);
     pop.innerHTML = `<p class="glosspop__term">${esc(t.term)}</p>
       <p class="glosspop__def">${esc(t.definition)}</p>
