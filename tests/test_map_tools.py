@@ -134,6 +134,23 @@ with sync_playwright() as pw:
     check(not pg.locator("#keyhint").is_visible(), "hint hides when the map loses focus")
 
     check(not errors, f"page errors: {errors}")
+
+    # Short phones (iPhone SE): the key shrinks to the size samples, so it
+    # doesn't cover the little map there is; taller phones keep the full key.
+    for (w, h), compact in (((375, 667), True), ((320, 568), True), ((390, 844), False)):
+        ph = b.new_page(viewport={"width": w, "height": h}, is_mobile=True, has_touch=True)
+        wire(ph, site)
+        ph.goto(SITE + "/")
+        ph.wait_for_selector("#mapkey .mapkey__sizes")
+        box = ph.locator("#mapkey").bounding_box()
+        mapbox = ph.locator("#map").bounding_box()
+        title = ph.locator(".mapkey__title").is_visible()
+        if compact:
+            check(not title and box["height"] < 60 and box["height"] < mapbox["height"] * 0.3,
+                  f"{w}x{h}: compact key {box} over a {mapbox['height']:.0f}px map")
+        else:
+            check(title and ph.locator("#mapkey .source").is_visible(), f"{w}x{h}: full key")
+        ph.close()
     b.close()
 
 print(f"{ok} checks passed")

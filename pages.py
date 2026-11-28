@@ -43,6 +43,9 @@ CARD = {"path": "/og-card.png", "width": 1200, "height": 630,
         "alt": "Spokane in Progress: a map of Spokane with every tracked housing project as a dot, colored by stage."}
 SAFE_ID = re.compile(r"^[A-Za-z0-9._-]+$")
 GONE_MARK = '<meta name="sip-page" content="gone">'
+# A page for something no longer on the map still answers old links, but
+# search engines shouldn't list it.
+ROBOTS_GONE = '<meta name="robots" content="noindex">'
 
 STAGE_PHRASE = {
     "Pre-Application": "proposed",
@@ -129,7 +132,7 @@ def page(*, origin, path, title, description, target, heading, kicker, gone=Fals
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-{GONE_MARK if gone else ""}
+{GONE_MARK + chr(10) + ROBOTS_GONE if gone else ""}
 <title>{e(full_title)}</title>
 <meta name="description" content="{e(description)}">
 <link rel="canonical" href="{e(url)}">
@@ -240,6 +243,19 @@ def write_all(projects, root=".", origin=ORIGIN):
             heading=f"City Council District {number}", kicker=f"{SITE_NAME} · City Council district",
         ))
 
+    # A project page whose id is gone, but whose permit is now part of another
+    # project (an older permit joined it, or a hand-curated file took it over):
+    # forward to that project, so links people shared keep working.
+    by_permit = {}
+    for p in projects:
+        for n in p.get("permitNumbers") or []:
+            by_permit.setdefault(str(n).upper(), p)
+    def moved_to(name):
+        permit = re.sub(r"^(city|monthly)-", "", name).upper()
+        if len(permit) < 8:
+            return None
+        return by_permit.get(permit) or next((p for n, p in by_permit.items() if n.startswith(permit)), None)
+
     # Pages for things no longer on the map stay, reworded.
     gone = 0
     for kind, what in (("p", "project"), ("n", "neighborhood"), ("d", "district")):
@@ -249,6 +265,17 @@ def write_all(projects, root=".", origin=ORIGIN):
         for name in sorted(os.listdir(folder)):
             index = os.path.join(folder, name, "index.html")
             if name in current[kind] or not os.path.isfile(index):
+                continue
+            now = moved_to(name) if kind == "p" else None
+            if now and SAFE_ID.match(now.get("id") or ""):
+                # Same page as the project's own (its address and card), forwarding to it.
+                written += write_if_changed(index, page(
+                    card=project_card(now, root),
+                    origin=origin, path=f"/p/{now['id']}/", title=now.get("name") or "Housing project",
+                    description=project_description(now), target=f"/?p={now['id']}",
+                    heading=now.get("name") or "Housing project",
+                    kicker=f"{SITE_NAME} · {now.get('status') or ''}".rstrip(" ·"),
+                ))
                 continue
             with open(index, encoding="utf-8") as handle:
                 old = handle.read()

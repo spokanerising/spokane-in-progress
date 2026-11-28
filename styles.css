@@ -1030,6 +1030,17 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
   .mapkey { font-size: 11px; }
 }
 
+/* Short portrait phones (iPhone SE and smaller): the map gets ~200-300px under
+   the header, and the full key covered a third or more of it (issue #41). Keep
+   just the size samples; the title and source line are in the "?" panel, as
+   on landscape phones, which hide the key entirely. */
+@media (max-width: 860px) and (max-height: 700px) and (min-height: 521px) {
+  .mapkey { padding: 4px 8px 3px; }
+  .mapkey__title, .mapkey .source { display: none; }
+  .mapkey__sizes::before { content: "Homes"; font-weight: 600; color: var(--ink); margin-right: 2px; align-self: center; }
+  .mapkey__sizes span { white-space: nowrap; }
+}
+
 /* Short landscape phones. */
 @media (max-height: 520px) and (max-width: 900px) {
   .masthead__tag, .lede, .figure__head, .spine__key, .figure .source, .mapkey { display: none; }

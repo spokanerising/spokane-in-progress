@@ -82,10 +82,28 @@ check(pages.write_all([p for p in P if p["id"] != gone_id], root, ORIGIN) == [],
 g = tags(os.path.join(root, "p", gone_id, "index.html"))
 check("no longer tracked" in g.meta["og:title"] and P[0]["name"] in g.meta["og:title"] and json.dumps("/") in "".join(g.scripts), g.meta["og:title"])
 before = open(os.path.join(root, "p", gone_id, "index.html")).read()
+check('<meta name="robots" content="noindex">' in before, "gone page asks search engines not to list it")
+check(gone_id not in open(os.path.join(root, "sitemap.xml")).read(), "gone page left out of the sitemap")
 pages.write_all([p for p in P if p["id"] != gone_id], root, ORIGIN)
 check(open(os.path.join(root, "p", gone_id, "index.html")).read() == before, "gone page written once, then left alone")
 pages.write_all(P, root, ORIGIN)
 check("no longer tracked" not in tags(os.path.join(root, "p", gone_id, "index.html")).meta["og:title"], "comes back when the project does")
+check("noindex" not in open(os.path.join(root, "p", gone_id, "index.html")).read(), "and can be listed again")
+
+# A project whose id changed (an older permit joined it): its old page forwards
+# to the project under its new id, instead of saying it's no longer tracked.
+moved = next(p for p in P if len(p.get("permitNumbers") or []) > 1)
+old_id = "city-" + moved["permitNumbers"][-1].lower()
+assert old_id != moved["id"]
+os.makedirs(os.path.join(root, "p", old_id), exist_ok=True)
+open(os.path.join(root, "p", old_id, "index.html"), "w").write(pages.page(
+    origin=ORIGIN, path=f"/p/{old_id}/", title="Old name", description="", target=f"/?p={old_id}", heading="Old name", kicker=""))
+pages.write_all(P, root, ORIGIN)
+m = tags(os.path.join(root, "p", old_id, "index.html"))
+check(json.dumps(f"/?p={moved['id']}") in "".join(m.scripts) and moved["name"] in m.meta["og:title"]
+      and "no longer tracked" not in m.meta["og:title"], f"old id forwards to the new one {m.meta['og:title']}")
+check(m.links.get("canonical", "").endswith(f"/p/{moved['id']}/"), "canonical is the new page")
+check(old_id not in open(os.path.join(root, "sitemap.xml")).read(), "old id left out of the sitemap")
 w = pages.write_all(P + [{"id": "bad id/../x", "name": "Bad"}], root, ORIGIN)
 check(w and "can't be a page address" in w[0] and not os.path.exists(os.path.join(root, "x")), w)
 w = pages.write_all(P + [dict(P[1])], root, ORIGIN)
