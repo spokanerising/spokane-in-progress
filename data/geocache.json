@@ -104,6 +104,26 @@
     "lat": 47.70634583738461,
     "lng": -117.40965627188935
   },
+  "address:1225 E NEWARK": {
+    "address": "1225 E Newark Ave, Spokane, WA, 99202",
+    "lat": 47.649256498144,
+    "lng": -117.39220778469
+  },
+  "address:1777 E UPRIVER DR": {
+    "address": "1777 E UPRIVER DR, SPOKANE, WA, 99207",
+    "lat": 47.676954446968,
+    "lng": -117.383521981744
+  },
+  "address:315 W 9TH": {
+    "address": "315 W 9th Ave",
+    "lat": 47.647149739062,
+    "lng": -117.416720393328
+  },
+  "address:3551 W 25TH": {
+    "address": "3551 W 25TH AVE, SPOKANE, WA, 99224",
+    "lat": 47.631821513423,
+    "lng": -117.464078433307
+  },
   "permit:B2506988BLDC": {
     "address": "335 S PITTSBURG ST",
     "lat": 47.65282542754864,

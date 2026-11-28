@@ -1,21 +1,5 @@
 [
  {
-  "key": "B2610907BLDC",
-  "source": "weekly permit report",
-  "permits": [
-   "B2610907BLDC"
-  ],
-  "name": "Legacy CO Khinda 4-unit Apartments",
-  "address": "3133 N Stuart",
-  "units": 3,
-  "estCost": 0,
-  "date": "2026-07-27",
-  "status": "Approved",
-  "description": "Legacy CO /Change of use from SFR to 4 Unit Apartment Building to include Life/fire safety and property maintenance corrections as redlined on plans.",
-  "parcelId": "35053.3614",
-  "reportUrl": "https://static.spokanecity.org/documents/business/statistics/daily-activity-report/2026/daily-activity-report-2026-08-02.pdf"
- },
- {
   "key": "B25M0082PDEV",
   "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
   "permits": [
