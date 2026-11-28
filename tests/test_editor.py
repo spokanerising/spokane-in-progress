@@ -22,15 +22,21 @@ shutil.copy(os.path.join(REPO, "editor.js"), site)
 shutil.copytree(os.path.join(REPO, "admin"), os.path.join(site, "admin"))
 os.makedirs(os.path.join(site, "data"), exist_ok=True)
 projects = data["projects"]
-# One project already edited, one with a picture, for Reset and permissions.
-edited = projects[0]
+# Real edits on the live site mark projects "edited". Start with none, so the
+# projects picked below can't change when someone edits the site (a pick by
+# position once landed on the project holding the fake history: issue #41).
+for p in projects:
+    p.pop("edited", None)
+    p.pop("editedAt", None)
+detailed = next(p for p in projects if any(f["label"] == "Floor area" for f in p["fields"]))
+# One project already edited, one with a picture, for Reset and permissions:
+# never the detailed one, which gets its own history and notes below.
+edited, pictured = [p for p in projects if p["id"] != detailed["id"]][:2]
 edited["edited"] = ["units"]
 edited["unitsSource"] = "edited by hand on 2026-11-20"
-pictured = projects[1]
 pictured["imageUrl"] = "/media/x.jpg"
 json.dump(data, open(os.path.join(site, "projects.json"), "w"))
 json.dump([{"id": "gone-one", "name": "Gone One", "at": "2026-11-20T10:00:00Z"}], open(os.path.join(site, "data", "hidden.json"), "w"))
-detailed = next(p for p in projects if any(f["label"] == "Floor area" for f in p["fields"]))
 # History and build notes for the detailed project (phase 3).
 HIST = [
     {"at": "2026-11-20T10:00:00Z", "file": "a.json", "set": {"units": 50}, "was": {"units": 44}, "unset": [], "note": "First count"},
@@ -273,7 +279,7 @@ with sync_playwright() as pw:
     first_only = pg.evaluate("SIPEditor.undoFor([{set:{units:50},was:{units:44},unset:[]}], 0)")
     check(first_only["unset"] == ["units"] and first_only["set"] == {}, "undoing the only edit goes back to automatic")
     # A project nobody has edited (real edits land in projects.json as "edited").
-    untouched = next(p for p in projects if p["id"] != detailed["id"] and not p.get("edited"))
+    untouched = next(p for p in projects if p["id"] not in (detailed["id"], pictured["id"]) and not p.get("edited"))
     pg.evaluate(f"SIPEditor.open(SIPApp.projectById({json.dumps(untouched['id'])}))")
     pg.click('[data-tab="history"]')
     check("No edits yet" in pg.locator(".editor__history").inner_text() and pg.locator(".ednotes").count() == 0, "no history, no notes")
