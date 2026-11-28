@@ -579,7 +579,7 @@ def since_for(history, pid, stage, fallback):
 
 
 def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
-                  history, previously_shown, geocache, monthly=None, monthly_used=None):
+                  history, previously_shown, geocache, monthly=None, monthly_used=None, previous=None):
     """Every active housing project in the city's records that no sheet row
     covers. Returns (projects, warnings, geocache_changed)."""
     warnings = []
@@ -660,6 +660,12 @@ def city_projects(records, by_parcel, weekly, claimed_ids, claimed_parcels,
             changed = changed or hit_changed
             if hit:
                 lat, lng = hit[0], hit[1]
+        if lat is None and last_known(previous, pid):
+            # Every lookup failed (a slow or down service), but the project was
+            # on the map last build: keep it where it was rather than drop it.
+            lat, lng = last_known(previous, pid)
+            warnings.append(f"City: {first['notes'] or first['id']} ({first['id']}): couldn't look up its "
+                            "location today; kept its last known location.")
         if lat is None:
             warnings.append(f"City: {first['notes'] or first['id']} ({first['id']}) has no map location. Skipped.")
             continue
@@ -756,10 +762,21 @@ MONTHLY_STAGE = [
 ]
 
 
-def monthly_only_projects(monthly, used, records, projects, history):
+def last_known(previous, pid):
+    """(lat, lng) of a project on the last build's map, or None."""
+    p = (previous or {}).get(pid) or {}
+    if isinstance(p.get("lat"), (int, float)) and isinstance(p.get("lng"), (int, float)):
+        return p["lat"], p["lng"]
+    return None
+
+
+def monthly_only_projects(monthly, used, records, projects, history, geocache=None, previous=None):
     """Projects the monthly report lists that neither the permit map nor the
-    sheet covers, placed by the city's address locator."""
-    warnings, out = [], []
+    sheet covers, placed by the city's address locator. Places found are kept
+    in the geocache (key "address:<ADDRESS>"), so the locator is asked once per
+    address, not every build. Returns (projects, warnings, geocache_changed)."""
+    geocache = {} if geocache is None else geocache
+    warnings, out, changed = [], [], False
     rows = {}
     for entries in monthly.values():
         for row in entries:
@@ -788,16 +805,31 @@ def monthly_only_projects(monthly, used, records, projects, history):
             continue
         if akey in taken:
             continue
-        found = cr.geocode(row["address"])
-        if not found:
-            warnings.append(f"Monthly: couldn't place {row['title']} at \"{row['address']}\". Not mapped.")
-            continue
-        lat, lng, matched = found
+        pid = "monthly-" + key.lower()
+        cache_key = "address:" + re.sub(r"\s+", " ", row["address"].strip().upper())
+        if cache_key in geocache:
+            hit = geocache[cache_key]
+            lat, lng, matched = hit["lat"], hit["lng"], hit["address"]
+        else:
+            found = cr.geocode(row["address"])
+            if found:
+                lat, lng, matched = found
+                geocache[cache_key] = {"lat": lat, "lng": lng, "address": matched}
+                changed = True
+            elif last_known(previous, pid):
+                # The locator didn't answer (or didn't match) today, but the
+                # project was on the map last build: keep it where it was.
+                lat, lng = last_known(previous, pid)
+                matched = previous[pid].get("address") or row["address"]
+                warnings.append(f"Monthly: couldn't look up {row['title']} at \"{row['address']}\" today; "
+                                "kept its last known location.")
+            else:
+                warnings.append(f"Monthly: couldn't place {row['title']} at \"{row['address']}\". Not mapped.")
+                continue
         stage = next((st for rx, st in MONTHLY_STAGE if rx.search(row["table"])), "Applied")
         if stage == "Applied" and str(row.get("approved")).lower() == "true":
             stage = "Approved"
         units = int(row["units"])
-        pid = "monthly-" + key.lower()
         since = since_for(history, pid, stage, row["as_of"])
         fields = [f for f in [
             field("Stage", stage),
@@ -821,7 +853,7 @@ def monthly_only_projects(monthly, used, records, projects, history):
             "sourceUrls": [], "autoAdded": True, "fields": fields,
         })
         taken.add(akey)
-    return out, warnings
+    return out, warnings, changed
 
 
 def as_text(value):
@@ -905,6 +937,7 @@ def main():
     monthly_used = set()
     previous = cr.load_json("projects.json", {}).get("projects", [])
     previously_shown = {p for project in previous for p in project.get("permitNumbers", [])}
+    previous_by_id = {p["id"]: p for p in previous if p.get("id")}
     claimed_parcels = set(sheet_parcels)
     for permit in permit_owners:
         if permit in records and records[permit]["parcel"]:
@@ -1164,7 +1197,7 @@ def main():
         write_not_on_site(city, set(permit_owners))
     auto, auto_warnings, auto_cache = city_projects(
         records, by_parcel, city, set(permit_owners), claimed_parcels, history,
-        previously_shown, geocache, monthly, monthly_used,
+        previously_shown, geocache, monthly, monthly_used, previous_by_id,
     )
     warnings.extend(auto_warnings)
     if auto_cache:
@@ -1172,8 +1205,11 @@ def main():
     taken = {p["id"] for p in projects}
     auto = [p for p in auto if p["id"] not in taken]
     projects.extend(auto)
-    extra, extra_warnings = monthly_only_projects(monthly, monthly_used, records, projects, history)
+    extra, extra_warnings, extra_cache = monthly_only_projects(monthly, monthly_used, records, projects, history,
+                                                               geocache, previous_by_id)
     warnings.extend(extra_warnings)
+    if extra_cache:
+        save_geocache(geocache)
     projects.extend(extra)
 
     # Your edits from the site (data/edits/), applied after everything above so
@@ -1234,6 +1270,11 @@ def main():
             p["id"] = f'{p["id"]}-{n}'
         taken_ids.add(p["id"])
 
+    # Projects on the last build's map that aren't on this one, and weren't
+    # hidden on purpose: usually expected (finished, merged, claimed by a
+    # hand-curated file), but said out loud so a silent drop can't go unseen.
+    warnings.extend(left_the_map(previous_by_id, projects, hidden))
+
     # First-page thumbnails for linked design PDFs (see pdf_thumbs.py).
     warnings.extend(pdf_thumbs.add(projects))
 
@@ -1267,6 +1308,18 @@ def main():
             print(f"  - {warning}")
     else:
         print("No problems found.")
+
+
+def left_the_map(previous_by_id, projects, hidden):
+    """A note for each project the last build showed that this one doesn't."""
+    now = {p["id"] for p in projects}
+    gone = [p for pid, p in previous_by_id.items() if pid not in now and pid not in {h["id"] for h in hidden}]
+    notes = [f"No longer on the map: {p.get('name') or p['id']} (\"{p['id']}\", {p.get('status') or 'no stage'} "
+             "on the last build). Nothing to do if that's expected." for p in sorted(gone, key=lambda p: p["id"])]
+    if len(gone) > 3:
+        notes.insert(0, f"{len(gone)} projects left the map in this build (from {len(previous_by_id)} to "
+                        f"{len(projects)}). Check that a city service didn't fail.")
+    return notes
 
 
 CANDIDATES_PATH = os.path.join("data", "candidates.json")

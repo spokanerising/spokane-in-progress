@@ -198,8 +198,10 @@ def set_detail(project, key, value):
     project["fields"] = fields
 
 
-def apply_to(project, values, dates, stage_rank):
-    """Applies one project's folded edits. Returns warnings."""
+def apply_to(project, values, dates, stage_rank, was=None):
+    """Applies one project's folded edits. Returns warnings. was: field -> what
+    the site showed just before the latest edit of that field."""
+    was = was or {}
     warnings = []
     label = values.get("name") or project.get("name") or project["id"]
     city_stage = project.get("_cityStage", project.get("status"))
@@ -233,10 +235,16 @@ def apply_to(project, values, dates, stage_rank):
             # Only against the city's numbers: on a hand-curated project the
             # "automatic" value is just the project file, which is yours too.
             from_city = project.get("unitsSource") not in (None, "", "sheet")
-            if from_city and value is not None and isinstance(auto, int) and auto > 0 and auto != value:
+            # Said once, not every day: when you saved the edit you saw the
+            # city's number (it's the edit's "was"). Only a change in the city's
+            # number since then is news.
+            seen = was.get("units")
+            if (from_city and value is not None and isinstance(auto, int) and auto > 0 and auto != value
+                    and auto != seen):
+                then = f" (it said {seen:,} when you edited)" if isinstance(seen, int) and seen != value else ""
                 warnings.append(
                     f"{label}: you set {value:,} units; {project.get('unitsSource') or 'the automatic value'} "
-                    f"says {auto:,}. Yours is shown."
+                    f"now says {auto:,}{then}. Yours is shown."
                 )
             project["units"] = value
             project["unitsSource"] = note if value is not None else ""
@@ -281,6 +289,8 @@ def apply_to(project, values, dates, stage_rank):
     return warnings
 
 
+_UNSET = object()  # "no earlier edit of this field" (None is a real value)
+
 # Edits for "candidate-<key>" aren't for a project: "hidden": true there means
 # "skip this permit" in the editor's list of housing permits not on the map.
 CANDIDATE = "candidate-"
@@ -295,7 +305,7 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
     dict: project id -> list, oldest first) for the editor's History tab."""
     found, warnings = load(edits_dir)
     by_id = {p["id"]: p for p in projects}
-    values, dates = {}, {}  # project id -> field -> value / time
+    values, dates, wases = {}, {}, {}  # project id -> field -> value / time / shown before
 
     skips = {}
     for edit in found:
@@ -311,7 +321,7 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
             warnings.append(f'Edit {edit["_file"]} for "{edit["project"]}": {problem}. Not applied.')
             continue
         pid = project["id"]
-        v, d = values.setdefault(pid, {}), dates.setdefault(pid, {})
+        v, d, before = values.setdefault(pid, {}), dates.setdefault(pid, {}), wases.setdefault(pid, {})
         if history_out is not None:
             history_out.setdefault(pid, []).append({
                 "at": edit.get("at", ""), "file": edit["_file"], "set": edit.get("set", {}),
@@ -322,17 +332,24 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
                 warnings.append(f'Edit {edit["_file"]}: "{key}" isn\'t a field that can be edited. Skipped.')
                 continue
             try:
+                earlier = v[key] if key in v else _UNSET
                 v[key] = read_value(key, raw, normalise_stage)
                 if key in URL_KEYS:
                     for url in (v[key] if isinstance(v[key], list) else [v[key]]):
                         check_url(url)
                 d[key] = str(edit.get("at") or "")
+                shown = (edit.get("was") or {}).get(key)
+                # Editing your own edit again: what the site showed before was
+                # your earlier value, so keep what it showed before that.
+                if not (earlier is not _UNSET and shown == earlier and key in before):
+                    before[key] = shown
             except Bad as error:
                 v.pop(key, None)
                 warnings.append(f'Edit {edit["_file"]}: {key} {error}. Skipped.')
         for key in edit.get("unset", []):
             v.pop(key, None)
             d.pop(key, None)
+            before.pop(key, None)
 
     kept, hidden = [], 0
     for p in projects:
@@ -345,7 +362,7 @@ def apply(projects, normalise_stage, stage_rank, edits_dir=EDITS_DIR, hidden_out
                                        "at": dates[p["id"]].get("hidden", ""),
                                        "permits": p.get("permitNumbers") or []})
                 continue
-            warnings.extend(apply_to(p, mine, dates[p["id"]], stage_rank))
+            warnings.extend(apply_to(p, mine, dates[p["id"]], stage_rank, wases.get(p["id"])))
         p.pop("_cityStage", None)
         kept.append(p)
     if skipped_out is not None:
