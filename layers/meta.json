@@ -1,5 +1,5 @@
 {
- "_updated": "2026-11-28T07:09:53+00:00",
+ "_updated": "2026-11-28T07:11:49+00:00",
  "centers": {
   "bytes": 17880,
   "features": 23,
@@ -69,12 +69,20 @@
   "year": 2026
  },
  "tracts": {
-  "error": "RuntimeError: only 74 features; kept the last good file",
+  "error": "RuntimeError: shapes fall outside the Spokane area; kept the last good file",
   "errorOn": "2026-11-28"
  },
  "transit": {
-  "error": "RuntimeError: the schedule download wasn't a zip file",
-  "errorOn": "2026-11-28"
+  "bytes": 36182,
+  "features": 1,
+  "fetched": "2026-11-28",
+  "file": "transit.geojson",
+  "note": "routes not drawn: the schedule download wasn't a zip file",
+  "routes": [],
+  "source": "Spokane Transit Authority schedule (GTFS); 15-minute-or-better midday service",
+  "sourceUrl": "https://www.spokanetransit.com/gtfs",
+  "stops": 418,
+  "title": "Frequent transit"
  },
  "zoning": {
   "bytes": 103531,
