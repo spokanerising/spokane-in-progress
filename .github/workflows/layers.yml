@@ -1,0 +1,44 @@
+name: Refresh map layers
+
+# The map's optional layers (issue #5): zoning, Census tracts, historic
+# districts, MFTE areas, Opportunity Zones, QCTs, the 1938 HOLC map,
+# centers and corridors, and frequent transit. See layers.py.
+on:
+  workflow_dispatch:        # the "Run workflow" button
+  schedule:
+    - cron: "17 13 2 * *"   # the 2nd of every month, about 6am Pacific
+  push:                     # while the layers PR is open: build them on its branch
+    branches: [layers-data]
+    paths:
+      - "layers.py"
+      - ".github/workflows/layers.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh            # shares the daily build's queue, so commits never collide
+  cancel-in-progress: false
+
+jobs:
+  layers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet shapely openpyxl
+      - run: python3 layers.py
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+      - name: Save the new layers
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add layers/
+          git diff --staged --quiet && exit 0
+          git commit -m "Refresh map layers"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push

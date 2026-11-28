@@ -10,6 +10,7 @@ on:
       - "permit-reports/**"
       - "data/projects/**"
       - "data/edits/**"
+      - "layers/**"         # new map layers: re-tag projects (designations.py)
 
 permissions:
   contents: write

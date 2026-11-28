@@ -17,6 +17,8 @@ TEST_WORKERS=1 python3 tests/run.py   # one at a time
 | --- | --- |
 | `test_filters.py` | Every filter, live counts, pills, Near, map view, old links, phones. Uses made-up zoning/transit/density so every filter shows. |
 | `test_real_data.py` | The real `projects.json`: unique ids, counts add up, outlines, project facts. |
+| `test_layers.py` | `layers.py`'s pure-Python parts: Census margins of error, MFTE terms, class breaks, 2010 populations on 2020 tracts. |
+| `test_designations.py` | `designations.py`: historic district, MFTE area, OZ 2.0, QCT and tract tags from the layer files, holes, overlaps, missing or broken files. |
 | `test_site_facts.py` | `site_facts.py` and the outlines in `boundaries.py`, against fake servers. |
 | `test_controls.py` | One look for every control: heights, corners, toggles, checkboxes, the focus ring, phones, and the unlinked `styleguide.html`. |
 | `test_icons.py` | Icon buttons: labels, icons drawn, sizes, tooltips on hover and keyboard focus, the project bar's Copy link and Report a correction, the Stats chart download menu, phones. |
