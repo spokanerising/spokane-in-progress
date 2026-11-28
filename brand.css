@@ -32,12 +32,12 @@
 
   --logo-src: "/brand/logo-primary.svg";   /* for images drawn in the browser (map export, chart downloads) */
   /* Type. Headlines use --display at --display-weight and --display-stretch. */
-  --display: Merriweather, Georgia, "Times New Roman", serif;
+  --display: Literata, Georgia, "Times New Roman", serif;
   --display-weight: 600;
   --display-stretch: 100%;
   --display-em-style: normal;   /* the 'in Progress' in the site name */
   --display-em-weight: 600;
-  --deck: Merriweather, Georgia, "Times New Roman", serif;
+  --deck: Literata, Georgia, "Times New Roman", serif;
   --deck-weight: 400;
   --sans: "Libre Franklin", "Helvetica Neue", Arial, system-ui, sans-serif;
 

@@ -23,10 +23,10 @@
   },
 
   "fonts": {
-    "_about": "Chosen Nov. 27, 2026 (issue #42): Merriweather serif for headlines and reading lines over Libre Franklin for data and controls, as at The Economist, The Upshot and the FT. 'webfonts' loads them on the site; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
-    "display": { "family": "Merriweather, Georgia, \"Times New Roman\", serif", "weight": 600, "stretch": "100%", "emStyle": "normal", "emWeight": 600,
+    "_about": "Chosen Nov. 27, 2026 (issue #42): Literata serif for headlines and reading lines over Libre Franklin for data and controls, as at The Economist, The Upshot and the FT. 'webfonts' loads them on the site; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
+    "display": { "family": "Literata, Georgia, \"Times New Roman\", serif", "weight": 600, "stretch": "100%", "emStyle": "normal", "emWeight": 600,
                  "use": "Headlines: the site name, project names, the headline sentence, page and section heads." },
-    "deck":    { "family": "Merriweather, Georgia, \"Times New Roman\", serif", "weight": 400,
+    "deck":    { "family": "Literata, Georgia, \"Times New Roman\", serif", "weight": 400,
                  "use": "Reading lines under headlines: the tagline, the stage summary, page intros, project summaries." },
     "sans":    { "family": "\"Libre Franklin\", \"Helvetica Neue\", Arial, system-ui, sans-serif",
                  "use": "Everything read as data or interface, including big numbers and chart titles." },
@@ -51,9 +51,9 @@
       "caps":  { "value": "0.07em",   "use": "Small uppercase labels." },
       "tight": { "value": "-0.012em", "use": "Serif headlines." }
     },
-    "webfonts": "https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400..700&family=Libre+Franklin:wght@400;500;600;700;800&display=swap",
+    "webfonts": "https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Libre+Franklin:wght@400;500;600;700;800&display=swap",
     "imageFonts": [
-      { "family": "Merriweather", "weight": "300 900", "style": "normal", "package": "@fontsource-variable/merriweather", "file": "merriweather-latin-opsz-normal.woff2" },
+      { "family": "Literata", "weight": "200 900", "style": "normal", "package": "@fontsource-variable/literata", "file": "literata-latin-opsz-normal.woff2" },
       { "family": "Libre Franklin", "weight": 400, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-400-normal.woff2" },
       { "family": "Libre Franklin", "weight": 500, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-500-normal.woff2" },
       { "family": "Libre Franklin", "weight": 600, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-600-normal.woff2" },
