@@ -1,0 +1,88 @@
+{
+ "_updated": "2026-11-28T07:09:53+00:00",
+ "centers": {
+  "bytes": 17880,
+  "features": 23,
+  "fetched": "2026-11-28",
+  "file": "centers.geojson",
+  "source": "City of Spokane GIS (Comprehensive Plan)",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Planning_WM_Dynamic/MapServer/13",
+  "title": "Centers and corridors"
+ },
+ "city-limits": {
+  "bytes": 11869,
+  "features": 1,
+  "fetched": "2026-11-28",
+  "file": "city-limits.geojson",
+  "source": "City of Spokane GIS",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Boundaries_WM_Dynamic/MapServer/1",
+  "title": "City limits"
+ },
+ "historic-districts": {
+  "bytes": 6355,
+  "features": 7,
+  "fetched": "2026-11-28",
+  "file": "historic-districts.geojson",
+  "source": "City of Spokane GIS (Spokane Register of Historic Places)",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Economic_WM_Dynamic/MapServer/8",
+  "title": "Local historic districts"
+ },
+ "holc": {
+  "bytes": 34034,
+  "features": 53,
+  "fetched": "2026-11-28",
+  "file": "holc.geojson",
+  "source": "Mapping Inequality, Digital Scholarship Lab, University of Richmond (CC BY-NC)",
+  "sourceUrl": "https://dsl.richmond.edu/panorama/redlining/static/citiesData/WASpokane1938/geojson.json",
+  "title": "1938 HOLC grades",
+  "vintage": "1938"
+ },
+ "mfte": {
+  "bytes": 21436,
+  "features": 2,
+  "fetched": "2026-11-28",
+  "file": "mfte.geojson",
+  "source": "City of Spokane GIS (SMC 8.15)",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Economic_WM_Dynamic/MapServer/2",
+  "title": "MFTE target areas"
+ },
+ "oz2": {
+  "bytes": 5998,
+  "effective": "2027-01-01",
+  "features": 9,
+  "fetched": "2026-11-28",
+  "file": "oz2.geojson",
+  "source": "U.S. Treasury / CDFI Fund, Opportunity Zone 2.0 designations (Nov. 2026)",
+  "sourceUrl": "https://www.cdfifund.gov/system/files/2026-11/final_oz2_designations.xlsx",
+  "title": "Opportunity Zones (from Jan. 1, 2027)",
+  "vintage": "OZ 2.0, effective Jan. 1, 2027 through Dec. 31, 2036"
+ },
+ "qct": {
+  "bytes": 9878,
+  "features": 20,
+  "fetched": "2026-11-28",
+  "file": "qct.geojson",
+  "source": "U.S. Department of Housing and Urban Development, 2026 Qualified Census Tracts",
+  "sourceUrl": "https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/QUALIFIED_CENSUS_TRACTS_2026/FeatureServer/0",
+  "title": "HUD Qualified Census Tracts (2026)",
+  "vintage": "2026",
+  "year": 2026
+ },
+ "tracts": {
+  "error": "RuntimeError: only 74 features; kept the last good file",
+  "errorOn": "2026-11-28"
+ },
+ "transit": {
+  "error": "RuntimeError: the schedule download wasn't a zip file",
+  "errorOn": "2026-11-28"
+ },
+ "zoning": {
+  "bytes": 103531,
+  "features": 5,
+  "fetched": "2026-11-28",
+  "file": "zoning.geojson",
+  "source": "City of Spokane GIS",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Planning_WM_Dynamic/MapServer/33",
+  "title": "Zoning"
+ }
+}
