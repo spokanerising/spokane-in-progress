@@ -1,0 +1,103 @@
+name: Clean up merged branches
+
+# Deletes branches whose work is already in main, so the branch list stays
+# short. Runs every Saturday at 5am Pacific, and from the "Run workflow"
+# button (with an option to only list what it would delete).
+#
+# A branch is deleted only if BOTH are true:
+#   - everything on it is already in main (merged, or its changes landed in
+#     main another way, so merging it again would change nothing), and
+#   - it has no open pull request.
+# main itself is never touched. Anything with work not in main is kept and
+# listed in the run summary.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only list what would be deleted (delete nothing)"
+        type: boolean
+        default: false
+  schedule:
+    # GitHub only takes UTC, and 5am Pacific is 12:00 UTC in summer (PDT)
+    # and 13:00 UTC in winter (PST). Both are listed; the first step lets
+    # only the right one through, so it runs once a week at 5am year-round.
+    - cron: "0 12 * * 6"
+    - cron: "0 13 * * 6"
+
+permissions:
+  contents: write        # to delete branches
+  pull-requests: read    # to see which branches have open pull requests
+
+concurrency:
+  group: branch-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Is it 5am in Spokane?
+        id: gate
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          go=true
+          if [ -n "$SCHEDULE" ]; then
+            offset=$(TZ=America/Los_Angeles date +%z)   # -0700 summer, -0800 winter
+            if [ "$SCHEDULE" = "0 12 * * 6" ] && [ "$offset" != "-0700" ]; then go=false; fi
+            if [ "$SCHEDULE" = "0 13 * * 6" ] && [ "$offset" != "-0800" ]; then go=false; fi
+          fi
+          echo "go=$go" >> "$GITHUB_OUTPUT"
+          echo "Run this time: $go"
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.go == 'true'
+        with:
+          fetch-depth: 0     # full history, needed to tell what's in main
+
+      - name: Delete branches already in main
+        if: steps.gate.outputs.go == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet --prune origin '+refs/heads/*:refs/remotes/origin/*'
+
+          main=$(gh api "repos/$GITHUB_REPOSITORY" -q .default_branch)
+          main_tree=$(git rev-parse "origin/$main^{tree}")
+          open_prs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" -q '.[].head.ref')
+
+          deleted=(); kept=()
+          for ref in $(git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin); do
+            if [ "$ref" = "$main" ] || [ "$ref" = "HEAD" ]; then continue; fi
+
+            if printf '%s\n' "$open_prs" | grep -qxF "$ref"; then
+              kept+=("$ref (has an open pull request)"); continue
+            fi
+
+            if git merge-base --is-ancestor "origin/$ref" "origin/$main"; then
+              :   # merged into main
+            else
+              # Not merged as-is. Would merging it change anything in main?
+              merged_tree=$(git merge-tree --write-tree "origin/$main" "origin/$ref" 2>/dev/null | head -1 || true)
+              if [ "$merged_tree" != "$main_tree" ]; then
+                kept+=("$ref (has work that isn't in $main)"); continue
+              fi
+            fi
+
+            deleted+=("$ref")
+          done
+
+          if [ "$DRY_RUN" != "true" ] && [ ${#deleted[@]} -gt 0 ]; then
+            git push --quiet origin --delete "${deleted[@]}"
+          fi
+
+          {
+            if [ "$DRY_RUN" = "true" ]; then echo "## Would delete (${#deleted[@]})"; else echo "## Deleted (${#deleted[@]})"; fi
+            for b in "${deleted[@]}"; do echo "- \`$b\`"; done
+            echo; echo "## Kept (${#kept[@]})"
+            for b in "${kept[@]}"; do echo "- $b"; done
+          } | tee -a "$GITHUB_STEP_SUMMARY"
