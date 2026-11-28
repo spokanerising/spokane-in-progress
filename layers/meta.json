@@ -1,5 +1,5 @@
 {
- "_updated": "2026-11-28T07:11:49+00:00",
+ "_updated": "2026-11-28T07:13:31+00:00",
  "centers": {
   "bytes": 17880,
   "features": 23,
@@ -69,11 +69,130 @@
   "year": 2026
  },
  "tracts": {
-  "error": "RuntimeError: shapes fall outside the Spokane area; kept the last good file",
-  "errorOn": "2026-11-28"
+  "acsYear": 2024,
+  "bytes": 94991,
+  "features": 74,
+  "fetched": "2026-11-28",
+  "file": "tracts.geojson",
+  "measures": {
+   "density": {
+    "breaks": [
+     1425.443,
+     4094.1701,
+     5266.3302,
+     6402.5071
+    ],
+    "label": "People per square mile, 2020",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "count"
+   },
+   "medianIncome": {
+    "breaks": [
+     50673.8,
+     66238.6,
+     79487.4,
+     96726.8
+    ],
+    "label": "Median household income",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "dollars"
+   },
+   "medianRent": {
+    "breaks": [
+     1108.6,
+     1218.0,
+     1385.6,
+     1589.8
+    ],
+    "label": "Median gross rent",
+    "scale": "sequential",
+    "tracts": 73,
+    "unit": "dollars"
+   },
+   "medianYearBuilt": {
+    "breaks": [
+     1946.2,
+     1956.0,
+     1971.0,
+     1993.0
+    ],
+    "label": "Median year built",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "year"
+   },
+   "popChange": {
+    "breaks": [
+     0.0121,
+     0.0452,
+     0.0699,
+     0.2432
+    ],
+    "label": "Population change, 2010\u20132020",
+    "scale": "diverging",
+    "tracts": 74,
+    "unit": "change"
+   },
+   "poverty": {
+    "breaks": [
+     0.0547,
+     0.0896,
+     0.1265,
+     0.2335
+    ],
+    "label": "People below the poverty line",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   },
+   "pre1940": {
+    "breaks": [
+     0.012,
+     0.0895,
+     0.2524,
+     0.4535
+    ],
+    "label": "Homes built before 1940",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   },
+   "rentBurden": {
+    "breaks": [
+     0.387,
+     0.4655,
+     0.5486,
+     0.6175
+    ],
+    "label": "Renters paying 30%+ of income on rent",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   },
+   "renterShare": {
+    "breaks": [
+     0.1713,
+     0.2634,
+     0.4397,
+     0.6179
+    ],
+    "label": "Homes rented, not owned",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   }
+  },
+  "source": "U.S. Census Bureau, American Community Survey 2020\u20132024 5-year estimates; 2010 and 2020 Census",
+  "sourceUrl": "https://data.census.gov/",
+  "title": "Census tracts",
+  "vintage": "ACS 2020\u20132024"
  },
  "transit": {
   "bytes": 36182,
+  "error": "RuntimeError: schedule download failed (not a zip (text/html, 13118 bytes, from https://www.spokanetransit.com/gtfs): <!DOCTYPE html> <html lang=\"en\"> <head>   <meta charset=\"utf8\">   <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">   <script>       (functi); kept the last good file",
+  "errorOn": "2026-11-28",
   "features": 1,
   "fetched": "2026-11-28",
   "file": "transit.geojson",
