@@ -78,6 +78,7 @@ card_mtime = os.path.getmtime(cards.card_path(few[0], root))
 # Nothing drawn changed: nothing redrawn (even if other fields did)
 few[0]["lastVerified"] = "2031-01-01"
 json.dump({"stages": data["stages"], "projects": few}, open(os.path.join(root, "projects.json"), "w"))
+check(cards.needed(root) == (0, False), f"nothing to draw: the daily job can skip the browser {cards.needed(root)}")
 cards.run(root, origin="https://example.test")
 check(os.path.getmtime(cards.card_path(few[0], root)) == card_mtime, "card not redrawn")
 check(os.path.getmtime(os.path.join(root, "og-card.png")) == site_mtime, "site card not redrawn")
@@ -86,6 +87,7 @@ check(os.path.getmtime(os.path.join(root, "og-card.png")) == site_mtime, "site c
 old_path = cards.card_path(few[0], root)
 few[0]["units"] = (few[0].get("units") or 0) + 7
 json.dump({"stages": data["stages"], "projects": few}, open(os.path.join(root, "projects.json"), "w"))
+check(cards.needed(root) == (1, True), f"a changed card and site card are noticed {cards.needed(root)}")
 cards.run(root, origin="https://example.test")
 new_path = cards.card_path(few[0], root)
 check(new_path != old_path and os.path.isfile(new_path) and not os.path.exists(old_path), "replaced card")

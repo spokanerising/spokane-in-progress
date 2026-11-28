@@ -1,13 +1,16 @@
 # Tests
 
 Headless-browser and build tests for Spokane in Progress. They serve a copy of
-the site to Chrome with the network stubbed out (map library from an npm
-copy, a blank base map, fake geocoders), so they run anywhere.
+the site to Chrome with the network stubbed out (the map library from the
+site's own copy in vendor/, a blank base map, fake geocoders), so they run
+anywhere. Each file works in its own temporary copy of the site, so run.py
+runs up to four at a time.
 
 ```
 pip install playwright && python -m playwright install chromium
 python3 tests/run.py              # everything
 python3 tests/run.py filters      # files whose name contains "filters"
+TEST_WORKERS=1 python3 tests/run.py   # one at a time
 ```
 
 | File | Checks |
@@ -21,6 +24,7 @@ python3 tests/run.py filters      # files whose name contains "filters"
 | `test_map_tools.py` | Scale bar, the Whole city button, skip links, and the map by keyboard: [ ] to step through projects, Enter to open, 0 for the whole city, Escape back to the row or map. |
 | `test_project_page.py` | The project page: kicker, standfirst, spec sections, the permits table, the satellite view, PDF thumbnails (`pdf_thumbs.py`, offline), the foot, links to a section, print, phones. |
 | `test_build_resilience.py` | The build when a city service is down: monthly-report places remembered, last known location kept, projects leaving the map noted. |
+| `test_links.py` | Internal links use /stats, /about, /glossary (no .html redirects), old project ids find their project, canonical tags, the sitemap, MapLibre from vendor/, `_headers`. |
 | `test_edits.py` | `edits.py`: edits applied on top of the build: later wins, reset, stage moves forward only, a units disagreement noted only when the city's number changes, hide, permit-number fallback, unsafe links refused. |
 | `test_functions.py` | The editor's Cloudflare functions in Node: sign-in token checks (forged, expired, wrong account), what Save commits, refused edits, uploads and serving them (fake R2), adding a project. Needs Node. |
 | `test_editor.py` | The editor in a browser: pencil only when signed in, form values for every project, what Save sends, errors, Hide, Reset, uploads (shrinking, turning upright, PDFs), build notes, History and Undo, adding a project with a map pin, phones, `/admin/`. |
