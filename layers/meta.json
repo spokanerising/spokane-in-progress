@@ -1,5 +1,5 @@
 {
- "_updated": "2026-11-28T07:13:31+00:00",
+ "_updated": "2026-11-28T07:14:42+00:00",
  "centers": {
   "bytes": 17880,
   "features": 23,
@@ -19,7 +19,7 @@
   "title": "City limits"
  },
  "historic-districts": {
-  "bytes": 6355,
+  "bytes": 6210,
   "features": 7,
   "fetched": "2026-11-28",
   "file": "historic-districts.geojson",
@@ -190,18 +190,25 @@
   "vintage": "ACS 2020\u20132024"
  },
  "transit": {
-  "bytes": 36182,
-  "error": "RuntimeError: schedule download failed (not a zip (text/html, 13118 bytes, from https://www.spokanetransit.com/gtfs): <!DOCTYPE html> <html lang=\"en\"> <head>   <meta charset=\"utf8\">   <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">   <script>       (functi); kept the last good file",
-  "errorOn": "2026-11-28",
-  "features": 1,
+  "bytes": 37051,
+  "features": 9,
   "fetched": "2026-11-28",
   "file": "transit.geojson",
-  "note": "routes not drawn: the schedule download wasn't a zip file",
-  "routes": [],
+  "routes": [
+   "1",
+   "20",
+   "21",
+   "25",
+   "28",
+   "33",
+   "4",
+   "9"
+  ],
   "source": "Spokane Transit Authority schedule (GTFS); 15-minute-or-better midday service",
   "sourceUrl": "https://www.spokanetransit.com/gtfs",
   "stops": 418,
-  "title": "Frequent transit"
+  "title": "Frequent transit",
+  "vintage": "2026-12-02"
  },
  "zoning": {
   "bytes": 103531,
