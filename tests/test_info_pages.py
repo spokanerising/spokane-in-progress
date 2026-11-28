@@ -71,6 +71,21 @@ with sync_playwright() as pw:
     check(pg.locator("#h-limits ~ #h-differ, section:has(#h-limits) #h-differ").count() == 1, "why the numbers differ sits in the limits section")
     if missing:
         check(pg.locator("#limit-units strong").inner_text().startswith(f"{missing:,} project"), "live count of projects with no units")
+    # Data notes (issue #39): dated, newest first, and dates and codes stay plain.
+    import datetime
+    dates = pg.evaluate("[...document.querySelectorAll('#notes dt')].map(d => d.textContent.trim())")
+    def note_date(d):  # AP style: "Nov. 27, 2026", "Sept. 3, 2027", "June 3, 2027"
+        d = d.replace("Sept.", "Sep.").replace(".", "")
+        for f in ("%b %d, %Y", "%B %d, %Y"):
+            try:
+                return datetime.datetime.strptime(d, f)
+            except ValueError:
+                pass
+        raise AssertionError(f"data note date not understood: {d!r} (write it like Nov. 27, 2026)")
+    parsed = [note_date(d) for d in dates]
+    check(len(parsed) >= 1 and parsed == sorted(parsed, reverse=True), f"data notes dated, newest first: {dates}")
+    check(pg.locator("#notes dd").count() == len(dates), "a note for every date")
+    check(pg.locator("#notes dt b.num, #notes a b.num").count() == 0, "note dates and citations aren't bolded as figures")
     stages = next(g for g in GLOSS["groups"] if g["id"] == "stages")["terms"]
     pg.wait_for_function("document.querySelectorAll('#stage-list dt').length > 0")
     dts = pg.locator("#stage-list dt")
