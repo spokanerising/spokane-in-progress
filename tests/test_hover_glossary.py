@@ -102,7 +102,9 @@ with sync_playwright() as pw:
     check(pg.locator("#detail .track__label .gloss").count() == 1, "the stage is a term")
     final = pg.locator('#detail .ptable .gloss[data-gloss="finaled"]').first
     check(final.count() == 1, "a Final status is a term")
-    final.scroll_into_view_if_needed()
+    # Fonts settled and the term mid-screen, so the popover has room either side.
+    pg.evaluate("document.fonts.ready")
+    final.evaluate("e => e.scrollIntoView({block: 'center'})")
     final.click()
     pop = pg.locator(".glosspop")
     pg.wait_for_selector(".glosspop:not([hidden])")
@@ -111,7 +113,10 @@ with sync_playwright() as pw:
     check(final.get_attribute("aria-expanded") == "true", "term says it's open")
     check(pop.locator("a").get_attribute("href") == "/glossary#g-finaled", "links to the Glossary page")
     pb, fb = pop.bounding_box(), final.bounding_box()
-    check(pb["x"] >= 0 and pb["x"] + pb["width"] <= 1280 and abs(pb["y"] - (fb["y"] + fb["height"])) < 12, f"popover under the term {pb} {fb}")
+    # Under the term, or above it when the term is near the bottom of the window.
+    below = abs(pb["y"] - (fb["y"] + fb["height"])) < 12
+    above = abs((pb["y"] + pb["height"]) - fb["y"]) < 12
+    check(pb["x"] >= 0 and pb["x"] + pb["width"] <= 1280 and (below or above), f"popover next to the term {pb} {fb}")
     pg.screenshot(path=os.path.join(SHOTS, "glossary-popover.png"))
     # Still open when Escape is pressed: if something closed it first (the page
     # shifting as a picture loads), Escape would close the project instead, and
