@@ -38,6 +38,9 @@ def make_site(with_facts=True):
             continue
         shutil.copy(os.path.join(REPO, f), d)
     shutil.copytree(os.path.join(REPO, "vendor"), os.path.join(d, "vendor"))
+    # The map layers (layers.py, issue #5): the real files, small enough to serve as they are.
+    if os.path.isdir(os.path.join(REPO, "layers")):
+        shutil.copytree(os.path.join(REPO, "layers"), os.path.join(d, "layers"))
     # The logos (brand/logo.svg) and the rest of the brand folder.
     shutil.copytree(os.path.join(REPO, "brand"), os.path.join(d, "brand"), ignore=shutil.ignore_patterns("source"))
     data = json.load(open(os.path.join(REPO, "projects.json")))

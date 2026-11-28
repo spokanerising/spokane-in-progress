@@ -272,6 +272,8 @@ const state = {
   builtAt: null,
   measure: "homes", // what the stage bar is sized by: "homes" or "projects"
   sort: "recent",   // list order; see SORTS
+  shade: null,      // the shaded map layer's key (SHADES), or null; see "Map layers"
+  lines: new Set(), // outline layer keys (LINES) that are on
 };
 
 // Fills in each filter's options from the data, ticks them all, and drops
@@ -1148,6 +1150,7 @@ function render() {
     markSelected();
   }
   drawInView();
+  syncLayersPanel();
   writeUrl();
 }
 
@@ -1806,7 +1809,7 @@ function closeDetail(fromHistory = false) {
 //   ?p=<project id>  &q=<search>  &stage=applied,approved  &type=middle | duplex,townhomes
 //   &size=20-99,100  &filed=30,90  &since=30  &district=2  &hood=logan,riverside
 //   &transit=quarter  &zone=rmf,cc2  &density=50,100  &near=47.65750,-117.42330,0.5
-//   &nearlabel=10 N Post St  &sort=homes  &view=list
+//   &nearlabel=10 N Post St  &layer=rent-burden  &lines=historic,oz  &sort=homes  &view=list
 // Each filter lists the options that are ticked ("none" if none are).
 // Anything at its default is left out. Opening a project adds a history step
 // (so Back closes it); filter changes just replace the current address.
@@ -1831,6 +1834,8 @@ function urlFromState() {
     params.set("near", `${state.near.lat.toFixed(5)},${state.near.lng.toFixed(5)},${state.near.miles}`);
     if (state.near.label) params.set("nearlabel", state.near.label);
   }
+  if (state.shade) params.set("layer", state.shade);
+  if (state.lines.size) params.set("lines", LINES.filter((l) => state.lines.has(l.key)).map((l) => l.key).join(","));
   if (state.sort !== "recent") params.set("sort", state.sort);
   if (document.body.dataset.view === "list") params.set("view", "list");
   const query = params.toString().replace(/%3A/g, ":").replace(/%2C/g, ",");
@@ -1924,6 +1929,11 @@ function readUrl() {
 
   state.sort = SORTS[params.get("sort")] ? params.get("sort") : "recent";
   document.getElementById("sort").value = state.sort;
+
+  // Map layers: ?layer=rent-burden&lines=historic,oz
+  state.shade = shadeDef(params.get("layer")) ? params.get("layer") : null;
+  state.lines = new Set(list("lines").filter((k) => lineDef(k)));
+  syncLayers();
 
   if (params.get("view") === "list") setView("list");
   return params.get("p");
@@ -2045,6 +2055,7 @@ function setBasemap(mode) {
   const on = mode === "satellite";
 
   map.setLayoutProperty("satellite", "visibility", on ? "visible" : "none");
+  setShadeOpacity(map, on);
 
   labelLayers.forEach((layer) => {
     try {
@@ -2085,7 +2096,8 @@ function drawMapKey() {
       ${samples.map((n) => `<li>${dot(radiusAt(zoom, n))}<span>${n}</span></li>`).join("")}
       <li>${dot(radiusAt(zoom, 0), "mapkey__dot--unknown")}<span>Not reported</span></li>
     </ul>
-    <p class="source">${escapeHtml(sourceLine())}</p>`;
+    ${layerKeyHtml()}
+    <p class="source">${escapeHtml(sourceLine())}${layerCredits().length ? ` Layers: ${escapeHtml(layerCredits().join("; "))}.` : ""}</p>`;
 }
 
 function sourceLine() {
@@ -2192,6 +2204,609 @@ function addOverlayLayers() {
     paint: { "circle-radius": 4, "circle-color": BRAND.link, "circle-stroke-color": BRAND.surface, "circle-stroke-width": 1.5 } });
 }
 
+// ---- map layers (issue #5) ------------------------------------------------------
+//
+// Optional layers under the project dots, all off until someone turns one on:
+// one shaded layer at a time (a Census measure, zoning or the 1938 HOLC
+// grades) and any number of outlines (historic districts, MFTE areas,
+// Opportunity Zones, QCTs, centers and corridors, frequent transit). The
+// files are the site's own copies in layers/, refreshed monthly by layers.py,
+// so the browser never asks the city, the Census Bureau or HUD for anything.
+// A layer's file is fetched the first time it's turned on.
+//
+// The Layers button opens a panel built from the filters' checklist parts
+// (radio rows for the shaded layers, since only one can show). The map key
+// and the saved map image both carry a legend and a credit for whatever is on.
+
+const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
+const LAYER_COLOR = (() => {
+  const names = ["layer-seq-1", "layer-seq-2", "layer-seq-3", "layer-seq-4", "layer-seq-5", "layer-loss", "layer-nodata",
+    "zone-res", "zone-cc", "zone-com", "zone-dt", "zone-ind", "holc-a", "holc-b", "holc-c", "holc-d",
+    "line-historic", "line-mfte", "line-oz", "line-qct", "line-centers", "line-transit"];
+  const out = {};
+  names.forEach((n) => { out[n] = cssVar(n); });
+  return out;
+})();
+const SEQ = [1, 2, 3, 4, 5].map((i) => LAYER_COLOR[`layer-seq-${i}`]);
+
+// Census measures: key (in the address bar), the property in tracts.geojson,
+// the label, and how its numbers read. Population change uses fixed classes
+// so "lost people" is its own color; the rest use the five equal-count
+// classes layers.py works out (meta.json).
+const CENSUS = [
+  { key: "renters", m: "renterShare", label: "Homes rented, not owned", unit: "share", group: "Renters and rent" },
+  { key: "rent", m: "medianRent", label: "Median gross rent", unit: "dollars", group: "Renters and rent" },
+  { key: "rent-burden", m: "rentBurden", label: "Renters paying 30%+ of income on rent", unit: "share", group: "Renters and rent" },
+  { key: "income", m: "medianIncome", label: "Median household income", unit: "dollars", group: "Income and poverty" },
+  { key: "poverty", m: "poverty", label: "People below the poverty line", unit: "share", group: "Income and poverty" },
+  { key: "growth", m: "popChange", label: "Population change, 2010–2020", unit: "change", group: "People",
+    breaks: [0, 0.05, 0.1, 0.25], colors: () => [LAYER_COLOR["layer-loss"], SEQ[1], SEQ[2], SEQ[3], SEQ[4]] },
+  { key: "density", m: "density", label: "People per square mile, 2020", unit: "count", group: "People" },
+  { key: "pre-1940", m: "pre1940", label: "Homes built before 1940", unit: "share", group: "Age of homes" },
+  { key: "year-built", m: "medianYearBuilt", label: "Median year homes were built", unit: "year", group: "Age of homes" },
+];
+const ZONE_FAMILIES = [
+  ["Residential", "zone-res"], ["Centers & Corridors", "zone-cc"], ["Commercial & mixed use", "zone-com"],
+  ["Downtown", "zone-dt"], ["Industrial", "zone-ind"],
+];
+const HOLC_GRADES = [["A", "Best", "holc-a"], ["B", "Still desirable", "holc-b"], ["C", "Declining", "holc-c"], ["D", "Hazardous", "holc-d"]];
+
+// Every shaded layer, in panel order. file: the layers/ file it draws from.
+const SHADES = [
+  ...CENSUS.map((c) => ({ ...c, file: "tracts", census: true })),
+  { key: "zoning", file: "zoning", label: "Zoning" },
+  { key: "redlining", file: "holc", label: "1938 redlining grades" },
+];
+// Outline layers. count: how many projects (with the current filters) sit
+// inside, where the build tags it (tag: the project field it sets).
+const LINES = [
+  { key: "historic", file: "historic-districts", label: "Local historic districts", group: "Designated areas",
+    tag: "historicDistrict", count: (p) => !!p.historicDistrict },
+  { key: "mfte", file: "mfte", label: "MFTE target areas", group: "Designated areas" },
+  { key: "oz", file: "oz2", label: "Opportunity Zones (from 2027)", group: "Designated areas", tag: "oz2", count: (p) => p.oz2 === true },
+  { key: "qct", file: "qct", label: "HUD Qualified Census Tracts", group: "Designated areas", tag: "qct", count: (p) => p.qct === true },
+  { key: "centers", file: "centers", label: "Centers and corridors", group: "Plans and transit" },
+  { key: "transit", file: "transit", label: "Frequent transit, ¼ mile", group: "Plans and transit", tag: "transitMiles",
+    count: (p) => Number.isFinite(p.transitMiles) && p.transitMiles <= 0.25 },
+];
+const LINE_STYLE = {
+  historic: { color: "line-historic", width: 2.2, dash: null, fill: 0.1 },
+  mfte: { color: "line-mfte", width: 2, dash: null, fill: 0.05 },
+  oz: { color: "line-oz", width: 2, dash: [5, 2], fill: 0.06 },
+  qct: { color: "line-qct", width: 2.2, dash: [0.2, 2], fill: 0 },
+  centers: { color: "line-centers", width: 1.6, dash: [3, 2], fill: 0.05 },
+  transit: { color: "line-transit", width: 2.5, dash: null, fill: 0.13 },
+};
+const SHADE_OPACITY = { map: 0.62, satellite: 0.5 };
+
+let layerMeta = null;            // layers/meta.json, once loaded
+const layerFiles = {};           // file -> Promise of its GeoJSON
+let firstLabelId = null;         // shaded layers sit under the base map's labels
+const areaTip = { popup: null };
+
+const shadeDef = (key) => SHADES.find((s) => s.key === key) || null;
+const lineDef = (key) => LINES.find((l) => l.key === key) || null;
+const layerReady = (file) => !!(layerMeta && layerMeta[file] && layerMeta[file].file);
+const activeLines = () => LINES.filter((l) => state.lines.has(l.key) && layerReady(l.file));
+const activeShade = () => (state.shade && layerReady(shadeDef(state.shade)?.file) ? shadeDef(state.shade) : null);
+
+function loadLayerMeta() {
+  return fetch("layers/meta.json")
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null)
+    .then((meta) => {
+      layerMeta = meta;
+      const any = [...SHADES, ...LINES].some((d) => layerReady(d.file));
+      document.getElementById("layers").hidden = !any;
+      syncLayers();
+    });
+}
+
+function loadLayerFile(file) {
+  if (!layerFiles[file]) {
+    layerFiles[file] = fetch(`layers/${file}.geojson`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`layers/${file}.geojson: ${r.status}`))))
+      .then((data) => (file === "tracts" ? prepTracts(data) : data));
+    layerFiles[file].catch(() => { delete layerFiles[file]; }); // try again next time
+  }
+  return layerFiles[file];
+}
+
+// Class breaks for a Census measure: fixed for population change, else the
+// five equal-count classes from meta.json.
+function breaksOf(c) {
+  if (c.breaks) return c.breaks;
+  const m = layerMeta && layerMeta.tracts && layerMeta.tracts.measures && layerMeta.tracts.measures[c.m];
+  return (m && m.breaks) || [];
+}
+const colorsOf = (c) => (c.colors ? c.colors() : SEQ);
+const classOf = (value, breaks) => (value === null || value === undefined ? -1 : breaks.filter((b) => value > b).length);
+
+// Each tract gets c_<measure> (its class, -1 for no estimate) and
+// lr_<measure> (1 when the estimate's margin is wide), so the map can color
+// and hatch it with plain expressions.
+function prepTracts(data) {
+  data.features.forEach((f) => {
+    const p = f.properties;
+    const low = new Set(p.lowReliability || []);
+    CENSUS.forEach((c) => {
+      p[`c_${c.m}`] = classOf(p[c.m], breaksOf(c));
+      p[`lr_${c.m}`] = low.has(c.m) ? 1 : 0;
+    });
+    delete p.lowReliability;
+  });
+  return data;
+}
+
+// Numbers as the key and the hover card show them.
+function layerNumber(value, unit, short = false) {
+  if (value === null || value === undefined) return "no estimate";
+  if (unit === "share") return `${Math.round(value * 100)}%`;
+  if (unit === "change") return `${value < 0 ? "−" : "+"}${Math.abs(Math.round(value * 100))}%`;
+  if (unit === "dollars") return short && value >= 1000 ? `$${Math.round(value / 1000)}k` : `$${numberWithCommas(Math.round(value))}`;
+  if (unit === "count") return short && value >= 1000 ? `${(value / 1000).toFixed(1)}k` : numberWithCommas(Math.round(value));
+  if (unit === "year") return String(Math.round(value));
+  return String(value);
+}
+function layerMargin(moe, unit) {
+  if (moe === null || moe === undefined) return "";
+  if (unit === "share") return ` (±${Math.max(1, Math.round(moe * 100))} pts)`;
+  if (unit === "dollars") return ` (±$${numberWithCommas(Math.round(moe))})`;
+  if (unit === "year") return "";
+  return ` (±${numberWithCommas(Math.round(moe))})`;
+}
+
+// A diagonal hatch for tracts whose estimate is unreliable.
+function hatchImage() {
+  const size = 16;
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const ctx = c.getContext("2d");
+  ctx.strokeStyle = withAlpha(BRAND.ink, 0.42);
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  for (let o = -size; o <= size; o += 8) { ctx.moveTo(o, size); ctx.lineTo(o + size, 0); }
+  ctx.stroke();
+  return { width: size, height: size, data: ctx.getImageData(0, 0, size, size).data };
+}
+
+// The paint for the shaded tracts under a measure.
+function censusFill(c) {
+  const colors = colorsOf(c);
+  return ["match", ["get", `c_${c.m}`], 0, colors[0], 1, colors[1], 2, colors[2], 3, colors[3], 4, colors[4], LAYER_COLOR["layer-nodata"]];
+}
+
+// The map layers for one file, added the first time it's needed. Shaded
+// layers go under the base map's labels; outlines go above them but under
+// the Where outline, the Near circle and the dots.
+function addLayerFile(file, data) {
+  if (map.getSource(`lyr-${file}`)) return;
+  map.addSource(`lyr-${file}`, { type: "geojson", data });
+  const shadeBelow = firstLabelId && map.getLayer(firstLabelId) ? firstLabelId : "areas-fill";
+  const lineBelow = "areas-fill";
+  const hidden = { visibility: "none" };
+  if (file === "tracts") {
+    map.addLayer({ id: "lyr-tracts-fill", type: "fill", source: "lyr-tracts", layout: hidden,
+      paint: { "fill-color": censusFill(CENSUS[0]), "fill-opacity": SHADE_OPACITY.map } }, shadeBelow);
+    if (!map.hasImage("hatch")) map.addImage("hatch", hatchImage(), { pixelRatio: 2 });
+    map.addLayer({ id: "lyr-tracts-hatch", type: "fill", source: "lyr-tracts", layout: hidden,
+      filter: ["==", ["get", "lr_renterShare"], 1], paint: { "fill-pattern": "hatch" } }, shadeBelow);
+    map.addLayer({ id: "lyr-tracts-line", type: "line", source: "lyr-tracts", layout: hidden,
+      paint: { "line-color": BRAND.surface, "line-width": 0.8, "line-opacity": 0.9 } }, shadeBelow);
+  } else if (file === "zoning") {
+    map.addLayer({ id: "lyr-zoning-fill", type: "fill", source: "lyr-zoning", layout: hidden,
+      paint: { "fill-color": ["match", ["get", "family"], ...ZONE_FAMILIES.flatMap(([f, c]) => [f, LAYER_COLOR[c]]), LAYER_COLOR["layer-nodata"]],
+        "fill-opacity": SHADE_OPACITY.map } }, shadeBelow);
+  } else if (file === "holc") {
+    map.addLayer({ id: "lyr-holc-fill", type: "fill", source: "lyr-holc", layout: hidden,
+      paint: { "fill-color": ["match", ["get", "grade"], ...HOLC_GRADES.flatMap(([g, , c]) => [g, LAYER_COLOR[c]]), LAYER_COLOR["layer-nodata"]],
+        "fill-opacity": SHADE_OPACITY.map } }, shadeBelow);
+    map.addLayer({ id: "lyr-holc-line", type: "line", source: "lyr-holc", layout: hidden,
+      paint: { "line-color": BRAND.surface, "line-width": 0.8 } }, shadeBelow);
+  } else {
+    const def = LINES.find((l) => l.file === file);
+    const st = LINE_STYLE[def.key];
+    const color = LAYER_COLOR[st.color];
+    const polys = ["==", ["geometry-type"], "Polygon"];
+    // An invisible fill makes the whole area answer the pointer (hover card).
+    map.addLayer({ id: `lyr-${file}-fill`, type: "fill", source: `lyr-${file}`, layout: hidden, filter: polys,
+      paint: { "fill-color": color, "fill-opacity": def.key === "mfte" ? ["case", ["==", ["get", "area"], "STIA"], st.fill, 0] : st.fill } }, lineBelow);
+    const line = { "line-color": color, "line-width": st.width };
+    if (st.dash) line["line-dasharray"] = st.dash;
+    if (def.key === "mfte") {
+      // The Targeted Investment Area solid; the Emphasis Area (the rest of the city) dotted and lighter.
+      map.addLayer({ id: `lyr-${file}-line`, type: "line", source: `lyr-${file}`, layout: { ...hidden, "line-cap": "round" },
+        filter: ["==", ["get", "area"], "STIA"], paint: line }, lineBelow);
+      map.addLayer({ id: `lyr-${file}-line2`, type: "line", source: `lyr-${file}`, layout: { ...hidden, "line-cap": "round" },
+        filter: ["==", ["get", "area"], "AHEA"], paint: { ...line, "line-width": 1.4, "line-dasharray": [0.2, 2.2], "line-opacity": 0.8 } }, lineBelow);
+    } else if (def.key === "transit") {
+      // The 1/4-mile area as a tint, the routes as lines.
+      map.addLayer({ id: `lyr-${file}-line`, type: "line", source: `lyr-${file}`, layout: { ...hidden, "line-cap": "round", "line-join": "round" },
+        filter: ["==", ["get", "part"], "route"], paint: { ...line, "line-opacity": 0.85 } }, lineBelow);
+    } else {
+      map.addLayer({ id: `lyr-${file}-line`, type: "line", source: `lyr-${file}`,
+        layout: { ...hidden, "line-cap": st.dash && st.dash[0] < 1 ? "round" : "butt" }, filter: polys, paint: line }, lineBelow);
+    }
+    // Names on the historic districts, once zoomed in (only where the base map has fonts).
+    if (def.key === "historic" && map.getStyle().glyphs && labelLayers.length) {
+      const font = map.getLayoutProperty(labelLayers[0].id, "text-font");
+      map.addSource("lyr-historic-names", { type: "geojson", data: labelPoints(data) });
+      map.addLayer({ id: "lyr-historic-districts-name", type: "symbol", source: "lyr-historic-names", minzoom: 13.5,
+        layout: { ...hidden, "text-field": ["get", "name"], "text-size": 11.5, "text-max-width": 8, ...(font ? { "text-font": font } : {}) },
+        paint: { "text-color": color, "text-halo-color": BRAND.paper, "text-halo-width": 1.6 } }, lineBelow);
+    }
+  }
+}
+
+// A point inside each polygon's biggest ring, for its name.
+function labelPoints(data) {
+  const features = data.features.map((f) => {
+    const polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates;
+    const ring = polys.map((p) => p[0]).sort((a, b) => b.length - a.length)[0];
+    const n = ring.length - 1;
+    const x = ring.slice(0, n).reduce((s, c) => s + c[0], 0) / n;
+    const y = ring.slice(0, n).reduce((s, c) => s + c[1], 0) / n;
+    return { type: "Feature", properties: { name: f.properties.name }, geometry: { type: "Point", coordinates: [x, y] } };
+  });
+  return { type: "FeatureCollection", features };
+}
+
+// The map layer ids that draw each file, for showing, hiding and hovering.
+const fileLayerIds = (m, file) => (m.getStyle().layers || []).map((l) => l.id)
+  .filter((id) => id.startsWith(`lyr-${file}-`));
+const hoverLayerIds = () => [
+  ...(activeShade() ? [`lyr-${activeShade().file}-fill`] : []),
+  ...activeLines().flatMap((l) => (l.key === "transit" ? [`lyr-transit-fill`, `lyr-transit-line`] : [`lyr-${l.file}-fill`])),
+].filter((id) => map && map.getLayer(id));
+
+function setShadeOpacity(m, satellite) {
+  ["lyr-tracts-fill", "lyr-zoning-fill", "lyr-holc-fill"].forEach((id) => {
+    if (m.getLayer(id)) m.setPaintProperty(id, "fill-opacity", satellite ? SHADE_OPACITY.satellite : SHADE_OPACITY.map);
+  });
+}
+
+// Shows what state.shade and state.lines ask for: loads files as needed,
+// sets visibility, recolors the tracts, and redraws the key and the button.
+let layerSync = 0;
+async function syncLayers() {
+  drawLayersButton();
+  syncLayersPanel();
+  if (!map || !map.getSource("projects") || !layerMeta) { drawMapKey(); return; }
+  const run = ++layerSync;
+  const shade = activeShade();
+  const lines = activeLines();
+  const wanted = new Set([...(shade ? [shade.file] : []), ...lines.map((l) => l.file)]);
+  try {
+    await Promise.all([...wanted].map((file) => loadLayerFile(file).then((data) => {
+      if (run === layerSync && map.getSource("projects")) addLayerFile(file, data);
+    })));
+  } catch (error) {
+    console.warn(error);
+    Share.toast("Couldn’t load that map layer. Please try again.");
+  }
+  if (run !== layerSync) return; // a newer change is on its way
+  [...SHADES.map((s) => s.file), ...LINES.map((l) => l.file)].forEach((file) => {
+    const on = wanted.has(file);
+    fileLayerIds(map, file).forEach((id) => map.setLayoutProperty(id, "visibility", on ? "visible" : "none"));
+  });
+  if (shade && shade.census && map.getLayer("lyr-tracts-fill")) {
+    map.setPaintProperty("lyr-tracts-fill", "fill-color", censusFill(shade));
+    map.setFilter("lyr-tracts-hatch", ["==", ["get", `lr_${shade.m}`], 1]);
+  }
+  setShadeOpacity(map, savedBasemap() === "satellite");
+  if (!hoverLayerIds().length && areaTip.popup) areaTip.popup.remove();
+  drawMapKey();
+}
+
+function setShade(key) {
+  state.shade = key && shadeDef(key) ? key : null;
+  syncLayers();
+  writeUrl();
+}
+function setLine(key, on) {
+  if (on) state.lines.add(key); else state.lines.delete(key);
+  syncLayers();
+  writeUrl();
+}
+
+// ---- the Layers panel ----
+
+function drawLayersButton() {
+  const n = activeLines().length + (activeShade() ? 1 : 0);
+  const box = document.getElementById("layers");
+  const count = document.getElementById("layers-count");
+  if (!box || !count) return;
+  count.textContent = n ? String(n) : "";
+  count.hidden = !n;
+  box.classList.toggle("is-on", n > 0);
+  box.querySelector("summary").setAttribute("aria-label", n ? `Layers, ${n} on` : "Layers");
+}
+
+function layerRow(type, def, name) {
+  const ready = layerReady(def.file);
+  return `<label class="picker__item${ready ? "" : " is-zero"}" data-text="${escapeHtml(def.label.toLowerCase())}">
+      <input type="${type}" ${type === "radio" ? `name="${name}" value="${escapeHtml(def.key)}"` : `data-line="${escapeHtml(def.key)}"`}${ready ? "" : " disabled"}>
+      <span class="picker__text">${escapeHtml(def.label)}</span>
+      ${type === "radio" ? "" : `<span class="picker__n" data-layer-n="${escapeHtml(def.key)}"></span>`}
+    </label>`;
+}
+
+function drawLayersPanel() {
+  const panel = document.getElementById("layers-panel");
+  const groups = (defs) => [...new Set(defs.map((d) => d.group))];
+  const vintage = layerMeta && layerMeta.tracts && layerMeta.tracts.vintage ? `${layerMeta.tracts.vintage} estimates` : "estimates";
+  panel.innerHTML = `
+    <div class="picker__quick"><button type="button" data-layers-clear>Turn all off</button></div>
+    <div class="picker__part">
+      <p class="picker__head">Shade the map by</p>
+      <p class="picker__note">One at a time.</p>
+      <div class="picker__group">
+        <label class="picker__item"><input type="radio" name="shade" value=""><span class="picker__text">Nothing</span></label>
+        ${layerRow("radio", shadeDef("zoning"), "shade")}
+        ${layerRow("radio", shadeDef("redlining"), "shade")}
+      </div>
+      ${groups(CENSUS).map((g) => `<div class="picker__group" role="group" aria-label="Census tracts: ${escapeHtml(g)}">
+          <p class="picker__subhead">Census tracts: ${escapeHtml(g.toLowerCase())}</p>
+          ${SHADES.filter((s) => s.census && s.group === g).map((s) => layerRow("radio", s, "shade")).join("")}
+        </div>`).join("")}
+      <p class="picker__note">Census figures are ${escapeHtml(vintage)} for each tract; hatching marks the least reliable ones.</p>
+    </div>
+    <div class="picker__part">
+      <p class="picker__head">Outline areas</p>
+      <p class="picker__note">Any number. The counts are projects inside, with your filters.</p>
+      ${groups(LINES).map((g) => {
+        const items = LINES.filter((l) => l.group === g);
+        return `<div class="picker__group">
+          <label class="picker__item picker__item--group">
+            <input type="checkbox" data-line-group="${escapeHtml(g)}">
+            <span class="picker__text">${escapeHtml(g)}</span>
+          </label>
+          ${items.map((l) => layerRow("checkbox", l)).join("")}
+        </div>`;
+      }).join("")}
+    </div>`;
+  syncLayersPanel();
+}
+
+function syncLayersPanel() {
+  const panel = document.getElementById("layers-panel");
+  const details = document.getElementById("layers");
+  if (!panel || !details || !details.open) return;
+  panel.querySelectorAll('input[name="shade"]').forEach((input) => { input.checked = input.value === (state.shade || ""); });
+  const shown = state.onMap || [];
+  LINES.forEach((l) => {
+    const input = panel.querySelector(`input[data-line="${CSS.escape(l.key)}"]`);
+    if (input) input.checked = state.lines.has(l.key);
+    const cell = panel.querySelector(`[data-layer-n="${CSS.escape(l.key)}"]`);
+    // A count only once the build has tagged projects for it; until then "0" would mislead.
+    const tagged = l.count && state.projects.some((p) => p[l.tag] !== undefined);
+    if (cell) cell.textContent = tagged ? numberWithCommas(shown.filter(l.count).length) : "";
+  });
+  panel.querySelectorAll("input[data-line-group]").forEach((box) => {
+    const items = LINES.filter((l) => l.group === box.dataset.lineGroup && layerReady(l.file));
+    const on = items.filter((l) => state.lines.has(l.key)).length;
+    box.checked = items.length > 0 && on === items.length;
+    box.indeterminate = on > 0 && on < items.length;
+  });
+}
+
+// Keeps the open panel inside the map, which is short on phones.
+function placeLayersPanel() {
+  const details = document.getElementById("layers");
+  const panel = document.getElementById("layers-panel");
+  const wrap = details.closest(".mapwrap") || document.body;
+  const top = panel.getBoundingClientRect().top;
+  const bottom = wrap.getBoundingClientRect().bottom;
+  panel.style.maxHeight = `${Math.max(200, Math.min(520, bottom - top - 12))}px`;
+}
+
+function wireLayers() {
+  const details = document.getElementById("layers");
+  const panel = document.getElementById("layers-panel");
+  if (!details) return;
+  details.addEventListener("toggle", () => {
+    if (!details.open) return;
+    drawLayersPanel();
+    placeLayersPanel();
+  });
+  panel.addEventListener("change", (e) => {
+    const input = e.target;
+    if (input.name === "shade") return setShade(input.value || null);
+    if (input.dataset.line) return setLine(input.dataset.line, input.checked);
+    if (input.dataset.lineGroup !== undefined) {
+      LINES.filter((l) => l.group === input.dataset.lineGroup && layerReady(l.file))
+        .forEach((l) => (input.checked ? state.lines.add(l.key) : state.lines.delete(l.key)));
+      syncLayers();
+      writeUrl();
+    }
+  });
+  panel.addEventListener("click", (e) => {
+    if (!e.target.closest("[data-layers-clear]")) return;
+    state.shade = null;
+    state.lines.clear();
+    syncLayers();
+    writeUrl();
+  });
+  // Closes like the filter checklists: a click outside, or Escape.
+  document.addEventListener("click", (e) => {
+    if (details.open && !e.composedPath().includes(details)) details.open = false;
+  });
+  details.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && details.open) {
+      e.stopPropagation();
+      details.open = false;
+      details.querySelector("summary").focus();
+    }
+  });
+}
+
+// ---- the key, the hover card and the saved image ----
+
+// Short credits for whatever layers are on, for the key and saved images.
+function layerCredits() {
+  const files = [...new Set([...(activeShade() ? [activeShade().file] : []), ...activeLines().map((l) => l.file)])];
+  const credit = {
+    tracts: () => `U.S. Census Bureau, ${(layerMeta.tracts && layerMeta.tracts.vintage) || "ACS"} 5-year estimates`,
+    zoning: () => "City of Spokane", "historic-districts": () => "City of Spokane", mfte: () => "City of Spokane",
+    centers: () => "City of Spokane", holc: () => "Mapping Inequality, University of Richmond (CC BY-NC)",
+    oz2: () => "U.S. Treasury", qct: () => `HUD${layerMeta.qct && layerMeta.qct.year ? ` (${layerMeta.qct.year})` : ""}`,
+    transit: () => "Spokane Transit",
+  };
+  return [...new Set(files.map((f) => credit[f]()))];
+}
+
+// Legend entries: for the shaded layer, its swatches and labels; for each
+// outline, its line style. Shared by the map key and the saved image.
+function shadeLegend() {
+  const s = activeShade();
+  if (!s) return null;
+  if (s.census) {
+    const breaks = breaksOf(s);
+    const colors = colorsOf(s);
+    const ticks = s.key === "growth" ? ["0%", "+5%", "+10%", "+25%"] : breaks.map((b) => layerNumber(b, s.unit, true));
+    return { kind: "ramp", title: s.label, colors, ticks, note: s.key === "growth" ? "Darkest grew most; tan lost people" : "Estimates; hatched where least reliable" };
+  }
+  if (s.key === "zoning") return { kind: "cats", title: "Zoning", items: ZONE_FAMILIES.map(([f, c]) => [f, LAYER_COLOR[c]]) };
+  return { kind: "cats", title: "1938 HOLC grades", items: HOLC_GRADES.map(([g, word, c]) => [`${g} “${word}”`, LAYER_COLOR[c]]) };
+}
+const lineLegend = () => activeLines().map((l) => ({ label: l.label, color: LAYER_COLOR[LINE_STYLE[l.key].color], dash: LINE_STYLE[l.key].dash,
+  fill: l.key === "transit" }));
+
+function layerKeyHtml() {
+  const sh = shadeLegend();
+  const lines = lineLegend();
+  if (!sh && !lines.length) return "";
+  let html = "";
+  if (sh && sh.kind === "ramp") {
+    html += `<div class="mapkey__layer"><p class="mapkey__title">${escapeHtml(sh.title)}</p>
+      <div class="ramp">${sh.colors.map((c) => `<span style="background:${c}"></span>`).join("")}</div>
+      <div class="ramp__ticks">${sh.ticks.map((t, i) => `<span style="left:${(i + 1) * 20}%">${escapeHtml(t)}</span>`).join("")}</div>
+      <p class="mapkey__note">${escapeHtml(sh.note)}</p></div>`;
+  } else if (sh) {
+    html += `<div class="mapkey__layer"><p class="mapkey__title">${escapeHtml(sh.title)}</p>
+      <ul class="mapkey__cats">${sh.items.map(([label, c]) => `<li><span class="mapkey__swatch" style="background:${c}"></span>${escapeHtml(label)}</li>`).join("")}</ul></div>`;
+  }
+  if (lines.length) {
+    html += `<ul class="mapkey__lines">${lines.map((l) => `<li><span class="mapkey__line${l.dash ? (l.dash[0] < 1 ? " is-dotted" : " is-dashed") : ""}${l.fill ? " is-tint" : ""}" style="color:${l.color}"></span>${escapeHtml(l.label)}</li>`).join("")}</ul>`;
+  }
+  return html;
+}
+
+// What's under the pointer, in words: the shaded layer's value there and the
+// names of any outlined areas.
+function areaLines(features) {
+  const out = [];
+  const seen = new Set();
+  features.forEach((f) => {
+    const p = f.properties;
+    const src = f.source.replace(/^lyr-/, "");
+    const key = `${src}:${p.geoid || p.name || p.family || p.label || p.area || p.part || ""}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    const s = activeShade();
+    if (src === "tracts" && s && s.census) {
+      const low = p[`lr_${s.m}`] === 1 ? " <span class=\"tip__low\">(less reliable)</span>" : "";
+      out.push(`<b>${escapeHtml(p.name)}</b><br>${escapeHtml(s.label)}: ${escapeHtml(layerNumber(p[s.m], s.unit))}${escapeHtml(layerMargin(p[`${s.m}Moe`], s.unit))}${low}`);
+    } else if (src === "zoning") out.push(`Zoning: <b>${escapeHtml(p.family)}</b>`);
+    else if (src === "holc") {
+      const g = HOLC_GRADES.find(([x]) => x === p.grade);
+      out.push(`1938 grade <b>${escapeHtml(p.grade)}</b>${g ? ` (“${escapeHtml(g[1])}”)` : ""}${p.label ? ` · area ${escapeHtml(p.label)}` : ""}`);
+    } else if (src === "historic-districts") out.push(`<b>${escapeHtml(p.name)}</b> Local Historic District`);
+    else if (src === "mfte") out.push(`MFTE: <b>${escapeHtml(p.name)}</b> (${escapeHtml(p.terms)})`);
+    else if (src === "oz2") out.push("<b>Opportunity Zone</b> from Jan. 1, 2027");
+    else if (src === "qct") out.push(`<b>HUD Qualified Census Tract</b>${p.year ? ` (${p.year})` : ""}`);
+    else if (src === "centers") out.push(`<b>${escapeHtml(p.name)}</b>${p.kind ? ` · ${escapeHtml(p.kind)}` : ""}`);
+    else if (src === "transit") out.push(p.part === "route" ? `Frequent bus: <b>Route ${escapeHtml(p.route)}</b>` : "Within ¼ mile of a frequent bus stop");
+  });
+  return out;
+}
+
+function showAreaTip(e) {
+  const ids = hoverLayerIds();
+  const hideTip = () => { if (areaTip.popup) areaTip.popup.remove(); };
+  if (!ids.length || picking) return hideTip();
+  if (map.queryRenderedFeatures(e.point, { layers: ["project-hit"] }).length) return hideTip(); // the dots win
+  const lines = areaLines(map.queryRenderedFeatures(e.point, { layers: ids }));
+  if (!lines.length) return hideTip();
+  areaTip.popup ||= new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10, maxWidth: "260px", className: "tip tip--area" });
+  areaTip.popup.setLngLat(e.lngLat).setHTML(lines.join("<br>")).addTo(map);
+}
+
+function wireAreaTips() {
+  const canHover = window.matchMedia("(hover: hover)").matches;
+  if (canHover) {
+    map.on("mousemove", showAreaTip);
+    map.getCanvas().addEventListener("mouseleave", () => { if (areaTip.popup) areaTip.popup.remove(); });
+  } else {
+    // Phones: a tap on the map (not on a dot) says what's there.
+    map.on("click", (e) => {
+      if (picking || Date.now() - pickedAt < 400) return;
+      showAreaTip(e);
+    });
+  }
+}
+
+// Saved map image: how much room the layer legend needs (output pixels per
+// 1,000 of width), and drawing it.
+const exportRows = () => (activeShade() ? 1 : 0) + (activeLines().length ? 1 : 0);
+const exportBand = () => ({ top: BAND.top, bottom: BAND.bottom + (exportRows() ? exportRows() * 34 + 17 : 0) });
+
+function drawLayerLegend(ctx, u, side, outW, y0) {
+  const type = Share.brandFonts();
+  let y = y0;
+  const sh = shadeLegend();
+  if (sh) {
+    y += 34 * u;
+    ctx.font = `600 ${14 * u}px ${type.sans}`;
+    ctx.fillStyle = BRAND.ink;
+    const title = fitText(ctx, sh.title, outW * 0.42);
+    ctx.fillText(title, side, y - 6 * u);
+    let x = side + ctx.measureText(title).width + 16 * u;
+    if (sh.kind === "ramp") {
+      const w = 40 * u, h = 10 * u;
+      sh.colors.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(x + i * w, y - 15 * u, w, h); });
+      ctx.font = `500 ${11 * u}px ${type.sans}`;
+      ctx.fillStyle = BRAND["ink-2"];
+      ctx.textAlign = "center";
+      sh.ticks.forEach((t, i) => ctx.fillText(t, x + (i + 1) * w, y + 8 * u));
+      ctx.textAlign = "left";
+      ctx.font = `500 ${11.5 * u}px ${type.sans}`;
+      ctx.fillStyle = BRAND.muted;
+      ctx.fillText(fitText(ctx, sh.note, outW - side - (x + 5 * w + 14 * u)), x + 5 * w + 14 * u, y - 6 * u);
+    } else {
+      ctx.font = `500 ${13 * u}px ${type.sans}`;
+      sh.items.forEach(([label, c]) => {
+        const w = 16 * u + ctx.measureText(label).width + 16 * u;
+        if (x + w > outW - side) return;
+        ctx.fillStyle = c;
+        ctx.fillRect(x, y - 16 * u, 11 * u, 11 * u);
+        ctx.fillStyle = BRAND.ink;
+        ctx.fillText(label, x + 16 * u, y - 6 * u);
+        x += w;
+      });
+    }
+  }
+  const lines = lineLegend();
+  if (lines.length) {
+    y += 34 * u;
+    let x = side;
+    ctx.font = `500 ${13 * u}px ${type.sans}`;
+    lines.forEach((l) => {
+      const w = 24 * u + ctx.measureText(l.label).width + 18 * u;
+      if (x + w > outW - side) return;
+      if (l.fill) { ctx.fillStyle = withAlpha(l.color, 0.18); ctx.fillRect(x, y - 16 * u, 18 * u, 12 * u); }
+      ctx.strokeStyle = l.color;
+      ctx.lineWidth = 2.2 * u;
+      ctx.setLineDash(l.dash ? (l.dash[0] < 1 ? [1.2 * u, 3.5 * u] : [6 * u, 3 * u]) : []);
+      ctx.beginPath(); ctx.moveTo(x, y - 10 * u); ctx.lineTo(x + 18 * u, y - 10 * u); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = BRAND.ink;
+      ctx.fillText(l.label, x + 24 * u, y - 6 * u);
+      x += w;
+    });
+  }
+}
+
 // ---- saving the map as an image ------------------------------------------------
 //
 // "Save image" offers the current view or three sizes made for social posts.
@@ -2243,10 +2858,16 @@ async function renderMapCopy(cssW, cssH, ratio, pad) {
     preserveDrawingBuffer: true, pixelRatio: ratio, fadeDuration: 0,
     bounds: map.getBounds(), fitBoundsOptions: { padding: pad },
   });
+  // The hatch for unreliable Census estimates is an image the style names
+  // but doesn't carry; give the copy its own.
+  copy.on("styleimagemissing", (e) => {
+    if (e.id === "hatch" && !copy.hasImage("hatch")) copy.addImage("hatch", hatchImage(), { pixelRatio: 2 });
+  });
   await new Promise((resolve, reject) => {
     copy.once("load", resolve);
     setTimeout(() => reject(new Error("the map copy didn't load")), 15000);
   });
+  setShadeOpacity(copy, false); // the copy is always the plain map
   // Plain-map label halos, in case the visible map is on satellite.
   labelLayers.forEach((layer) => {
     try {
@@ -2279,7 +2900,8 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
   ctx.fillRect(0, 0, outW, outH);
   ctx.drawImage(mapCanvas, 0, 0, outW, outH);
 
-  const top = BAND.top * u, bottom = BAND.bottom * u, side = 32 * u;
+  const band = exportBand();
+  const top = band.top * u, bottom = band.bottom * u, side = 32 * u;
   ctx.fillStyle = withAlpha(BRAND.paper, 0.95);
   ctx.fillRect(0, 0, outW, top);
   ctx.fillRect(0, outH - bottom, outW, bottom);
@@ -2331,10 +2953,13 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
     ctx.fillText(label, x + 14 * u, ky);
     x += w;
   });
+  // The map layers that are on: the shaded layer's key, then the outlines.
+  drawLayerLegend(ctx, u, side, outW, ky);
 
   // Credits: the site and data date, then the map's required credit.
   ctx.fillStyle = BRAND.muted;
   ctx.font = `500 ${12.5 * u}px ${type.sans}`;
+  if (exportRows()) ctx.fillText(fitText(ctx, `Layers: ${layerCredits().join("; ")}`, outW - 2 * side), side, outH - 47 * u);
   ctx.fillText(fitText(ctx, `${Share.creditLine(state.builtAt)} · Circle size shows homes`, outW - 2 * side), side, outH - 30 * u);
   ctx.fillText(fitText(ctx, MAP_CREDIT, outW - 2 * side), side, outH - 13 * u);
   return out;
@@ -2358,7 +2983,8 @@ async function saveMapImage(size, button) {
     // gets a ~540-wide map at twice the detail.
     const ratio = size.w ? 2 : Math.min(2, window.devicePixelRatio || 1);
     const cssW = Math.round(outW / ratio), cssH = Math.round(outH / ratio);
-    const pad = { top: (BAND.top * outW / 1000) / ratio + 8, bottom: (BAND.bottom * outW / 1000) / ratio + 8, left: 12, right: 12 };
+    const band = exportBand();
+    const pad = { top: (band.top * outW / 1000) / ratio + 8, bottom: (band.bottom * outW / 1000) / ratio + 8, left: 12, right: 12 };
     copy = await renderMapCopy(cssW, cssH, ratio, pad);
     const inView = (state.onMap || []).filter((p) => Number.isFinite(p.lng) && copy.bounds.contains([p.lng, p.lat]));
     const image = composeMapImage(copy.canvas, outW, outH, inView);
@@ -2518,6 +3144,7 @@ function startMap() {
   map.on("load", () => {
     const styleLayers = map.getStyle().layers || [];
     const firstSymbol = styleLayers.find((l) => l.type === "symbol");
+    firstLabelId = firstSymbol ? firstSymbol.id : null;
 
     labelLayers = styleLayers
       .filter((l) => l.type === "symbol" && map.getLayoutProperty(l.id, "text-field"))
@@ -2579,6 +3206,8 @@ function startMap() {
       paint: { "circle-radius": radiusExpression(8), "circle-opacity": 0 },
     });
     addOverlayLayers();
+    wireAreaTips();
+    syncLayers();
     lastMapKey = "";
     markSelected();
     drawInView();
@@ -2729,6 +3358,8 @@ async function start() {
   wirePills();
   wireChips();
   wireSaveMap();
+  wireLayers();
+  loadLayerMeta();
   document.getElementById("inview-only").addEventListener("change", (e) => {
     setInViewOnly(e.target.checked);
     render();

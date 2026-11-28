@@ -2537,3 +2537,89 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
 b.num { font-weight: 700; font-variant-numeric: lining-nums tabular-nums; }
 .lede b.num, .standfirst b.num, .article__dek b.num { color: var(--ink); }
 .spine__key b.num, .figure__title b.num { font-weight: 800; }
+
+/* ---------- map layers (issue #5) ----------
+   The Layers button sits with the base map switch; its panel reuses the
+   filter checklist parts (.picker__panel, __group, __item). */
+.layers { position: relative; }
+.layers[hidden] { display: none; }
+.layers__button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 11px 0 9px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  list-style: none;
+}
+.layers__button::-webkit-details-marker { display: none; }
+.layers__button .icon { width: 18px; height: 18px; }
+.layers[open] .layers__button { background: var(--paper-2); }
+.layers.is-on .layers__button { font-weight: 600; box-shadow: inset 0 -2px 0 var(--ink); }
+.layers__count {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--ink);
+  color: var(--surface);
+  font-family: var(--sans);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.layers__count[hidden] { display: none; }
+.layers__panel { width: min(330px, calc(100vw - 24px)); }
+.picker__subhead {
+  margin: 2px 0 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.picker__item input[type="radio"] { border-radius: 50%; }
+.picker__item input:disabled + .picker__text { color: var(--muted); }
+
+/* Layer legends in the map key. */
+.mapkey__layer { margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--rule); }
+.ramp { display: grid; grid-template-columns: repeat(5, 1fr); height: 10px; }
+.ramp span { display: block; }
+.ramp__ticks { position: relative; height: 15px; font-size: var(--fs-2xs); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ramp__ticks span { position: absolute; top: 2px; transform: translateX(-50%); white-space: nowrap; }
+.mapkey__note { margin: 2px 0 0; font-size: var(--fs-xs); color: var(--muted); }
+.mapkey__cats, .mapkey__lines { display: grid; gap: 3px; margin: 6px 0 0; padding: 0; list-style: none; }
+.mapkey__lines { margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--rule); }
+.mapkey__cats li, .mapkey__lines li { display: flex; align-items: center; gap: 7px; }
+.mapkey__swatch { flex: none; width: 12px; height: 12px; }
+.mapkey__line { flex: none; width: 18px; height: 0; border-top: 2.5px solid currentColor; }
+.mapkey__line.is-dashed { border-top-style: dashed; }
+.mapkey__line.is-dotted { border-top: 3px dotted currentColor; }
+.mapkey__line.is-tint { height: 7px; background: color-mix(in srgb, currentColor 22%, transparent); }
+.tip__low { color: var(--muted); }
+
+/* Short portrait phones hide the key's title; a layer's legend needs its own. */
+@media (max-width: 860px) and (max-height: 700px) and (min-height: 521px) {
+  .mapkey__layer .mapkey__title { display: block; }
+  .mapkey__note { display: none; }
+}
+/* The open panel reaches down past the map key; keep it on top. */
+.maptools:has(.layers[open]) { z-index: 6; }
+/* Narrow phones: the map's top-left tools must clear the zoom buttons. */
+@media (max-width: 420px) {
+  .maptools { gap: 6px; }
+  .basemap button { padding: 0 10px; }
+  .layers__button { padding: 0 9px 0 8px; gap: 5px; }
+}
+@media (max-width: 370px) {
+  .layers__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* Phones: the panel opens from the toolbar's left edge, so it fits the screen. */
+@media (max-width: 600px) {
+  .layers { position: static; }
+  .layers__panel { left: 0; width: min(330px, calc(100vw - 20px)); }
+}
+/* Radio rows aren't under a group box, so they aren't indented. */
+.layers__panel .picker__item:has(input[type="radio"]) { padding-left: 0; }

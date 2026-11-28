@@ -175,6 +175,13 @@
         <button type="button" data-basemap="map" aria-pressed="true">Map</button>
         <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
       </div>
+      <!-- Optional map layers: zoning, Census figures, designated areas (app.js,
+           "Map layers"; issue #5). Hidden until layers/meta.json loads. The panel
+           uses the filters' checklist parts. -->
+      <details class="layers" id="layers" hidden>
+        <summary class="mapbtn layers__button"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-layers"></use></svg><span class="layers__label">Layers</span><span class="layers__count" id="layers-count"></span></summary>
+        <div class="picker__panel layers__panel" id="layers-panel" role="group" aria-label="Map layers"></div>
+      </details>
       <!-- Saves the map as a picture (app.js, "Saving the map as an image"). -->
       <button type="button" class="mapbtn iconbtn" id="save-map" aria-label="Save the map as an image" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-camera"></use></svg></button>
       <button type="button" class="mapbtn iconbtn" id="how-to-read" aria-label="How to read this map" aria-expanded="false" aria-controls="howto"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-help"></use></svg></button>
@@ -197,6 +204,8 @@
       <h3 class="howto__sub">Getting around</h3>
       <p class="howto__hover">Hover over a circle for its name, size and address; click it to open the project.</p>
       <p class="howto__touch">Tap a circle to open the project.</p>
+      <h3 class="howto__sub">Layers</h3>
+      <p>The Layers button shades the map by zoning, Census figures or the 1938 redlining grades, one at a time, and outlines areas such as historic districts and Opportunity Zones. They’re off until you turn them on, and the key explains whatever is showing.</p>
       <p class="howto__more"><a href="/about">How it works and what it leaves out <span aria-hidden="true">→</span></a></p>
     </section>
 

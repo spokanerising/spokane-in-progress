@@ -2,25 +2,47 @@
    change brand.json and run  python3 tools/make_brand.py  */
 
 :root {
-  --brand:         #126781;   /* Spokane Rising teal. Logo; the site's accent from phase 2 on. */
-  --ink:           #121212;   /* Body text, headlines, rules, chart axes. */
-  --ink-2:         #3a3936;   /* Secondary text, single-series chart marks. */
-  --muted:         #6b6964;   /* Notes, captions, labels. */
-  --paper:         #f9f8f5;   /* Page background: between cream and white. */
-  --paper-2:       #f1efea;   /* Hover and selected rows; locator land on cards. */
-  --paper-3:       #e9e6df;   /* Loading shimmer highlight. */
-  --rule:          #d9d5cd;   /* Hairlines and chart gridlines. */
-  --link:          #126781;   /* Links, focus ring, Near circle on the map. */
-  --accent:        #126781;   /* Top rule and kickers. Pressed and selected controls are ink, not teal (issue #42). */
-  --chart:         #126781;   /* Single-series chart marks (middle housing, shares). Never a stage color. */
-  --surface:       #ffffff;   /* Menus, fields, buttons, white edges on map dots. */
-  --other:         #b6b1a7;   /* 'Other' category in charts; outline of the city on cards. */
-  --map-bg:        #e8e5de;   /* Map background before tiles load. */
-  --locator-hood:  #d4cfc5;   /* The project's neighborhood on share cards. */
-  --track-off:     #e5e2da;   /* Stages not yet reached on the share-card track. */
-  --alert:         #9b2c12;   /* Editor warnings and armed buttons. */
-  --print-ink:     #000000;   /* Rules when printing. */
-  --print-muted:   #444444;   /* Secondary text when printing. */
+  --brand:          #126781;   /* Spokane Rising teal. Logo; the site's accent from phase 2 on. */
+  --ink:            #121212;   /* Body text, headlines, rules, chart axes. */
+  --ink-2:          #3a3936;   /* Secondary text, single-series chart marks. */
+  --muted:          #6b6964;   /* Notes, captions, labels. */
+  --paper:          #f9f8f5;   /* Page background: between cream and white. */
+  --paper-2:        #f1efea;   /* Hover and selected rows; locator land on cards. */
+  --paper-3:        #e9e6df;   /* Loading shimmer highlight. */
+  --rule:           #d9d5cd;   /* Hairlines and chart gridlines. */
+  --link:           #126781;   /* Links, focus ring, Near circle on the map. */
+  --accent:         #126781;   /* Top rule and kickers. Pressed and selected controls are ink, not teal (issue #42). */
+  --chart:          #126781;   /* Single-series chart marks (middle housing, shares). Never a stage color. */
+  --surface:        #ffffff;   /* Menus, fields, buttons, white edges on map dots. */
+  --other:          #b6b1a7;   /* 'Other' category in charts; outline of the city on cards. */
+  --map-bg:         #e8e5de;   /* Map background before tiles load. */
+  --locator-hood:   #d4cfc5;   /* The project's neighborhood on share cards. */
+  --track-off:      #e5e2da;   /* Stages not yet reached on the share-card track. */
+  --alert:          #9b2c12;   /* Editor warnings and armed buttons. */
+  --print-ink:      #000000;   /* Rules when printing. */
+  --print-muted:    #444444;   /* Secondary text when printing. */
+  --layer-seq-1:    #eef1f3;   /* Map layers (issue #5): Census shading, lowest fifth. A cool slate ramp, so the warm-to-violet stage dots stay distinct on top. */
+  --layer-seq-2:    #d2dbe2;   /* Census shading, second fifth. */
+  --layer-seq-3:    #aabbc8;   /* Census shading, middle fifth. */
+  --layer-seq-4:    #7c94a8;   /* Census shading, fourth fifth. */
+  --layer-seq-5:    #4f6a80;   /* Census shading, highest fifth. */
+  --layer-loss:     #cdbfae;   /* Census shading: tracts that lost people, 2010-2020. */
+  --layer-nodata:   #e4e1da;   /* Census shading: no estimate for the tract. */
+  --zone-res:       #efe2b4;   /* Zoning layer: residential. */
+  --zone-cc:        #d9c4e2;   /* Zoning layer: centers and corridors. */
+  --zone-com:       #ebbca6;   /* Zoning layer: commercial and mixed use. */
+  --zone-dt:        #c99aa2;   /* Zoning layer: downtown. */
+  --zone-ind:       #c2c8d0;   /* Zoning layer: industrial. */
+  --holc-a:         #8fb07f;   /* 1938 HOLC layer: grade A. Muted versions of the originals' green, blue, yellow and red, which readers know. */
+  --holc-b:         #8fbcc4;   /* 1938 HOLC layer: grade B. */
+  --holc-c:         #e3d07f;   /* 1938 HOLC layer: grade C. */
+  --holc-d:         #d99595;   /* 1938 HOLC layer: grade D. */
+  --line-historic:  #7a4a1e;   /* Outline layer: local historic districts (solid). */
+  --line-mfte:      #23558c;   /* Outline layer: MFTE areas (solid for the Targeted Investment Area, dotted for the Emphasis Area). */
+  --line-oz:        #9a2f6a;   /* Outline layer: Opportunity Zones 2.0 (long dashes). */
+  --line-qct:       #4d4d4d;   /* Outline layer: HUD Qualified Census Tracts (dots). */
+  --line-centers:   #5b4b8a;   /* Outline layer: Comprehensive Plan centers and corridors (short dashes). */
+  --line-transit:   #2e7d5b;   /* Outline layer: frequent bus routes and the area within 1/4 mile of their stops. */
 
   /* Stages, in order. The map and charts get these from projects.json; CSS uses them for keys and samples. */
   --stage-0: #b5771a;   /* Pre-Application */
