@@ -1,0 +1,37 @@
+# Temporary (issue #5): runs tools/layers_discover.py on the runner and commits
+# data/layers-discovery.json back to the branch. Deleted before the layers PR
+# merges.
+name: Layers discovery (temporary)
+
+on:
+  push:
+    branches: [layers-data]
+    paths:
+      - "tools/layers_discover.py"
+      - ".github/workflows/layers-discover.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet openpyxl
+      - run: python3 tools/layers_discover.py
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+      - name: Save the findings
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data/layers-discovery.json
+          git diff --staged --quiet && exit 0
+          git commit -m "Layers discovery results"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push
