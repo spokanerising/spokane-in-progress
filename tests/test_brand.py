@@ -79,6 +79,9 @@ for key, rel in branding.BRAND["logo"].items():
     s = open(os.path.join(REPO, rel), encoding="utf-8").read()
     check(s.lstrip().startswith("<svg") and "<text" not in s and "font-family" not in s, f"{rel} must be outlines only (no <text>), so it never depends on a font")
     check(C["brand"] in s, f"{rel} should use the brand color {C['brand']}")
+# The secondary logo has no background: inside the frame stays transparent.
+main_logo = open(os.path.join(REPO, branding.BRAND["logo"]["main"]), encoding="utf-8").read()
+check(not re.search(r'<rect(?![^>]*fill="none")[^>]*width="1000"', main_logo), "brand/logo.svg should have no background fill (keep it transparent)")
 
 # ---- contrast -----------------------------------------------------------------
 def lin(h):
@@ -151,6 +154,15 @@ with sync_playwright() as pw:
         check(got["ink"] == C["ink"] and got["paper"] == C["paper"], f"{path}: brand.css not loaded ({got})")
         check(got["stage0"] == branding.STAGES[0]["color"], f"{path}: stage colors missing from brand.css")
         check(got["chevron"] > 50, f"{path}: icon variables missing")
+    # The header logo shows the page through its frame.
+    pg.goto(SITE + "/")
+    pg.wait_for_selector(".lockup__img")
+    pg.wait_for_function("() => document.querySelector('.lockup__img').complete")
+    box = pg.locator(".lockup__img").bounding_box()
+    from PIL import Image
+    import io
+    shot = Image.open(io.BytesIO(pg.screenshot(clip={"x": box["x"] + box["width"] * 0.3, "y": box["y"] + box["height"] * 0.25, "width": 2, "height": 2}))).convert("RGB")
+    check(shot.getpixel((0, 0)) == branding.rgb("paper"), f"inside the logo's frame should be the page color, got {shot.getpixel((0, 0))}")
     # The map's colors come from brand.css too.
     pg.goto(SITE + "/")
     pg.wait_for_function("() => typeof map !== 'undefined' && map && map.getLayer && map.getLayer('project-dot')", timeout=15000)

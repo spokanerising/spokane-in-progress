@@ -112,7 +112,9 @@ def main():
         f.write(f'{head}<rect width="1000" height="1000" fill="{teal}"/><path fill="#fff" d="{p}"/></svg>')
     # Frame geometry from the Affinity export: rect 14,13 973x972, 75px stroke.
     with open(os.path.join(REPO, "brand", "logo.svg"), "w") as f:
-        f.write(f'{head}<rect width="1000" height="1000" fill="#fff"/><rect x="14" y="13" width="973" height="972" fill="none" stroke="{teal}" stroke-width="75"/>'
+        # No background: the inside of the frame stays transparent, as in the
+        # original artwork, so the page shows through.
+        f.write(f'{head}<rect x="14" y="13" width="973" height="972" fill="none" stroke="{teal}" stroke-width="75"/>'
                 f'<path fill="{teal}" d="{s}"/></svg>')
     with open(os.path.join(REPO, "brand", "logo-mark.svg"), "w") as f:
         f.write(mark_svg(teal))

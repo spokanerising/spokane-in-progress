@@ -63,12 +63,15 @@ def rasterize(jobs):
 
 def main():
     mark, mark16, logo = read("logo-mark.svg"), read("logo-mark-16.svg"), read("logo.svg")
+    # Home-screen icons must be opaque (iPhones fill see-through parts with
+    # black), so the transparent logo goes on a white square for each.
+    full = placed(logo, 1.0)
     apple = placed(logo, 0.86)      # room for iOS's rounded corners
     maskable = placed(logo, 0.56)   # inside Android's crop circle (radius 40% of the icon)
 
     open(os.path.join(ROOT, "favicon.svg"), "w").write(mark + "\n")
     p16, p32, p48, p180, p192, p512, pmask = rasterize(
-        [(mark16, 16), (mark, 32), (mark, 48), (apple, 180), (logo, 192), (logo, 512), (maskable, 512)])
+        [(mark16, 16), (mark, 32), (mark, 48), (apple, 180), (full, 192), (full, 512), (maskable, 512)])
 
     ims = [Image.open(io.BytesIO(p)).convert("RGBA") for p in (p16, p32, p48)]
     ims[2].save(os.path.join(ROOT, "favicon.ico"), format="ICO", sizes=[(16, 16), (32, 32), (48, 48)],
