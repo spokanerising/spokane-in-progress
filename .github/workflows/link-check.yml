@@ -1,0 +1,14 @@
+name: Link check (one-off, issue #41)
+on:
+  push:
+    branches: [link-check]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 tools/link-check/check_links.py tools/link-check/links.json
