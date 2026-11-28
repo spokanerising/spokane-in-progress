@@ -113,6 +113,10 @@ with sync_playwright() as pw:
     pb, fb = pop.bounding_box(), final.bounding_box()
     check(pb["x"] >= 0 and pb["x"] + pb["width"] <= 1280 and abs(pb["y"] - (fb["y"] + fb["height"])) < 12, f"popover under the term {pb} {fb}")
     pg.screenshot(path=os.path.join(SHOTS, "glossary-popover.png"))
+    # Still open when Escape is pressed: if something closed it first (the page
+    # shifting as a picture loads), Escape would close the project instead, and
+    # the failure would blame the wrong thing (issue #41).
+    check(pop.is_visible() and final.get_attribute("aria-expanded") == "true", "popover still open before Escape")
     pg.keyboard.press("Escape")
     pg.wait_for_selector(".glosspop", state="hidden")
     check(pg.locator("#detail").is_visible(), "Escape closes the popover, not the project")
