@@ -133,6 +133,12 @@ a:hover { text-decoration-thickness: 2px; }
   .lockup { align-items: center; }
   .lockup__img { width: 44px; }
 }
+/* The smallest phones (320px, the first iPhone SE): one notch down so the
+   site name stays on one line and the map keeps its height (issue #41). */
+@media (max-width: 340px) {
+  .lockup__img { width: 40px; }
+  .masthead h1 { font-size: var(--fs-h1); }
+}
 @media (max-height: 520px) and (max-width: 900px) {
   .lockup { align-items: center; }
   .lockup__img { width: 34px; }
@@ -659,8 +665,6 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 }
 
 .sharebtn:hover { text-decoration: underline; text-underline-offset: 3px; }
-.detail__share { margin: -8px 0 18px; }
-@media (max-width: 860px) { .detail__share { margin: -16px 0 12px; } }
 
 /* A row whose dot is hovered on the map. */
 .card.is-hover { background: var(--paper-2); }
@@ -903,11 +907,6 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
 .specs dd { margin: 0; overflow-wrap: anywhere; }
 
-.specs--quiet { border-top-color: var(--rule); font-size: var(--fs-ui); color: var(--ink-2); }
-.permits { list-style: none; margin: 0; padding: 0; }
-.permits li { margin: 0 0 6px; line-height: 1.4; }
-.permits a { font-weight: 600; }
-.permits__status { white-space: nowrap; }
 
 .detail__note {
   margin: 22px 0 0;
@@ -1157,7 +1156,7 @@ body.page {
 }
 
 .stat { display: grid; gap: 4px; border-top: 2px solid var(--ink); padding-top: 8px; }
-.stat b { font-family: var(--sans); font-weight: 800; font-size: var(--fs-num); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+.stat > b { font-family: var(--sans); font-weight: 800; font-size: var(--fs-num); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
 .stat span { font-size: var(--fs-ui); line-height: 1.35; color: var(--ink-2); }
 
 .section { margin-top: 44px; }
@@ -2537,4 +2536,4 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
    in serif lines and sans data alike. Dates, addresses and codes stay plain. */
 b.num { font-weight: 700; font-variant-numeric: lining-nums tabular-nums; }
 .lede b.num, .standfirst b.num, .article__dek b.num { color: var(--ink); }
-.spine__key b.num, .figure__title b.num, .stat b.num { font-weight: 800; }
+.spine__key b.num, .figure__title b.num { font-weight: 800; }

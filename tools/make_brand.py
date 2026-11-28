@@ -3,7 +3,7 @@
   brand.css          the colors, stage colors and fonts as CSS variables, plus
                      the small icons drawn inside the CSS (they can't use variables)
   site.webmanifest   theme and background colors
-  *.html             each page's theme-color, web-font link and header logo
+  *.html             each page's theme-color, web-font preloads and link, and header logo
 
 Run it after any change to brand/brand.json:
 
@@ -84,7 +84,18 @@ def manifest(text):
 
 
 THEME = re.compile(r'(<meta name="theme-color" content=")#[0-9a-fA-F]{3,6}(">)')
-WEBFONTS = re.compile(r'(<link href=")https://fonts\.googleapis\.com/css2\?[^"]*(" rel="stylesheet">)')
+# The web-font block: preloads for the first files, then the stylesheet. Also
+# matches the old Google Fonts block (preconnects + css2 link) it replaced.
+WEBFONTS = re.compile(
+    r'(?:<link rel="preconnect" href="https://fonts\.g[^"]*"(?: crossorigin)?>\n)*'
+    r'(?:<link rel="preload" href="[^"]*\.woff2" as="font" type="font/woff2" crossorigin>\n)*'
+    r'<link href="[^"]*(?:fonts\.googleapis\.com/css2\?[^"]*|/fonts\.css)" rel="stylesheet">')
+
+
+def font_block():
+    f = branding.BRAND["fonts"]
+    lines = [f'<link rel="preload" href="{u}" as="font" type="font/woff2" crossorigin>' for u in f.get("preload", [])]
+    return "\n".join(lines + [f'<link href="{f["webfonts"]}" rel="stylesheet">'])
 LOGO_LINK = re.compile(r'(<a class="lockup__logo" href=")[^"]*(")')
 LOGO_IMG = re.compile(r'(<img class="lockup__img" src=")(/?)[^"]*(" alt=")[^"]*(")')
 
@@ -92,7 +103,7 @@ LOGO_IMG = re.compile(r'(<img class="lockup__img" src=")(/?)[^"]*(" alt=")[^"]*(
 def page(text):
     b = branding.BRAND
     text = THEME.sub(lambda m: m.group(1) + branding.COLORS[b["browser"]["themeColor"]] + m.group(2), text)
-    text = WEBFONTS.sub(lambda m: m.group(1) + b["fonts"]["webfonts"] + m.group(2), text)
+    text = WEBFONTS.sub(lambda m: font_block(), text)
     # The header logo: its link, file and name come from brand.json.
     text = LOGO_LINK.sub(lambda m: m.group(1) + b["parent"]["url"] + m.group(2), text)
     text = LOGO_IMG.sub(lambda m: m.group(1) + m.group(2) + b["logo"]["main"] + m.group(3) + b["parent"]["name"] + m.group(4), text)

@@ -23,7 +23,7 @@
   },
 
   "fonts": {
-    "_about": "Chosen Nov. 27, 2026 (issue #42): Literata serif for headlines and reading lines over Libre Franklin for data and controls, as at The Economist, The Upshot and the FT. 'webfonts' loads them on the site; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
+    "_about": "Chosen Nov. 27, 2026 (issue #42): Literata serif for headlines and reading lines over Libre Franklin for data and controls, as at The Economist, The Upshot and the FT. 'webfonts' is the site's own copy (vendor/, issue #41) and 'preload' the two files every page needs first; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
     "display": { "family": "Literata, Georgia, \"Times New Roman\", serif", "weight": 600, "stretch": "100%", "emStyle": "normal", "emWeight": 600,
                  "use": "Headlines: the site name, project names, the headline sentence, page and section heads." },
     "deck":    { "family": "Literata, Georgia, \"Times New Roman\", serif", "weight": 400,
@@ -51,7 +51,8 @@
       "caps":  { "value": "0.07em",   "use": "Small uppercase labels." },
       "tight": { "value": "-0.012em", "use": "Serif headlines." }
     },
-    "webfonts": "https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Libre+Franklin:wght@400;500;600;700;800&display=swap",
+    "webfonts": "/vendor/fonts-5.3.0/fonts.css",
+    "preload": ["/vendor/fonts-5.3.0/literata-latin-opsz-normal.woff2", "/vendor/fonts-5.3.0/libre-franklin-latin-wght-normal.woff2"],
     "imageFonts": [
       { "family": "Literata", "weight": "200 900", "style": "normal", "package": "@fontsource-variable/literata", "file": "literata-latin-opsz-normal.woff2" },
       { "family": "Libre Franklin", "weight": 400, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-400-normal.woff2" },

@@ -49,6 +49,10 @@ with sync_playwright() as pw:
     pg.goto(f"{SITE}/stats.html")
     pg.wait_for_selector("#stats .stat")
     check(pg.locator("#stats .stat").count() == 5, "five big numbers")
+    # A number inside a tile's label (the middle-housing share) stays label-sized.
+    sizes = pg.evaluate("""() => [...document.querySelectorAll('#stats .stat span b')].map(b =>
+        [b.textContent, parseFloat(getComputedStyle(b).fontSize), parseFloat(getComputedStyle(b.parentElement).fontSize)])""")
+    check(sizes and all(abs(a - b) < 0.5 for _, a, b in sizes), f"label numbers are label-sized {sizes}")
     for c in ["type", "district", "hood", "quarter", "size"]:
         check(pg.locator(f"#chart-{c} .chart__title").count() == 1, f"chart {c} drawn")
         check(pg.locator(f"#chart-{c} .chart__tools button").count() == 1, f"chart {c} has its download")

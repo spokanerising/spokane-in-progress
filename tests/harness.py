@@ -119,8 +119,9 @@ def wire(page, site_dir, geocode_fail=False):
     # Satellite tiles: a plain grey square (the project page's satellite view
     # asks for them every time a project opens).
     page.route("https://server.arcgisonline.com/**", lambda r: r.fulfill(status=200, body=GREY_TILE, content_type="image/png"))
-    page.route("https://fonts.googleapis.com/**", lambda r: r.fulfill(status=200, body="", content_type="text/css"))
-    page.route("https://fonts.gstatic.com/**", lambda r: r.abort())
+    # Fonts come from the site's own copy too (vendor/fonts-*, issue #41).
+    page.route("https://fonts.googleapis.com/**", lambda r: r.fulfill(status=404, body="Google Fonts is not used"))
+    page.route("https://fonts.gstatic.com/**", lambda r: r.fulfill(status=404, body="Google Fonts is not used"))
 
     def geocoder(route):
         url = route.request.url

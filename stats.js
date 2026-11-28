@@ -779,29 +779,30 @@ function sizeSvg(spec) {
 
 const SVG_FOR = { stacked: stackedSvg, quarter: quarterSvg, size: sizeSvg, strip: stripSvg, share: shareSvg, line: lineSvg };
 
-// The site's typefaces, embedded so a drawn image uses them. Fetched once
-// from Google Fonts (latin subsets only); if that fails the image still
-// draws, in Georgia and Arial.
+// The site's typefaces, embedded so a drawn image uses them. Read once from
+// the site's own copy (vendor/fonts-*/fonts.css, latin files only); if that
+// fails the image still draws, in Georgia and Arial.
 let fontCss = null;
 function embeddedFonts() {
-  // Never let a slow font server hold up a download: 4 seconds, then without.
+  // Never let a slow download hold up an image: 4 seconds, then without.
   return Promise.race([loadEmbeddedFonts(), new Promise((r) => setTimeout(() => r(""), 4000))]);
 }
 async function loadEmbeddedFonts() {
   if (fontCss !== null) return fontCss;
   fontCss = "";
   try {
-    const href = [...document.querySelectorAll('link[rel="stylesheet"]')].map((l) => l.href).find((h) => h.includes("fonts.googleapis.com"));
+    const href = [...document.querySelectorAll('link[rel="stylesheet"]')].map((l) => l.href).find((h) => /\/fonts\.css$/.test(h));
     if (!href) return fontCss;
     const css = await (await fetch(href)).text();
-    const blocks = css.split("/*").filter((b) => b.startsWith(" latin */"));
+    const blocks = css.match(/@font-face\s*\{[^}]*\}/g) || [];
     const faces = await Promise.all(blocks.map(async (b) => {
-      const url = (/url\((https:[^)]+)\)/.exec(b) || [])[1];
-      if (!url) return "";
-      const buf = await (await fetch(url)).arrayBuffer();
+      const file = (/url\(\.?\/?([^)]+-latin-[a-z]+-normal\.woff2)\)/.exec(b) || [])[1];
+      if (!file) return "";  // latin-ext and the rest stay out
+      const buf = await (await fetch(new URL(file, href))).arrayBuffer();
       let bin = "";
       new Uint8Array(buf).forEach((c) => { bin += String.fromCharCode(c); });
-      return b.slice(b.indexOf("@font-face")).replace(url, `data:font/woff2;base64,${btoa(bin)}`);
+      const data = `url(data:font/woff2;base64,${btoa(bin)}) format('woff2')`;
+      return b.replace(/src:[^;]+;/, `src: ${data};`);
     }));
     fontCss = faces.join("\n");
   } catch (error) {
