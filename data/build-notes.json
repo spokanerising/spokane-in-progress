@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-28T05:55:03.068083+00:00",
+ "builtAt": "2026-11-28T05:57:10.821577+00:00",
  "projects": {
   "B2606311BLDC": [
    "37 E Everett Triplex: stage moved from Applied to Under Construction by the city's permit records (1 trade permit(s) issued since the building permit). Nothing to do unless that's wrong."
@@ -11,6 +11,7 @@
  "other": [
   "Canyon Bluff Apartments: no parcel_id, and the city's permit map doesn't have B25M0067PDEV. Fill lat/lng in by hand. Skipped.",
   "Kodiak Lacey Townhomes: no parcel_id, and the city's permit map doesn't have B2503736, B2503737, B2503738, B2503739, B2503740, B2503741, B2503742, B2503743, B2503744. Fill lat/lng in by hand. Skipped.",
+  "St. Agnes Family Haven: no parcel_id, and the city's permit map doesn't have B2513640, B2513641. Fill lat/lng in by hand. Skipped.",
   "Monthly: Canyon Bluff Apartments (168 units) has no street address. Not mapped.",
   "Monthly: couldn't place Kodiak Lacey Townhomes at \"2715-2779 E Dalke\". Not mapped."
  ]

@@ -1,22 +1,5 @@
 [
  {
-  "key": "B2513640",
-  "source": "monthly permit report (Largest Projects 2026, as of 2026-05-31)",
-  "permits": [
-   "B2513640",
-   "B2513641"
-  ],
-  "name": "St. Agnes Family Haven",
-  "address": "701 S Government",
-  "units": 48,
-  "estCost": 8889517,
-  "date": "2026-05-31",
-  "status": "Approved",
-  "description": "",
-  "parcelId": "",
-  "reportUrl": ""
- },
- {
   "key": "B24M0090PDEV",
   "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
   "permits": [
