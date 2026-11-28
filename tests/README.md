@@ -17,6 +17,7 @@ TEST_WORKERS=1 python3 tests/run.py   # one at a time
 | --- | --- |
 | `test_filters.py` | Every filter, live counts, pills, Near, map view, old links, phones. Uses made-up zoning/transit/density so every filter shows. |
 | `test_real_data.py` | The real `projects.json`: unique ids, counts add up, outlines, project facts. |
+| `test_map_layers.py` | The Layers panel: one shaded layer at a time, grouped outline checkboxes, the address bar (`layer=`, `lines=`), the key and credits, the hover card, satellite, saved map images with a layer legend, shared links, no `layers/` folder, phones (360 and 390 px). |
 | `test_layers.py` | `layers.py`'s pure-Python parts: Census margins of error, MFTE terms, class breaks, 2010 populations on 2020 tracts. |
 | `test_designations.py` | `designations.py`: historic district, MFTE area, OZ 2.0, QCT and tract tags from the layer files, holes, overlaps, missing or broken files. |
 | `test_site_facts.py` | `site_facts.py` and the outlines in `boundaries.py`, against fake servers. |

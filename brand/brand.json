@@ -82,7 +82,30 @@
     "track-off":   { "value": "#e5e2da", "use": "Stages not yet reached on the share-card track." },
     "alert":       { "value": "#9b2c12", "use": "Editor warnings and armed buttons." },
     "print-ink":   { "value": "#000000", "use": "Rules when printing." },
-    "print-muted": { "value": "#444444", "use": "Secondary text when printing." }
+    "print-muted": { "value": "#444444", "use": "Secondary text when printing." },
+
+    "layer-seq-1": { "value": "#eef1f3", "use": "Map layers (issue #5): Census shading, lowest fifth. A cool slate ramp, so the warm-to-violet stage dots stay distinct on top." },
+    "layer-seq-2": { "value": "#d2dbe2", "use": "Census shading, second fifth." },
+    "layer-seq-3": { "value": "#aabbc8", "use": "Census shading, middle fifth." },
+    "layer-seq-4": { "value": "#7c94a8", "use": "Census shading, fourth fifth." },
+    "layer-seq-5": { "value": "#4f6a80", "use": "Census shading, highest fifth." },
+    "layer-loss":  { "value": "#cdbfae", "use": "Census shading: tracts that lost people, 2010-2020." },
+    "layer-nodata":{ "value": "#e4e1da", "use": "Census shading: no estimate for the tract." },
+    "zone-res":    { "value": "#efe2b4", "use": "Zoning layer: residential." },
+    "zone-cc":     { "value": "#d9c4e2", "use": "Zoning layer: centers and corridors." },
+    "zone-com":    { "value": "#ebbca6", "use": "Zoning layer: commercial and mixed use." },
+    "zone-dt":     { "value": "#c99aa2", "use": "Zoning layer: downtown." },
+    "zone-ind":    { "value": "#c2c8d0", "use": "Zoning layer: industrial." },
+    "holc-a":      { "value": "#8fb07f", "use": "1938 HOLC layer: grade A. Muted versions of the originals' green, blue, yellow and red, which readers know." },
+    "holc-b":      { "value": "#8fbcc4", "use": "1938 HOLC layer: grade B." },
+    "holc-c":      { "value": "#e3d07f", "use": "1938 HOLC layer: grade C." },
+    "holc-d":      { "value": "#d99595", "use": "1938 HOLC layer: grade D." },
+    "line-historic": { "value": "#7a4a1e", "use": "Outline layer: local historic districts (solid)." },
+    "line-mfte":   { "value": "#23558c", "use": "Outline layer: MFTE areas (solid for the Targeted Investment Area, dotted for the Emphasis Area)." },
+    "line-oz":     { "value": "#9a2f6a", "use": "Outline layer: Opportunity Zones 2.0 (long dashes)." },
+    "line-qct":    { "value": "#4d4d4d", "use": "Outline layer: HUD Qualified Census Tracts (dots)." },
+    "line-centers":{ "value": "#5b4b8a", "use": "Outline layer: Comprehensive Plan centers and corridors (short dashes)." },
+    "line-transit":{ "value": "#2e7d5b", "use": "Outline layer: frequent bus routes and the area within 1/4 mile of their stops." }
   },
 
   "stages": [
