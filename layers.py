@@ -43,6 +43,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import zipfile
 from collections import Counter
 from datetime import date, datetime, timezone
 
@@ -75,8 +76,9 @@ QCT = "https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/{name}/
 HOLC = "https://dsl.richmond.edu/panorama/redlining/static/citiesData/WASpokane1938/geojson.json"
 HOLC_FALLBACK = "https://services8.arcgis.com/4eSmkZn4Z1xN6dXf/ArcGIS/rest/services/mappinginequality/FeatureServer/0"
 
-# Roughly the Spokane area, lng/lat: every layer must fall inside it.
-AREA = (-117.75, 47.45, -117.10, 47.90)
+# Spokane County, with a margin, lng/lat: every layer must fall inside it.
+# (Tracts that cross the city edge reach well into the county.)
+AREA = (-117.90, 47.20, -116.95, 48.10)
 MILE = 1609.344
 
 
@@ -510,7 +512,13 @@ def transit():
     archive, problem = None, None
     for attempt in range(3):
         try:
-            archive = site_facts.download_gtfs()
+            request = urllib.request.Request(site_facts.GTFS_URL, headers=HEADERS)
+            with urllib.request.urlopen(request, timeout=120) as response:
+                body, kind, final = response.read(), response.headers.get("Content-Type"), response.geturl()
+            if not body.startswith(b"PK"):
+                snippet = body[:160].decode("utf-8", "replace").replace("\n", " ")
+                raise RuntimeError(f"not a zip ({kind}, {len(body)} bytes, from {final}): {snippet}")
+            archive = zipfile.ZipFile(io.BytesIO(body))
             break
         except Exception as error:  # noqa: BLE001 - STA's site sometimes answers with a web page
             problem = error
