@@ -9,11 +9,11 @@
   "corrections": "spokanerising@gmail.com",
 
   "logo": {
-    "main": "brand/logo.svg",
-    "primary": "brand/logo-primary.svg",
+    "main": "brand/logo-primary.svg",
+    "secondary": "brand/logo.svg",
     "mark": "brand/logo-mark.svg",
     "mark16": "brand/logo-mark-16.svg",
-    "_about": "Rebuild these from brand/source with tools/trace_logo.py; then tools/make_icons.py draws the favicon and app icons from them."
+    "_about": "main is the primary logo (solid teal square), used in the headers, icons and every drawn image since issue #42; secondary is the framed version, kept for reference. Rebuild these from brand/source with tools/trace_logo.py; then tools/make_icons.py draws the favicon and app icons from them."
   },
 
   "browser": {
@@ -23,16 +23,37 @@
   },
 
   "fonts": {
-    "_about": "Option C, chosen Nov. 27, 2026: condensed Archivo headlines over Libre Franklin. 'webfonts' loads them on the site; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
-    "display": { "family": "Archivo, \"Arial Narrow\", sans-serif", "weight": 800, "stretch": "75%", "emStyle": "normal", "emWeight": 800,
-                 "use": "Headlines: the site name, project names, page and section heads, big numbers." },
-    "deck":    { "family": "\"Libre Franklin\", \"Helvetica Neue\", Arial, sans-serif", "weight": 400,
+    "_about": "Chosen Nov. 27, 2026 (issue #42): Merriweather serif for headlines and reading lines over Libre Franklin for data and controls, as at The Economist, The Upshot and the FT. 'webfonts' loads them on the site; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
+    "display": { "family": "Merriweather, Georgia, \"Times New Roman\", serif", "weight": 600, "stretch": "100%", "emStyle": "normal", "emWeight": 600,
+                 "use": "Headlines: the site name, project names, the headline sentence, page and section heads." },
+    "deck":    { "family": "Merriweather, Georgia, \"Times New Roman\", serif", "weight": 400,
                  "use": "Reading lines under headlines: the tagline, the stage summary, page intros, project summaries." },
     "sans":    { "family": "\"Libre Franklin\", \"Helvetica Neue\", Arial, system-ui, sans-serif",
-                 "use": "Everything read as data or interface." },
-    "webfonts": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Libre+Franklin:wght@400;500;600;700&display=swap",
+                 "use": "Everything read as data or interface, including big numbers and chart titles." },
+    "scale": {
+      "_about": "Every font size on the site (issue #42). styles.css uses only these, as var(--fs-NAME); the tests check. Roles, small to large.",
+      "2xs":     { "size": "10.5px", "use": "Dense ticks and tags only: stage-track labels, est. markers, axis ticks." },
+      "xs":      { "size": "11.5px", "use": "Small uppercase labels, source notes, map attribution." },
+      "sm":      { "size": "12.5px", "use": "Notes, captions, counts, secondary lines in lists and menus." },
+      "ui":      { "size": "13.5px", "use": "Controls, list details, tables, most interface text." },
+      "body":    { "size": "16px",   "use": "Running text and phone form fields (16px stops iPhones zooming in)." },
+      "lead":    { "size": "17px",   "use": "Article body on About and Glossary; small headlines." },
+      "deck":    { "size": "clamp(16px, 1.4vw, 19px)", "use": "Serif reading lines: tagline, headline sentence, project summaries." },
+      "intro":   { "size": "clamp(18px, 1.9vw, 21px)", "use": "Page intros under a page headline." },
+      "h3":      { "size": "clamp(17px, 1.4vw, 19px)", "use": "Project names in the list; small heads." },
+      "h2":      { "size": "clamp(21px, 2.2vw, 25px)", "use": "Section heads; editor heads." },
+      "h1":      { "size": "clamp(24px, 2.6vw, 29px)", "use": "Project page names; page titles in the small header." },
+      "title":   { "size": "clamp(26px, 2.9vw, 36px)", "use": "The site name on the map page." },
+      "display": { "size": "clamp(28px, 3.8vw, 40px)", "use": "Page headlines on Stats, About and Glossary." },
+      "num":     { "size": "clamp(28px, 3vw, 34px)",   "use": "Big numbers (sans, bold)." }
+    },
+    "tracking": {
+      "caps":  { "value": "0.07em",   "use": "Small uppercase labels." },
+      "tight": { "value": "-0.012em", "use": "Serif headlines." }
+    },
+    "webfonts": "https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400..700&family=Libre+Franklin:wght@400;500;600;700&display=swap",
     "imageFonts": [
-      { "family": "Archivo", "weight": "400 900", "stretch": "62% 125%", "style": "normal", "package": "@fontsource-variable/archivo", "file": "archivo-latin-wdth-normal.woff2" },
+      { "family": "Merriweather", "weight": "300 900", "style": "normal", "package": "@fontsource-variable/merriweather", "file": "merriweather-latin-opsz-normal.woff2" },
       { "family": "Libre Franklin", "weight": 400, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-400-normal.woff2" },
       { "family": "Libre Franklin", "weight": 500, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-500-normal.woff2" },
       { "family": "Libre Franklin", "weight": 600, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-600-normal.woff2" },
@@ -50,7 +71,7 @@
     "paper-3":     { "value": "#e9e6df", "use": "Loading shimmer highlight." },
     "rule":        { "value": "#d9d5cd", "use": "Hairlines and chart gridlines." },
     "link":        { "value": "brand", "use": "Links, focus ring, Near circle on the map." },
-    "accent":      { "value": "brand", "use": "Top rule, selected rows and controls, active filters, kickers." },
+    "accent":      { "value": "brand", "use": "Top rule and kickers. Pressed and selected controls are ink, not teal (issue #42)." },
     "chart":       { "value": "brand", "use": "Single-series chart marks (middle housing, shares). Never a stage color." },
     "surface":     { "value": "#ffffff", "use": "Menus, fields, buttons, white edges on map dots." },
     "other":       { "value": "#b6b1a7", "use": "'Other' category in charts; outline of the city on cards." },

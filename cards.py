@@ -35,7 +35,7 @@ OTHER, HOOD, TRACK_OFF, SURFACE, ACCENT = C["other"], C["locator-hood"], C["trac
 FALLBACK = branding.FALLBACK_STAGE_COLOR
 
 W, H = 1200, 630
-VERSION = "3"   # bump when the layout changes, so every card is redrawn (brand changes redraw on their own)
+VERSION = "4"   # bump when the layout changes, so every card is redrawn (brand changes redraw on their own)
 SAMPLES = os.path.join(ROOT, "cards-samples")
 
 STAGE_WORDS = {
@@ -143,7 +143,7 @@ def name_size(name):
     """Big for short names, smaller as they get longer, so every name fits
     in three lines."""
     n = len(name)
-    return 76 if n <= 22 else 66 if n <= 34 else 56 if n <= 46 else 48
+    return 64 if n <= 22 else 56 if n <= 34 else 48 if n <= 46 else 42
 
 
 def card_html(p, stages, outlines, fonts_css):
@@ -165,16 +165,16 @@ def card_html(p, stages, outlines, fonts_css):
 body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; font-family: var(--sans); }}
 .card {{ position: relative; width: {W}px; height: {H}px; }}
 .left {{ position: absolute; left: 72px; top: 58px; width: 640px; bottom: 100px; display: flex; flex-direction: column; }}
-.kicker {{ font: 600 16px var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: {MUTED}; }}
-h1 {{ margin-top: 18px; font: var(--display-weight) {name_size(d["name"])}px/1.02 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.3px;
+.kicker {{ font: 600 16px var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: {ACCENT}; }}
+h1 {{ margin-top: 18px; font: var(--display-weight) {name_size(d["name"])}px/1.02 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.4px;
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
 .where {{ margin-top: 16px; font: 500 22px/1.3 var(--sans); color: {INK2};
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 .facts {{ margin-top: auto; }}
 .homes {{ display: flex; align-items: baseline; gap: 12px; }}
-.num {{ font: var(--display-weight) 84px/0.9 var(--display); font-stretch: var(--display-stretch); }}
-.unit {{ font: var(--deck-weight) 30px var(--deck); color: {INK2}; }}
-.unit--none {{ font: var(--deck-weight) 26px var(--deck); color: {MUTED}; }}
+.num {{ font: 700 84px/0.9 var(--sans); font-variant-numeric: lining-nums tabular-nums; }}
+.unit {{ font: 500 30px var(--sans); color: {INK2}; }}
+.unit--none {{ font: 500 26px var(--sans); color: {MUTED}; }}
 .stage {{ display: flex; align-items: center; gap: 12px; margin-top: 18px; font: 600 22px var(--sans); }}
 .stage b {{ width: 16px; height: 16px; border-radius: 50%; background: {color}; flex: none; }}
 .stage span {{ font-weight: 500; color: {MUTED}; }}

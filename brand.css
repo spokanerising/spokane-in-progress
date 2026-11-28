@@ -11,7 +11,7 @@
   --paper-3:       #e9e6df;   /* Loading shimmer highlight. */
   --rule:          #d9d5cd;   /* Hairlines and chart gridlines. */
   --link:          #126781;   /* Links, focus ring, Near circle on the map. */
-  --accent:        #126781;   /* Top rule, selected rows and controls, active filters, kickers. */
+  --accent:        #126781;   /* Top rule and kickers. Pressed and selected controls are ink, not teal (issue #42). */
   --chart:         #126781;   /* Single-series chart marks (middle housing, shares). Never a stage color. */
   --surface:       #ffffff;   /* Menus, fields, buttons, white edges on map dots. */
   --other:         #b6b1a7;   /* 'Other' category in charts; outline of the city on cards. */
@@ -30,16 +30,34 @@
   --stage-4: #071b38;   /* Complete */
   --stage-5: #857f76;   /* Stalled */
 
-  --logo-src: "/brand/logo.svg";   /* for images drawn in the browser (map export, chart downloads) */
+  --logo-src: "/brand/logo-primary.svg";   /* for images drawn in the browser (map export, chart downloads) */
   /* Type. Headlines use --display at --display-weight and --display-stretch. */
-  --display: Archivo, "Arial Narrow", sans-serif;
-  --display-weight: 800;
-  --display-stretch: 75%;
+  --display: Merriweather, Georgia, "Times New Roman", serif;
+  --display-weight: 600;
+  --display-stretch: 100%;
   --display-em-style: normal;   /* the 'in Progress' in the site name */
-  --display-em-weight: 800;
-  --deck: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --display-em-weight: 600;
+  --deck: Merriweather, Georgia, "Times New Roman", serif;
   --deck-weight: 400;
   --sans: "Libre Franklin", "Helvetica Neue", Arial, system-ui, sans-serif;
+
+  /* Type scale (issue #42): every font size and letter-spacing in styles.css. */
+  --fs-2xs: 10.5px;   /* Dense ticks and tags only: stage-track labels, est. markers, axis ticks. */
+  --fs-xs: 11.5px;   /* Small uppercase labels, source notes, map attribution. */
+  --fs-sm: 12.5px;   /* Notes, captions, counts, secondary lines in lists and menus. */
+  --fs-ui: 13.5px;   /* Controls, list details, tables, most interface text. */
+  --fs-body: 16px;   /* Running text and phone form fields (16px stops iPhones zooming in). */
+  --fs-lead: 17px;   /* Article body on About and Glossary; small headlines. */
+  --fs-deck: clamp(16px, 1.4vw, 19px);   /* Serif reading lines: tagline, headline sentence, project summaries. */
+  --fs-intro: clamp(18px, 1.9vw, 21px);   /* Page intros under a page headline. */
+  --fs-h3: clamp(17px, 1.4vw, 19px);   /* Project names in the list; small heads. */
+  --fs-h2: clamp(21px, 2.2vw, 25px);   /* Section heads; editor heads. */
+  --fs-h1: clamp(24px, 2.6vw, 29px);   /* Project page names; page titles in the small header. */
+  --fs-title: clamp(26px, 2.9vw, 36px);   /* The site name on the map page. */
+  --fs-display: clamp(28px, 3.8vw, 40px);   /* Page headlines on Stats, About and Glossary. */
+  --fs-num: clamp(28px, 3vw, 34px);   /* Big numbers (sans, bold). */
+  --ls-caps: 0.07em;   /* Small uppercase labels. */
+  --ls-tight: -0.012em;   /* Serif headlines. */
 
   --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23121212' stroke-width='1.5'/%3E%3C/svg%3E");
   --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M2 5.6 4.4 8 9 3' fill='none' stroke='%23f9f8f5' stroke-width='1.7'/%3E%3C/svg%3E");

@@ -199,6 +199,9 @@ with sync_playwright() as pw:
     ctx = b.new_context(viewport=VIEWPORTS["desktop"]); pg = ctx.new_page(); wire(pg, site)
     home(pg)
     tip = "(() => { const t = document.querySelector('.tip-label'); return !!t && t.classList.contains('is-on'); })()"
+    # Bring the button well inside the window first: hovering one at the very
+    # bottom edge scrolls the list, and any scroll hides the tooltip.
+    pg.evaluate("document.querySelector('#share-view').scrollIntoView({block: 'center'})"); pg.wait_for_timeout(200)
     pg.hover("#share-view"); pg.wait_for_timeout(700)
     check(pg.evaluate(tip), "tooltip shows on hover")
     r = pg.locator(".tip-label").bounding_box()

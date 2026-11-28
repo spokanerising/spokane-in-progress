@@ -72,8 +72,8 @@ def glyph_path(mask, x0, y0, scale):
 
 
 def mark_svg(teal, small=False):
-    """The favicon mark: the logo's frame, with its S and R side by side in the
-    bottom-right corner, like the wordmark. 100-unit square."""
+    """The favicon mark: the logo's S and R side by side in the bottom-right
+    corner of a solid teal square, like the primary logo. 100-unit square."""
     from scipy import ndimage
     m = letters(os.path.join(SRC, "Spokane_Rising_Logo_2026_-_Secondary.png"), False)
     lab, n = ndimage.label(m)
@@ -98,9 +98,10 @@ def mark_svg(teal, small=False):
         letter = (lab[t:b, l:r] == idx)
         parts.append(glyph_path(letter, x, bottom - (b - t) * k, k))
         x += w + gap
+    # Drawn like the primary logo (issue #42): white letters on a solid teal square.
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Spokane Rising">'
-            f'<rect width="100" height="100" fill="#fff"/><rect x="{stroke / 2}" y="{stroke / 2}" width="{100 - stroke}" height="{100 - stroke}" fill="none" stroke="{teal}" stroke-width="{stroke}"/>'
-            f'<path fill="{teal}" d="{"".join(parts)}"/></svg>')
+            f'<rect width="100" height="100" fill="{teal}"/>'
+            f'<path fill="#fff" d="{"".join(parts)}"/></svg>')
 
 
 def main():

@@ -12,13 +12,15 @@
 <meta name="theme-color" content="#126781">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400..700&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="brand.css" rel="stylesheet">
 <link href="styles.css" rel="stylesheet">
 <style>
   /* Page layout only; every control below uses the site's own classes. */
   .sg { max-width: 760px; margin: 0 auto; padding: 24px var(--gutter) 60px; }
-  .sg h1 { font: 600 34px/1.1 var(--serif); margin: 0 0 6px; }
+  .sg h1 { font: var(--display-weight) var(--fs-display)/1.1 var(--display); letter-spacing: var(--ls-tight); margin: 0 0 6px; }
+  .sg .type > div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+  .sg .type code { font-size: var(--fs-sm); color: var(--muted); }
   .sg > p { color: var(--ink-2); margin: 0 0 8px; }
   .sg section { border-top: 1px solid var(--ink); margin-top: 28px; padding-top: 10px; }
   .sg h2 { margin: 0 0 12px; }
@@ -36,14 +38,34 @@
 </head>
 <body class="page">
 <main class="sg">
-  <h1>Controls</h1>
-  <p>Every control on Spokane in Progress, side by side. This page isn't linked anywhere; it's here to check that they all match. Press Tab to see the focus ring.</p>
+  <h1>Type and controls</h1>
+  <p>Every type style and control on Spokane in Progress, side by side. This page isn't linked anywhere; it's here to check that they all match. Press Tab to see the focus ring.</p>
   <dl>
     <dt>Height</dt><dd>36px (28px small); 40px (36px small) on phones</dd>
     <dt>Corners</dt><dd>2px; filter pills are the only rounded control</dd>
     <dt>Borders</dt><dd>light rule at rest, ink on hover, ink and bold when on; ink over the map</dd>
-    <dt>Focus</dt><dd>2px blue ring, keyboard only</dd>
+    <dt>Focus</dt><dd>2px teal ring, keyboard only (paper on ink-filled parts)</dd>
+    <dt>On</dt><dd>pressed and selected states are ink with white text; teal is for the logo, links, focus and kickers</dd>
   </dl>
+
+  <section class="type">
+    <h2 class="label">Type (issue #42)</h2>
+    <p style="margin:0 0 8px;color:var(--ink-2)">Merriweather for headlines and reading lines; Libre Franklin for data and controls. Sizes come from <code>fonts.scale</code> in brand/brand.json; styles.css uses nothing else.</p>
+    <div><code>--fs-display</code><span style="font: var(--display-weight) var(--fs-display)/1.1 var(--display); letter-spacing: var(--ls-tight)">What’s being built</span></div>
+    <div><code>--fs-title</code><span style="font: var(--display-weight) var(--fs-title)/1.1 var(--display); letter-spacing: var(--ls-tight)">Spokane in Progress</span></div>
+    <div><code>--fs-h1</code><span style="font: var(--display-weight) var(--fs-h1)/1.15 var(--display); letter-spacing: var(--ls-tight)">Kendall Yards Podium</span></div>
+    <div><code>--fs-h2</code><span style="font: var(--display-weight) var(--fs-h2)/1.2 var(--display)">The pipeline, by the numbers</span></div>
+    <div><code>--fs-h3</code><span style="font: var(--display-weight) var(--fs-h3)/1.2 var(--display)">Bethany Apartments</span></div>
+    <div><code>--fs-intro</code><span style="font: var(--deck-weight) var(--fs-intro)/1.4 var(--deck); color: var(--ink-2)">Here is where they are and what kind of housing they are.</span></div>
+    <div><code>--fs-deck</code><span style="font: var(--deck-weight) var(--fs-deck)/1.35 var(--deck); color: var(--ink-2)">200 homes, in permit review since July 16, 2026.</span></div>
+    <div><code>--fs-num</code><span style="font: 700 var(--fs-num)/1 var(--sans); font-variant-numeric: lining-nums tabular-nums">1,458</span></div>
+    <div><code>--fs-lead</code><span style="font-size: var(--fs-lead)">Article body on About and Glossary.</span></div>
+    <div><code>--fs-body</code><span style="font-size: var(--fs-body)">Running text and phone form fields.</span></div>
+    <div><code>--fs-ui</code><span style="font-size: var(--fs-ui)">Controls, list details and tables.</span></div>
+    <div><code>--fs-sm</code><span style="font-size: var(--fs-sm); color: var(--ink-2)">Notes, captions and counts.</span></div>
+    <div><code>--fs-xs</code><span style="font: 600 var(--fs-xs) var(--sans); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--muted)">Small uppercase label</span></div>
+    <div><code>--fs-2xs</code><span style="font-size: var(--fs-2xs); color: var(--muted)">Dense ticks and tags only</span></div>
+  </section>
 
   <section>
     <h2 class="label">Buttons</h2>

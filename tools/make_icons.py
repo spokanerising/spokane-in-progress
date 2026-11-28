@@ -1,15 +1,16 @@
-"""Draws the site icons from the Spokane Rising logos in brand/ (issue #36).
+"""Draws the site icons from the Spokane Rising logos in brand/ (issues #36, #42).
 
     python3 tools/make_icons.py
 
 Writes, in the site root:
-  favicon.svg            the "SR" mark (brand/logo-mark.svg), for browsers that take SVG
+  favicon.svg            the "SR" mark (brand/logo-mark.svg): white letters on
+                         teal, like the primary logo, for browsers that take SVG
   favicon.ico            16, 32 and 48 px; 16 px uses brand/logo-mark-16.svg,
-                         with bigger letters and a heavier frame so it stays sharp
-  apple-touch-icon.png   180 px, the full logo inset on white, so the frame
-                         survives the rounded corners iPhones and iPads add
-  icon-192.png, icon-512.png   the full logo, for Android home screens
-  icon-maskable-512.png        the logo small and centered on white, inside
+                         with bigger letters so it stays sharp
+  apple-touch-icon.png   180 px, the primary logo inset on teal, so its words
+                         clear the rounded corners iPhones and iPads add
+  icon-192.png, icon-512.png   the primary logo, for Android home screens
+  icon-maskable-512.png        the logo small and centered on teal, inside
                                the circle Android may crop it to
 
 Colors live in the logo files, which come from brand/brand.json via
@@ -38,10 +39,11 @@ def inner(svg):
 
 
 def placed(svg, scale):
-    """The 1000-unit logo on a white square, scaled about the center."""
+    """The 1000-unit logo on a brand-color square (the primary logo's own
+    background), scaled about the center."""
     o = 1000 * (1 - scale) / 2
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">'
-            f'<rect width="1000" height="1000" fill="{branding.COLORS["surface"]}"/>'
+            f'<rect width="1000" height="1000" fill="{branding.COLORS["brand"]}"/>'
             f'<g transform="translate({o:.1f} {o:.1f}) scale({scale})">{inner(svg)}</g></svg>')
 
 
@@ -62,9 +64,9 @@ def rasterize(jobs):
 
 
 def main():
-    mark, mark16, logo = read("logo-mark.svg"), read("logo-mark-16.svg"), read("logo.svg")
+    mark, mark16, logo = read("logo-mark.svg"), read("logo-mark-16.svg"), branding.logo_svg("main")
     # Home-screen icons must be opaque (iPhones fill see-through parts with
-    # black), so the transparent logo goes on a white square for each.
+    # black); the primary logo is, and its shrunken copies sit on teal.
     full = placed(logo, 1.0)
     apple = placed(logo, 0.86)      # room for iOS's rounded corners
     maskable = placed(logo, 0.56)   # inside Android's crop circle (radius 40% of the icon)

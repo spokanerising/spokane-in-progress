@@ -5,9 +5,9 @@ Everything about how the site looks lives here: colors, stage colors, fonts, nam
 | File | What it is |
 | --- | --- |
 | `brand.json` | Colors (each with a note on where it's used), the six stage colors in order, fonts, the site's name and links, and the address-bar color. |
-| `logo.svg` | The Spokane Rising secondary logo, as plain shapes. |
-| `logo-primary.svg` | The primary logo (teal square), as plain shapes. |
-| `logo-mark.svg`, `logo-mark-16.svg` | The "SR" favicon mark, drawn from the logo's own S and R; the 16 px version has bigger letters and a heavier frame. |
+| `logo-primary.svg` | The primary logo (teal square), as plain shapes. The site's main logo since issue #42: headers, icons, share cards and downloads. |
+| `logo.svg` | The secondary (framed) logo, as plain shapes. Kept for reference. |
+| `logo-mark.svg`, `logo-mark-16.svg` | The "SR" favicon mark, drawn from the logo's own S and R; white on teal like the primary logo; the 16 px version has bigger letters. |
 | `source/` | The original PNG and Affinity SVG files, for reference. |
 
 ## Changing the look
@@ -24,7 +24,7 @@ Everything about how the site looks lives here: colors, stage colors, fonts, nam
 
 ## Where the colors go
 
-- **CSS:** `brand.css` defines `--ink`, `--paper`, `--stage-0` … `--stage-5`, `--serif`, `--sans`, and three small icons. `styles.css` uses only these variables.
+- **CSS:** `brand.css` defines `--ink`, `--paper`, `--stage-0` … `--stage-5`, the fonts (`--display`, `--deck`, `--sans`), the type scale (`--fs-*`, `--ls-*`), and three small icons. `styles.css` uses only these variables for color, font size and letter-spacing.
 - **JavaScript:** `app.js` and `stats.js` read the same variables from the page at start-up. Stage colors also travel in `projects.json`.
 - **Python** (share cards, sharing pages, icons, the build): `import branding`, then `branding.COLORS["ink"]`, `branding.STAGES`.
 

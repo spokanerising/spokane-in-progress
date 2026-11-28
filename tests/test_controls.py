@@ -55,12 +55,12 @@ with sync_playwright() as pw:
     pg.wait_for_selector(".maplibregl-ctrl-zoom-in")
     sizes(pg, {"ctl": 36, "sm": 28})
 
-    # Segmented toggles: one ink outline, the chosen part filled with the accent.
+    # Segmented toggles: one ink outline, the chosen part filled with ink (issue #42).
     for grp, on in [("#measure", "#measure [aria-pressed=true]"), ("#basemap", "#basemap [aria-pressed=true]")]:
         s = pg.eval_on_selector(grp, "e => { const s = getComputedStyle(e); return [s.borderTopColor, s.borderTopWidth, s.borderTopLeftRadius]; }")
         check(s == [INK, "1px", "2px"], f"{grp} outline {s}")
         bg = pg.eval_on_selector(on, "e => getComputedStyle(e).backgroundColor")
-        check(bg == ACCENT, f"{on} filled {bg}")
+        check(bg == INK, f"{on} filled {bg}")
 
     # The focus ring: blue, 2px, from the keyboard.
     pg.keyboard.press("Tab")

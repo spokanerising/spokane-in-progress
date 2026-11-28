@@ -113,7 +113,7 @@ def html(projects, outlines, stages):
 body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; }}
 .card {{ position: relative; width: {W}px; height: {H}px; padding: 64px 0 0 72px; }}
 .rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: {INK}; }}
-h1 {{ font: var(--display-weight) 92px/0.98 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.5px; width: 560px; }}
+h1 {{ font: var(--display-weight) 80px/1.04 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.5px; width: 560px; }}
 h1 em {{ font-weight: var(--display-em-weight); font-style: var(--display-em-style); }}
 p.tag {{ margin-top: 26px; font: var(--deck-weight) 36px/1.2 var(--deck); color: {INK2}; width: 520px; }}
 .bar {{ display: flex; gap: 3px; width: 470px; height: 16px; margin-top: 92px; }}

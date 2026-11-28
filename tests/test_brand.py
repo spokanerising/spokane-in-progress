@@ -59,6 +59,23 @@ for root, dirs, files in os.walk(REPO):
                 found.append(f"{rel}:{n}: {line.strip()[:120]}")
 check(not found, "Colors typed outside brand/brand.json (use a brand.css variable or branding.COLORS):\n  " + "\n  ".join(found))
 
+# ---- type sizes come from the scale (issue #42) --------------------------------
+css_text = open(os.path.join(REPO, "styles.css"), encoding="utf-8").read()
+css_text = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
+print_block = css_text.find("@media print")
+loose = []
+for m in re.finditer(r"(font-size\s*:[^;}]*|font\s*:[^;}]*|letter-spacing\s*:[^;}]*)", css_text):
+    decl = m.group(1)
+    if print_block != -1 and m.start() > print_block and "pt" in decl:
+        continue   # print sizes are in points
+    if re.search(r"\d(px|em|rem|vw)\b", decl) and not re.match(r"letter-spacing\s*:\s*0\s*$", decl):
+        loose.append(decl.strip())
+check(not loose, "Font sizes and letter-spacing in styles.css should use var(--fs-*) / var(--ls-*) from brand.json:\n  " + "\n  ".join(loose[:20]))
+fs = {k: v["size"] for k, v in branding.FONTS["scale"].items() if not k.startswith("_")}
+check(fs.get("body") == "16px", "--fs-body must stay 16px: phone form fields use it, and smaller makes iPhones zoom in")
+for name in set(re.findall(r"var\(--fs-([a-z0-9]+)\)", css_text)):
+    check(name in fs, f"styles.css uses --fs-{name}, which brand.json's fonts.scale doesn't define")
+
 # ---- every page loads brand.css before styles.css ----------------------------
 for page in ["index.html", "about.html", "stats.html", "glossary.html", "404.html", "styleguide.html", "admin/index.html"]:
     s = open(os.path.join(REPO, page), encoding="utf-8").read()
@@ -79,9 +96,12 @@ for key, rel in branding.BRAND["logo"].items():
     s = open(os.path.join(REPO, rel), encoding="utf-8").read()
     check(s.lstrip().startswith("<svg") and "<text" not in s and "font-family" not in s, f"{rel} must be outlines only (no <text>), so it never depends on a font")
     check(C["brand"] in s, f"{rel} should use the brand color {C['brand']}")
-# The secondary logo has no background: inside the frame stays transparent.
+# The secondary (framed) logo has no background: inside the frame stays transparent.
+second = open(os.path.join(REPO, branding.BRAND["logo"]["secondary"]), encoding="utf-8").read()
+check(not re.search(r'<rect(?![^>]*fill="none")[^>]*width="1000"', second), "brand/logo.svg should have no background fill (keep it transparent)")
+# The primary logo, used everywhere since issue #42, is a solid brand-color square with white letters.
 main_logo = open(os.path.join(REPO, branding.BRAND["logo"]["main"]), encoding="utf-8").read()
-check(not re.search(r'<rect(?![^>]*fill="none")[^>]*width="1000"', main_logo), "brand/logo.svg should have no background fill (keep it transparent)")
+check(re.search(r'<rect width="1000" height="1000" fill="' + C["brand"] + '"', main_logo) and 'fill="#fff"' in main_logo, "the main logo should be the primary logo: white letters on a solid brand-color square")
 
 # ---- contrast -----------------------------------------------------------------
 def lin(h):
@@ -162,7 +182,7 @@ with sync_playwright() as pw:
     from PIL import Image
     import io
     shot = Image.open(io.BytesIO(pg.screenshot(clip={"x": box["x"] + box["width"] * 0.3, "y": box["y"] + box["height"] * 0.25, "width": 2, "height": 2}))).convert("RGB")
-    check(shot.getpixel((0, 0)) == branding.rgb("paper"), f"inside the logo's frame should be the page color, got {shot.getpixel((0, 0))}")
+    check(shot.getpixel((0, 0)) == branding.rgb("brand"), f"the header logo should be the solid teal primary logo, got {shot.getpixel((0, 0))}")
     # The map's colors come from brand.css too.
     pg.goto(SITE + "/")
     pg.wait_for_function("() => typeof map !== 'undefined' && map && map.getLayer && map.getLayer('project-dot')", timeout=15000)

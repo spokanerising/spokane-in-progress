@@ -63,6 +63,13 @@ def css():
     out.append(f"  --deck-weight: {f['deck']['weight']};")
     out.append(f"  --sans: {f['sans']['family']};")
     out.append("")
+    out.append("  /* Type scale (issue #42): every font size and letter-spacing in styles.css. */")
+    for name, s in f["scale"].items():
+        if not name.startswith("_"):
+            out.append(f"  --fs-{name}: {s['size']};   /* {s['use']} */")
+    for name, s in f["tracking"].items():
+        out.append(f"  --ls-{name}: {s['value']};   /* {s['use']} */")
+    out.append("")
     for name, url in icons(c).items():
         out.append(f"  --{name}: {url};")
     out.append("}")

@@ -24,9 +24,8 @@ check(ico.info.get("sizes") == {(16, 16), (32, 32), (48, 48)}, f"favicon.ico siz
 for name, px in [("apple-touch-icon.png", 180), ("icon-192.png", 192), ("icon-512.png", 512), ("icon-maskable-512.png", 512)]:
     im = Image.open(os.path.join(REPO, name))
     check(im.size == (px, px), f"{name} is {im.size}")
-    # The full logo's teal frame runs to the edge of the Android icons; the
-    # iPhone icon and the maskable one keep the logo inset on white.
-    edge = branding.rgb("brand") if name in ("icon-192.png", "icon-512.png") else branding.rgb("surface")
+    # Every icon is the primary logo: teal to the edge (issue #42).
+    edge = branding.rgb("brand")
     got = im.convert("RGB").getpixel((px // 2, 2))
     check(all(abs(a - b) < 4 for a, b in zip(got, edge)), f"{name}: edge {got}, wanted {edge}")
     check(im.convert("RGBA").getpixel((0, 0))[3] == 255, f"{name}: no transparent corners")
