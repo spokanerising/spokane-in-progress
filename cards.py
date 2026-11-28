@@ -229,6 +229,21 @@ def site_card_inputs(projects, stages):
     return hashlib.sha1(json.dumps([VERSION, branding.FINGERPRINT, stages, dots]).encode()).hexdigest()[:12]
 
 
+def needed(root=ROOT):
+    """(cards to draw, whether the site card needs redrawing), without a
+    browser. The daily job checks this first, and skips installing a browser
+    when there's nothing to draw (issue #41)."""
+    data = json.load(open(os.path.join(root, "projects.json"), encoding="utf-8"))
+    todo = sum(1 for p in data["projects"]
+               if os.path.isdir(os.path.join(root, "p", p["id"])) and not os.path.exists(card_path(p, root)))
+    try:
+        have = json.load(open(os.path.join(root, "data", "site-card.json"))).get("inputs")
+    except (OSError, ValueError):
+        have = None
+    site = have != site_card_inputs(data["projects"], data["stages"]) or not os.path.exists(os.path.join(root, "og-card.png"))
+    return todo, site
+
+
 def run(root=ROOT, redraw_all=False, site_card=True, origin=None):
     """Draws missing or changed cards, removes replaced ones, rewrites the
     pages to point at them, and redraws the site card if it changed."""
@@ -278,7 +293,14 @@ def main():
     ap.add_argument("--only", nargs="+", help="project ids to draw as samples into cards-samples/")
     ap.add_argument("--all", action="store_true", help="redraw every card")
     ap.add_argument("--no-site-card", action="store_true", help="leave og-card.png alone")
+    ap.add_argument("--needed", action="store_true",
+                    help='print "draw=true" or "draw=false" (for GitHub Actions) and stop')
     args = ap.parse_args()
+    if args.needed:
+        todo, site = needed(ROOT)
+        print(f"draw={'true' if todo or site else 'false'}")
+        print(f"{todo} card(s) to draw; site card {'changed' if site else 'unchanged'}.", file=sys.stderr)
+        return
     if args.only:
         data = json.load(open(os.path.join(ROOT, "projects.json"), encoding="utf-8"))
         try:

@@ -1871,6 +1871,21 @@ const LEGACY_TIME = {
   "stage:30": ["since", ["30"]], "stage:90": ["since", ["30", "90"]], "stage:365": ["since", ["30", "90", "365"]],
 };
 
+// A link to a project id that's gone. Ids come from a permit number
+// ("city-b2604501bldc"), and an id can change: an older permit joins the
+// project, or a hand-curated file takes it over. Open whichever project now
+// carries that permit; null if none does.
+function resolveId(id) {
+  if (!id || state.projects.some((p) => p.id === id)) return id;
+  const permit = String(id).replace(/^(city|monthly)-/, "").toUpperCase();
+  if (permit.length < 8) return null;
+  const match = state.projects.find((p) => (p.permitNumbers || []).some((n) => {
+    const u = String(n).toUpperCase();
+    return u === permit || u.startsWith(permit);
+  }));
+  return match ? match.id : null;
+}
+
 function readUrl() {
   const params = new URLSearchParams(location.search);
   const list = (key) => (params.get(key) || "").split(",").map((v) => v.trim()).filter(Boolean);
@@ -2703,7 +2718,7 @@ async function start() {
   document.getElementById("share-view").addEventListener("click", (e) => Share.share(e.currentTarget, viewShare()));
   document.getElementById("download-list").addEventListener("click", (e) => downloadList(e.currentTarget));
   window.addEventListener("popstate", () => {
-    const id = readUrl();
+    const id = resolveId(readUrl());
     if (id) select(id, true, true);
     else if (!el.detail.hidden) closeDetail(true);
     render();
@@ -2810,15 +2825,16 @@ async function start() {
     drawLede();
     drawNote();
     drawMapKey();
-    const openId = readUrl();
-    const known = openId && state.projects.some((p) => p.id === openId);
+    const askedFor = readUrl();
+    const openId = resolveId(askedFor);
+    const known = !!openId;
     // Set before the first render, whose address-bar update would otherwise
     // drop ?p= (and any #section) from a shared link.
     if (known) state.selected = openId;
     urlReady = true;
     render();
     if (known) select(openId, false, true);
-    else if (openId) writeUrl(); // drop a link to a project that no longer exists
+    if (askedFor && askedFor !== openId) writeUrl(); // the project's current id, or none if it's gone
   }
 }
 

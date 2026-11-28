@@ -50,10 +50,18 @@ jobs:
       # and the site-wide card. Drawn in a headless browser with the site's
       # typefaces. If this step has a problem, the data still publishes and
       # the pages fall back to the site-wide card.
+      # Most refreshes change no card, so check first and skip installing
+      # the browser then (issue #41). If the check itself fails, draw anyway.
+      - name: Anything to draw?
+        id: cards
+        continue-on-error: true
+        run: python3 cards.py --needed >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v4
+        if: steps.cards.outputs.draw != 'false'
         with:
           node-version: "20"
       - name: Draw the share cards
+        if: steps.cards.outputs.draw != 'false'
         continue-on-error: true
         run: |
           pip install --quiet playwright

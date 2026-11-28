@@ -40,6 +40,18 @@ with sync_playwright() as pw:
         for h in {h.split("#")[0] for h in own if h.split("#")[0] in ("/stats", "/about", "/glossary")}:
             check(pg.evaluate("(u) => fetch(u).then(r => r.status)", SITE + h) == 200, f"{h} serves a page")
     check(not outside, f"nothing comes from unpkg: {outside}")
+    # A link to an id that's gone opens the project now carrying that permit,
+    # and the address bar shows its current id; an unknown id just shows the map.
+    moved = next(p for p in data["projects"] if len(p.get("permitNumbers") or []) > 1
+                 and "city-" + p["permitNumbers"][-1].lower() != p["id"])
+    old_id = "city-" + moved["permitNumbers"][-1].lower()
+    pg.goto(f"{SITE}/?p={old_id}")
+    pg.wait_for_selector("#detail:not([hidden])")
+    check(pg.evaluate("state.selected") == moved["id"] and f"p={moved['id']}" in pg.url, f"old id {old_id} opens {moved['id']}: {pg.url}")
+    pg.goto(f"{SITE}/?p=city-b0000000bldc")
+    pg.wait_for_selector("#cards > *")
+    pg.wait_for_timeout(300)
+    check(pg.locator("#detail").is_hidden() and "p=" not in pg.url, f"unknown id: just the map {pg.url}")
     # The glossary popover's "All terms" link.
     pg.goto(f"{SITE}/?p={pid}")
     pg.wait_for_selector("#detail:not([hidden]) .gloss")
