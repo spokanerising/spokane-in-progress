@@ -28,6 +28,7 @@ import display_tidy
 import edits
 import housing_types
 import boundaries
+import designations
 import site_facts
 import pages
 import milestones
@@ -1252,6 +1253,9 @@ def main():
     # Lot size and homes per acre, zoning, and distance to frequent transit
     # (see site_facts.py). Each source fails soft.
     warnings.extend(site_facts.assign(projects, records, cr.kind_of))
+    # Historic district, MFTE area, Opportunity Zone, QCT and Census tract,
+    # from the monthly map layers in layers/ (see designations.py).
+    warnings.extend(designations.assign(projects))
     # Dated milestones for each project's timeline (see milestones.py).
     milestones.add_milestones(projects, records, by_parcel, city, stage_history)
 

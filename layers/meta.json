@@ -1,0 +1,222 @@
+{
+ "_updated": "2026-11-28T07:14:42+00:00",
+ "centers": {
+  "bytes": 17880,
+  "features": 23,
+  "fetched": "2026-11-28",
+  "file": "centers.geojson",
+  "source": "City of Spokane GIS (Comprehensive Plan)",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Planning_WM_Dynamic/MapServer/13",
+  "title": "Centers and corridors"
+ },
+ "city-limits": {
+  "bytes": 11869,
+  "features": 1,
+  "fetched": "2026-11-28",
+  "file": "city-limits.geojson",
+  "source": "City of Spokane GIS",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Boundaries_WM_Dynamic/MapServer/1",
+  "title": "City limits"
+ },
+ "historic-districts": {
+  "bytes": 6210,
+  "features": 7,
+  "fetched": "2026-11-28",
+  "file": "historic-districts.geojson",
+  "source": "City of Spokane GIS (Spokane Register of Historic Places)",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Economic_WM_Dynamic/MapServer/8",
+  "title": "Local historic districts"
+ },
+ "holc": {
+  "bytes": 34034,
+  "features": 53,
+  "fetched": "2026-11-28",
+  "file": "holc.geojson",
+  "source": "Mapping Inequality, Digital Scholarship Lab, University of Richmond (CC BY-NC)",
+  "sourceUrl": "https://dsl.richmond.edu/panorama/redlining/static/citiesData/WASpokane1938/geojson.json",
+  "title": "1938 HOLC grades",
+  "vintage": "1938"
+ },
+ "mfte": {
+  "bytes": 21436,
+  "features": 2,
+  "fetched": "2026-11-28",
+  "file": "mfte.geojson",
+  "source": "City of Spokane GIS (SMC 8.15)",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Economic_WM_Dynamic/MapServer/2",
+  "title": "MFTE target areas"
+ },
+ "oz2": {
+  "bytes": 5998,
+  "effective": "2027-01-01",
+  "features": 9,
+  "fetched": "2026-11-28",
+  "file": "oz2.geojson",
+  "source": "U.S. Treasury / CDFI Fund, Opportunity Zone 2.0 designations (Nov. 2026)",
+  "sourceUrl": "https://www.cdfifund.gov/system/files/2026-11/final_oz2_designations.xlsx",
+  "title": "Opportunity Zones (from Jan. 1, 2027)",
+  "vintage": "OZ 2.0, effective Jan. 1, 2027 through Dec. 31, 2036"
+ },
+ "qct": {
+  "bytes": 9878,
+  "features": 20,
+  "fetched": "2026-11-28",
+  "file": "qct.geojson",
+  "source": "U.S. Department of Housing and Urban Development, 2026 Qualified Census Tracts",
+  "sourceUrl": "https://services.arcgis.com/VTyQ9soqVukalItT/arcgis/rest/services/QUALIFIED_CENSUS_TRACTS_2026/FeatureServer/0",
+  "title": "HUD Qualified Census Tracts (2026)",
+  "vintage": "2026",
+  "year": 2026
+ },
+ "tracts": {
+  "acsYear": 2024,
+  "bytes": 94991,
+  "features": 74,
+  "fetched": "2026-11-28",
+  "file": "tracts.geojson",
+  "measures": {
+   "density": {
+    "breaks": [
+     1425.443,
+     4094.1701,
+     5266.3302,
+     6402.5071
+    ],
+    "label": "People per square mile, 2020",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "count"
+   },
+   "medianIncome": {
+    "breaks": [
+     50673.8,
+     66238.6,
+     79487.4,
+     96726.8
+    ],
+    "label": "Median household income",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "dollars"
+   },
+   "medianRent": {
+    "breaks": [
+     1108.6,
+     1218.0,
+     1385.6,
+     1589.8
+    ],
+    "label": "Median gross rent",
+    "scale": "sequential",
+    "tracts": 73,
+    "unit": "dollars"
+   },
+   "medianYearBuilt": {
+    "breaks": [
+     1946.2,
+     1956.0,
+     1971.0,
+     1993.0
+    ],
+    "label": "Median year built",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "year"
+   },
+   "popChange": {
+    "breaks": [
+     0.0121,
+     0.0452,
+     0.0699,
+     0.2432
+    ],
+    "label": "Population change, 2010\u20132020",
+    "scale": "diverging",
+    "tracts": 74,
+    "unit": "change"
+   },
+   "poverty": {
+    "breaks": [
+     0.0547,
+     0.0896,
+     0.1265,
+     0.2335
+    ],
+    "label": "People below the poverty line",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   },
+   "pre1940": {
+    "breaks": [
+     0.012,
+     0.0895,
+     0.2524,
+     0.4535
+    ],
+    "label": "Homes built before 1940",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   },
+   "rentBurden": {
+    "breaks": [
+     0.387,
+     0.4655,
+     0.5486,
+     0.6175
+    ],
+    "label": "Renters paying 30%+ of income on rent",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   },
+   "renterShare": {
+    "breaks": [
+     0.1713,
+     0.2634,
+     0.4397,
+     0.6179
+    ],
+    "label": "Homes rented, not owned",
+    "scale": "sequential",
+    "tracts": 74,
+    "unit": "share"
+   }
+  },
+  "source": "U.S. Census Bureau, American Community Survey 2020\u20132024 5-year estimates; 2010 and 2020 Census",
+  "sourceUrl": "https://data.census.gov/",
+  "title": "Census tracts",
+  "vintage": "ACS 2020\u20132024"
+ },
+ "transit": {
+  "bytes": 37051,
+  "features": 9,
+  "fetched": "2026-11-28",
+  "file": "transit.geojson",
+  "routes": [
+   "1",
+   "20",
+   "21",
+   "25",
+   "28",
+   "33",
+   "4",
+   "9"
+  ],
+  "source": "Spokane Transit Authority schedule (GTFS); 15-minute-or-better midday service",
+  "sourceUrl": "https://www.spokanetransit.com/gtfs",
+  "stops": 418,
+  "title": "Frequent transit",
+  "vintage": "2026-12-02"
+ },
+ "zoning": {
+  "bytes": 103531,
+  "features": 5,
+  "fetched": "2026-11-28",
+  "file": "zoning.geojson",
+  "source": "City of Spokane GIS",
+  "sourceUrl": "https://services.spokanegis.org/arcgis/rest/services/PublicData/Planning_WM_Dynamic/MapServer/33",
+  "title": "Zoning"
+ }
+}
