@@ -415,7 +415,7 @@ def tracts():
     measures = {k: {"label": label, "unit": unit, "scale": scale, "breaks": breaks[k],
                     "tracts": sum(1 for v in values[k] if v is not None)}
                 for k, (label, unit, _dec, scale) in MEASURES.items()}
-    return out, {"title": "Census tracts", "minFeatures": 80,
+    return out, {"title": "Census tracts", "minFeatures": 50,
                  "source": f"U.S. Census Bureau, American Community Survey {year - 4}–{year} 5-year estimates; "
                            "2010 and 2020 Census",
                  "sourceUrl": "https://data.census.gov/", "vintage": f"ACS {year - 4}–{year}",
@@ -507,7 +507,27 @@ def transit():
 
     Uses the same rule and stops as the transit filter (site_facts), so the
     shaded area matches "within 1/4 mile of frequent transit"."""
-    archive = site_facts.download_gtfs()
+    archive, problem = None, None
+    for attempt in range(3):
+        try:
+            archive = site_facts.download_gtfs()
+            break
+        except Exception as error:  # noqa: BLE001 - STA's site sometimes answers with a web page
+            problem = error
+            time.sleep(10 * (attempt + 1))
+    if archive is None:
+        # No schedule today. With no transit file yet, draw just the 1/4-mile
+        # area from the stops the daily build already keeps (the same ones the
+        # transit filter uses); otherwise keep last month's file, routes and all.
+        stops = site_facts.load_stops()
+        if os.path.exists(os.path.join(OUT_DIR, "transit.geojson")) or len(stops) < 10:
+            raise RuntimeError(f"schedule download failed ({problem}); kept the last good file")
+        circles = [transform(to_m, Point(s["lng"], s["lat"])).buffer(MILE / 4, quad_segs=12) for s in stops]
+        area = transform(to_deg, unary_union(circles).simplify(5))
+        return [feature(area, {"part": "area"})], {
+            "title": "Frequent transit", "source": "Spokane Transit Authority schedule (GTFS); "
+            "15-minute-or-better midday service", "sourceUrl": site_facts.GTFS_URL,
+            "stops": len(stops), "routes": [], "note": f"routes not drawn: {problem}"}
     day, stops = site_facts.frequent_stops(archive)
     if len(stops) < 10:
         raise RuntimeError(f"only {len(stops)} frequent stops")
