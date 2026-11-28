@@ -23,8 +23,21 @@
   },
 
   "fonts": {
-    "serif": "Newsreader, \"Iowan Old Style\", Georgia, serif",
-    "sans": "\"Libre Franklin\", \"Helvetica Neue\", Arial, system-ui, sans-serif"
+    "_about": "Option C, chosen Nov. 27, 2026: condensed Archivo headlines over Libre Franklin. 'webfonts' loads them on the site; 'imageFonts' are the files the share-card drawer embeds (npm packages).",
+    "display": { "family": "Archivo, \"Arial Narrow\", sans-serif", "weight": 800, "stretch": "75%", "emStyle": "normal", "emWeight": 800,
+                 "use": "Headlines: the site name, project names, page and section heads, big numbers." },
+    "deck":    { "family": "\"Libre Franklin\", \"Helvetica Neue\", Arial, sans-serif", "weight": 400,
+                 "use": "Reading lines under headlines: the tagline, the stage summary, page intros, project summaries." },
+    "sans":    { "family": "\"Libre Franklin\", \"Helvetica Neue\", Arial, system-ui, sans-serif",
+                 "use": "Everything read as data or interface." },
+    "webfonts": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Libre+Franklin:wght@400;500;600;700&display=swap",
+    "imageFonts": [
+      { "family": "Archivo", "weight": "400 900", "stretch": "62% 125%", "style": "normal", "package": "@fontsource-variable/archivo", "file": "archivo-latin-wdth-normal.woff2" },
+      { "family": "Libre Franklin", "weight": 400, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-400-normal.woff2" },
+      { "family": "Libre Franklin", "weight": 500, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-500-normal.woff2" },
+      { "family": "Libre Franklin", "weight": 600, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-600-normal.woff2" },
+      { "family": "Libre Franklin", "weight": 700, "style": "normal", "package": "@fontsource/libre-franklin", "file": "libre-franklin-latin-700-normal.woff2" }
+    ]
   },
 
   "colors": {

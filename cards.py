@@ -162,20 +162,20 @@ def card_html(p, stages, outlines, fonts_css):
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 {fonts_css}
 * {{ margin: 0; box-sizing: border-box; }}
-body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; font-family: 'Libre Franklin'; }}
+body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; font-family: var(--sans); }}
 .card {{ position: relative; width: {W}px; height: {H}px; }}
 .left {{ position: absolute; left: 72px; top: 58px; width: 640px; bottom: 100px; display: flex; flex-direction: column; }}
-.kicker {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: {MUTED}; }}
-h1 {{ margin-top: 18px; font: 600 {name_size(d["name"])}px/1.02 'Newsreader'; letter-spacing: -0.3px;
+.kicker {{ font: 600 16px var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: {MUTED}; }}
+h1 {{ margin-top: 18px; font: var(--display-weight) {name_size(d["name"])}px/1.02 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.3px;
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
-.where {{ margin-top: 16px; font: 500 22px/1.3 'Libre Franklin'; color: {INK2};
+.where {{ margin-top: 16px; font: 500 22px/1.3 var(--sans); color: {INK2};
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 .facts {{ margin-top: auto; }}
 .homes {{ display: flex; align-items: baseline; gap: 12px; }}
-.num {{ font: 600 84px/0.9 'Newsreader'; }}
-.unit {{ font: 500 30px 'Newsreader'; color: {INK2}; }}
-.unit--none {{ font: 500 26px 'Newsreader'; color: {MUTED}; }}
-.stage {{ display: flex; align-items: center; gap: 12px; margin-top: 18px; font: 600 22px 'Libre Franklin'; }}
+.num {{ font: var(--display-weight) 84px/0.9 var(--display); font-stretch: var(--display-stretch); }}
+.unit {{ font: var(--deck-weight) 30px var(--deck); color: {INK2}; }}
+.unit--none {{ font: var(--deck-weight) 26px var(--deck); color: {MUTED}; }}
+.stage {{ display: flex; align-items: center; gap: 12px; margin-top: 18px; font: 600 22px var(--sans); }}
 .stage b {{ width: 16px; height: 16px; border-radius: 50%; background: {color}; flex: none; }}
 .stage span {{ font-weight: 500; color: {MUTED}; }}
 .track {{ display: flex; gap: 4px; width: 420px; height: 10px; margin-top: 14px; }}
@@ -186,9 +186,9 @@ h1 {{ margin-top: 18px; font: 600 {name_size(d["name"])}px/1.02 'Newsreader'; le
 .foot {{ position: absolute; left: 72px; right: 72px; bottom: 26px; display: flex; justify-content: space-between; align-items: center; }}
 .lockup {{ display: flex; align-items: center; gap: 14px; }}
 .lockup img {{ width: 40px; height: 40px; display: block; }}
-.brand {{ font: 600 24px 'Newsreader'; }}
-.brand em {{ font-weight: 500; font-style: italic; }}
-.url {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: {INK2}; }}
+.brand {{ font: var(--display-weight) 24px var(--display); font-stretch: var(--display-stretch); }}
+.brand em {{ font-weight: var(--display-em-weight); font-style: var(--display-em-style); }}
+.url {{ font: 600 16px var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: {INK2}; }}
 </style></head><body><div class="card">
 <div class="left">
   <p class="kicker">{e(d["type"] or "Housing project")}</p>

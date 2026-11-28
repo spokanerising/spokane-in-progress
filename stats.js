@@ -611,12 +611,13 @@ if (LOGO_SRC) {
     LOGO_INNER = svg.trim().replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
   }).catch(() => {});
 }
-const SANS = "'Libre Franklin', Arial, sans-serif";
-const SERIF = "Newsreader, Georgia, serif";
+// Type from brand.css (brand/brand.json), via share.js.
+const TYPE = Share.brandFonts();
+const SANS = TYPE.sans;
 
 const measurer = document.createElement("canvas").getContext("2d");
-function textWidth(text, size, weight = 400, family = SANS) {
-  measurer.font = `${weight} ${size}px ${family}`;
+function textWidth(text, size, weight = 400, family = SANS, stretchWord = "") {
+  measurer.font = `${stretchWord ? stretchWord + " " : ""}${weight} ${size}px ${family}`;
   return measurer.measureText(text).width;
 }
 function wrap(text, size, maxW, weight = 400) {
@@ -630,8 +631,8 @@ function wrap(text, size, maxW, weight = 400) {
   if (line) lines.push(line);
   return lines;
 }
-const t = (x, y, text, { size = 16, weight = 400, fill = INK, anchor = "start", family = SANS, style = "" } = {}) =>
-  `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="${esc(family)}" font-size="${size}" font-weight="${weight}"${style ? ` font-style="${style}"` : ""} fill="${fill}" text-anchor="${anchor}">${esc(text)}</text>`;
+const t = (x, y, text, { size = 16, weight = 400, fill = INK, anchor = "start", family = SANS, style = "", stretch = "" } = {}) =>
+  `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="${esc(family)}" font-size="${size}" font-weight="${weight}"${style ? ` font-style="${style}"` : ""}${stretch ? ` style="font-stretch:${stretch}"` : ""} fill="${fill}" text-anchor="${anchor}">${esc(text)}</text>`;
 
 // Title at the top; note, source and the site's name at the bottom. body()
 // draws the chart from y and returns the y where it ends.
@@ -660,8 +661,10 @@ function frame(spec, body) {
     parts.push(`<svg x="${PAD}" y="${y - 29}" width="38" height="38" viewBox="0 0 1000 1000">${LOGO_INNER}</svg>`);
     x += 50;
   }
-  parts.push(t(x, y, "Spokane ", { size: 22, weight: 600, family: SERIF }));
-  parts.push(t(x + textWidth("Spokane ", 22, 600, SERIF), y, "in Progress", { size: 22, weight: 500, family: SERIF, style: "italic" }));
+  const head = { size: 22, weight: TYPE.displayWeight, family: TYPE.display, stretch: TYPE.displayStretch };
+  parts.push(t(x, y, "Spokane ", head));
+  parts.push(t(x + textWidth("Spokane ", 22, TYPE.displayWeight, TYPE.display, TYPE.stretchWord), y, "in Progress",
+    { ...head, weight: TYPE.emWeight, style: TYPE.emStyle === "normal" ? "" : TYPE.emStyle }));
   parts.push(t(SVG_W - PAD, y, "PROJECTS.SPOKANERISING.COM", { size: 15, weight: 600, fill: INK2, anchor: "end" }));
   const h = Math.ceil(y + PAD - 8);
   return { h, body: parts.join("") };

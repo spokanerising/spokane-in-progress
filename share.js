@@ -156,15 +156,38 @@
     return parts.concat(extra).join(" · ");
   }
 
-  // Waits for the site's two typefaces before anything is drawn on a canvas,
+  // The site's type, from brand.css (made from brand/brand.json), for images
+  // drawn in the browser. canvas() gives a ctx.font string for headlines.
+  const STRETCH_WORDS = [[50, "ultra-condensed"], [62.5, "extra-condensed"], [75, "condensed"], [87.5, "semi-condensed"],
+    [100, "normal"], [112.5, "semi-expanded"], [125, "expanded"], [150, "extra-expanded"], [200, "ultra-expanded"]];
+  function brandFonts() {
+    const css = getComputedStyle(document.documentElement);
+    const v = (n, d) => css.getPropertyValue(`--${n}`).trim() || d;
+    const pct = parseFloat(v("display-stretch", "100%")) || 100;
+    const word = STRETCH_WORDS.reduce((a, b) => (Math.abs(b[0] - pct) < Math.abs(a[0] - pct) ? b : a))[1];
+    const f = {
+      display: v("display", "Georgia, serif"), displayWeight: v("display-weight", "600"),
+      displayStretch: `${pct}%`, stretchWord: word,
+      emStyle: v("display-em-style", "italic"), emWeight: v("display-em-weight", "500"),
+      deck: v("deck", "Georgia, serif"), deckWeight: v("deck-weight", "400"),
+      sans: v("sans", "Arial, sans-serif"),
+    };
+    // "condensed 800 34px Archivo, sans-serif": font-stretch must be a keyword in ctx.font.
+    f.canvas = (px, em = false) => `${em ? f.emStyle + " " : ""}${f.stretchWord} ${em ? f.emWeight : f.displayWeight} ${px}px ${f.display}`;
+    return f;
+  }
+
+  // Waits for the site's typefaces before anything is drawn on a canvas,
   // so an export never falls back to a system font. Gives up after `ms`.
   function fontsReady(ms = 3000) {
     if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+    const f = brandFonts();
     const loads = Promise.all([
-      document.fonts.load('500 40px "Newsreader"'),
-      document.fonts.load('600 40px "Newsreader"'),
-      document.fonts.load('400 16px "Libre Franklin"'),
-      document.fonts.load('600 16px "Libre Franklin"'),
+      document.fonts.load(f.canvas(40)),
+      document.fonts.load(f.canvas(40, true)),
+      document.fonts.load(`${f.deckWeight} 16px ${f.deck}`),
+      document.fonts.load(`400 16px ${f.sans}`),
+      document.fonts.load(`600 16px ${f.sans}`),
     ]).then(() => document.fonts.ready).then(() => true, () => false);
     return Promise.race([loads, new Promise((r) => setTimeout(() => r(false), ms))]);
   }
@@ -479,7 +502,7 @@
     copyText,
     downloadBlob, downloadText, downloadCanvas, filename, toCsv,
     toast,
-    creditLine, fontsReady,
+    creditLine, fontsReady, brandFonts,
     projectUrl, hoodUrl, districtUrl, PROJECT_COLUMNS, projectsCsv, projectsGeoJson,
     menu, closeMenu, share,
   };

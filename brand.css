@@ -31,7 +31,14 @@
   --stage-5: #857f76;   /* Stalled */
 
   --logo-src: "/brand/logo.svg";   /* for images drawn in the browser (map export, chart downloads) */
-  --serif: Newsreader, "Iowan Old Style", Georgia, serif;
+  /* Type. Headlines use --display at --display-weight and --display-stretch. */
+  --display: Archivo, "Arial Narrow", sans-serif;
+  --display-weight: 800;
+  --display-stretch: 75%;
+  --display-em-style: normal;   /* the 'in Progress' in the site name */
+  --display-em-weight: 800;
+  --deck: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --deck-weight: 400;
   --sans: "Libre Franklin", "Helvetica Neue", Arial, system-ui, sans-serif;
 
   --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23121212' stroke-width='1.5'/%3E%3C/svg%3E");

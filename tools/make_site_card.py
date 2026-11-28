@@ -25,21 +25,20 @@ FONTS = os.path.join(HERE, ".fonts")
 OUT = os.path.join(ROOT, "og-card.png")
 W, H = 1200, 630
 
-FONT_FILES = {
-    ("Newsreader", 600, "normal"): ("newsreader", "newsreader-latin-600-normal.woff2"),
-    ("Newsreader", 500, "italic"): ("newsreader", "newsreader-latin-500-italic.woff2"),
-    ("Newsreader", 500, "normal"): ("newsreader", "newsreader-latin-500-normal.woff2"),
-    ("Libre Franklin", 500, "normal"): ("libre-franklin", "libre-franklin-latin-500-normal.woff2"),
-    ("Libre Franklin", 600, "normal"): ("libre-franklin", "libre-franklin-latin-600-normal.woff2"),
-}
+# The font files the drawer embeds, from brand.json's fonts.imageFonts.
+FONT_FILES = branding.FONTS["imageFonts"]
 
 
 def font_path(package, filename):
-    folder = os.path.join(FONTS, package)
+    """A font file from an npm package (e.g. @fontsource/libre-franklin),
+    fetched once into tools/.fonts/."""
+    if not package.startswith("@"):
+        package = f"@fontsource/{package}"
+    folder = os.path.join(FONTS, package.lstrip("@").replace("/", "__"))
     path = os.path.join(folder, "package", "files", filename)
     if not os.path.exists(path):
         os.makedirs(folder, exist_ok=True)
-        name = subprocess.check_output(["npm", "pack", f"@fontsource/{package}", "--silent"], cwd=folder, text=True).strip().splitlines()[-1]
+        name = subprocess.check_output(["npm", "pack", package, "--silent"], cwd=folder, text=True).strip().splitlines()[-1]
         with tarfile.open(os.path.join(folder, name)) as tar:
             tar.extractall(folder, filter="data")
         os.remove(os.path.join(folder, name))
@@ -47,11 +46,15 @@ def font_path(package, filename):
 
 
 def font_faces():
+    """@font-face rules for the brand's image fonts, embedded, plus the type
+    variables (--display, --deck, --sans) the drawings use."""
     css = []
-    for (family, weight, style), (package, filename) in FONT_FILES.items():
-        data = base64.b64encode(open(font_path(package, filename), "rb").read()).decode()
-        css.append(f"@font-face{{font-family:'{family}';font-weight:{weight};font-style:{style};"
+    for f in FONT_FILES:
+        data = base64.b64encode(open(font_path(f["package"], f["file"]), "rb").read()).decode()
+        stretch = f"font-stretch:{f['stretch']};" if f.get("stretch") else ""
+        css.append(f"@font-face{{font-family:'{f['family']}';font-weight:{f['weight']};font-style:{f['style']};{stretch}"
                    f"src:url(data:font/woff2;base64,{data}) format('woff2');}}")
+    css.append(branding.type_css())
     return "\n".join(css)
 
 
@@ -110,14 +113,14 @@ def html(projects, outlines, stages):
 body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; }}
 .card {{ position: relative; width: {W}px; height: {H}px; padding: 64px 0 0 72px; }}
 .rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: {INK}; }}
-h1 {{ font: 600 92px/0.98 'Newsreader'; letter-spacing: -0.5px; width: 560px; }}
-h1 em {{ font-weight: 500; font-style: italic; }}
-p.tag {{ margin-top: 26px; font: 500 36px/1.2 'Newsreader'; color: {INK2}; width: 520px; }}
+h1 {{ font: var(--display-weight) 92px/0.98 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.5px; width: 560px; }}
+h1 em {{ font-weight: var(--display-em-weight); font-style: var(--display-em-style); }}
+p.tag {{ margin-top: 26px; font: var(--deck-weight) 36px/1.2 var(--deck); color: {INK2}; width: 520px; }}
 .bar {{ display: flex; gap: 3px; width: 470px; height: 16px; margin-top: 92px; }}
 .bar i {{ display: block; }}
-.key {{ margin-top: 12px; font: 500 15px 'Libre Franklin'; color: {MUTED}; letter-spacing: 0.02em; }}
+.key {{ margin-top: 12px; font: 500 15px var(--sans); color: {MUTED}; letter-spacing: 0.02em; }}
 .card::before {{ content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: {ACCENT}; }}
-.url {{ position: absolute; left: 72px; bottom: 26px; display: flex; align-items: center; gap: 14px; font: 600 17px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; }}
+.url {{ position: absolute; left: 72px; bottom: 26px; display: flex; align-items: center; gap: 14px; font: 600 17px var(--sans); letter-spacing: 0.09em; text-transform: uppercase; }}
 .url img {{ width: 40px; height: 40px; display: block; }}
 .map {{ position: absolute; right: 56px; top: 44px; }}
 </style></head><body><div class="card">

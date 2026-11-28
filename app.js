@@ -2284,23 +2284,24 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
   }
   ctx.fillStyle = BRAND.ink;
   ctx.textBaseline = "alphabetic";
-  ctx.font = `600 ${34 * u}px Newsreader, Georgia, serif`;
+  const type = Share.brandFonts();
+  ctx.font = type.canvas(34 * u);
   ctx.fillText("Spokane ", tx, 52 * u);
   const w1 = ctx.measureText("Spokane ").width;
-  ctx.font = `italic 500 ${34 * u}px Newsreader, Georgia, serif`;
+  ctx.font = type.canvas(34 * u, true);
   ctx.fillText("in Progress", tx + w1, 52 * u);
 
   const homes = unitsOf(inView);
   const tally = `${plural(inView.length, "housing project", "housing projects")}${homes ? `, at least ${plural(homes, "home", "homes")}` : ""}`;
   const filters = filtersInWords();
   const line = filters ? `${filters[0].toUpperCase()}${filters.slice(1)}: ${tally}` : `${tally[0].toUpperCase()}${tally.slice(1)} on this map`;
-  ctx.font = `500 ${21 * u}px "Libre Franklin", Arial, sans-serif`;
+  ctx.font = `500 ${21 * u}px ${type.sans}`;
   ctx.fillStyle = BRAND["ink-2"];
   ctx.fillText(fitText(ctx, line, outW - side - tx), tx, 86 * u);
 
   // Key: the stages on this map.
   const present = STAGES.filter((s) => inView.some((p) => p.status === s.name));
-  ctx.font = `500 ${15 * u}px "Libre Franklin", Arial, sans-serif`;
+  ctx.font = `500 ${15 * u}px ${type.sans}`;
   let x = side;
   const ky = outH - bottom + 28 * u;
   present.forEach((s) => {
@@ -2318,7 +2319,7 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
 
   // Credits: the site and data date, then the map's required credit.
   ctx.fillStyle = BRAND.muted;
-  ctx.font = `500 ${12.5 * u}px "Libre Franklin", Arial, sans-serif`;
+  ctx.font = `500 ${12.5 * u}px ${type.sans}`;
   ctx.fillText(fitText(ctx, `${Share.creditLine(state.builtAt)} · Circle size shows homes`, outW - 2 * side), side, outH - 30 * u);
   ctx.fillText(fitText(ctx, MAP_CREDIT, outW - 2 * side), side, outH - 13 * u);
   return out;

@@ -1,6 +1,7 @@
 /* Spokane in Progress — editorial styles.
-   Two typefaces: Newsreader (a serif, for names and headlines) and Libre
-   Franklin (a news sans, for everything you read as data or interface).
+   Type comes from brand.css: --display for names and headlines (condensed
+   Archivo since Nov. 2026), --deck for the reading lines under them, and
+   --sans (Libre Franklin) for everything read as data or interface.
    Color is ink on paper; the only strong color is the stage ramp. Every color
    is a variable from brand.css (generated from brand/brand.json), so a reskin
    never touches this file. */
@@ -98,19 +99,20 @@ a:hover { text-decoration-thickness: 2px; }
 
 .masthead h1 {
   margin: 0;
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight);
   font-size: clamp(28px, 3.8vw, 46px);
   letter-spacing: -0.018em;
   line-height: 1;
 }
 
-.masthead h1 em { font-style: italic; font-weight: 500; }
+.masthead h1 em { font-style: var(--display-em-style); font-weight: var(--display-em-weight); }
 
 .masthead__tag {
   margin: 5px 0 0;
   max-width: 46ch;
-  font-family: var(--serif);
+  font-family: var(--deck);
+  font-weight: var(--deck-weight);
   font-size: clamp(15px, 1.35vw, 18px);
   line-height: 1.3;
   color: var(--ink-2);
@@ -182,7 +184,8 @@ a:hover { text-decoration-thickness: 2px; }
 .lede {
   margin: 0 0 10px;
   max-width: 62ch;
-  font-family: var(--serif);
+  font-family: var(--deck);
+  font-weight: var(--deck-weight);
   font-size: clamp(16px, 1.45vw, 20px);
   line-height: 1.3;
   color: var(--ink-2);
@@ -709,7 +712,7 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 .tipcard__stage i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .tipcard__name {
   margin: 3px 0 2px;
-  font: 600 16px/1.2 var(--serif); letter-spacing: -0.005em;
+  font: var(--display-weight) 16px/1.2 var(--display); font-stretch: var(--display-stretch); letter-spacing: -0.005em;
   overflow-wrap: anywhere;
 }
 .tipcard__facts { font: 600 12.5px/1.35 var(--sans); font-variant-numeric: tabular-nums; }
@@ -767,8 +770,8 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 
 .card__name {
   margin: 4px 0 2px;
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight);
   font-size: clamp(18px, 1.5vw, 20px);
   letter-spacing: -0.008em;
   line-height: 1.2;
@@ -845,8 +848,8 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 .detail__close:hover { border-color: var(--ink); color: var(--ink); }
 
 .detail h2 {
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight);
   letter-spacing: -0.015em;
   font-size: clamp(25px, 2.4vw, 31px);
   line-height: 1.08;
@@ -958,7 +961,7 @@ body[data-panel="closed"] .paneltoggle svg { transform: scaleX(-1); }
 }
 
 .colophon p { margin: 0 0 8px; max-width: 70ch; }
-.colophon strong { color: var(--ink); font-family: var(--serif); font-size: 15px; font-weight: 600; }
+.colophon strong { color: var(--ink); font-family: var(--display); font-stretch: var(--display-stretch); font-size: 15px; font-weight: var(--display-weight); }
 
 /* ---------- map controls and popup ---------- */
 
@@ -1067,14 +1070,14 @@ body.page {
 .masthead__home { color: inherit; text-decoration: none; }
 
 .masthead__title {
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight);
   font-size: clamp(24px, 2.8vw, 34px);
   letter-spacing: -0.018em;
   line-height: 1;
 }
 
-.masthead__title em { font-style: italic; font-weight: 500; }
+.masthead__title em { font-style: var(--display-em-style); font-weight: var(--display-em-weight); }
 
 .pagenav { display: flex; gap: 20px; }
 
@@ -1114,15 +1117,16 @@ body.page {
 
 .article__hed {
   margin: 0 0 14px;
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight);
   font-size: clamp(32px, 4.6vw, 48px);
   line-height: 1.06;
   letter-spacing: -0.02em;
 }
 
 .article__dek {
-  font-family: var(--serif);
+  font-family: var(--deck);
+  font-weight: var(--deck-weight);
   font-size: clamp(19px, 2vw, 22px);
   line-height: 1.4;
   color: var(--ink-2);
@@ -1142,7 +1146,7 @@ body.page {
 }
 
 .stat { display: grid; gap: 4px; border-top: 2px solid var(--ink); padding-top: 8px; }
-.stat b { font-family: var(--serif); font-weight: 600; font-size: 34px; line-height: 1; }
+.stat b { font-family: var(--display); font-stretch: var(--display-stretch); font-weight: var(--display-weight); font-size: 34px; line-height: 1; }
 .stat span { font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
 
 .section { margin-top: 44px; }
@@ -1151,8 +1155,8 @@ body.page {
   margin: 0 0 14px;
   padding-top: 10px;
   border-top: 1px solid var(--ink);
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight);
   font-size: clamp(24px, 2.6vw, 28px);
   line-height: 1.15;
 }
@@ -2166,7 +2170,8 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 .detail .pkicker + h2 { margin-top: 0; }
 .standfirst {
   margin: 4px 0 6px;
-  font-family: var(--serif);
+  font-family: var(--deck);
+  font-weight: var(--deck-weight);
   font-size: clamp(17px, 1.35vw, 19px);
   line-height: 1.35;
   color: var(--ink-2);
@@ -2286,7 +2291,7 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 }
 .glosspop[hidden] { display: none; }
 .glosspop p { margin: 0; }
-.glosspop__term { font: 600 15px/1.25 var(--serif); margin-bottom: 4px !important; }
+.glosspop__term { font: var(--display-weight) 15px/1.25 var(--display); font-stretch: var(--display-stretch); margin-bottom: 4px !important; }
 .glosspop__def { color: var(--ink-2); }
 .glosspop__more { display: inline-block; margin-top: 7px; font: 600 12px var(--sans); color: var(--link); text-decoration: none; }
 .glosspop__more:hover { text-decoration: underline; }
@@ -2338,7 +2343,7 @@ body[data-mapkeys="on"] .keyhint { display: block; }
 .howto:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .howto p { margin: 0 0 4px; }
 .howto__bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 -8px 2px 0; }
-.howto__hed { margin: 6px 0 0; font: 600 18px/1.2 var(--serif); color: var(--ink); }
+.howto__hed { margin: 6px 0 0; font: var(--display-weight) 18px/1.2 var(--display); font-stretch: var(--display-stretch); color: var(--ink); }
 .howto__sub {
   margin: 11px 0 4px;
   padding-top: 8px;
@@ -2404,7 +2409,7 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
   padding: 16px var(--gutter) 12px; border-bottom: 1px solid var(--ink);
 }
 .editor__head .label { margin: 0; color: var(--muted); }
-.editor__head h2 { margin: 2px 0 0; font: 600 24px/1.15 var(--serif); }
+.editor__head h2 { margin: 2px 0 0; font: var(--display-weight) 24px/1.15 var(--display); font-stretch: var(--display-stretch); }
 .editor__id { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
 .editor__body { overflow-y: auto; padding: 4px var(--gutter) 16px; overscroll-behavior: contain; }
 .editor fieldset { margin: 16px 0 0; padding: 0; border: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
@@ -2457,8 +2462,8 @@ body[data-editor="out"] .editbtn { color: var(--muted); }
 
 /* The editor's own page (/admin/). */
 .admin { max-width: 680px; margin: 0 auto; padding: 32px var(--gutter) 64px; }
-.admin h1 { margin: 0; font: 600 34px/1.1 var(--serif); }
-.admin h2 { margin: 32px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--ink); font: 600 20px/1.2 var(--serif); }
+.admin h1 { margin: 0; font: var(--display-weight) 34px/1.1 var(--display); font-stretch: var(--display-stretch); }
+.admin h2 { margin: 32px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--ink); font: var(--display-weight) 20px/1.2 var(--display); font-stretch: var(--display-stretch); }
 .admin__status { margin: 14px 0; padding: 12px 14px; border-left: 3px solid var(--ink); background: var(--paper-2); }
 .admin__actions[hidden] { display: none; }
 .admin__actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }

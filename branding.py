@@ -72,3 +72,14 @@ def logo_data_uri(key="main"):
 # stages, fonts, the logo), so share cards redraw themselves after a reskin.
 FINGERPRINT = hashlib.sha1(json.dumps(
     [COLORS, STAGES, FONTS, logo_svg("main")], sort_keys=True).encode()).hexdigest()[:10]
+
+
+def type_css():
+    """The brand's type as CSS variables, for pages drawn outside the site
+    (share cards): the same names brand.css uses."""
+    d, k, sa = FONTS["display"], FONTS["deck"], FONTS["sans"]
+    return (":root{"
+            f"--display:{d['family']};--display-weight:{d['weight']};--display-stretch:{d.get('stretch', '100%')};"
+            f"--display-em-style:{d.get('emStyle', 'italic')};--display-em-weight:{d.get('emWeight', d['weight'])};"
+            f"--deck:{k['family']};--deck-weight:{k['weight']};--sans:{sa['family']};"
+            "}")

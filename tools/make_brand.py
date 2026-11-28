@@ -3,7 +3,7 @@
   brand.css          the colors, stage colors and fonts as CSS variables, plus
                      the small icons drawn inside the CSS (they can't use variables)
   site.webmanifest   theme and background colors
-  *.html             the <meta name="theme-color"> line on every page
+  *.html             each page's theme-color, web-font link and header logo
 
 Run it after any change to brand/brand.json:
 
@@ -52,8 +52,16 @@ def css():
         out.append(f"  --stage-{i}: {s['color']};   /* {s['name']} */")
     out.append("")
     out.append(f"  --logo-src: \"/{b['logo']['main']}\";   /* for images drawn in the browser (map export, chart downloads) */")
-    out.append(f"  --serif: {b['fonts']['serif']};")
-    out.append(f"  --sans: {b['fonts']['sans']};")
+    f = b["fonts"]
+    out.append("  /* Type. Headlines use --display at --display-weight and --display-stretch. */")
+    out.append(f"  --display: {f['display']['family']};")
+    out.append(f"  --display-weight: {f['display']['weight']};")
+    out.append(f"  --display-stretch: {f['display'].get('stretch', '100%')};")
+    out.append(f"  --display-em-style: {f['display'].get('emStyle', 'italic')};   /* the 'in Progress' in the site name */")
+    out.append(f"  --display-em-weight: {f['display'].get('emWeight', f['display']['weight'])};")
+    out.append(f"  --deck: {f['deck']['family']};")
+    out.append(f"  --deck-weight: {f['deck']['weight']};")
+    out.append(f"  --sans: {f['sans']['family']};")
     out.append("")
     for name, url in icons(c).items():
         out.append(f"  --{name}: {url};")
@@ -69,6 +77,7 @@ def manifest(text):
 
 
 THEME = re.compile(r'(<meta name="theme-color" content=")#[0-9a-fA-F]{3,6}(">)')
+WEBFONTS = re.compile(r'(<link href=")https://fonts\.googleapis\.com/css2\?[^"]*(" rel="stylesheet">)')
 LOGO_LINK = re.compile(r'(<a class="lockup__logo" href=")[^"]*(")')
 LOGO_IMG = re.compile(r'(<img class="lockup__img" src=")(/?)[^"]*(" alt=")[^"]*(")')
 
@@ -76,6 +85,7 @@ LOGO_IMG = re.compile(r'(<img class="lockup__img" src=")(/?)[^"]*(" alt=")[^"]*(
 def page(text):
     b = branding.BRAND
     text = THEME.sub(lambda m: m.group(1) + branding.COLORS[b["browser"]["themeColor"]] + m.group(2), text)
+    text = WEBFONTS.sub(lambda m: m.group(1) + b["fonts"]["webfonts"] + m.group(2), text)
     # The header logo: its link, file and name come from brand.json.
     text = LOGO_LINK.sub(lambda m: m.group(1) + b["parent"]["url"] + m.group(2), text)
     text = LOGO_IMG.sub(lambda m: m.group(1) + m.group(2) + b["logo"]["main"] + m.group(3) + b["parent"]["name"] + m.group(4), text)
