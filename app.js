@@ -1,18 +1,28 @@
 // Spokane in Progress — map, list, filters, detail panel.
 // Reads projects.json, which build.py generates from your sheet.
 
-// Stages are defined in build.py and travel with the data, so this list is only
-// a fallback for when the data fails to load. Edit build.py, not this.
-// The five live stages are one hue stepping from light to dark, so the order
-// reads in the color itself. Stalled sits off the ramp in neutral gray.
-let STAGES = [
-  { name: "Pre-Application",     color: "#ce5c11" },
-  { name: "Applied",             color: "#ba4521" },
-  { name: "Approved",            color: "#a2301f" },
-  { name: "Under Construction",  color: "#881713" },
-  { name: "Complete",            color: "#511a14" },
-  { name: "Stalled",             color: "#6e8086" },
-];
+// Colors come from brand.css, which tools/make_brand.py writes from
+// brand/brand.json. Nothing in this file names a color itself.
+const BRAND = (() => {
+  const css = getComputedStyle(document.documentElement);
+  const get = (name) => css.getPropertyValue(`--${name}`).trim();
+  const names = ["ink", "ink-2", "muted", "paper", "link", "surface", "map-bg"];
+  const out = {};
+  names.forEach((n) => { out[n] = get(n); });
+  out.stages = [0, 1, 2, 3, 4, 5].map((i) => get(`stage-${i}`));
+  return out;
+})();
+
+// A brand color at some opacity, for canvas and map paints.
+function withAlpha(hex, alpha) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+}
+
+// Stages travel with the data (projects.json, from brand/brand.json via
+// build.py), so this list is only a fallback for when the data fails to load.
+const STAGE_NAMES = ["Pre-Application", "Applied", "Approved", "Under Construction", "Complete", "Stalled"];
+let STAGES = STAGE_NAMES.map((name, i) => ({ name, color: BRAND.stages[i] }));
 
 // Roughly the City of Spokane limits. The map opens here.
 const CITY_BOUNDS = [[-117.545, 47.598], [-117.300, 47.748]];
@@ -1604,7 +1614,7 @@ function startSiteView(p) {
       style: {
         version: 8,
         sources: { sat: { type: "raster", tiles: [SATELLITE_TILES], tileSize: 256, maxzoom: 19 } },
-        layers: [{ id: "paper", type: "background", paint: { "background-color": "#e9e5dc" } },
+        layers: [{ id: "paper", type: "background", paint: { "background-color": BRAND["map-bg"] } },
                  { id: "sat", type: "raster", source: "sat" }],
       },
       center: [p.lng, p.lat],
@@ -2021,7 +2031,7 @@ function setBasemap(mode) {
       map.setPaintProperty(
         layer.id,
         "text-halo-color",
-        on ? "rgba(255,255,255,0.95)" : layer.haloColor
+        on ? withAlpha(BRAND.surface, 0.95) : layer.haloColor
       );
     } catch (error) {
       /* a label layer without a halo is not worth failing the switch over */
@@ -2151,14 +2161,14 @@ function addOverlayLayers() {
   map.addSource("areas", { type: "geojson", data: EMPTY });
   map.addSource("near", { type: "geojson", data: EMPTY });
   const below = "project-dot";
-  map.addLayer({ id: "areas-fill", type: "fill", source: "areas", paint: { "fill-color": "#121212", "fill-opacity": 0.035 } }, below);
-  map.addLayer({ id: "areas-line", type: "line", source: "areas", paint: { "line-color": "#121212", "line-width": 1.6, "line-dasharray": [3, 2] } }, below);
+  map.addLayer({ id: "areas-fill", type: "fill", source: "areas", paint: { "fill-color": BRAND.ink, "fill-opacity": 0.035 } }, below);
+  map.addLayer({ id: "areas-line", type: "line", source: "areas", paint: { "line-color": BRAND.ink, "line-width": 1.6, "line-dasharray": [3, 2] } }, below);
   map.addLayer({ id: "near-fill", type: "fill", source: "near", filter: ["==", ["get", "part"], "circle"],
-    paint: { "fill-color": "#275b84", "fill-opacity": 0.06 } }, below);
+    paint: { "fill-color": BRAND.link, "fill-opacity": 0.06 } }, below);
   map.addLayer({ id: "near-line", type: "line", source: "near", filter: ["==", ["get", "part"], "circle"],
-    paint: { "line-color": "#275b84", "line-width": 1.6 } }, below);
+    paint: { "line-color": BRAND.link, "line-width": 1.6 } }, below);
   map.addLayer({ id: "near-center", type: "circle", source: "near", filter: ["==", ["get", "part"], "center"],
-    paint: { "circle-radius": 4, "circle-color": "#275b84", "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } });
+    paint: { "circle-radius": 4, "circle-color": BRAND.link, "circle-stroke-color": BRAND.surface, "circle-stroke-width": 1.5 } });
 }
 
 // ---- saving the map as an image ------------------------------------------------
@@ -2244,15 +2254,15 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
   out.height = outH;
   const ctx = out.getContext("2d");
   const u = outW / 1000; // layout unit: everything scales with the width
-  ctx.fillStyle = "#faf8f3";
+  ctx.fillStyle = BRAND.paper;
   ctx.fillRect(0, 0, outW, outH);
   ctx.drawImage(mapCanvas, 0, 0, outW, outH);
 
   const top = BAND.top * u, bottom = BAND.bottom * u, side = 32 * u;
-  ctx.fillStyle = "rgba(250, 248, 243, 0.95)";
+  ctx.fillStyle = withAlpha(BRAND.paper, 0.95);
   ctx.fillRect(0, 0, outW, top);
   ctx.fillRect(0, outH - bottom, outW, bottom);
-  ctx.fillStyle = "#121212";
+  ctx.fillStyle = BRAND.ink;
   ctx.fillRect(0, top - Math.max(1, u), outW, Math.max(1, u));
   ctx.fillRect(0, outH - bottom, outW, Math.max(1, u));
 
@@ -2269,7 +2279,7 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
   const filters = filtersInWords();
   const line = filters ? `${filters[0].toUpperCase()}${filters.slice(1)}: ${tally}` : `${tally[0].toUpperCase()}${tally.slice(1)} on this map`;
   ctx.font = `500 ${21 * u}px "Libre Franklin", Arial, sans-serif`;
-  ctx.fillStyle = "#3a3936";
+  ctx.fillStyle = BRAND["ink-2"];
   ctx.fillText(fitText(ctx, line, outW - 2 * side), side, 84 * u);
 
   // Key: the stages on this map.
@@ -2285,13 +2295,13 @@ function composeMapImage(mapCanvas, outW, outH, inView) {
     ctx.beginPath();
     ctx.arc(x + 5 * u, ky - 5 * u, 5 * u, 0, 2 * Math.PI);
     ctx.fill();
-    ctx.fillStyle = "#121212";
+    ctx.fillStyle = BRAND.ink;
     ctx.fillText(label, x + 14 * u, ky);
     x += w;
   });
 
   // Credits: the site and data date, then the map's required credit.
-  ctx.fillStyle = "#6b6964";
+  ctx.fillStyle = BRAND.muted;
   ctx.font = `500 ${12.5 * u}px "Libre Franklin", Arial, sans-serif`;
   ctx.fillText(fitText(ctx, `${Share.creditLine(state.builtAt)} · Circle size shows homes`, outW - 2 * side), side, outH - 30 * u);
   ctx.fillText(fitText(ctx, MAP_CREDIT, outW - 2 * side), side, outH - 13 * u);
@@ -2511,13 +2521,13 @@ function startMap() {
       layout: { "circle-sort-key": ["-", 0, ["get", "units"]] },
       paint: {
         "circle-radius": radiusExpression(),
-        "circle-color": ["case", known, ["get", "color"], "#faf8f3"],
+        "circle-color": ["case", known, ["get", "color"], BRAND.paper],
         "circle-opacity": ["case", known, 0.9, 1],
         "circle-stroke-color": [
           "case",
           ["any", ["boolean", ["feature-state", "selected"], false], ["boolean", ["feature-state", "hover"], false]],
-          "#121212",
-          known, "#ffffff",
+          BRAND.ink,
+          known, BRAND.surface,
           ["get", "color"],
         ],
         "circle-stroke-width": [

@@ -223,7 +223,7 @@
     canvas.width = w;
     canvas.height = h;
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#fff";           // transparent PNGs get a white background
+    ctx.fillStyle = "#fff";           // transparent PNGs get a white background (photo handling, not a brand color: brand-exempt)
     ctx.fillRect(0, 0, w, h);
     ctx.drawImage(bitmap, 0, 0, w, h);
     bitmap.close && bitmap.close();

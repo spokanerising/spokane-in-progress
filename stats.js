@@ -21,7 +21,8 @@ const SIZES = [
 
 const AP_MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
 
-let STAGES = STAGE_ORDER.map((name) => ({ name, color: "#999" }));
+// Replaced by the stages in projects.json once it loads; until then, the brand.css copies.
+let STAGES = STAGE_ORDER.map((name, i) => ({ name, color: getComputedStyle(document.documentElement).getPropertyValue(`--stage-${i}`).trim() }));
 let projects = [];
 let builtAt = null;
 
@@ -33,7 +34,8 @@ const fmt = (n) => Number(n).toLocaleString("en-US");
 const plural = (n, one, many) => `${fmt(n)} ${n === 1 ? one : many}`;
 const units = (p) => (p.units > 0 ? p.units : 0);
 const sumUnits = (list) => list.reduce((s, p) => s + units(p), 0);
-const colorOf = (stage) => (STAGES.find((s) => s.name === stage) || {}).color || "#999";
+// An unknown stage falls back to the last stage color (Stalled's gray), as on the map.
+const colorOf = (stage) => (STAGES.find((s) => s.name === stage) || {}).color || getComputedStyle(document.documentElement).getPropertyValue("--stage-5").trim();
 const typeOf = (p) => p.buildingType || UNKNOWN_TYPE;
 const firstFiled = (p) => ((p.permits || []).map((x) => x.opened).filter(Boolean).sort()[0] || "");
 
@@ -149,7 +151,7 @@ function quarterColumns() {
   return `<figcaption class="chart__title">Projects first filed with the city, by quarter</figcaption>
     <ul class="legend legend--small">
       <li><i style="background:var(--ink-2)"></i>Middle housing</li>
-      <li><i style="background:#b9b2a5"></i>Other housing</li>
+      <li><i style="background:var(--other)"></i>Other housing</li>
     </ul>
     <div class="cols" aria-hidden="true">${cols}</div>
     ${srTable("Projects first filed with the city, by quarter", ["Quarter", "Projects", "Middle housing projects", "Homes"],
@@ -321,7 +323,7 @@ function middleShare() {
   return `<figcaption class="chart__title">${esc(title)}</figcaption>
     <ul class="legend legend--small">
       <li><i style="background:var(--ink-2)"></i>Middle housing</li>
-      <li><i style="background:#b9b2a5"></i>Other housing</li>
+      <li><i style="background:var(--other)"></i>Other housing</li>
     </ul>
     <div class="share">${body}</div>
     <p class="source">Note: ${esc(note)} ${esc(sourceLine())}</p>`;
@@ -597,7 +599,9 @@ function draw() {
 const CHARTS = {};
 const SVG_W = 1200;
 const PAD = 48;
-const INK = "#121212", INK2 = "#3a3936", MUTED = "#6b6964", RULE = "#dcd6ca", OTHER = "#b9b2a5", PAPER = "#faf8f3";
+// Colors come from brand.css (written by tools/make_brand.py from brand/brand.json).
+const brandColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
+const INK = brandColor("ink"), INK2 = brandColor("ink-2"), MUTED = brandColor("muted"), RULE = brandColor("rule"), OTHER = brandColor("other"), PAPER = brandColor("paper");
 const SANS = "'Libre Franklin', Arial, sans-serif";
 const SERIF = "Newsreader, Georgia, serif";
 

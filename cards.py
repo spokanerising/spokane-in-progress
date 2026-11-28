@@ -27,6 +27,13 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 from make_site_card import font_faces  # noqa: E402
 
+import branding  # noqa: E402  (brand/brand.json: every color on the card)
+
+C = branding.COLORS
+INK, INK2, MUTED, PAPER, PAPER2 = C["ink"], C["ink-2"], C["muted"], C["paper"], C["paper-2"]
+OTHER, HOOD, TRACK_OFF, SURFACE = C["other"], C["locator-hood"], C["track-off"], C["surface"]
+FALLBACK = branding.FALLBACK_STAGE_COLOR
+
 W, H = 1200, 630
 VERSION = "2"   # bump when the design changes, so every card is redrawn
 SAMPLES = os.path.join(ROOT, "cards-samples")
@@ -106,29 +113,29 @@ def locator(d, outlines, stages, box_w, box_h):
     oy = (box_h - (lat1 - lat0) * scale) / 2
     xy = lambda lng, lat: (ox + (lng - lng0) * kx * scale, oy + (lat1 - lat) * scale)
     path = lambda ring: "M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (xy(*pt[:2]) for pt in ring)) + "Z"
-    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#6e8086")
+    color = {s["name"]: s["color"] for s in stages}.get(d["status"], FALLBACK)
     # Just the city's outer edge: the districts drawn twice, first with a
     # wide edge, then filled (with a thin same-color edge) on top, which
     # hides every inside border and any hairline gaps between districts.
     outline = "".join(path(r) for r in rings)
-    out = [f'<path d="{outline}" fill="#f2eee5" stroke="#b9b2a5" stroke-width="4" stroke-linejoin="round"/>',
-           f'<path d="{outline}" fill="#f2eee5" stroke="#f2eee5" stroke-width="2" stroke-linejoin="round"/>']
+    out = [f'<path d="{outline}" fill="{PAPER2}" stroke="{OTHER}" stroke-width="4" stroke-linejoin="round"/>',
+           f'<path d="{outline}" fill="{PAPER2}" stroke="{PAPER2}" stroke-width="2" stroke-linejoin="round"/>']
     for f in hood:
         for poly in polys(f):
-            out.append(f'<path d="{" ".join(path(r) for r in poly)}" fill="#d6cfc1" fill-rule="evenodd" stroke="#3a3936" stroke-width="1.5" stroke-linejoin="round"/>')
+            out.append(f'<path d="{" ".join(path(r) for r in poly)}" fill="{HOOD}" fill-rule="evenodd" stroke="{INK2}" stroke-width="1.5" stroke-linejoin="round"/>')
     if d["at"]:
         x, y = xy(d["at"][1], d["at"][0])
-        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="13" fill="none" stroke="#121212" stroke-width="1.8"/>')
-        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="8" fill="{color}" stroke="#fff" stroke-width="2"/>')
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="13" fill="none" stroke="{INK}" stroke-width="1.8"/>')
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="8" fill="{color}" stroke="{SURFACE}" stroke-width="2"/>')
     return f'<svg width="{box_w}" height="{box_h}" viewBox="0 0 {box_w} {box_h}">{"".join(out)}</svg>'
 
 
 def track(d, stages):
     """The detail panel's five-step stage track."""
     names = [s["name"] for s in stages][:5]
-    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#6e8086")
+    color = {s["name"]: s["color"] for s in stages}.get(d["status"], FALLBACK)
     at = names.index(d["status"]) if d["status"] in names else -1
-    segs = "".join(f'<i style="background:{color if i <= at else "#e6e1d6"}"></i>' for i in range(len(names)))
+    segs = "".join(f'<i style="background:{color if i <= at else TRACK_OFF}"></i>' for i in range(len(names)))
     return f'<div class="track">{segs}</div>'
 
 
@@ -142,7 +149,7 @@ def name_size(name):
 def card_html(p, stages, outlines, fonts_css):
     d = drawn(p)
     e = lambda s: html.escape(str(s))
-    color = {s["name"]: s["color"] for s in stages}.get(d["status"], "#6e8086")
+    color = {s["name"]: s["color"] for s in stages}.get(d["status"], FALLBACK)
     stage = STAGE_WORDS.get(d["status"], d["status"])
     if d["est"]:
         stage += " (estimated)"
@@ -155,30 +162,30 @@ def card_html(p, stages, outlines, fonts_css):
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 {fonts_css}
 * {{ margin: 0; box-sizing: border-box; }}
-body {{ width: {W}px; height: {H}px; background: #faf8f3; color: #121212; overflow: hidden; font-family: 'Libre Franklin'; }}
+body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; font-family: 'Libre Franklin'; }}
 .card {{ position: relative; width: {W}px; height: {H}px; }}
 .left {{ position: absolute; left: 72px; top: 58px; width: 640px; bottom: 100px; display: flex; flex-direction: column; }}
-.kicker {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: #6b6964; }}
+.kicker {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: {MUTED}; }}
 h1 {{ margin-top: 18px; font: 600 {name_size(d["name"])}px/1.02 'Newsreader'; letter-spacing: -0.3px;
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
-.where {{ margin-top: 16px; font: 500 22px/1.3 'Libre Franklin'; color: #3a3936;
+.where {{ margin-top: 16px; font: 500 22px/1.3 'Libre Franklin'; color: {INK2};
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 .facts {{ margin-top: auto; }}
 .homes {{ display: flex; align-items: baseline; gap: 12px; }}
 .num {{ font: 600 84px/0.9 'Newsreader'; }}
-.unit {{ font: 500 30px 'Newsreader'; color: #3a3936; }}
-.unit--none {{ font: 500 26px 'Newsreader'; color: #6b6964; }}
+.unit {{ font: 500 30px 'Newsreader'; color: {INK2}; }}
+.unit--none {{ font: 500 26px 'Newsreader'; color: {MUTED}; }}
 .stage {{ display: flex; align-items: center; gap: 12px; margin-top: 18px; font: 600 22px 'Libre Franklin'; }}
 .stage b {{ width: 16px; height: 16px; border-radius: 50%; background: {color}; flex: none; }}
-.stage span {{ font-weight: 500; color: #6b6964; }}
+.stage span {{ font-weight: 500; color: {MUTED}; }}
 .track {{ display: flex; gap: 4px; width: 420px; height: 10px; margin-top: 14px; }}
 .track i {{ flex: 1; display: block; }}
 .map {{ position: absolute; right: 60px; top: 60px; }}
-.rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: #121212; }}
+.rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: {INK}; }}
 .foot {{ position: absolute; left: 72px; right: 72px; bottom: 36px; display: flex; justify-content: space-between; align-items: baseline; }}
 .brand {{ font: 600 24px 'Newsreader'; }}
 .brand em {{ font-weight: 500; font-style: italic; }}
-.url {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: #3a3936; }}
+.url {{ font: 600 16px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; color: {INK2}; }}
 </style></head><body><div class="card">
 <div class="left">
   <p class="kicker">{e(d["type"] or "Housing project")}</p>

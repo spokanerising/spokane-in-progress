@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&display=swap" rel="stylesheet">
+<link href="brand.css" rel="stylesheet">
 <link href="styles.css" rel="stylesheet">
 <style>
   /* Page layout only; every control below uses the site's own classes. */
@@ -22,7 +23,7 @@
   .sg section { border-top: 1px solid var(--ink); margin-top: 28px; padding-top: 10px; }
   .sg h2 { margin: 0 0 12px; }
   .sg .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .sg .onmap { padding: 14px; background: #d9d4c8; display: flex; gap: 8px; align-items: flex-start; position: relative; }
+  .sg .onmap { padding: 14px; background: var(--map-bg); display: flex; gap: 8px; align-items: flex-start; position: relative; }
   .sg .onmap .maptools { position: static; }
   .sg .picker__panel { position: static; width: 300px; }
   .sg .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
@@ -57,9 +58,9 @@
   <section>
     <h2 class="label">Stage chips</h2>
     <div class="chips" style="margin:0">
-      <span class="chipwrap"><button type="button" class="chip" aria-pressed="true" style="--stage:#ba4521"><i></i>Applied <span class="chip__n">18</span></button></span>
-      <span class="chipwrap"><button type="button" class="chip" aria-pressed="false" style="--stage:#a2301f"><i></i>Approved <span class="chip__n">20</span></button></span>
-      <span class="chipwrap"><button type="button" class="chip is-zero" aria-pressed="true" style="--stage:#6e8086"><i></i>Stalled <span class="chip__n">0</span></button></span>
+      <span class="chipwrap"><button type="button" class="chip" aria-pressed="true" style="--stage:var(--stage-1)"><i></i>Applied <span class="chip__n">18</span></button></span>
+      <span class="chipwrap"><button type="button" class="chip" aria-pressed="false" style="--stage:var(--stage-2)"><i></i>Approved <span class="chip__n">20</span></button></span>
+      <span class="chipwrap"><button type="button" class="chip is-zero" aria-pressed="true" style="--stage:var(--stage-5)"><i></i>Stalled <span class="chip__n">0</span></button></span>
     </div>
   </section>
 

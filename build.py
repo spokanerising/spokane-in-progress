@@ -23,6 +23,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 import city_records as cr
+import branding
 import display_tidy
 import edits
 import housing_types
@@ -38,14 +39,8 @@ PROJECTS_DIR = os.path.join("data", "projects")
 
 # The single source of truth for stages. The website reads this list out of
 # projects.json, so changing a name or colour here changes it everywhere.
-STAGES = [
-    {"name": "Pre-Application",    "color": "#ce5c11"},  # pre-application conference held
-    {"name": "Applied",            "color": "#ba4521"},  # permit application filed
-    {"name": "Approved",           "color": "#a2301f"},
-    {"name": "Under Construction", "color": "#881713"},
-    {"name": "Complete",           "color": "#511a14"},
-    {"name": "Stalled",            "color": "#6e8086"},
-]
+# Stage names and colors live in brand/brand.json (see branding.py).
+STAGES = branding.STAGES
 
 STAGE_NAMES = [stage["name"] for stage in STAGES]
 

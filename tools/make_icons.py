@@ -28,9 +28,11 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from make_site_card import font_path  # noqa: E402
 
-INK, PAPER = "#121212", "#faf8f3"
-# Keep in step with STAGES in build.py (Pre-Application … Complete).
-RAMP = ["#ea957a", "#d66a48", "#b6451f", "#8a2f10", "#592211"]
+sys.path.insert(0, ROOT)
+import branding  # noqa: E402  (brand/brand.json)
+
+INK, PAPER = branding.COLORS["ink"], branding.COLORS["paper"]
+RAMP = [s["color"] for s in branding.STAGES][:5]   # Pre-Application … Complete
 
 
 def s_glyph():

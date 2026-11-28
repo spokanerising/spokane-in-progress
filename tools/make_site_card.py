@@ -10,10 +10,17 @@ plots every project from projects.json over the council district outlines in
 boundaries.geojson, colored by stage and sized by homes, like the site.
 Needs: pip install playwright && python -m playwright install chromium
 """
-import base64, json, math, os, subprocess, tarfile, tempfile
+import base64, json, math, os, subprocess, sys, tarfile, tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+sys.path.insert(0, ROOT)
+import branding  # noqa: E402  (brand/brand.json: every color on the card)
+
+C = branding.COLORS
+INK, INK2, MUTED, PAPER, PAPER2 = C["ink"], C["ink-2"], C["muted"], C["paper"], C["paper-2"]
+OTHER, SURFACE = C["other"], C["surface"]
+FALLBACK = branding.FALLBACK_STAGE_COLOR
 FONTS = os.path.join(HERE, ".fonts")
 OUT = os.path.join(ROOT, "og-card.png")
 W, H = 1200, 630
@@ -69,8 +76,8 @@ def map_svg(projects, outlines, stages, box_w, box_h):
     # Just the city's outer edge (no district lines): the districts drawn
     # with a wide edge, then filled on top, which hides the inside borders.
     outline = "".join("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (xy(*pt[:2]) for pt in ring)) + "Z" for ring in rings)
-    parts = [f'<path d="{outline}" fill="#f2eee5" stroke="#b9b2a5" stroke-width="4" stroke-linejoin="round"/>',
-             f'<path d="{outline}" fill="#f2eee5" stroke="#f2eee5" stroke-width="2" stroke-linejoin="round"/>']
+    parts = [f'<path d="{outline}" fill="{PAPER2}" stroke="{OTHER}" stroke-width="4" stroke-linejoin="round"/>',
+             f'<path d="{outline}" fill="{PAPER2}" stroke="{PAPER2}" stroke-width="2" stroke-linejoin="round"/>']
     for p in sorted(projects, key=lambda p: -(p.get("units") or 0)):
         if not (isinstance(p.get("lat"), (int, float)) and isinstance(p.get("lng"), (int, float))):
             continue
@@ -78,12 +85,12 @@ def map_svg(projects, outlines, stages, box_w, box_h):
         if not (-10 < x < box_w + 10 and -10 < y < box_h + 10):
             continue
         u = p.get("units") or 0
-        c = color.get(p.get("status"), "#6e8086")
+        c = color.get(p.get("status"), FALLBACK)
         if u > 0:
             r = max(3.2, 0.95 * math.sqrt(u))
-            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{c}" fill-opacity="0.9" stroke="#fff" stroke-width="1"/>')
+            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{c}" fill-opacity="0.9" stroke="{SURFACE}" stroke-width="1"/>')
         else:
-            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.4" fill="#faf8f3" stroke="{c}" stroke-width="1.8"/>')
+            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.4" fill="{PAPER}" stroke="{c}" stroke-width="1.8"/>')
     return f'<svg width="{box_w}" height="{box_h}" viewBox="0 0 {box_w} {box_h}">{"".join(parts)}</svg>'
 
 
@@ -100,15 +107,15 @@ def html(projects, outlines, stages):
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 {font_faces()}
 * {{ margin: 0; box-sizing: border-box; }}
-body {{ width: {W}px; height: {H}px; background: #faf8f3; color: #121212; overflow: hidden; }}
+body {{ width: {W}px; height: {H}px; background: {PAPER}; color: {INK}; overflow: hidden; }}
 .card {{ position: relative; width: {W}px; height: {H}px; padding: 64px 0 0 72px; }}
-.rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: #121212; }}
+.rule {{ position: absolute; left: 72px; right: 72px; bottom: 76px; height: 1px; background: {INK}; }}
 h1 {{ font: 600 92px/0.98 'Newsreader'; letter-spacing: -0.5px; width: 560px; }}
 h1 em {{ font-weight: 500; font-style: italic; }}
-p.tag {{ margin-top: 26px; font: 500 36px/1.2 'Newsreader'; color: #3a3936; width: 520px; }}
+p.tag {{ margin-top: 26px; font: 500 36px/1.2 'Newsreader'; color: {INK2}; width: 520px; }}
 .bar {{ display: flex; gap: 3px; width: 470px; height: 16px; margin-top: 92px; }}
 .bar i {{ display: block; }}
-.key {{ margin-top: 12px; font: 500 15px 'Libre Franklin'; color: #6b6964; letter-spacing: 0.02em; }}
+.key {{ margin-top: 12px; font: 500 15px 'Libre Franklin'; color: {MUTED}; letter-spacing: 0.02em; }}
 .url {{ position: absolute; left: 72px; bottom: 36px; font: 600 17px 'Libre Franklin'; letter-spacing: 0.09em; text-transform: uppercase; }}
 .map {{ position: absolute; right: 56px; top: 44px; }}
 </style></head><body><div class="card">

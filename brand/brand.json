@@ -1,0 +1,55 @@
+{
+  "_about": "The one place for the site's look and names. Edit this, then run: python3 tools/make_brand.py. Then run the tests (python3 tests/run.py brand); they check that text and map dots stay readable. Colors are 6-digit hex.",
+
+  "name": "Spokane in Progress",
+  "tagline": "Tracking Spokane's housing progress.",
+  "siteUrl": "https://projects.spokanerising.com",
+  "parent": { "name": "Spokane Rising", "url": "https://spokanerising.com" },
+  "credit": "Produced by Anthony Gill, writer of Spokane Rising.",
+  "corrections": "spokanerising@gmail.com",
+
+  "logo": {
+    "main": "brand/logo.svg",
+    "primary": "brand/logo-primary.svg"
+  },
+
+  "browser": {
+    "themeColor": "paper",
+    "backgroundColor": "paper",
+    "_about": "Color names from 'colors' below. themeColor tints the phone browser's address bar; backgroundColor shows while the site opens as an app."
+  },
+
+  "fonts": {
+    "serif": "Newsreader, \"Iowan Old Style\", Georgia, serif",
+    "sans": "\"Libre Franklin\", \"Helvetica Neue\", Arial, system-ui, sans-serif"
+  },
+
+  "colors": {
+    "brand":       { "value": "#126781", "use": "Spokane Rising teal. Logo; the site's accent from phase 2 on." },
+    "ink":         { "value": "#121212", "use": "Body text, headlines, rules, chart axes." },
+    "ink-2":       { "value": "#3a3936", "use": "Secondary text, single-series chart marks." },
+    "muted":       { "value": "#6b6964", "use": "Notes, captions, labels." },
+    "paper":       { "value": "#faf8f3", "use": "Page background." },
+    "paper-2":     { "value": "#f2eee5", "use": "Hover and selected rows; locator land on cards." },
+    "paper-3":     { "value": "#ebe6db", "use": "Loading shimmer highlight." },
+    "rule":        { "value": "#dcd6ca", "use": "Hairlines and chart gridlines." },
+    "link":        { "value": "#275b84", "use": "Links, focus ring, Near circle on the map." },
+    "surface":     { "value": "#ffffff", "use": "Menus, fields, buttons, white edges on map dots." },
+    "other":       { "value": "#b9b2a5", "use": "'Other' category in charts; outline of the city on cards." },
+    "map-bg":      { "value": "#e9e5dc", "use": "Map background before tiles load." },
+    "locator-hood":{ "value": "#d6cfc1", "use": "The project's neighborhood on share cards." },
+    "track-off":   { "value": "#e6e1d6", "use": "Stages not yet reached on the share-card track." },
+    "alert":       { "value": "#9b2c12", "use": "Editor warnings and armed buttons." },
+    "print-ink":   { "value": "#000000", "use": "Rules when printing." },
+    "print-muted": { "value": "#444444", "use": "Secondary text when printing." }
+  },
+
+  "stages": [
+    { "name": "Pre-Application",    "color": "#ce5c11", "note": "pre-application conference held" },
+    { "name": "Applied",            "color": "#ba4521", "note": "permit application filed" },
+    { "name": "Approved",           "color": "#a2301f" },
+    { "name": "Under Construction", "color": "#881713" },
+    { "name": "Complete",           "color": "#511a14" },
+    { "name": "Stalled",            "color": "#6e8086" }
+  ]
+}

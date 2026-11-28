@@ -23,6 +23,7 @@ python3 tests/run.py filters      # files whose name contains "filters"
 | `test_edits.py` | `edits.py`: edits applied on top of the build: later wins, reset, stage moves forward only, hide, permit-number fallback, unsafe links refused. |
 | `test_functions.py` | The editor's Cloudflare functions in Node: sign-in token checks (forged, expired, wrong account), what Save commits, refused edits, uploads and serving them (fake R2), adding a project. Needs Node. |
 | `test_editor.py` | The editor in a browser: pencil only when signed in, form values for every project, what Save sends, errors, Hide, Reset, uploads (shrinking, turning upright, PDFs), build notes, History and Undo, adding a project with a map pin, phones, `/admin/`. |
+| `test_brand.py` | `brand/brand.json` is the only place colors are typed; `brand.css` and the manifest are current; logos are shapes, not text; text, map-dot and color-blind contrast; every page loads `brand.css`. |
 | `test_share_toolkit.py` | `share.js`: share links, copying, downloads, CSV, notices; Copy link and the Stats CSV. |
 
 GitHub runs them on every code push and after every data refresh

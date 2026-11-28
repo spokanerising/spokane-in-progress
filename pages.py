@@ -33,6 +33,10 @@ import json
 import os
 import re
 
+import branding
+
+C = branding.COLORS
+
 SITE_NAME = "Spokane in Progress"
 ORIGIN = os.environ.get("SITE_ORIGIN", "https://projects.spokanerising.com").rstrip("/")
 CARD = {"path": "/og-card.png", "width": 1200, "height": 630,
@@ -146,11 +150,11 @@ def page(*, origin, path, title, description, target, heading, kicker, gone=Fals
 <meta name="twitter:image:alt" content="{e(card['alt'])}">
 <script>location.replace({json.dumps(target)} + location.hash);</script>
 <style>
-body {{ margin: 0; background: #faf8f3; color: #121212; font: 17px/1.5 Georgia, "Times New Roman", serif; }}
+body {{ margin: 0; background: {C["paper"]}; color: {C["ink"]}; font: 17px/1.5 Georgia, "Times New Roman", serif; }}
 main {{ max-width: 34rem; margin: 12vh auto; padding: 0 24px; }}
-.kicker {{ font: 600 12px/1 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #6b6964; }}
+.kicker {{ font: 600 12px/1 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: {C["muted"]}; }}
 h1 {{ margin: .4em 0 .3em; font-size: 2rem; line-height: 1.15; }}
-a {{ color: #275b84; font-family: system-ui, sans-serif; font-weight: 600; }}
+a {{ color: {C["link"]}; font-family: system-ui, sans-serif; font-weight: 600; }}
 </style>
 </head>
 <body>
