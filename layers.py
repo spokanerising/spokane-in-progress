@@ -180,13 +180,11 @@ def city_limits():
 
 def historic_districts():
     out = []
-    for f in arcgis_features(LAYERS["historic"], fields="Name,LocalRegistry,NationalRegistry"):
+    for f in arcgis_features(LAYERS["historic"], fields="Name,LocalRegistry"):
         p = f.get("properties") or {}
         if (p.get("LocalRegistry") or "").strip().lower() != "yes":
             continue
-        out.append(feature(simplified(shape(f["geometry"]), 3), {
-            "name": (p.get("Name") or "").strip(),
-            "alsoNational": (p.get("NationalRegistry") or "").strip().lower() == "yes"}))
+        out.append(feature(simplified(shape(f["geometry"]), 3), {"name": (p.get("Name") or "").strip()}))
     return sorted(out, key=lambda f: f["properties"]["name"]), {
         "title": "Local historic districts", "source": "City of Spokane GIS (Spokane Register of Historic Places)",
         "sourceUrl": LAYERS["historic"], "minFeatures": 5}
