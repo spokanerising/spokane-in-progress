@@ -1,37 +1,5 @@
 [
  {
-  "key": "B25M0082PDEV",
-  "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
-  "permits": [
-   "B25M0082PDEV"
-  ],
-  "name": "Kendall Yards Mixed Use-Active Adult",
-  "address": "1175 W Summit Pkwy",
-  "units": 200,
-  "estCost": null,
-  "date": "2026-05-31",
-  "status": "Pre-Application",
-  "description": "",
-  "parcelId": "",
-  "reportUrl": ""
- },
- {
-  "key": "B25M0067PDEV",
-  "source": "monthly permit report (Significant PDEV & MFTEs, as of 2026-05-31)",
-  "permits": [
-   "B25M0067PDEV"
-  ],
-  "name": "Canyon Bluff Apartments",
-  "address": "",
-  "units": 168,
-  "estCost": 16700000,
-  "date": "2026-05-31",
-  "status": "Pre-Application",
-  "description": "",
-  "parcelId": "",
-  "reportUrl": ""
- },
- {
   "key": "B2513640",
   "source": "monthly permit report (Largest Projects 2026, as of 2026-05-31)",
   "permits": [
@@ -60,30 +28,6 @@
   "estCost": 9500000,
   "date": "2026-05-31",
   "status": "Pre-Application",
-  "description": "",
-  "parcelId": "",
-  "reportUrl": ""
- },
- {
-  "key": "B2503736",
-  "source": "monthly permit report (Largest Projects in Plan Review, as of 2026-05-31)",
-  "permits": [
-   "B2503736",
-   "B2503737",
-   "B2503738",
-   "B2503739",
-   "B2503740",
-   "B2503741",
-   "B2503742",
-   "B2503743",
-   "B2503744"
-  ],
-  "name": "Kodiak Lacey Townhomes",
-  "address": "2715-2779 E Dalke",
-  "units": 11,
-  "estCost": 3425037,
-  "date": "2026-05-31",
-  "status": "Applied",
   "description": "",
   "parcelId": "",
   "reportUrl": ""
